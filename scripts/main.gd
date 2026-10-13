@@ -399,6 +399,16 @@ func _create_combatants() -> void:
 		actor.scale = Vector2.ONE * depth_scales[hero]
 		actor.z_index = 6 - HEROES.find(hero)
 		actor_layer.add_child(actor)
+		var ground_shadow := Polygon2D.new()
+		var shadow_points := PackedVector2Array()
+		for point_index in 32:
+			var angle := TAU * float(point_index) / 32.0
+			shadow_points.append(Vector2(cos(angle) * 132.0, sin(angle) * 24.0))
+		ground_shadow.polygon = shadow_points
+		ground_shadow.color = Color(0.025, 0.045, 0.09, 0.38)
+		ground_shadow.position = Vector2(0, 208)
+		ground_shadow.z_index = -1
+		actor.add_child(ground_shadow)
 		hero_actors[hero] = actor
 		actor.play("idle")
 	boss_actor = Sprite2D.new()
