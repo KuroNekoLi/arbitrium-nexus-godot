@@ -11,6 +11,10 @@ enum CardKind { ATTACK, DEFENSE, SUPPORT, REACTION }
 @export var power: int = 0
 @export var kind: CardKind = CardKind.ATTACK
 @export var reaction: bool = false
+@export var analysis_gain: int = 1
+@export var healing: int = 0
+@export var stability_damage: int = 0
+@export var mana_gain: int = 0
 
 func is_ordinary() -> bool:
 	return not reaction and kind != CardKind.REACTION

@@ -21,11 +21,11 @@ func _run() -> void:
 	var hp_before: int = game.battle.boss_hp
 	var hand_before: int = game.battle.hands[game.selected_hero].size()
 	var card_start: Vector2 = playable.global_position
-	var actor: Sprite2D = game.hero_actors[game.selected_hero]
+	var actor: AnimatedSprite2D = game.hero_actors[game.selected_hero]
 	var actor_start: Vector2 = actor.position
 	game._on_card_drag_started(playable, playable)
 	game._handle_card_release(playable, Vector2(880, 300))
-	await create_timer(0.12).timeout
+	await create_timer(0.18).timeout
 	if playable.global_position.distance_to(card_start) < 10.0:
 		push_error("Card did not visibly travel toward the boss after release")
 		quit(1)
@@ -34,11 +34,15 @@ func _run() -> void:
 		push_error("Selected hero did not move to perform the attack")
 		quit(1)
 		return
+	if actor.animation != "run":
+		push_error("Hero did not switch to its run-cycle atlas during the charge")
+		quit(1)
+		return
 	if game.battle.boss_hp != hp_before:
 		push_error("Card effect resolved before its impact animation completed")
 		quit(1)
 		return
-	await create_timer(0.7).timeout
+	await create_timer(0.5).timeout
 	if game.battle.boss_hp >= hp_before or game.battle.hands[game.selected_hero].size() != hand_before - 1:
 		push_error("Dragging an ordinary card to the boss zone did not play it")
 		quit(1)

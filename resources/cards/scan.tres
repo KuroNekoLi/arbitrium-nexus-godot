@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "scan"
+title = "分析掃描"
+description = "分析值 +3，揭露敵方意圖。"
+cost = 1
+power = 3
+kind = 2
+analysis_gain = 3

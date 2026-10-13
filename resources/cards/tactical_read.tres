@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "tactical_read"
+title = "戰術推演"
+description = "分析值 +1，回復 1 點能量。"
+cost = 0
+power = 1
+kind = 2
+analysis_gain = 1
+mana_gain = 1

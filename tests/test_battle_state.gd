@@ -10,8 +10,9 @@ func _init() -> void:
 	_test_enemy_phase_and_reaction()
 	_test_deterministic_intent()
 	_test_support_effects_do_not_damage_boss()
+	_test_attack_stability_effects()
 	if failures == 0:
-		print("M1 TESTS PASS // 5 suites")
+		print("M1 TESTS PASS // 6 suites")
 		quit(0)
 	else:
 		print("M1 TESTS FAIL // %d failures" % failures)
@@ -88,6 +89,25 @@ func _test_support_effects_do_not_damage_boss() -> void:
 	_assert(state.boss_hp == hp_before, "support card does not deal unintended boss damage")
 	_assert(state.analysis == 2, "focus grants its declared Analysis")
 	_assert(state.heroes["nova"]["mana"] == 4, "focus grants its declared Mana")
+
+func _test_attack_stability_effects() -> void:
+	for definition: Dictionary in [{"suffix": "pierce", "loss": 6}, {"suffix": "rupture", "loss": 12}]:
+		var state = BattleStateClass.new()
+		state.heroes["kleya"]["mana"] = 10
+		var card_index := _ensure_card_in_hand(state, "kleya", String(definition.suffix))
+		_assert(card_index >= 0, String(definition.suffix) + " card exists")
+		if card_index >= 0:
+			_assert(state.play_card("kleya", card_index), String(definition.suffix) + " is playable")
+			_assert(state.boss_stability == BattleStateClass.BOSS_MAX_STABILITY - int(definition.loss), String(definition.suffix) + " applies its Stability damage")
+
+func _ensure_card_in_hand(state: BattleState, hero_id: String, suffix: String) -> int:
+	for i: int in range(state.hands[hero_id].size()):
+		if state.hands[hero_id][i].id.ends_with(suffix): return i
+	for i: int in range(state.decks[hero_id].size()):
+		if state.decks[hero_id][i].id.ends_with(suffix):
+			state.hands[hero_id].append(state.decks[hero_id].pop_at(i))
+			return state.hands[hero_id].size() - 1
+	return -1
 
 func _assert(condition: bool, message: String) -> void:
 	if not condition:

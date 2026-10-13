@@ -33,48 +33,73 @@ func _animate_hover(hovering: bool) -> void:
 
 func _draw() -> void:
 	var rect := Rect2(Vector2.ZERO,size)
-	var bg := Color("#111f31")
+	var kind_color := _kind_color()
+	var bg := Color("#201d2a") if combat_data and combat_data.kind == CardData.CardKind.ATTACK else Color("#10242b") if combat_data and combat_data.kind == CardData.CardKind.DEFENSE else Color("#201b31") if combat_data and combat_data.kind == CardData.CardKind.SUPPORT else Color("#2a172b")
 	_draw_round(rect.grow(-1),10,bg)
-	_draw_outline(rect.grow(-1),10,accent)
-	draw_rect(Rect2(7,7,size.x-14,3),accent)
+	_draw_outline(rect.grow(-1),10,kind_color)
+	_draw_outline(rect.grow(-5),8,Color(kind_color.r, kind_color.g, kind_color.b, 0.28))
+	draw_rect(Rect2(7,7,size.x-14,4),kind_color)
+	var kind_name := _kind_name()
+	draw_string(ThemeDB.fallback_font, Vector2(12, 26), kind_name, HORIZONTAL_ALIGNMENT_LEFT, 76, 9, kind_color)
 	# engraved suit emblem
-	draw_circle(Vector2(size.x*0.5,65),31,Color(accent.r,accent.g,accent.b,0.09))
-	draw_arc(Vector2(size.x*0.5,65),25,0,TAU,48,Color(accent.r,accent.g,accent.b,0.6),1.4)
+	draw_circle(Vector2(size.x*0.5,65),31,Color(kind_color.r,kind_color.g,kind_color.b,0.09))
+	draw_arc(Vector2(size.x*0.5,65),25,0,TAU,48,Color(kind_color.r,kind_color.g,kind_color.b,0.6),1.4)
 	if combat_data:
 		match combat_data.kind:
 			CardData.CardKind.ATTACK:
-				draw_line(Vector2(54,80),Vector2(74,49),accent,3.0,true)
-				draw_line(Vector2(65,82),Vector2(82,56),Color(accent.r,accent.g,accent.b,0.65),2.0,true)
+				draw_line(Vector2(54,80),Vector2(74,49),kind_color,3.0,true)
+				draw_line(Vector2(65,82),Vector2(82,56),Color(kind_color.r,kind_color.g,kind_color.b,0.65),2.0,true)
 			CardData.CardKind.DEFENSE:
-				draw_colored_polygon(PackedVector2Array([Vector2(71,44),Vector2(90,51),Vector2(87,69),Vector2(71,83),Vector2(55,69),Vector2(52,51)]),Color(accent.r,accent.g,accent.b,0.13))
-				draw_polyline(PackedVector2Array([Vector2(71,44),Vector2(90,51),Vector2(87,69),Vector2(71,83),Vector2(55,69),Vector2(52,51),Vector2(71,44)]),accent,2.0,true)
+				draw_colored_polygon(PackedVector2Array([Vector2(71,44),Vector2(90,51),Vector2(87,69),Vector2(71,83),Vector2(55,69),Vector2(52,51)]),Color(kind_color.r,kind_color.g,kind_color.b,0.13))
+				draw_polyline(PackedVector2Array([Vector2(71,44),Vector2(90,51),Vector2(87,69),Vector2(71,83),Vector2(55,69),Vector2(52,51),Vector2(71,44)]),kind_color,2.0,true)
 			CardData.CardKind.SUPPORT:
-				draw_colored_polygon(PackedVector2Array([Vector2(71,45),Vector2(89,65),Vector2(71,84),Vector2(53,65)]),Color(accent.r,accent.g,accent.b,0.17))
-				draw_polyline(PackedVector2Array([Vector2(71,45),Vector2(89,65),Vector2(71,84),Vector2(53,65),Vector2(71,45)]),accent,2.0,true)
+				draw_colored_polygon(PackedVector2Array([Vector2(71,45),Vector2(89,65),Vector2(71,84),Vector2(53,65)]),Color(kind_color.r,kind_color.g,kind_color.b,0.17))
+				draw_polyline(PackedVector2Array([Vector2(71,45),Vector2(89,65),Vector2(71,84),Vector2(53,65),Vector2(71,45)]),kind_color,2.0,true)
 			CardData.CardKind.REACTION:
-				draw_polyline(PackedVector2Array([Vector2(77,44),Vector2(62,64),Vector2(73,64),Vector2(64,83),Vector2(84,59),Vector2(73,59)]),accent,3.0,true)
+				draw_polyline(PackedVector2Array([Vector2(77,44),Vector2(62,64),Vector2(73,64),Vector2(64,83),Vector2(84,59),Vector2(73,59)]),kind_color,3.0,true)
 	if combat_data:
-		draw_string(ThemeDB.fallback_font,Vector2(12,111),combat_data.title.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,118,11,Color("#e5f4f7"))
-		var lines := _wrap(combat_data.description,20)
+		draw_string(ThemeDB.fallback_font,Vector2(12,111),combat_data.title,HORIZONTAL_ALIGNMENT_LEFT,118,11,Color("#f4f3fa"))
+		var lines := _wrap(combat_data.description,11)
 		for i in mini(3,lines.size()):
-			draw_string(ThemeDB.fallback_font,Vector2(12,130+i*13),lines[i],HORIZONTAL_ALIGNMENT_LEFT,118,9,Color("#a9c2ce"))
-		draw_circle(Vector2(size.x-21,21),14,Color("#172f40"))
-		draw_arc(Vector2(size.x-21,21),14,0,TAU,32,accent,1.2)
+			draw_string(ThemeDB.fallback_font,Vector2(12,130+i*13),lines[i],HORIZONTAL_ALIGNMENT_LEFT,118,9,Color("#c3ced9"))
+		draw_circle(Vector2(size.x-21,21),14,Color(kind_color.r*0.2,kind_color.g*0.2,kind_color.b*0.2))
+		draw_arc(Vector2(size.x-21,21),14,0,TAU,32,kind_color,1.6)
 		draw_string(ThemeDB.fallback_font,Vector2(size.x-29,26),str(combat_data.cost),HORIZONTAL_ALIGNMENT_CENTER,16,14,Color.WHITE)
-		draw_string(ThemeDB.fallback_font,Vector2(12,size.y-10),combat_data.owner_id.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,95,8,accent)
+		var hero_names := {"kleya": "克蕾雅", "nova": "諾瓦", "yora": "尤拉"}
+		draw_string(ThemeDB.fallback_font,Vector2(12,size.y-10),hero_names.get(combat_data.owner_id, ""),HORIZONTAL_ALIGNMENT_LEFT,95,9,accent)
 
 func _wrap(text_value: String, width: int) -> PackedStringArray:
 	var out := PackedStringArray()
-	var words := text_value.split(" ")
 	var line := ""
-	for word in words:
-		if line.length()+word.length()+1 > width and not line.is_empty():
+	for i in text_value.length():
+		var character := text_value.substr(i, 1)
+		if character == "，" or character == "。":
+			line += character
+			continue
+		if line.length() >= width:
 			out.append(line)
-			line = word
-		else:
-			line = (line+" "+word).strip_edges()
+			line = ""
+		line += character
 	if not line.is_empty(): out.append(line)
 	return out
+
+func _kind_color() -> Color:
+	if combat_data == null: return accent
+	match combat_data.kind:
+		CardData.CardKind.ATTACK: return Color("#ff765f")
+		CardData.CardKind.DEFENSE: return Color("#53d8c2")
+		CardData.CardKind.SUPPORT: return Color("#c29aff")
+		CardData.CardKind.REACTION: return Color("#ff5cba")
+	return accent
+
+func _kind_name() -> String:
+	if combat_data == null: return "戰術牌"
+	match combat_data.kind:
+		CardData.CardKind.ATTACK: return "攻擊"
+		CardData.CardKind.DEFENSE: return "防禦"
+		CardData.CardKind.SUPPORT: return "支援"
+		CardData.CardKind.REACTION: return "反應"
+	return "戰術牌"
 
 func _draw_round(r: Rect2, radius: float, color: Color) -> void:
 	var st := StyleBoxFlat.new()

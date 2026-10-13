@@ -1,53 +1,53 @@
-# Combat Rules v1.0 — Arbitrium Nexus
+# 仲裁核心戰鬥規則 v1.0
 
-## Scope
+## 範圍
 
-Single-player 2D horizontal turn-based card JRPG prototype for Godot 4.x. The combat simulation is deterministic under a fixed RNG seed and has no UI dependencies.
+Godot 4.x 單人 2D 橫向回合制卡牌 JRPG 原型。戰鬥模擬與 UI 分離；固定亂數種子可重現牌序與戰鬥狀態。
 
-## Roster and decks
+## 角色與牌組
 
-- Player roster: Kleya, Nova, Yora.
-- Each character owns an independent 8-card deck, draw pile, discard pile, hand, Mana pool, and reaction-ready state.
-- Opening hand: 4 cards per character.
-- At the start of each player phase, draw until 4 cards; hand hard cap is 6.
-- Cards are data-driven `CardData` Resources. The first slice uses eight cards per character, with shared rules and character identity.
+- 可用角色：克蕾雅、諾瓦、尤拉。
+- 每位角色各自持有 8 張牌的牌組、抽牌堆、棄牌堆、手牌、能量池及反應狀態。
+- 開局每位角色抽 4 張；每個我方階段補牌至 4 張，手牌上限 6 張。
+- 卡牌定義由獨立 `CardData` Resource 驅動；首版共享卡牌目錄、各角色擁有獨立牌組與手牌。
+- 目前提供 12 種卡牌 Resource；牌組編輯器可為每位角色選擇 8 張不重複卡牌，設定存於 `user://deck_profile.json`，並可匯出 JSON。
 
-## Turn and resource rules
+## 回合與資源
 
-- Combat opens in `PLAYER` phase, round 1.
-- Each player phase allows at most two ordinary card plays across the party.
-- Mana refills to the character's maximum at the start of every player phase.
-- Unspent Mana remains available during the enemy phase for immediate Reaction cards.
-- `END TURN` moves to enemy phase. The boss executes its visible intent, then returns to player phase.
-- A card can be played only by its owner, only if its cost is affordable, and only while that owner is alive.
+- 戰鬥由第 1 回合「我方階段」開始。
+- 每個我方階段，全隊最多普通出牌 2 次。
+- 每位角色於我方階段開始時回滿能量。
+- 未使用的能量保留至敵方階段，用於即時施放反應牌。
+- 結束回合後進入敵方階段；首領執行預告意圖後進入下一個我方階段。
+- 只有卡牌所屬角色可以出牌；角色能量須足以支付卡牌費用。
 
-## Boss: Arbitrium Nexus
+## 首領：仲裁核心
 
-- HP: 300.
-- Stability: 50. Damage to Stability exposes a Weak Node at 0; Stability recovers by 4 after the boss acts, capped at 50.
-- Weak Node: exposed while Stability is 0; the next ordinary damage action deals +50% damage and restores Stability to 20.
-- Enemy Intent: telegraphed before the enemy phase; the first slice cycles `NEXUS_LANCE` (24 damage to the lowest HP hero) and `STABILITY_SURGE` (stability +10, then 12 damage to all heroes).
-- Analysis: each ordinary card play increments Analysis. At 3, the boss intent is revealed with a higher-confidence label and Analysis resets to 0.
-- Interrupt: Reaction cards can spend retained Mana during enemy phase to cancel the current intent once per enemy phase.
+- 生命：300。
+- 穩定度：50。降至 0 時暴露弱點節點；首領行動後穩定度恢復 4，最高為 50。
+- 弱點節點：穩定度為 0 時，下一次普通攻擊傷害提高 50%，之後穩定度回復至 20。
+- 敵方意圖：敵方階段前預告。原型依序輪替「核心長槍」（對生命最低的角色造成 24 傷害）與「穩定度脈衝」（首領穩定度 +10，全隊各受 12 傷害）。
+- 分析：每次普通出牌增加分析值；達到 3 時，完成分析並重設為 0。
+- 中斷：敵方階段可支付保留能量施放反應牌，每階段最多中斷一次，取消當回合意圖。
 
-## Determinism and validation
+## 固定亂數與驗證
 
-- `BattleState` owns a `RandomNumberGenerator` seeded with `v1_seed=104729`.
-- Domain tests cover opening draw, refill-to-four, hand cap, two-play limit, Mana retention, damage, Stability/Weak Node, and deterministic intent order.
-- UI and animation are consumers of domain signals; they do not own combat rules. The battle screen uses original generated character artwork, custom-drawn data-driven card faces, and native Godot Control drag/hover/tween interactions.
+- `BattleState` 使用 `v1_seed=104729` 作為固定種子。
+- 領域測試涵蓋起始抽牌、補牌、手牌上限、普通出牌上限、能量保留、傷害、卡牌穩定度效果、弱點節點與固定意圖順序；M5 測試另外涵蓋牌組編輯、存讀檔及 JSON 匯出。
+- UI 與動畫只消費戰鬥狀態訊號，不持有規則判定。角色動畫、卡牌外觀及互動均可獨立替換。
 
-## M0–M5 delivery plan
+## M0–M5 里程碑
 
-- M0: project scaffold, toolchain detection, source of truth, CI-like headless test entrypoint.
-- M1: pure combat engine and deterministic tests.
-- M2: playable 16:9 battle UI with hoverable, draggable hand cards, phase flow, intent, and logs.
-- M3: Boss Analysis, Interrupt, Reaction, and Weak Node feedback.
-- M4: authored visual pass, motion and impact feedback.
-- M5: deck builder, save/load, export profiles.
+- M0：專案骨架、工具鏈偵測、規格文件與無頭測試入口。
+- M1：純戰鬥引擎與固定亂數測試。
+- M2：可操作 16:9 戰鬥介面、拖曳手牌、階段流程與敵方意圖。
+- M3：首領分析、中斷、反應與弱點節點回饋。
+- M4：原創美術、角色逐格動作、卡牌分類樣式與命中特效。
+- M5：牌組編輯器、存讀檔與匯出設定（`tests/test_deck_builder.gd`）。
 
-## Resolved prototype ambiguities
+## 原型歧義的收斂
 
-- “每玩家階段最多兩次普通出牌” is interpreted as a party-wide limit of two ordinary plays per player phase, while Reaction plays are outside that limit.
-- Each character begins with 3 Mana and cards cost 0–3. Mana refill occurs before the draw refill.
-- The prototype uses a compact shared card vocabulary so the engine is testable before M5 content expansion.
-
+- 「每玩家階段最多兩次普通出牌」採全隊共用兩次上限；反應牌不佔普通出牌次數。
+- 每位角色起始能量 3；首版卡牌費用為 0–3。
+- 每回合先回滿能量，再補牌至 4 張。
+- 首版共用 12 種卡牌定義；每位角色各自從目錄選出 8 張不重複牌卡。

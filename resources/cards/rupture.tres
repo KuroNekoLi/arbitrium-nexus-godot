@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/card_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "rupture"
+title = "震裂"
+description = "造成 12 點傷害，穩定度 −12。"
+cost = 2
+power = 12
+kind = 0
+stability_damage = 12
