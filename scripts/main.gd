@@ -386,10 +386,11 @@ func _animate_card_play(view: Control, hand_index: int, hero_id: String) -> void
 		_animate_card_return(view)
 
 func _create_combatants() -> void:
-	# A shallow 2.5D lane: the party advances from the lower-left foreground
-	# toward the upper-right background instead of standing on one flat line.
-	var positions := {"kleya": Vector2(355, 375), "nova": Vector2(510, 315), "yora": Vector2(665, 255)}
-	var depth_scales := {"kleya": 0.29, "nova": 0.27, "yora": 0.25}
+	# Compact 2.5D party wedge: front-to-back depth is readable from the
+	# lower-left foreground to the upper-right background without scattering
+	# the heroes across the arena or letting the front sprite overlap the hand.
+	var positions := {"kleya": Vector2(520, 350), "nova": Vector2(590, 310), "yora": Vector2(660, 270)}
+	var depth_scales := {"kleya": 0.255, "nova": 0.24, "yora": 0.225}
 	for hero in HEROES:
 		var actor := AnimatedSprite2D.new()
 		actor.name = hero.capitalize() + "Sprite"
