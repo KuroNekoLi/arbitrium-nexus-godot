@@ -112,8 +112,8 @@ func _build_ui() -> void:
 	boss.offset_left = -318
 	boss.offset_top = 18
 	boss.offset_right = -20
-	boss.offset_bottom = 328
-	boss.custom_minimum_size = Vector2(298, 292)
+	boss.offset_bottom = 398
+	boss.custom_minimum_size = Vector2(298, 362)
 	battle_area.add_child(boss)
 	var bottom := HBoxContainer.new()
 	bottom.custom_minimum_size.y = 232
@@ -190,7 +190,7 @@ func _boss_panel() -> PanelContainer:
 	p.add_theme_stylebox_override("panel", _style("#1c1626", Color("#e77da8")))
 	var inner := Control.new()
 	inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	inner.custom_minimum_size = Vector2(270, 270)
+	inner.custom_minimum_size = Vector2(270, 340)
 	p.add_child(inner)
 	var col := VBoxContainer.new()
 	col.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -207,9 +207,9 @@ func _boss_panel() -> PanelContainer:
 	boss_atlas.atlas = PARTY_ART
 	boss_atlas.region = Rect2(1000, 0, 696, 956)
 	boss_portrait.texture = boss_atlas
-	boss_portrait.custom_minimum_size = Vector2(270, 100)
+	boss_portrait.custom_minimum_size = Vector2(270, 160)
 	boss_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	boss_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	boss_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	boss_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(boss_portrait)
 	var boss_stats := _label("生命 300 / 300\n穩定度 50 / 50", 13, Color("#e5cfef"))
@@ -220,7 +220,6 @@ func _boss_panel() -> PanelContainer:
 	var intent := _label("敵方意圖  /  核心長槍", 12, Color("#ff718e"))
 	intent.name = "IntentLabel"
 	col.add_child(intent)
-	col.add_child(_label("將攻擊牌拖至此處出擊", 10, Color("#9c8ba8")))
 	var frame := NinePatchRect.new()
 	frame.name = "FantasyBorder"
 	frame.texture = FANTASY_FRAME
