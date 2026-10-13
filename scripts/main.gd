@@ -29,6 +29,7 @@ var animation_busy := false
 var deck_builder: Control
 
 const HEROES := ["kleya", "nova", "yora"]
+const REACTION_WINDOW_SECONDS: float = 1.5
 const ACCENTS := {"kleya": Color("#72cfff"), "nova": Color("#8be8ff"), "yora": Color("#ff647d")}
 
 func _ready() -> void:
@@ -146,13 +147,16 @@ func _build_ui() -> void:
 	action_col.add_theme_constant_override("separation", 10)
 	bottom.add_child(action_col)
 	var turn_btn := Button.new()
+	turn_btn.name = "EndTurnButton"
 	turn_btn.text = "結束回合  ↗"
 	turn_btn.custom_minimum_size = Vector2(140, 48)
 	turn_btn.pressed.connect(_on_end_turn)
 	action_col.add_child(turn_btn)
 	var resolve_btn := Button.new()
-	resolve_btn.text = "承受敵方行動"
+	resolve_btn.name = "PassReactionButton"
+	resolve_btn.text = "略過反應"
 	resolve_btn.custom_minimum_size = Vector2(140, 48)
+	resolve_btn.visible = false
 	resolve_btn.pressed.connect(_on_resolve)
 	action_col.add_child(resolve_btn)
 	var hint := _label("空白鍵  /  結束回合\n保留能量與反應牌\n於敵方階段即時反制", 11, Color("#7794a2"))
@@ -204,8 +208,12 @@ func _refresh() -> void:
 	if not is_inside_tree() or hand_root == null: return
 	var round_label = find_child("PhaseLabel", true, false)
 	if round_label:
-		var phase_name := "我方階段" if battle.phase == "PLAYER" else "敵方階段"
+		var phase_name := "我方階段" if battle.phase == "PLAYER" else ("反應窗口" if _has_reaction_option() else "敵方行動")
 		round_label.text = "%s     •     第 %02d 回合     •     普通出牌 %d/2" % [phase_name, battle.round, battle.ordinary_plays]
+	var end_turn_button := find_child("EndTurnButton", true, false) as Button
+	if end_turn_button: end_turn_button.visible = battle.phase == "PLAYER"
+	var pass_reaction_button := find_child("PassReactionButton", true, false) as Button
+	if pass_reaction_button: pass_reaction_button.visible = battle.phase == "ENEMY" and _has_reaction_option()
 	var boss_stats = find_child("BossStats", true, false)
 	if boss_stats: boss_stats.text = "生命  %d / 300\n穩定度  %d / 50" % [battle.boss_hp, battle.boss_stability]
 	var intent = find_child("IntentLabel", true, false)
@@ -339,6 +347,8 @@ func _animate_card_play(view: Control, hand_index: int, hero_id: String) -> void
 		else:
 			_show_status_text(hero.position + Vector2(0, -85), "分析值 +%d" % data.power, _card_color(data.kind))
 		if is_instance_valid(view): view.queue_free()
+		if is_reaction and battle.phase == "ENEMY":
+			_resolve_boss_turn()
 	else:
 		view.disabled = false
 		_animate_card_return(view)
@@ -478,7 +488,58 @@ func _animate_boss_hit(color: Color, damage: int) -> void:
 	rise.tween_callback(number.queue_free)
 
 func _on_end_turn() -> void:
-	if battle.phase == "PLAYER" and not animation_busy: battle.end_player_phase()
+	if battle.phase != "PLAYER" or animation_busy:
+		return
+	battle.end_player_phase()
+	if _has_reaction_option():
+		_resolve_after_reaction_window()
+	else:
+		_resolve_boss_turn()
+
+func _resolve_after_reaction_window() -> void:
+	await get_tree().create_timer(REACTION_WINDOW_SECONDS).timeout
+	while animation_busy:
+		await get_tree().process_frame
+	if battle.phase == "ENEMY":
+		_resolve_boss_turn()
+
+func _has_reaction_option() -> bool:
+	if battle == null or battle.phase != "ENEMY" or not battle.interrupt_available:
+		return false
+	for hero_id: String in HEROES:
+		if int(battle.heroes[hero_id]["hp"]) <= 0:
+			continue
+		for card_variant: Variant in battle.hands[hero_id]:
+			var card := card_variant as CardDataClass
+			if card != null and card.reaction and int(battle.heroes[hero_id]["mana"]) >= card.cost:
+				return true
+	return false
+
+func _resolve_boss_turn() -> void:
+	if battle.phase != "ENEMY":
+		return
+	var hp_before: Dictionary = {}
+	for hero_id: String in HEROES:
+		hp_before[hero_id] = int(battle.heroes[hero_id]["hp"])
+	battle.resolve_enemy_phase()
+	_animate_enemy_action(hp_before)
+
+func _animate_enemy_action(hp_before: Dictionary) -> void:
+	if boss_actor == null:
+		return
+	var start_position := boss_actor.position
+	var lunge := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	lunge.tween_property(boss_actor, "position", start_position + Vector2(-30, 8), 0.14)
+	lunge.tween_property(boss_actor, "position", start_position, 0.2)
+	for hero_id: String in HEROES:
+		var damage: int = int(hp_before.get(hero_id, 0)) - int(battle.heroes[hero_id]["hp"])
+		if damage <= 0:
+			continue
+		var actor: AnimatedSprite2D = hero_actors[hero_id]
+		actor.modulate = Color("#ff7888")
+		var flash := create_tween()
+		flash.tween_property(actor, "modulate", Color.WHITE, 0.28)
+		_show_status_text(actor.position + Vector2(-18, -82), "−%d HP" % damage, Color("#ff8795"))
 
 func _select_hero(hero_id: String) -> void:
 	if animation_busy: return
@@ -486,7 +547,7 @@ func _select_hero(hero_id: String) -> void:
 	_refresh()
 
 func _on_resolve() -> void:
-	if battle.phase == "ENEMY": battle.resolve_enemy_phase()
+	if battle.phase == "ENEMY": _resolve_boss_turn()
 
 func _open_deck_builder() -> void:
 	if deck_builder != null and is_instance_valid(deck_builder):
