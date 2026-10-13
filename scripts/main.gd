@@ -4,13 +4,16 @@ const BattleStateClass = preload("res://scripts/domain/battle_state.gd")
 const CardDataClass = preload("res://scripts/domain/card_data.gd")
 const CardViewScript = preload("res://scripts/ui/card_view.gd")
 const ArenaArtScript = preload("res://scripts/ui/arena_art.gd")
+const HeroRosterItemScene: PackedScene = preload("res://scenes/ui/hero_roster_item.tscn")
 const CardResourceType = preload("res://addons/simple_cards/card/card_resource/card_resource.gd")
+const BATTLEFIELD_BG: Texture2D = preload("res://assets/battlefield_bg.png")
 const HERO_ATLASES := {
-	"kleya": preload("res://assets/kleya_atlas.png"),
-	"nova": preload("res://assets/nova_atlas.png"),
+	"kleya": preload("res://assets/nova_atlas.png"),
+	"nova": preload("res://assets/kleya_atlas.png"),
 	"yora": preload("res://assets/yora_atlas.png")
 }
 const PARTY_ART: Texture2D = preload("res://assets/nexus_party_splash.png")
+const PARTY_PORTRAITS: Texture2D = preload("res://assets/portraits/party_portraits.png")
 
 var battle: BattleState
 var selected_hero := "kleya"
@@ -26,7 +29,7 @@ var animation_busy := false
 var deck_builder: Control
 
 const HEROES := ["kleya", "nova", "yora"]
-const ACCENTS := {"kleya": Color("#72e8ff"), "nova": Color("#ff9a72"), "yora": Color("#c59aff")}
+const ACCENTS := {"kleya": Color("#72cfff"), "nova": Color("#8be8ff"), "yora": Color("#ff647d")}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -37,11 +40,19 @@ func _ready() -> void:
 	call_deferred("_refresh")
 
 func _build_ui() -> void:
-	var bg := Control.new()
+	var bg := TextureRect.new()
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.set_script(load("res://scripts/ui/backdrop.gd"))
+	bg.texture = BATTLEFIELD_BG
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
+	var atmosphere := Control.new()
+	atmosphere.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	atmosphere.set_script(load("res://scripts/ui/backdrop.gd"))
+	atmosphere.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	atmosphere.modulate = Color(0.72, 0.84, 0.94, 0.58)
+	add_child(atmosphere)
 	var root := VBoxContainer.new()
 	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.add_theme_constant_override("separation", 0)
@@ -84,15 +95,14 @@ func _build_ui() -> void:
 	party.offset_bottom = -24
 	battle_area.add_child(party)
 	for hero in HEROES:
-		var row := _hero_panel(hero)
-		party.add_child(row)
+		_hero_panel(hero, party)
 	var boss := _boss_panel()
 	boss.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	boss.offset_left = -318
 	boss.offset_top = 18
 	boss.offset_right = -20
-	boss.offset_bottom = 230
-	boss.custom_minimum_size = Vector2(298, 205)
+	boss.offset_bottom = 310
+	boss.custom_minimum_size = Vector2(298, 292)
 	battle_area.add_child(boss)
 	var bottom := HBoxContainer.new()
 	bottom.custom_minimum_size.y = 232
@@ -148,25 +158,18 @@ func _build_ui() -> void:
 	var hint := _label("空白鍵  /  結束回合\n保留能量與反應牌\n於敵方階段即時反制", 11, Color("#7794a2"))
 	action_col.add_child(hint)
 
-func _hero_panel(hero: String) -> PanelContainer:
-	var p := PanelContainer.new()
-	p.custom_minimum_size = Vector2(282, 98)
-	p.add_theme_stylebox_override("panel", _style("#102337", ACCENTS[hero]))
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 5)
-	p.add_child(col)
+func _hero_panel(hero: String, parent: VBoxContainer) -> void:
+	var item := HeroRosterItemScene.instantiate() as HeroRosterItem
+	item.name = "Hero_" + hero
+	parent.add_child(item)
 	var hero_names := {"kleya": "克蕾雅", "nova": "諾瓦", "yora": "尤拉"}
-	var name := _label(hero_names[hero] + "   /   戰術成員", 12, ACCENTS[hero])
-	col.add_child(name)
-	var bars := _label("生命 100 / 100        能量 3 / 3", 11, Color("#d2e9ef"))
-	bars.name = "Hero_" + hero
-	col.add_child(bars)
-	var select := Button.new()
-	select.text = "切換牌組   →"
-	select.custom_minimum_size.y = 28
-	select.pressed.connect(_select_hero.bind(hero))
-	col.add_child(select)
-	return p
+	var portrait_columns := {"kleya": 0, "nova": 1, "yora": 2}
+	var portrait := AtlasTexture.new()
+	portrait.atlas = PARTY_PORTRAITS
+	portrait.region = Rect2(portrait_columns[hero] * 682.0, 0, 682.0, 683.0)
+	item.configure(hero, hero_names[hero], portrait, ACCENTS[hero])
+	item.hero_selected.connect(_select_hero)
+	item.set_selected(hero == selected_hero)
 
 func _boss_panel() -> PanelContainer:
 	var p := PanelContainer.new()
@@ -176,6 +179,16 @@ func _boss_panel() -> PanelContainer:
 	p.add_child(col)
 	col.add_child(_label("威脅等級  /  Ω 級", 10, Color("#e88cae")))
 	col.add_child(_label("仲裁核心", 24, Color("#f4e5ff")))
+	var boss_portrait := TextureRect.new()
+	var boss_atlas := AtlasTexture.new()
+	boss_atlas.atlas = PARTY_ART
+	boss_atlas.region = Rect2(1000, 0, 696, 956)
+	boss_portrait.texture = boss_atlas
+	boss_portrait.custom_minimum_size = Vector2(270, 100)
+	boss_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	boss_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	boss_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_child(boss_portrait)
 	var boss_stats := _label("生命 300 / 300\n穩定度 50 / 50", 13, Color("#e5cfef"))
 	boss_stats.name = "BossStats"
 	col.add_child(boss_stats)
@@ -200,17 +213,16 @@ func _refresh() -> void:
 	var al = find_child("AnalysisLabel", true, false)
 	if al: al.text = "分析值  /  %d" % battle.analysis
 	for hero in HEROES:
-		var h = find_child("Hero_" + hero, true, false)
-		if h:
+		var roster_item := find_child("Hero_" + hero, true, false) as HeroRosterItem
+		if roster_item:
 			var s: Dictionary = battle.heroes[hero]
-			h.text = "生命 %d/%d   能量 %d/%d   手牌 %d" % [s.hp, s.max_hp, s.mana, s.max_mana, battle.hands[hero].size()]
-			var container = h.get_parent().get_parent()
-			container.modulate = Color.WHITE if hero == selected_hero else Color(0.66,0.75,0.82)
+			roster_item.update_status(s.hp, s.max_hp, s.mana, s.max_mana, battle.hands[hero].size())
+			roster_item.set_selected(hero == selected_hero)
 	for c in card_views: c.queue_free()
 	card_views.clear()
 	var cards: Array = battle.hands[selected_hero]
 	var card_w := 142.0
-	var spacing := minf(116.0, (hand_root.size.x - card_w - 8) / maxf(1, cards.size() - 1))
+	var spacing := minf(154.0, (hand_root.size.x - card_w - 8) / maxf(1, cards.size() - 1))
 	spacing = maxf(0.0, spacing)
 	var total := card_w + spacing * maxf(0, cards.size() - 1)
 	for i in cards.size():
@@ -332,14 +344,17 @@ func _animate_card_play(view: Control, hand_index: int, hero_id: String) -> void
 		_animate_card_return(view)
 
 func _create_combatants() -> void:
-	var positions := {"kleya": Vector2(410, 325), "nova": Vector2(540, 335), "yora": Vector2(675, 325)}
+	# A shallow 2.5D lane: the party advances from the lower-left foreground
+	# toward the upper-right background instead of standing on one flat line.
+	var positions := {"kleya": Vector2(355, 375), "nova": Vector2(510, 315), "yora": Vector2(665, 255)}
+	var depth_scales := {"kleya": 0.29, "nova": 0.27, "yora": 0.25}
 	for hero in HEROES:
 		var actor := AnimatedSprite2D.new()
 		actor.name = hero.capitalize() + "Sprite"
 		actor.sprite_frames = _make_hero_frames(HERO_ATLASES[hero])
 		actor.position = positions[hero]
-		actor.scale = Vector2(0.27, 0.27)
-		actor.z_index = 4
+		actor.scale = Vector2.ONE * depth_scales[hero]
+		actor.z_index = 6 - HEROES.find(hero)
 		actor_layer.add_child(actor)
 		hero_actors[hero] = actor
 		actor.play("idle")

@@ -10,6 +10,8 @@ func _capture() -> void:
 	root.add_child(game)
 	await process_frame
 	await process_frame
+	var viewport_image: Image = root.get_viewport().get_texture().get_image()
+	viewport_image.save_png(ProjectSettings.globalize_path("res://outputs/combat_ui_mvp.png"))
 	var attack_card: Control
 	for view: Control in game.card_views:
 		if view.combat_data.kind == CardData.CardKind.ATTACK:
@@ -22,7 +24,7 @@ func _capture() -> void:
 	game._on_card_drag_started(attack_card, attack_card)
 	game._handle_card_release(attack_card, Vector2(880, 300))
 	await create_timer(0.17).timeout
-	var viewport_image: Image = root.get_viewport().get_texture().get_image()
+	viewport_image = root.get_viewport().get_texture().get_image()
 	viewport_image.save_png(ProjectSettings.globalize_path("res://outputs/card_attack_midflight.png"))
 	await create_timer(0.4).timeout
 	viewport_image = root.get_viewport().get_texture().get_image()

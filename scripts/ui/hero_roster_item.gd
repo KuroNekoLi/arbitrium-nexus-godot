@@ -1,0 +1,60 @@
+class_name HeroRosterItem
+extends Button
+
+signal hero_selected(hero_id: String)
+
+@onready var portrait: TextureRect = %Portrait
+@onready var name_label: Label = %HeroName
+@onready var hp_label: Label = %HeroHP
+@onready var mana_label: Label = %HeroMana
+
+var hero_id: String = ""
+var accent: Color = Color.WHITE
+
+func _ready() -> void:
+	pressed.connect(_on_pressed)
+
+func configure(id: String, display_name: String, portrait_texture: Texture2D, accent_color: Color) -> void:
+	hero_id = id
+	accent = accent_color
+	name_label.text = display_name
+	name_label.add_theme_color_override("font_color", accent)
+	portrait.texture = portrait_texture
+	_apply_style()
+
+func update_status(hp: int, max_hp: int, mana: int, max_mana: int, hand_count: int) -> void:
+	hp_label.text = "HP  %d / %d" % [hp, max_hp]
+	mana_label.text = "MP  %d / %d     手牌 %d" % [mana, max_mana, hand_count]
+
+func set_selected(selected: bool) -> void:
+	button_pressed = selected
+	_apply_style()
+
+func _on_pressed() -> void:
+	hero_selected.emit(hero_id)
+
+func _apply_style() -> void:
+	var portrait_frame := portrait.get_parent() as PanelContainer
+	var portrait_style := StyleBoxFlat.new()
+	portrait_style.bg_color = Color("#07111d")
+	portrait_style.border_color = accent
+	portrait_style.set_border_width_all(1)
+	portrait_style.set_corner_radius_all(5)
+	portrait_style.content_margin_left = 3
+	portrait_style.content_margin_right = 3
+	portrait_style.content_margin_top = 3
+	portrait_style.content_margin_bottom = 3
+	portrait_frame.add_theme_stylebox_override("panel", portrait_style)
+	var panel := StyleBoxFlat.new()
+	panel.bg_color = Color("#102338") if button_pressed else Color("#081725")
+	panel.border_color = accent if button_pressed else Color("#274154")
+	panel.set_border_width_all(2 if button_pressed else 1)
+	panel.set_corner_radius_all(8)
+	panel.content_margin_left = 7
+	panel.content_margin_right = 7
+	panel.content_margin_top = 6
+	panel.content_margin_bottom = 6
+	add_theme_stylebox_override("normal", panel)
+	add_theme_stylebox_override("hover", panel)
+	add_theme_stylebox_override("pressed", panel)
+	add_theme_stylebox_override("focus", StyleBoxEmpty.new())

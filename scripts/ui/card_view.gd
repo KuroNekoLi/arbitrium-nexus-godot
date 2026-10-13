@@ -1,5 +1,7 @@
 extends "res://addons/simple_cards/card/card.gd"
 
+const CARD_ART_ATLAS: Texture2D = preload("res://assets/card_art_atlas.png")
+
 var combat_data: CardData
 var accent := Color("#72e8ff")
 
@@ -41,22 +43,11 @@ func _draw() -> void:
 	draw_rect(Rect2(7,7,size.x-14,4),kind_color)
 	var kind_name := _kind_name()
 	draw_string(ThemeDB.fallback_font, Vector2(12, 26), kind_name, HORIZONTAL_ALIGNMENT_LEFT, 76, 9, kind_color)
-	# engraved suit emblem
-	draw_circle(Vector2(size.x*0.5,65),31,Color(kind_color.r,kind_color.g,kind_color.b,0.09))
-	draw_arc(Vector2(size.x*0.5,65),25,0,TAU,48,Color(kind_color.r,kind_color.g,kind_color.b,0.6),1.4)
 	if combat_data:
-		match combat_data.kind:
-			CardData.CardKind.ATTACK:
-				draw_line(Vector2(54,80),Vector2(74,49),kind_color,3.0,true)
-				draw_line(Vector2(65,82),Vector2(82,56),Color(kind_color.r,kind_color.g,kind_color.b,0.65),2.0,true)
-			CardData.CardKind.DEFENSE:
-				draw_colored_polygon(PackedVector2Array([Vector2(71,44),Vector2(90,51),Vector2(87,69),Vector2(71,83),Vector2(55,69),Vector2(52,51)]),Color(kind_color.r,kind_color.g,kind_color.b,0.13))
-				draw_polyline(PackedVector2Array([Vector2(71,44),Vector2(90,51),Vector2(87,69),Vector2(71,83),Vector2(55,69),Vector2(52,51),Vector2(71,44)]),kind_color,2.0,true)
-			CardData.CardKind.SUPPORT:
-				draw_colored_polygon(PackedVector2Array([Vector2(71,45),Vector2(89,65),Vector2(71,84),Vector2(53,65)]),Color(kind_color.r,kind_color.g,kind_color.b,0.17))
-				draw_polyline(PackedVector2Array([Vector2(71,45),Vector2(89,65),Vector2(71,84),Vector2(53,65),Vector2(71,45)]),kind_color,2.0,true)
-			CardData.CardKind.REACTION:
-				draw_polyline(PackedVector2Array([Vector2(77,44),Vector2(62,64),Vector2(73,64),Vector2(64,83),Vector2(84,59),Vector2(73,59)]),kind_color,3.0,true)
+		var art_index: int = _card_art_index(combat_data.id)
+		var source := Rect2(Vector2((art_index % 3) * 512, int(art_index / 3) * 512), Vector2(512, 512))
+		draw_texture_rect_region(CARD_ART_ATLAS, Rect2(8, 34, size.x - 16, 70), source)
+		draw_rect(Rect2(8, 34, size.x - 16, 70), Color(kind_color.r, kind_color.g, kind_color.b, 0.25), false, 1.0)
 	if combat_data:
 		draw_string(ThemeDB.fallback_font,Vector2(12,111),combat_data.title,HORIZONTAL_ALIGNMENT_LEFT,118,11,Color("#f4f3fa"))
 		var lines := _wrap(combat_data.description,11)
@@ -100,6 +91,19 @@ func _kind_name() -> String:
 		CardData.CardKind.SUPPORT: return "支援"
 		CardData.CardKind.REACTION: return "反應"
 	return "戰術牌"
+
+func _card_art_index(card_id: String) -> int:
+	if card_id.ends_with("nova_burst") or card_id.ends_with("surge"):
+		return 1
+	if card_id.ends_with("guard"):
+		return 2
+	if card_id.ends_with("focus") or card_id.ends_with("scan") or card_id.ends_with("tactical_read"):
+		return 3
+	if card_id.ends_with("field_medic"):
+		return 4
+	if card_id.ends_with("interrupt"):
+		return 5
+	return 0
 
 func _draw_round(r: Rect2, radius: float, color: Color) -> void:
 	var st := StyleBoxFlat.new()
