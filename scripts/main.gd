@@ -372,7 +372,9 @@ func _create_combatants() -> void:
 	boss_actor.name = "NexusSprite"
 	boss_actor.texture = PARTY_ART
 	boss_actor.region_enabled = true
-	boss_actor.region_rect = Rect2(1000, 0, 696, 956)
+	# Keep the full boss silhouette inside the 1672×941 source atlas. The
+	# previous region started too far right and extended beyond the image edges.
+	boss_actor.region_rect = Rect2(960, 0, 712, 941)
 	boss_actor.position = Vector2(855, 270)
 	boss_actor.scale = Vector2(0.23, 0.23)
 	boss_actor.z_index = 2
