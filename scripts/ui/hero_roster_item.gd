@@ -1,6 +1,8 @@
 class_name HeroRosterItem
 extends Button
 
+const FANTASY_FRAME: Texture2D = preload("res://addons/kenney_fantasy_ui_borders/panel-border-000.png")
+
 signal hero_selected(hero_id: String)
 
 @onready var portrait: TextureRect = %Portrait
@@ -13,6 +15,17 @@ var accent: Color = Color.WHITE
 
 func _ready() -> void:
 	pressed.connect(_on_pressed)
+	var frame := NinePatchRect.new()
+	frame.name = "FantasyBorder"
+	frame.texture = FANTASY_FRAME
+	frame.patch_margin_left = 12
+	frame.patch_margin_top = 12
+	frame.patch_margin_right = 12
+	frame.patch_margin_bottom = 12
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.z_index = 1
+	add_child(frame)
 
 func configure(id: String, display_name: String, portrait_texture: Texture2D, accent_color: Color) -> void:
 	hero_id = id
@@ -34,6 +47,9 @@ func _on_pressed() -> void:
 	hero_selected.emit(hero_id)
 
 func _apply_style() -> void:
+	var fantasy_frame := get_node_or_null("FantasyBorder") as NinePatchRect
+	if fantasy_frame:
+		fantasy_frame.modulate = accent.lightened(0.35) if button_pressed else Color("#7892a7")
 	var portrait_frame := portrait.get_parent() as PanelContainer
 	var portrait_style := StyleBoxFlat.new()
 	portrait_style.bg_color = Color("#07111d")

@@ -4,6 +4,7 @@ const BattleStateClass = preload("res://scripts/domain/battle_state.gd")
 const CardDataClass = preload("res://scripts/domain/card_data.gd")
 const CardViewScript = preload("res://scripts/ui/card_view.gd")
 const ArenaArtScript = preload("res://scripts/ui/arena_art.gd")
+const CombatFeedbackScript = preload("res://scripts/ui/combat_feedback.gd")
 const HeroRosterItemScene: PackedScene = preload("res://scenes/ui/hero_roster_item.tscn")
 const CardResourceType = preload("res://addons/simple_cards/card/card_resource/card_resource.gd")
 const BATTLEFIELD_BG: Texture2D = preload("res://assets/battlefield_bg.png")
@@ -14,6 +15,7 @@ const HERO_ATLASES := {
 }
 const PARTY_ART: Texture2D = preload("res://assets/nexus_party_splash.png")
 const PARTY_PORTRAITS: Texture2D = preload("res://assets/portraits/party_portraits.png")
+const FANTASY_FRAME: Texture2D = preload("res://addons/kenney_fantasy_ui_borders/panel-border-000.png")
 
 var battle: BattleState
 var selected_hero := "kleya"
@@ -25,6 +27,7 @@ var card_views: Array[Control] = []
 var actor_layer: Node2D
 var hero_actors: Dictionary = {}
 var boss_actor: Sprite2D
+var combat_feedback: Node2D
 var animation_busy := false
 var deck_builder: Control
 
@@ -73,6 +76,8 @@ func _build_ui() -> void:
 	var deck_button := Button.new()
 	deck_button.text = "牌組編輯"
 	deck_button.pressed.connect(_open_deck_builder)
+	deck_button.mouse_entered.connect(_play_ui_sound.bind("hover"))
+	deck_button.pressed.connect(_play_ui_sound.bind("click"))
 	top_row.add_child(deck_button)
 	var battle_area := Control.new()
 	battle_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -83,6 +88,11 @@ func _build_ui() -> void:
 	actor_layer.name = "AnimatedCombatants"
 	battle_area.add_child(actor_layer)
 	_create_combatants()
+	combat_feedback = Node2D.new()
+	combat_feedback.name = "CombatFeedback"
+	combat_feedback.set_script(CombatFeedbackScript)
+	combat_feedback.z_index = 28
+	battle_area.add_child(combat_feedback)
 	var overlays := HBoxContainer.new()
 	overlays.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlays.add_theme_constant_override("separation", 20)
@@ -102,7 +112,7 @@ func _build_ui() -> void:
 	boss.offset_left = -318
 	boss.offset_top = 18
 	boss.offset_right = -20
-	boss.offset_bottom = 310
+	boss.offset_bottom = 328
 	boss.custom_minimum_size = Vector2(298, 292)
 	battle_area.add_child(boss)
 	var bottom := HBoxContainer.new()
@@ -178,9 +188,18 @@ func _hero_panel(hero: String, parent: VBoxContainer) -> void:
 func _boss_panel() -> PanelContainer:
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", _style("#1c1626", Color("#e77da8")))
+	var inner := Control.new()
+	inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	inner.custom_minimum_size = Vector2(270, 270)
+	p.add_child(inner)
 	var col := VBoxContainer.new()
+	col.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	col.offset_left = 8
+	col.offset_top = 8
+	col.offset_right = -8
+	col.offset_bottom = -8
 	col.add_theme_constant_override("separation", 8)
-	p.add_child(col)
+	inner.add_child(col)
 	col.add_child(_label("威脅等級  /  Ω 級", 10, Color("#e88cae")))
 	col.add_child(_label("仲裁核心", 24, Color("#f4e5ff")))
 	var boss_portrait := TextureRect.new()
@@ -202,6 +221,18 @@ func _boss_panel() -> PanelContainer:
 	intent.name = "IntentLabel"
 	col.add_child(intent)
 	col.add_child(_label("將攻擊牌拖至此處出擊", 10, Color("#9c8ba8")))
+	var frame := NinePatchRect.new()
+	frame.name = "FantasyBorder"
+	frame.texture = FANTASY_FRAME
+	frame.patch_margin_left = 12
+	frame.patch_margin_top = 12
+	frame.patch_margin_right = 12
+	frame.patch_margin_bottom = 12
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.modulate = Color("#e8bf8c")
+	frame.z_index = 2
+	inner.add_child(frame)
 	return p
 
 func _refresh() -> void:
@@ -238,6 +269,7 @@ func _refresh() -> void:
 		view.combat_data = cards[i] as CardDataClass
 		view.accent = ACCENTS[selected_hero]
 		view.set_meta("hand_index", i)
+		view.card_hovered.connect(_play_ui_sound.bind("hover"))
 		view.drag_started.connect(_on_card_drag_started.bind(view))
 		view.drag_ended.connect(_on_card_drag_released.bind(view))
 		hand_root.add_child(view)
@@ -249,6 +281,7 @@ func _refresh() -> void:
 	if battlefield: battlefield.queue_redraw()
 
 func _on_card_drag_started(_card: Card, view: Control) -> void:
+	_play_ui_sound("pick")
 	if animation_busy:
 		view.undraggable = true
 		return
@@ -411,14 +444,17 @@ func _card_color(kind: int) -> Color:
 	return Color.WHITE
 
 func _show_guard(center: Vector2) -> void:
+	combat_feedback.play_magic(center, Color("#53d8c2"))
 	var ring := _effect_ring(center, Color("#53d8c2"), 20.0, 66.0)
 	_show_status_text(center + Vector2(-18, -48), "防禦", Color("#7dffe4"))
 
 func _show_support(center: Vector2) -> void:
+	combat_feedback.play_magic(center, Color("#c29aff"))
 	var ring := _effect_ring(center, Color("#c29aff"), 12.0, 54.0)
 	_show_status_text(center + Vector2(-22, -50), "解析", Color("#dfc7ff"))
 
 func _show_interrupt(center: Vector2) -> void:
+	combat_feedback.play_magic(center, Color("#ff5cba"), true)
 	var ring := _effect_ring(center, Color("#ff5cba"), 90.0, 22.0)
 	_show_status_text(center + Vector2(-45, -58), "中斷！", Color("#ff8ad1"))
 
@@ -456,6 +492,7 @@ func _show_status_text(at: Vector2, text: String, color: Color) -> void:
 	rise.tween_callback(heal.queue_free)
 
 func _show_slash(center: Vector2, color: Color) -> void:
+	combat_feedback.play_slash(center, color)
 	var slash := Line2D.new()
 	slash.width = 8.0
 	slash.default_color = color
@@ -492,6 +529,7 @@ func _animate_boss_hit(color: Color, damage: int) -> void:
 func _on_end_turn() -> void:
 	if battle.phase != "PLAYER" or animation_busy:
 		return
+	_play_ui_sound("click")
 	battle.end_player_phase()
 	if _has_reaction_option():
 		_resolve_after_reaction_window()
@@ -537,6 +575,7 @@ func _animate_enemy_action(hp_before: Dictionary) -> void:
 		var damage: int = int(hp_before.get(hero_id, 0)) - int(battle.heroes[hero_id]["hp"])
 		if damage <= 0:
 			continue
+		combat_feedback.play_enemy_hit()
 		var actor: AnimatedSprite2D = hero_actors[hero_id]
 		actor.modulate = Color("#ff7888")
 		var flash := create_tween()
@@ -545,11 +584,17 @@ func _animate_enemy_action(hp_before: Dictionary) -> void:
 
 func _select_hero(hero_id: String) -> void:
 	if animation_busy: return
+	_play_ui_sound("click")
 	selected_hero = hero_id
 	_refresh()
 
 func _on_resolve() -> void:
+	_play_ui_sound("click")
 	if battle.phase == "ENEMY": _resolve_boss_turn()
+
+func _play_ui_sound(kind: String = "click") -> void:
+	if combat_feedback != null and is_instance_valid(combat_feedback):
+		combat_feedback.play_ui(kind)
 
 func _open_deck_builder() -> void:
 	if deck_builder != null and is_instance_valid(deck_builder):

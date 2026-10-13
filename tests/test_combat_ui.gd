@@ -8,6 +8,17 @@ func _run() -> void:
 	root.add_child(game)
 	await process_frame
 	await process_frame
+	if game.combat_feedback == null:
+		push_error("Combat feedback component was not initialized")
+		quit(1)
+		return
+	var hero_item := game.find_child("Hero_kleya", true, false)
+	var boss_stats := game.find_child("BossStats", true, false)
+	var boss_content: Node = boss_stats.get_parent().get_parent() if boss_stats != null else null
+	if hero_item == null or hero_item.get_node_or_null("FantasyBorder") == null or boss_content == null or boss_content.get_node_or_null("FantasyBorder") == null:
+		push_error("Fantasy UI asset frames were not applied to the roster and boss panel")
+		quit(1)
+		return
 	var playable: Control
 	for view: Control in game.card_views:
 		var card: CardData = view.card_data
@@ -47,5 +58,9 @@ func _run() -> void:
 		push_error("Dragging an ordinary card to the boss zone did not play it")
 		quit(1)
 		return
-	print("UI TEST PASS // drag-to-play resolves card and updates boss HP")
+	if game.combat_feedback.get_child_count() == 0:
+		push_error("Playing an attack did not create asset-backed combat feedback")
+		quit(1)
+		return
+	print("UI TEST PASS // drag-to-play resolves card, updates boss HP, and creates asset-backed feedback")
 	quit(0)
