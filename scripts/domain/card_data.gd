@@ -1,5 +1,5 @@
 class_name CardData
-extends Resource
+extends "res://addons/simple_cards/card/card_resource/card_resource.gd"
 
 enum CardKind { ATTACK, DEFENSE, SUPPORT, REACTION }
 

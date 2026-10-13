@@ -1,0 +1,30 @@
+{
+	"res://addons/simple_cards/card/card_layout/default_card_back_layout.tscn": {
+		"enabled": true,
+		"last_modified": 0.0,
+		"layout_id": "default_back",
+		"tags": []
+	},
+	"res://addons/simple_cards/card/card_layout/default_card_layout.tscn": {
+		"enabled": true,
+		"last_modified": 0.0,
+		"layout_id": "default",
+		"tags": []
+	},
+	"res://work/simple-cards-v-2/examples/cards/standard_deck/standard_back_layout.tscn": {
+		"enabled": true,
+		"last_modified": 1791908757.0,
+		"layout_id": "standard_back_layout",
+		"tags": [
+			"back"
+		]
+	},
+	"res://work/simple-cards-v-2/examples/cards/standard_deck/standard_layout.tscn": {
+		"enabled": true,
+		"last_modified": 1791908757.0,
+		"layout_id": "standard_layout",
+		"tags": [
+			"front"
+		]
+	}
+}

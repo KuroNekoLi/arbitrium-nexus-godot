@@ -34,13 +34,13 @@ Single-player 2D horizontal turn-based card JRPG prototype for Godot 4.x. The co
 
 - `BattleState` owns a `RandomNumberGenerator` seeded with `v1_seed=104729`.
 - Domain tests cover opening draw, refill-to-four, hand cap, two-play limit, Mana retention, damage, Stability/Weak Node, and deterministic intent order.
-- UI and animation are consumers of domain signals; they do not own combat rules.
+- UI and animation are consumers of domain signals; they do not own combat rules. The battle screen uses original generated character artwork, custom-drawn data-driven card faces, and native Godot Control drag/hover/tween interactions.
 
 ## M0–M5 delivery plan
 
 - M0: project scaffold, toolchain detection, source of truth, CI-like headless test entrypoint.
 - M1: pure combat engine and deterministic tests.
-- M2: playable 16:9 battle UI with clickable hand, phase flow, intent, logs.
+- M2: playable 16:9 battle UI with hoverable, draggable hand cards, phase flow, intent, and logs.
 - M3: Boss Analysis, Interrupt, Reaction, and Weak Node feedback.
 - M4: authored visual pass, motion and impact feedback.
 - M5: deck builder, save/load, export profiles.
