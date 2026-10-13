@@ -4,17 +4,20 @@ const BattleStateClass = preload("res://scripts/domain/battle_state.gd")
 const CardDataClass = preload("res://scripts/domain/card_data.gd")
 const CardViewScript = preload("res://scripts/ui/card_view.gd")
 const ArenaArtScript = preload("res://scripts/ui/arena_art.gd")
+const CardResourceType = preload("res://addons/simple_cards/card/card_resource/card_resource.gd")
+const PARTY_ART: Texture2D = preload("res://assets/nexus_party_splash.png")
 
 var battle: BattleState
 var selected_hero := "kleya"
 var hand_root: Control
-var hud: VBoxContainer
 var log_box: RichTextLabel
 var battlefield: Control
 var dragged_card: Control
-var drag_origin := Vector2.ZERO
 var card_views: Array[Control] = []
-var anim_layer: Control
+var actor_layer: Node2D
+var hero_actors: Dictionary = {}
+var boss_actor: Sprite2D
+var animation_busy := false
 
 const HEROES := ["kleya", "nova", "yora"]
 const ACCENTS := {"kleya": Color("#72e8ff"), "nova": Color("#ff9a72"), "yora": Color("#c59aff")}
@@ -54,13 +57,10 @@ func _build_ui() -> void:
 	battle_area.set_script(ArenaArtScript)
 	root.add_child(battle_area)
 	battlefield = battle_area
-	var character_art := TextureRect.new()
-	character_art.texture = load("res://assets/nexus_party_splash.png")
-	character_art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	character_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	character_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	character_art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	battle_area.add_child(character_art)
+	actor_layer = Node2D.new()
+	actor_layer.name = "AnimatedCombatants"
+	battle_area.add_child(actor_layer)
+	_create_combatants()
 	var overlays := HBoxContainer.new()
 	overlays.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlays.add_theme_constant_override("separation", 20)
@@ -137,10 +137,6 @@ func _build_ui() -> void:
 	action_col.add_child(resolve_btn)
 	var hint := _label("SPACE  /  END TURN\nReaction cards stay live\nduring enemy phase", 11, Color("#7794a2"))
 	action_col.add_child(hint)
-	anim_layer = Control.new()
-	anim_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	anim_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(anim_layer)
 
 func _hero_panel(hero: String) -> PanelContainer:
 	var p := PanelContainer.new()
@@ -157,7 +153,7 @@ func _hero_panel(hero: String) -> PanelContainer:
 	var select := Button.new()
 	select.text = "SELECT DECK   →"
 	select.custom_minimum_size.y = 28
-	select.pressed.connect(func(): selected_hero = hero; _refresh())
+	select.pressed.connect(_select_hero.bind(hero))
 	col.add_child(select)
 	return p
 
@@ -205,44 +201,203 @@ func _refresh() -> void:
 	spacing = maxf(0.0, spacing)
 	var total := card_w + spacing * maxf(0, cards.size() - 1)
 	for i in cards.size():
-		var view: Control = CardViewScript.new()
-		view.card_data = cards[i]
+		var view: Control = CardViewScript.new(cards[i] as CardResourceType)
+		view.combat_data = cards[i] as CardDataClass
 		view.accent = ACCENTS[selected_hero]
 		view.set_meta("hand_index", i)
 		view.drag_started.connect(_on_card_drag_started.bind(view))
-		view.drag_released.connect(_on_card_drag_released.bind(view))
+		view.drag_ended.connect(_on_card_drag_released.bind(view))
 		hand_root.add_child(view)
 		view.position = Vector2((hand_root.size.x-total)*0.5+i*spacing, 8 + absf(float(i-(cards.size()-1)*0.5))*3)
 		view.set_meta("home_position", view.position)
 		view.rotation = deg_to_rad((i-(cards.size()-1)*0.5)*2.0)
+		view.set_meta("home_rotation", view.rotation)
 		card_views.append(view)
 	if battlefield: battlefield.queue_redraw()
 
-func _on_card_drag_started(view: Control) -> void:
+func _on_card_drag_started(_card: Card, view: Control) -> void:
+	if animation_busy:
+		view.undraggable = true
+		return
+	view.undraggable = false
 	dragged_card = view
-	drag_origin = view.global_position
 	view.z_index = 1000
 	view.scale = Vector2(1.08,1.08)
 
-func _on_card_drag_released(view: Control, screen_pos: Vector2) -> void:
+func _on_card_drag_released(_card: Card, view: Control) -> void:
+	_handle_card_release(view, get_global_mouse_position())
+
+func _handle_card_release(view: Control, drop_pos: Vector2) -> void:
 	if dragged_card != view: return
 	var idx: int = int(view.get_meta("hand_index"))
-	var played := false
-	if Rect2(Vector2(760, 85), Vector2(500, 390)).has_point(screen_pos):
-		played = battle.play_reaction(selected_hero, idx) if battle.phase == "ENEMY" else battle.play_card(selected_hero, idx)
-	if played:
-		var tween := create_tween()
-		tween.tween_property(view, "global_position", Vector2(1000, 280), 0.18)
-		tween.parallel().tween_property(view, "scale", Vector2(0.25,0.25), 0.18)
-		tween.tween_callback(view.queue_free)
+	if Rect2(Vector2(750, 76), Vector2(520, 408)).has_point(drop_pos) and _can_play_card(idx):
+		animation_busy = true
+		for card_view in card_views:
+			card_view.disabled = true
+		view.call_deferred("kill_all_tweens")
+		call_deferred("_animate_card_play", view, idx, selected_hero)
 	else:
-		var tween := create_tween()
-		tween.tween_property(view, "position", view.get_meta("home_position", view.position), 0.18).set_trans(Tween.TRANS_BACK)
-		view.scale = Vector2.ONE
+		call_deferred("_animate_card_return", view)
 	dragged_card = null
 
+func _can_play_card(index: int) -> bool:
+	var hand: Array = battle.hands[selected_hero]
+	if index < 0 or index >= hand.size(): return false
+	var card: CardData = hand[index]
+	var mana: int = battle.heroes[selected_hero]["mana"]
+	if battle.phase == "ENEMY":
+		return card.reaction and battle.interrupt_available and mana >= card.cost
+	return card.is_ordinary() and battle.ordinary_plays < BattleStateClass.MAX_ORDINARY_PLAYS and mana >= card.cost
+
+func _animate_card_return(view: Control) -> void:
+	if not is_instance_valid(view): return
+	view.kill_all_tweens()
+	var home: Vector2 = view.get_meta("home_position", view.position)
+	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(view, "position", home, 0.24)
+	tween.parallel().tween_property(view, "scale", Vector2.ONE, 0.18)
+	tween.parallel().tween_property(view, "rotation", view.get_meta("home_rotation", 0.0), 0.18)
+
+func _animate_card_play(view: Control, hand_index: int, hero_id: String) -> void:
+	if not is_instance_valid(view):
+		animation_busy = false
+		return
+	view.kill_all_tweens()
+	view.set_process(false)
+	view.z_index = 2000
+	var data: CardData = view.combat_data
+	var boss_target := Vector2(850, 255)
+	var target_global := battlefield.global_position + boss_target
+	var hero: Sprite2D = hero_actors[hero_id]
+	var origin := hero.position
+	var is_attack := data.kind == CardDataClass.CardKind.ATTACK
+	var is_defense := data.kind == CardDataClass.CardKind.DEFENSE
+	var strike_target := boss_target - Vector2(95, 0)
+	var dash_duration := 0.25 if is_attack else 0.18
+	var card_tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	card_tween.tween_property(view, "global_position", target_global - view.size * 0.5, 0.3)
+	card_tween.parallel().tween_property(view, "scale", Vector2(0.42, 0.42), 0.3)
+	card_tween.parallel().tween_property(view, "rotation", 0.0, 0.3)
+	var move := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	var move_target := strike_target if is_attack else (origin + Vector2(0, -16) if is_defense else origin + Vector2(42, -10))
+	move.tween_property(hero, "position", move_target, dash_duration)
+	if is_attack:
+		move.tween_callback(_show_slash.bind(boss_target, ACCENTS[hero_id]))
+		move.tween_property(hero, "position", origin, 0.24)
+	elif is_defense:
+		move.tween_callback(_show_slash.bind(origin + Vector2(0, -28), Color("#72e8c2")))
+		move.tween_property(hero, "position", origin, 0.2)
+	else:
+		move.tween_callback(_show_slash.bind(origin + Vector2(48, -10), ACCENTS[hero_id]))
+		move.tween_property(hero, "position", origin, 0.2)
+	await move.finished
+	animation_busy = false
+	var boss_hp_before: int = battle.boss_hp
+	var played := battle.play_reaction(hero_id, hand_index) if battle.phase == "ENEMY" else battle.play_card(hero_id, hand_index)
+	if played:
+		if data.kind == CardDataClass.CardKind.ATTACK:
+			_animate_boss_hit(ACCENTS[hero_id], boss_hp_before - battle.boss_hp)
+		elif data.kind == CardDataClass.CardKind.DEFENSE:
+			_animate_hero_heal(hero, data.power)
+		elif data.reaction:
+			_animate_boss_hit(ACCENTS[hero_id], 0)
+		else:
+			_show_status_text(hero.position + Vector2(0, -85), "ANALYSIS +%d" % data.power, ACCENTS[hero_id])
+		if is_instance_valid(view): view.queue_free()
+	else:
+		view.disabled = false
+		_animate_card_return(view)
+
+func _create_combatants() -> void:
+	var positions := {"kleya": Vector2(410, 325), "nova": Vector2(540, 335), "yora": Vector2(675, 325)}
+	var regions := {"kleya": Rect2(0, 350, 430, 606), "nova": Rect2(385, 370, 370, 586), "yora": Rect2(690, 365, 440, 591)}
+	for hero in HEROES:
+		var actor := Sprite2D.new()
+		actor.name = hero.capitalize() + "Sprite"
+		actor.texture = PARTY_ART
+		actor.region_enabled = true
+		actor.region_rect = regions[hero]
+		actor.position = positions[hero]
+		actor.scale = Vector2(0.25, 0.25)
+		actor.z_index = 4
+		actor_layer.add_child(actor)
+		hero_actors[hero] = actor
+		var idle := create_tween().set_loops()
+		idle.tween_property(actor, "position:y", positions[hero].y - 3.0, 1.0).set_trans(Tween.TRANS_SINE)
+		idle.tween_property(actor, "position:y", positions[hero].y + 2.0, 1.0).set_trans(Tween.TRANS_SINE)
+	boss_actor = Sprite2D.new()
+	boss_actor.name = "NexusSprite"
+	boss_actor.texture = PARTY_ART
+	boss_actor.region_enabled = true
+	boss_actor.region_rect = Rect2(1000, 0, 696, 956)
+	boss_actor.position = Vector2(855, 270)
+	boss_actor.scale = Vector2(0.23, 0.23)
+	boss_actor.z_index = 2
+	actor_layer.add_child(boss_actor)
+	var boss_idle := create_tween().set_loops()
+	boss_idle.tween_property(boss_actor, "position:y", 267.0, 1.3).set_trans(Tween.TRANS_SINE)
+	boss_idle.tween_property(boss_actor, "position:y", 273.0, 1.3).set_trans(Tween.TRANS_SINE)
+
+func _animate_hero_heal(actor: Sprite2D, amount: int) -> void:
+	actor.modulate = Color("#83ffd8")
+	var tint := create_tween()
+	tint.tween_property(actor, "modulate", Color.WHITE, 0.28)
+	_show_status_text(actor.position + Vector2(0, -90), "+%d HP" % amount, Color("#83ffd8"))
+
+func _show_status_text(at: Vector2, text: String, color: Color) -> void:
+	var heal := Label.new()
+	heal.text = text
+	heal.add_theme_font_size_override("font_size", 17)
+	heal.add_theme_color_override("font_color", color)
+	heal.position = at
+	heal.z_index = 32
+	actor_layer.add_child(heal)
+	var rise := create_tween()
+	rise.tween_property(heal, "position:y", heal.position.y - 42, 0.45)
+	rise.parallel().tween_property(heal, "modulate:a", 0.0, 0.45)
+	rise.tween_callback(heal.queue_free)
+
+func _show_slash(center: Vector2, color: Color) -> void:
+	var slash := Line2D.new()
+	slash.width = 8.0
+	slash.default_color = color
+	slash.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	slash.end_cap_mode = Line2D.LINE_CAP_ROUND
+	slash.points = PackedVector2Array([center + Vector2(-40, 30), center, center + Vector2(45, -32)])
+	slash.z_index = 30
+	actor_layer.add_child(slash)
+	var tween := create_tween()
+	tween.tween_property(slash, "modulate:a", 0.0, 0.24)
+	tween.tween_callback(slash.queue_free)
+
+func _animate_boss_hit(color: Color, damage: int) -> void:
+	var original := boss_actor.position
+	var hit := create_tween()
+	hit.tween_property(boss_actor, "position", original + Vector2(12, -2), 0.045)
+	hit.tween_property(boss_actor, "position", original + Vector2(-8, 1), 0.045)
+	hit.tween_property(boss_actor, "position", original, 0.08)
+	boss_actor.modulate = color.lightened(0.5)
+	var flash := create_tween()
+	flash.tween_property(boss_actor, "modulate", Color.WHITE, 0.2)
+	var number := Label.new()
+	number.text = "-%d" % damage if damage > 0 else "INTERRUPT"
+	number.add_theme_font_size_override("font_size", 25)
+	number.add_theme_color_override("font_color", color)
+	number.position = Vector2(805, 155)
+	number.z_index = 32
+	actor_layer.add_child(number)
+	var rise := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	rise.tween_property(number, "position:y", 120.0, 0.5)
+	rise.parallel().tween_property(number, "modulate:a", 0.0, 0.5)
+	rise.tween_callback(number.queue_free)
+
 func _on_end_turn() -> void:
-	if battle.phase == "PLAYER": battle.end_player_phase()
+	if battle.phase == "PLAYER" and not animation_busy: battle.end_player_phase()
+
+func _select_hero(hero_id: String) -> void:
+	if animation_busy: return
+	selected_hero = hero_id
+	_refresh()
 
 func _on_resolve() -> void:
 	if battle.phase == "ENEMY": battle.resolve_enemy_phase()

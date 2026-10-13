@@ -91,8 +91,10 @@ func play_card(hero_id: String, hand_index: int) -> bool:
 	if card.id.ends_with("guard"):
 		heroes[hero_id]["hp"] = mini(int(heroes[hero_id]["max_hp"]), int(heroes[hero_id]["hp"]) + card.power)
 		_log("%s casts GUARD // +%d HP" % [hero_id.to_upper(), card.power])
-	else:
+	elif card.kind == CardDataClass.CardKind.ATTACK:
 		_damage_boss(card.power, card.title)
+	else:
+		_log("%s casts %s // Analysis +%d" % [hero_id.to_upper(), card.title.to_upper(), card.power])
 	if card.id.ends_with("focus"):
 		heroes[hero_id]["mana"] = mini(int(heroes[hero_id]["max_mana"]) + 1, int(heroes[hero_id]["mana"]) + 1)
 		_log("FOCUS // %s gains +1 retained Mana" % hero_id.to_upper())

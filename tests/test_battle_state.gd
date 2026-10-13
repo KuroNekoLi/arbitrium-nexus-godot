@@ -9,8 +9,9 @@ func _init() -> void:
 	_test_play_limit_and_mana()
 	_test_enemy_phase_and_reaction()
 	_test_deterministic_intent()
+	_test_support_effects_do_not_damage_boss()
 	if failures == 0:
-		print("M1 TESTS PASS // 4 suites")
+		print("M1 TESTS PASS // 5 suites")
 		quit(0)
 	else:
 		print("M1 TESTS FAIL // %d failures" % failures)
@@ -62,6 +63,31 @@ func _test_deterministic_intent() -> void:
 	a.resolve_enemy_phase()
 	b.resolve_enemy_phase()
 	_assert(a.boss_intent == b.boss_intent and a.round == b.round, "fixed seed intent order")
+
+func _test_support_effects_do_not_damage_boss() -> void:
+	var state = BattleStateClass.new()
+	var focus: CardData = null
+	var focus_index := -1
+	for i: int in range(state.hands["nova"].size()):
+		if state.hands["nova"][i].id.ends_with("focus"):
+			focus = state.hands["nova"][i]
+			focus_index = i
+			break
+	for i: int in range(state.decks["nova"].size()):
+		if focus != null: break
+		if state.decks["nova"][i].id.ends_with("focus"):
+			focus = state.decks["nova"].pop_at(i)
+			break
+	_assert(focus != null, "focus exists in character deck")
+	if focus == null: return
+	if focus_index < 0:
+		state.hands["nova"].append(focus)
+		focus_index = state.hands["nova"].size() - 1
+	var hp_before: int = state.boss_hp
+	_assert(state.play_card("nova", focus_index), "focus is playable")
+	_assert(state.boss_hp == hp_before, "support card does not deal unintended boss damage")
+	_assert(state.analysis == 2, "focus grants its declared Analysis")
+	_assert(state.heroes["nova"]["mana"] == 4, "focus grants its declared Mana")
 
 func _assert(condition: bool, message: String) -> void:
 	if not condition:
