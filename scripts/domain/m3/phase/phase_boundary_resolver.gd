@@ -76,7 +76,7 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 		return _failure(core, "INVALID_BOUNDARY_HOOKS")
 	# Fail closed instead of silently dropping unscheduled actual M4/M5 work.
 	if not core["battle"]["statuses"].is_empty():
-		return _failure(core, "UNIMPLEMENTED_REAL_STATUS_TICKS")
+		return _failure(core, "UNIMPLEMENTED_REAL_TICKS")
 	if not core["battle"]["casting_instances"].is_empty() and config.get("m4_dual_cast_enabled", false) != true:
 		return _failure(core, "UNIMPLEMENTED_REAL_TICKS")
 	var next_round: int = int(core["battle"]["round"]) + 1
