@@ -7,7 +7,7 @@ const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Integrated = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Scheduler = preload("res://scripts/domain/m3/enemy/enemy_action_scheduler.gd")
 const Boundary = preload("res://scripts/domain/m3/phase/phase_boundary_resolver.gd")
-const Window = preload("res://scripts/domain/m3/reaction/reaction_window_resolver.gd")
+const ReactionWindow = preload("res://scripts/domain/m3/reaction/reaction_window_resolver.gd")
 const ReactionQueue = preload("res://scripts/domain/m3/reaction/reaction_queue_resolver.gd")
 const SCHEMA: String = "m3.1-phase-fixture-v1"
 const PLAYER_KINDS: Array[String] = [
@@ -219,7 +219,7 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 		if not catalogue is Dictionary:
 			return _reject(original, "MISSING_REACTION_CATALOGUE")
 		var selected_action: Dictionary = next["enemy_actions"][int(next["enemy_cursor"])]
-		var opened: Dictionary = Window.open(next["core"], selected_action, catalogue)
+		var opened: Dictionary = ReactionWindow.open(next["core"], selected_action, catalogue)
 		if not opened["ok"]:
 			return _reject(original, str(opened["error"]))
 		next["reaction_window"] = opened["window"]
