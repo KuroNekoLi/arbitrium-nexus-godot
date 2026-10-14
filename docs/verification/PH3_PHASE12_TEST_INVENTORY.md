@@ -501,3 +501,67 @@ Official Godot 4.7.2 [CI #38594159424](https://github.com/KuroNekoLi/arbitrium-n
 | 50 | `M3_2_REPLAY_STALE_DUPLICATE_ATOMIC` | test_m3_reaction_window.gd | PASS / M3.2 domain |
 
 Replay event SHA256 a37005b13323e86d4068fef74519adf1c95a1ff03da7b76d6d3e276b51cf414e; final state SHA256 c05baecca6080f83dd15608317d588fde6b2ca5260381ccc9ea8b9f1f6dbb6f7. M3.3 onward still requires its own named suites/CI and real gameplay verification.
+
+
+### M3.3 Guard and Protect — 54 executed named Domain tests (2026-10-14)
+
+Final official Godot 4.7.2 Actions run https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38596728929, tested SHA 42d0ac055b457f96123b4a669e558b0bcc3bcb65, seed 20261014. Actual M3.3 54/54 PASS + M3.2 50/50 + M3.1 61/61 + M1–M2 249/249 all PASS in this run. Four legacy smoke scripts exit0. The exact 54 observed PASS IDs:
+
+| # | Godot test case | Runner | Verdict |
+|---:|---|---|---|
+| 1 | M3_3_SP_FREE_GUARD_AVAILABLE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 2 | M3_3_MULTHIT_SINGLE_WINDOW | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 3 | M3_3_QUEUE_GUARD_NO_HAND | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 4 | M3_3_GUARD_PREVIEW_PURE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 5 | M3_3_GUARD_EXACTLY_ONE_RP | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 6 | M3_3_GUARD_NO_MP_OR_CARD | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 7 | M3_3_GUARD_THREE_HIT_COVERAGE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 8 | M3_3_GUARD_NO_DAMAGE_HARDCODE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 9 | M3_3_GUARD_EVENTS_ORDER | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 10 | M3_3_GUARD_EXECUTE_ONCE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 11 | M3_3_GUARD_HANDOFF_SNAPSHOT | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 12 | M3_3_GUARD_NOT_GLOBAL_PERSISTENT | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 13 | M3_3_DOUBLE_PROTECT_DRAFT_IS_PURE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 14 | M3_3_PROTECT_ONE_REDIRECT | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 15 | M3_3_PROTECT_THREE_HITS_SINGLE_REDIRECT | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 16 | M3_3_PROTECT_ONLY_TWO_RP | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 17 | M3_3_SECOND_PROTECT_SKIPPED_NO_CHAIN | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 18 | M3_3_PROTECT_NO_CARD_USED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 19 | M3_3_REDIRECT_BEFORE_HIT_OR_DEFENSE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 20 | M3_3_REDIRECT_NOT_DAMAGE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 21 | M3_3_GUARD_THEN_PROTECT_PAID | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 22 | M3_3_GUARD_NOT_FREELY_REFUNDED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 23 | M3_3_GUARD_AFTER_REDIRECT_SKIPS | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 24 | M3_3_MULTITARGET_PROTECT_REJECTED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 25 | M3_3_AOE_PROTECT_REJECTED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 26 | M3_3_DIRECT_CASTING_NOT_BASIC_REACTION | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 27 | M3_3_UNPROTECTABLE_REJECTED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 28 | M3_3_CAN_GUARD_UNPROTECTABLE_HP | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 29 | M3_3_CANNOT_PROTECT_SELF | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 30 | M3_3_WRONG_PROTECT_TARGET | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 31 | M3_3_GUARD_NONTARGET_REJECTED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 32 | M3_3_INCAPACITATED_CANNOT_PROTECT | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 33 | M3_3_EXHAUSTED_CANNOT_PROTECT | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 34 | M3_3_CONCENTRATING_BASIC_DISALLOWED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 35 | M3_3_CAN_PROTECT_EXHAUSTED_TARGET | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 36 | M3_3_HP0_TARGET_REJECTED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 37 | M3_3_PROTECT_NEEDS_2_RP | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 38 | M3_3_GUARD_WITH_1_RP | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 39 | M3_3_NO_RP_NO_BASIC | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 40 | M3_3_NO_CARD_COST_FROM_BASIC | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 41 | M3_3_BASIC_GUARD_ZERO_RP_AFTER_PAY | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 42 | M3_3_DRAFT_IGNORES_CLIENT_COST_FIELDS | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 43 | M3_3_COST_SOURCE_IS_FIXED_DOMAIN | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 44 | M3_3_PRE3_R04_PROTECT_TRIGGER_GONE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 45 | M3_3_PRE3_R04_NO_PROTECT_CHARGE | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 46 | M3_3_PRE3_R04_REAL_SP_CARD_USED | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 47 | M3_3_SECOND_WINDOW_GUARD_RESETS | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 48 | M3_3_RP_SHARED_BETWEEN_ACTIONS | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 49 | M3_3_GUARD_COST_PER_DISTINCT_ACTION | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 50 | M3_3_RP_EXPIRES_AFTER_ACTIONS | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 51 | M3_3_SEEDED_GUARD_PROTECT_REPLAY | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 52 | M3_3_EVENT_SEQUENCE_MONOTONIC | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 53 | M3_3_REPLAY_CARD_CONSERVATION | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+| 54 | M3_3_REPLAY_DUPLICATE_ATOMIC | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
+
+Canonical replay event hash SHA256 33da67eb4cd91d0e1b3ce0a5ca3d59d76ac6f5ff993f85fd57f5e6593853d077; final state SHA256 153aa594a108b70cecd4bb5e12188429cf636ad555e2727963c508455d6da9fa. Damage, Barrier/Guard mitigation, M4 magic and M3.4–M3.5 remain unexecuted.

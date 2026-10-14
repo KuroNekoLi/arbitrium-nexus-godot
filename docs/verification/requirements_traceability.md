@@ -174,6 +174,23 @@ Final code SHA 3c26267cb2e314cf07e3a6ba269f07133852222e; Godot4.7.2 [CI #3859415
 | P1-D16, PRE3-R04 deferred skips | eligibility + Queue + existing M2 atomic ResourceLedger; M3_2_PRE3_R04_JIT_SKIP, M3_2_ONLY_TWO_REAL_SPENDS, M3_2_ONLY_TWO_CARDS_DISCARDED | VERIFIED with fixture-only counter and independent support; real Spell Counter postponed to M4 |
 | P1-D03, M-D08/09 RP/MP per window | resource_ledger.gd, m2_domain_resolver.gd; M3_2_RP_PERSISTS_BETWEEN_WINDOWS, M3_2_RP_EXPIRES_AT_PHASE_END, M3_2_CONFIRM_REJECTS_KNOWN_BUDGET_DEFICIT | VERIFIED real RP/MP/card transaction; card spell effect fixture |
 | CORE-04 no timeout/no autopass | M3_2_PASS_EXPLICIT_ONLY, M3_2_NO_AUTO_PASS_WITH_ELAPSED_DATA | M3.2 Domain VERIFIED; old UI timer removal M3.4/Presentation deferred |
-| Basic Guard/Protect available without SP | M3_2_BASIC_GUARD_CANNOT_BE_SILENTLY_SKIPPED, M3_2_GUARD_PROTECT_NOT_FALSELY_IMPLEMENTED | **M3.3 NOT_IMPLEMENTED**; eligible Guard-only encounter blocked, not silently skipped |
+| Basic Guard/Protect available without SP | M3_2_BASIC_GUARD_CANNOT_BE_SILENTLY_SKIPPED, M3_2_GUARD_PROTECT_NOT_FALSELY_IMPLEMENTED | Historical M3.2 verdict only; now superseded for basic Guard/Protect by the verified M3.3 section below. |
 
 M3.3 Guard/Protect, M3.4 Smart/Always Ask/Quick contract, M3.5 full-phase integrated M3 replay and M4/M5 gameplay remain UNVERIFIED. Do not label M3 DOMAIN VERIFIED.
+
+
+## M3.3 — Guard/Protect independent acceptance — 2026-10-14
+
+Final tested source SHA 42d0ac055b457f96123b4a669e558b0bcc3bcb65. Successful Godot4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38596728929: new M3.3 54/54 PASS, preceding M3.2 50/50, M3.1 61/61 and M1–M2 249/249, total 414/414 named Domain cases; legacy scripts exit0. Full evidence in PH3_M3_3_ENGINEERING_NOTE.md.
+
+| Approved source / requirement | Code and actual named tests | Current verdict |
+|---|---|---|
+| P1-D11 / PRE3-R02/R17 Guard basic 1 RP and multihit | basic_guard_resolver.gd, M3_3_GUARD_EXACTLY_ONE_RP, M3_3_GUARD_THREE_HIT_COVERAGE, M3_3_GUARD_NO_MP_OR_CARD | M3.3 Guard eligibility/payment/action coverage VERIFIED; actual damage coefficient still M5/BALANCE_PROVISIONAL |
+| P1-D12–14 / PRE3-R01/R02 Protect 2 RP before hit | basic_protect_resolver.gd, M3_3_PROTECT_ONE_REDIRECT, M3_3_PROTECT_THREE_HITS_SINGLE_REDIRECT, M3_3_REDIRECT_BEFORE_HIT_OR_DEFENSE | M3.3 single-target recipient routing VERIFIED; M5 real hit/DEF/HP deferred |
+| PRE3-R01, PRE3-R04, P1-D16 no chain and skip | reaction_queue_resolver.gd, M3_3_SECOND_PROTECT_SKIPPED_NO_CHAIN, M3_3_GUARD_AFTER_REDIRECT_SKIPS, M3_3_PRE3_R04_PROTECT_TRIGGER_GONE | No chained redirects or fees on invalidated pending entries VERIFIED |
+| PRE3-R03 explicit follows_damage_recipient status routing | phase_engine.gd defense_snapshot, M3_3_REDIRECT_BEFORE_HIT_OR_DEFENSE | Effect routing **metadata** VERIFIED; applying status/knockback/casting effects remains M5 |
+| P1-D11–14 / PRE3-R13/R14 guard/protect exceptions | M3_3_AOE_PROTECT_REJECTED, M3_3_MULTITARGET_PROTECT_REJECTED, M3_3_CAN_PROTECT_EXHAUSTED_TARGET, M3_3_CONCENTRATING_BASIC_DISALLOWED | Headless legality VERIFIED; no invented M4 concentration exceptions |
+| P1-D03 and M2 resource/card conservation | M2.COMMIT_BASIC_REACTION, M3_3_COST_SOURCE_IS_FIXED_DOMAIN, M3_3_GUARD_PREVIEW_PURE, M3_3_PROTECT_NO_CARD_USED | Shared RP 1/2, 0 MP, 0 card use, no client cost injection VERIFIED |
+| P2-D16 seed/event Replay | M3_3_SEEDED_GUARD_PROTECT_REPLAY, M3_3_REPLAY_DUPLICATE_ATOMIC, M3_3_GUARD_COST_PER_DISTINCT_ACTION | Same-seed M3.3 replay and RP across action windows VERIFIED |
+
+M3.4 presentation modes, M3.5 integrated acceptance, M4 spell/casting and M5 real HP damage, and legacy UI replacement remain NOT_VERIFIED. **Do not declare overall M3 DOMAIN VERIFIED at M3.3.**
