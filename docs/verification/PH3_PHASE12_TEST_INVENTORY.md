@@ -769,3 +769,60 @@ Official successful CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actio
 | 101 | M35-REPLAY-NO_REAL_HP_DAMAGE_CLAIM | test_m3_replay.gd | PASS / M3.5 Replay |
 
 Canonical replay seed 20261014; initial SHA256 435fe62907f8f5006bfb5fb201db0a54207bc06694173dc172c2757b94dc5430; event SHA256 05599b881ad2ba6ee37e9cd1b2cc89ce9b6d97ce1e7b53e1ec58ea439ae17717; final SHA256 25ca6dfaee05dc68d175adcea0392a679248b477d8d3bbdc9611a96714611b66. Exact evidence: above CI raw logs. `M3 DOMAIN VERIFIED` applies ONLY to headless fixture scope.
+
+
+### M4.1 Dual Casting — 47 actual Godot assertions (2026-10-15)
+
+Official PASS: https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38654007627 on tested SHA 8fcd65ee075664593a08448f3d44eede21a5c2bf; M4.1 **47/47** and M1–M3.5 **598/598** pass; four legacy scripts exit0. This is headless casting, not M5 real damage.
+
+| # | Exact Godot stdout case ID | Runner | Result |
+|---:|---|---|---|
+| 1 | CAST-001-CHANTLESS_ACCEPTED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 2 | CAST-001-CARD_IN_DISCARD | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 3 | CAST-001-IMMEDIATE_EFFECT_CONTRACT | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 4 | CAST-001-NO_CONCENTRATION | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 5 | CAST-001-COST_PAID_ONCE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 6 | M21-CAST-001-IMMEDIATE_NO_HP_DAMAGE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 7 | CAST-002-FULL_ACCEPTED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 8 | CAST-002-CARD_IN_CASTING | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 9 | CAST-002-ONE_CASTING_INSTANCE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 10 | CAST-002-CONCENTRATING | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 11 | CAST-002-SCHEDULED_NEXT_PLAYER | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 12 | CAST-002-COST_PAID_AT_START | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 13 | M21-CAST-001-EQUAL_BASE_MP | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 14 | CAST-002-OWN_INSTANCE_STABILITY_ONLY | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 15 | CAST-002-ZONE_CONSERVATION | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 16 | CAST-002-RNG_UNCHANGED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 17 | CAST-002-NO_PREMATURE_EFFECT | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 18 | CAST-003-BASIC_ATTACK_DENIED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 19 | CAST-003-SECOND_FULL_DENIED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 20 | CAST-003-CHANTLESS_WHILE_CONCENTRATING_DENIED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 21 | CAST-003-M2_FREE_SWAP_NO_ACTIVE_ACTOR | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 22 | CAST-003-OTHER_ACTOR_CAN_ACT | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 23 | CAST-003-STILL_INITIAL_UNCHANGED | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 24 | CAST-003-NO_CANCEL_COMMAND | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 25 | CAST-NEG-DUPLICATE_COMMAND | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 26 | CAST-NEG-STALE_EVENT_SEQ | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 27 | CAST-NEG-BAD_CAST_MODE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 28 | CAST-NEG-MODE_UNAVAILABLE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 29 | CAST-NEG-WRONG_CARD_OWNER | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 30 | CAST-NEG-MISSING_TARGET | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 31 | CAST-NEG-INSUFFICIENT_MP_ATOMIC | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 32 | CAST-NEG-AP_FAILURE_NO_PARTIAL_COMMIT | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 33 | CAST-NEG-NO_CASTING_PROFILE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 34 | CAST-NEG-STABILITY_REQUIRES_PROVISIONAL_FIXTURE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 35 | CAST-NEG-NO_CONFIG_DONT_INVENT | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 36 | CAST-002-ENEMY_PHASE_WITH_CONCENTRATION | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 37 | CAST-002-RELEASED_ONLY_AT_BOUNDARY | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 38 | CAST-002-CAST_TO_DISCARD_ON_RELEASE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 39 | CAST-002-RELEASE_NO_SECOND_PAYMENT | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 40 | CAST-002-PHASE2_HAND_REFILLS_FOUR | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 41 | CAST-002-EVENT_BEFORE_M2_RENEW_AND_DRAW | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 42 | CAST-002-EFFECT_IS_NOT_REAL_DAMAGE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 43 | CAST-002-CARD_CONSERVATION_AFTER_ROUND_CHANGE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 44 | CAST-002-CAST_CAN_RESTART_LATER | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 45 | CAST-002-M4_REPLAY_ENTIRE_PHASE | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 46 | CAST-002-FAILED_INPUT_PRESERVES_RNG | test_m4_dual_cast.gd | PASS / M4.1 only |
+| 47 | CAST-002-NO_FORGED_EFFECT_ON_REJECT | test_m4_dual_cast.gd | PASS / M4.1 only |
+
+Fixed seed 20261014; event SHA256 6225fa6eb9949575437d7305057be8b7ad743d000e42625f8c8df9427118151b; final state SHA256 42b5f311978d20fea048cf5a85e075ff79998d540c7332ae69343ad595794871. M4.2–M4.5 pending.

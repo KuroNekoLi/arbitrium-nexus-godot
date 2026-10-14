@@ -1,6 +1,6 @@
 # Phase 3 M4.1 — Dual Casting Foundation / Engineering Note
 
-Status at authoring: IMPLEMENTED AWAITING REAL GODOT CI; no passed claim prior to actual logs.
+Current status: M4_1_DUAL_CAST_DOMAIN_VERIFIED. Official Godot 4.7.2 independent gate completed successfully.
 
 ## Authority and prerequisites
 ChatGPT Library 05_DUAL_CASTING_AND_INTERRUPTION.md; 18/19 approved M-D01..31 (M-D21 same default MP for Chantless and Full); 20 PRE3-R12/13; 21 Phase2 specification; 23 Phase3 roadmap. Decision priority: USER_APPROVED > approved M/P1/P2 > DELEGATED_DEFAULT > BALANCE_PROVISIONAL. Latest previously verified master 87a01d27bc856462806faed71174ebcd6dae1743, official M3.5 GitHub Actions #38601440415 with 598/598 named Domain assertions.
@@ -21,3 +21,15 @@ M-D21 default MP cost equal across modes through M2 quote, AP modifications/over
 
 ## Hard gate and repair cap
 M4.1 VERIFIED requires the actual GitHub Actions official Godot4.7.2 green job, named positive/negative cases, Seed event/state Hash, full M1–M3.5 regression, and verified committed HEAD. Same failing group: first attempt plus max two fixes; third failure stop, preserve logs, never relax assertions for green.
+
+
+## Executed official CI and final verdict — 2026-10-15 Taipei
+
+- Tested source SHA: **8fcd65ee075664593a08448f3d44eede21a5c2bf**. Successful [Godot4.7.2 CI #38654007627](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38654007627) job 116159331211 completed/success, SHA512 official Godot ZIP verified, imported with version **4.7.2.stable.official.ed1daf0bf**.
+- Actual new M4.1 test output: **47/47 PASS, failed=0**, marker M4_1_DUAL_CAST_DOMAIN_VERIFIED. SAME job ran ALL prior M1–M3.5 scripts **598/598 named Domain cases PASS** and 4 legacy prototype scripts exit0. Overall **645/645 Domain assertions PASS**.
+- Fixed Seed **20261014**. Initial SHA256 **5dcd5282669b59f29c62fd1907299ac053a24a68d66da77e6e5e0c78fdc58e49**; Event SHA256 **6225fa6eb9949575437d7305057be8b7ad743d000e42625f8c8df9427118151b**; Final State SHA256 **42b5f311978d20fea048cf5a85e075ff79998d540c7332ae69343ad595794871**.
+- First source commit 4df6e41e848bda350aa53fdec225466845f7f9a5 produced [initial run #38653818191](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38653818191): new M4.1 47/47 passed, but M3.1 legacy assertion M3_1_REAL_STATUS_FAIL_CLOSED failed because the new boundary changed its expected error name from UNIMPLEMENTED_REAL_TICKS. Repaired solely that unchanged pre-existing error contract in source commit 8fcd65ee075664593a08448f3d44eede21a5c2bf; no rules or assertions weakened. This was initial run + ONE corrective rerun, within stated repair cap.
+- Canonical scope: same MP base for both modes, cost once at commit, real M2 Hand→Discard or Hand→Casting→Discard, Concentration and refusal of further actions, next Player Phase release BEFORE AP renewal and hand refill, cost/card atomicity and seeded replay. An explicit provisional stability=10 fixture does not approve balance; no actual damage or spell interruption.
+- Deferred by design: M4.2 Focus Ward/Disruption and MP refund, M4.3 Last Spell, M4.4 HP0 forced invalidation, M4.5 combined acceptance, M5 HP damage and Presentation HUD. Dead caster or dead target at release intentionally fail closed. This Domain gate does not mean the whole M4 or playable battle is verified.
+
+**Final independent acceptance: M4.1 VERIFIED; proceed to M4.2 only as a separate task.**

@@ -228,3 +228,19 @@ Source SHA e638626a3c9fe44c2c4d172d04e1b409a9af08e0. Official Godot 4.7.2 [full 
 | M4/M5 and Presentation boundaries | Report PH3_M3_5_ACCEPTANCE_REPORT.md | Headless Domain PASS; live magic/damage/UI still deferred |
 
 **VERDICT: M3 DOMAIN VERIFIED — HEADLESS FIXTURE SCOPE (M3.1–M3.5)**. Do not call the Godot app PLAYABLE VERIFIED, casting VERIFIED, hit/damage VERIFIED or old countdown removed. See acceptance report for full SHA256 replay proof and exact remaining dependencies.
+
+
+## M4.1 Dual Casting independent gate — 2026-10-15
+
+Source 8fcd65ee075664593a08448f3d44eede21a5c2bf; official [Godot4.7.2 CI #38654007627](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38654007627). M4.1 47/47 PASS and full M1–M3.5 598/598 PASS, total 645/645, four legacy smoke runners exit0. Replay hashes and repair record in PH3_M4_1_ENGINEERING_NOTE.md.
+
+| Rule / source | Confirmed executable oracles | Status |
+|---|---|---|
+| CAST-001 Chantless immediate effect contract, Hand→Discard | CAST-001-CHANTLESS_ACCEPTED, CAST-001-IMMEDIATE_EFFECT_CONTRACT, CAST-001-COST_PAID_ONCE | PASS headless contract; M5 damage deferred |
+| CAST-002 Full Chant and Concentration | CAST-002-FULL_ACCEPTED, CAST-002-ONE_CASTING_INSTANCE, CAST-002-CARD_IN_CASTING | PASS one active cast and accurate card zone |
+| M-D21 same default MP in Chantless and Full | M21-CAST-001-EQUAL_BASE_MP, CAST-002-COST_PAID_AT_START | PASS authoritative M2 MP quote |
+| CAST-003 Concentration action restriction | CAST-003-BASIC_ATTACK_DENIED, CAST-003-SECOND_FULL_DENIED | PASS rejects without mutation |
+| PRE3-R09/R12 release before AP/draw | CAST-002-EVENT_BEFORE_M2_RENEW_AND_DRAW, CAST-002-RELEASE_NO_SECOND_PAYMENT | PASS real M3 Boundary and M2 settlement |
+| Replay / fail-closed | CAST-002-M4_REPLAY_ENTIRE_PHASE, CAST-NEG-INSUFFICIENT_MP_ATOMIC, CAST-NEG-DUPLICATE_COMMAND | PASS at fixed Seed 20261014 |
+
+**M4.2–M4.5 not executed, overall M4 DOMAIN VERIFIED not claimed.**
