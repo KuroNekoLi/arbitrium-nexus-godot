@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m3_reaction_window.gd > "$RUNNER_TEMP/m3-2-logs/test_m3_reaction_window.log" 2>&1 || {
+          timeout 35s "$GODOT_BIN" --headless --path . --script res://tests/test_m3_reaction_window.gd > "$RUNNER_TEMP/m3-2-logs/test_m3_reaction_window.log" 2>&1 || {
             cat "$RUNNER_TEMP/m3-2-logs/test_m3_reaction_window.log"; exit 1;
           }
           cat "$RUNNER_TEMP/m3-2-logs/test_m3_reaction_window.log"
