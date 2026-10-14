@@ -116,3 +116,17 @@ Executed code on commit de2178e175846c2eeae5aba7f3f96995bb61323c. Evidence: [M2.
 | PRE3-16 (spec-13) | Last Spell caster HP0 | M4 | None | SPECIFIED_NOT_EXECUTED (not loadout PRE3-R16) |
 
 The old M2.5 report's initial missing-M2.3 finding refers only to its historical baseline SHA. Current status: M2.3 independently verified, M2.4 still missing and full cross-card/Free Swap replay not executed. Do not promote the full M2.5 gate to VERIFIED.
+
+## M2.4 — Free Swap + Card Events independent verified domain (2026-10-14)
+
+Source [Library 19 M-D26–30 / Library 20 PRE3-R11], source code `scripts/domain/m2/cards/free_swap_resolver.gd`, `card_trigger_dispatcher.gd`, updated `card_zone_resolver.gd`. Test: `tests/test_m2_free_swap.gd`. Evidence [successful official Godot 4.7.2 CI #38582070292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38582070292), tested SHA `7b115720716c5fd155088313d14c9df81344bd74`. **32/32 PASS**, M2.3 **46/46**, M1 **30/30**, M2.1 **38/38**, M2.2 **43/43**, legacy scripts exit0. Event/State replay hashes in [PH3_M2_4_ENGINEERING_NOTE.md](PH3_M2_4_ENGINEERING_NOTE.md).
+
+| RTM | Test | Verified scope | Deferred |
+|---|---|---|---|
+| G0-R13 / M-D26, M-D27 | `M26-SWAP-001`, `M27-SWAP-002`, per actor quota / next phase, seeded reshuffle | CARD_DOMAIN_ONLY_VERIFIED: 1 per actor per phase, isolated no-self-redraw, event 0AP/0MP | Actual M3 phase driver and shared resource ledger |
+| M-D29 / PRE3-11 (spec13) | `M29-SWAP-003`, PRECHECK retry | CARD_DOMAIN_ONLY_VERIFIED: no replacement => atomic reject/no event/no consumption | Full battle driver |
+| M-D28/30 | `M30-SWAP-004`, `M28-SWAP-EVENT_TRIGGERS_ORDER` | CARD_EVENTS_ONLY_VERIFIED: legal event ordering, finite declarative MOVE_CARD triggers | **Spec13 MP recovery and draw-Buff effects** not implemented |
+| PRE3-12 (spec13) / PRE3-R11 (Library20) | `PRE3-11-POOL_CHANGED`, `PRE3-11-EVENT_ORDER` | CARD_DOMAIN_ONLY_VERIFIED: post-trigger depletion => no CardDrawn, CardDrawFailed(POOL_CHANGED), quota spent, no rollback | Full Card/Cost/Status replay in M2.5 |
+| G0-R25 / P2-D16 | `M2_4-SEEDED_REPLAY`, `M2_4-EVENT_SEQ_MONOTONIC` | CARD_DOMAIN_ONLY_VERIFIED replay hashes | Integrated M2.5 replay and M3/M4/M5 |
+
+Do not interpret `PRE3-12` (spec13 changed-pool test) as Library `PRE3-R12` (Casting). Existing M2.5 baseline narrative of missing M2.3/M2.4 describes its **historical old SHA**, not the current source tree. The entire M2.5 workflow still deliberately returns exit2 `BLOCKED_M2_FULL_INTEGRATION`; **M2 DOMAIN VERIFIED is NOT claimed**.

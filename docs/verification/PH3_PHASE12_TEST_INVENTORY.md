@@ -307,3 +307,16 @@ Source-of-truth 128 test IDs above remain unchanged. This new section adds **20 
 Godot4.7.2 M2.3 tests **46/46 PASS** in [run #38580461921](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38580461921), commit de2178e175846c2eeae5aba7f3f96995bb61323c. Exact DECK-003 mixed draw1/discard10 and PRE3-20 hand7/request3 scenarios are included. DECK-002 and M25-HAND-001 execute the M2.3 explicit draw-to-four function, not a real M3 phase reducer. V2 store and PRE3-R16 deck entry validation are verified as independent M2.3 rules.
 
 Do not conflate **PRE3-R16** (deck rule) with **PRE3-16** (existing spec-13 Last Spell HP0 testcase owned by M4). The latter is unexecuted. M2.4 Free Swap and full M2.5 replay remain blocked; legacy G0 behavior is not magically migrated.
+
+### M2.4 independent Free Swap oracle supplement (2026-10-14)
+
+Godot `4.7.2.stable.official.ed1daf0bf`, source commit `7b115720716c5fd155088313d14c9df81344bd74`, [CI #38582070292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38582070292): **32/32 M2.4 PASS** plus M2.3=46/46, M1=30/30, M2.1=38/38, M2.2=43/43; full workflow success. Source table §2 entries retain their original SPECIFIED statuses as a statement about the **complete** spec13 end-to-end tests; the following maps actually executed domain sub-oracles, not unimplemented MP/BUFF cases.
+
+- `M26-SWAP-001`: per actor/phase quota, independent B/C, zero AP/MP event metadata; no integrated resource debit.
+- `M27-SWAP-002`: isolated original, seeded discard reshuffle never returns that exact instance during the operation.
+- `M29-SWAP-003`, `PRE3-11` (spec13): no candidate PRECHECK => unchanged zone and quota, no events, retry after actual candidate appears.
+- `M30-SWAP-004`: event ordering with **MOVE_CARD** effects only; MP restoration and draw Buff from spec13 remain `NOT_EXECUTED`.
+- `PRE3-12` (spec13, equivalent to Library `PRE3-R11`): CardDiscarded effect exhausts pool after successful PRECHECK => `CardDrawFailed(POOL_CHANGED)`; prior effect persists, original discarded and quota consumed, no phantom draw.
+- `M2_4-SEEDED_REPLAY`: card-domain seeded event hash `f8003dc11c5831b29a7e07c9fcae1b085c45fdb6d85a95e58933ebd077c5add4`, final state hash `dd5c7d9896614711c522cc17ab3091f05635fb3b7708acacb55a599457cdd3f2`. Full M2.5 replay remains blocked.
+
+`PRE3-12` is not Library `PRE3-R12`, which covers Full Chant Casting.
