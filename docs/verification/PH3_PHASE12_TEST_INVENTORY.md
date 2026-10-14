@@ -658,3 +658,114 @@ Official Godot 4.7.2 successful workflow https://github.com/KuroNekoLi/arbitrium
 | 83 | M3_4_PLAYER_PHASE_NO_WINDOW | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
 
 Seed replay event SHA256 1643d46796699e9eea86115bf1cb1960c8aa66f93302659f29f59d5e5b652642; final state SHA256 4cac348cc321900fcb65343ee8420d4ff3cc78f2529ab65ad4e24fa408de421f. M3.5 pending and all true Presentation UI work remains separate.
+
+
+### M3.5 Integration + Replay — 101 actual Godot test cases (2026-10-14)
+
+Official successful CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38601022642 on tested source SHA e638626a3c9fe44c2c4d172d04e1b409a9af08e0; official Godot 4.7.2, seed 20261014, 47 commands. Exactly **61/61** Integration and **40/40** Replay cases from actual stdout below; total M1–M3.5 named assertions **598/598 PASS**, 4 legacy prototype headless runners exit0. Domain-only fixture: no M4 casting effects, no M5 HP/damage/Guard coefficient, no playable UI.
+
+| # | Exact Godot test ID | Runner | Gate |
+|---:|---|---|---|
+| 1 | M35-END2END-COMPLETE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 2 | M35-END2END-REAL_M2_CARD_ZONES | test_m3_integration.gd | PASS / M3.5 Integration |
+| 3 | M35-END2END-ALL_36_INSTANCES | test_m3_integration.gd | PASS / M3.5 Integration |
+| 4 | M35-END2END-SEED_IMMUTABLE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 5 | M35-END2END-PUBLIC_ORDER | test_m3_integration.gd | PASS / M3.5 Integration |
+| 6 | M35-END2END-RP_CAP6_FROM_AP | test_m3_integration.gd | PASS / M3.5 Integration |
+| 7 | M35-END2END-PHASE_AWAITING_CONSENT | test_m3_integration.gd | PASS / M3.5 Integration |
+| 8 | M35-QUEUE-THREE_DIFFERENT_ACTORS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 9 | M35-QUEUE-NO_EARLY_RP_CHARGE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 10 | M35-QUEUE-NO_EARLY_MP_OR_CARD | test_m3_integration.gd | PASS / M3.5 Integration |
+| 11 | M35-QUEUE-AGGREGATE_BUDGET | test_m3_integration.gd | PASS / M3.5 Integration |
+| 12 | M35-QUEUE-CANNOT_PREMATURELY_FINISH | test_m3_integration.gd | PASS / M3.5 Integration |
+| 13 | PH3-M3-QUEUE-001 | test_m3_integration.gd | PASS / M3.5 Integration |
+| 14 | PRE3-R04-SKIP_WITHOUT_PAYMENT | test_m3_integration.gd | PASS / M3.5 Integration |
+| 15 | M35-QUEUE-ONLY_TWO_REAL_PAYMENTS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 16 | M35-QUEUE-SKIPPED_B_KEEPS_MP | test_m3_integration.gd | PASS / M3.5 Integration |
+| 17 | M35-QUEUE-SPENT_A_C_CARDS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 18 | M35-QUEUE-CARD_INSTANCE_CONSERVED | test_m3_integration.gd | PASS / M3.5 Integration |
+| 19 | M35-QUEUE-COMMIT_BEFORE_SKIP_AND_CLOSE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 20 | M35-QUEUE-INDEPENDENT_SUPPORT_AFTER_CANCEL | test_m3_integration.gd | PASS / M3.5 Integration |
+| 21 | M35-QUEUE-CONFIRM_IS_IDEMPOTENT_REJECT | test_m3_integration.gd | PASS / M3.5 Integration |
+| 22 | M35-QUEUE-SKIPPED_GUARD_NOT_CONSUMED | test_m3_integration.gd | PASS / M3.5 Integration |
+| 23 | M35-ACTION-CANCELLATION_METADATA_ONLY | test_m3_integration.gd | PASS / M3.5 Integration |
+| 24 | M35-WINDOW-UNIQUE_ACTION_ID | test_m3_integration.gd | PASS / M3.5 Integration |
+| 25 | M35-WINDOW-RP_CONTINUES_AS4 | test_m3_integration.gd | PASS / M3.5 Integration |
+| 26 | M35-WINDOW-RESETS_EXECUTED_ACTORS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 27 | M35-GUARD_PROTECT-NO_DRAFT_CHARGE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 28 | PRE3-R02-GUARD_ALL_HITS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 29 | PH3-M3-PROTECT-001 | test_m3_integration.gd | PASS / M3.5 Integration |
+| 30 | M35-GUARD_PROTECT-ONLY_3RP | test_m3_integration.gd | PASS / M3.5 Integration |
+| 31 | M35-GUARD_PROTECT-NO_MP_CARD | test_m3_integration.gd | PASS / M3.5 Integration |
+| 32 | M35-GUARD_PROTECT-CHRONOLOGY | test_m3_integration.gd | PASS / M3.5 Integration |
+| 33 | M35-PROTECT-M5_HANDOFF_BEFORE_HIT | test_m3_integration.gd | PASS / M3.5 Integration |
+| 34 | M35-PROTECT-ONLY_EXPLICIT_STATUS_TRANSFER | test_m3_integration.gd | PASS / M3.5 Integration |
+| 35 | M35-PROTECT-NEVER_FAKES_HP_DAMAGE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 36 | M35-AOE-NO_PROTECT | test_m3_integration.gd | PASS / M3.5 Integration |
+| 37 | M35-AOE-GUARD1RP | test_m3_integration.gd | PASS / M3.5 Integration |
+| 38 | M35-AOE-MULTIHIT_COVERAGE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 39 | M35-RP_ZERO-EMPTY_WINDOW | test_m3_integration.gd | PASS / M3.5 Integration |
+| 40 | M35-RP_ZERO-NO_PHANTOM_RP | test_m3_integration.gd | PASS / M3.5 Integration |
+| 41 | M35-RP_ZERO-NO_FORCED_CONFIRM | test_m3_integration.gd | PASS / M3.5 Integration |
+| 42 | M35-END_ENEMY-RP_EXPIRED | test_m3_integration.gd | PASS / M3.5 Integration |
+| 43 | M35-PHASE_ROUND2_STARTS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 44 | M35-PHASE_REFILL_HAND4 | test_m3_integration.gd | PASS / M3.5 Integration |
+| 45 | M35-PHASE_RESETS_REACTION_WINDOW | test_m3_integration.gd | PASS / M3.5 Integration |
+| 46 | M35-PHASE_RESETS_SWAP_QUOTA | test_m3_integration.gd | PASS / M3.5 Integration |
+| 47 | M35-PHASE_ORDER_RENEW_BEFORE_DRAW | test_m3_integration.gd | PASS / M3.5 Integration |
+| 48 | P1-D01-PLAYER_ACTION_ORDER_AABA | test_m3_integration.gd | PASS / M3.5 Integration |
+| 49 | M35-PHASE_AABA_AP_ACTUAL_COST | test_m3_integration.gd | PASS / M3.5 Integration |
+| 50 | M35-PHASE_AABA_NO_UI_TIMER | test_m3_integration.gd | PASS / M3.5 Integration |
+| 51 | M35-PHASE_SECOND_TURN_ALL_PASSED | test_m3_integration.gd | PASS / M3.5 Integration |
+| 52 | M35-PHASE_SECOND_TURN_EXPLICIT_PASS | test_m3_integration.gd | PASS / M3.5 Integration |
+| 53 | M35-PHASE_FINAL_HP_UNCHANGED_FIXTURE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 54 | M35-PHASE_NO_CASTING_STATUS_FAKE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 55 | M35-PHASE_36_CARDS_ALSO_ROUND3 | test_m3_integration.gd | PASS / M3.5 Integration |
+| 56 | P2-VIS-02-NO_MOVE_COMMAND | test_m3_integration.gd | PASS / M3.5 Integration |
+| 57 | M35-REJECT_STALE_COMMAND | test_m3_integration.gd | PASS / M3.5 Integration |
+| 58 | M35-REJECT_DUPLICATE_COMMAND | test_m3_integration.gd | PASS / M3.5 Integration |
+| 59 | M35-REJECT_DUPLICATE_CARD_ZONE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 60 | M35-INVALID_SOURCE_FAIL_CLOSED | test_m3_integration.gd | PASS / M3.5 Integration |
+| 61 | M35-INTEGRATION_DOES_NOT_MUTATE_BATTLE | test_m3_integration.gd | PASS / M3.5 Integration |
+| 62 | M35-REPLAY-EXACT_FINAL_STATE | test_m3_replay.gd | PASS / M3.5 Replay |
+| 63 | M35-REPLAY-EXACT_EVENT_HASH | test_m3_replay.gd | PASS / M3.5 Replay |
+| 64 | M35-REPLAY-STATE_HASH_REPEATABLE | test_m3_replay.gd | PASS / M3.5 Replay |
+| 65 | M35-REPLAY-TAPE_NOT_MUTATED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 66 | M35-REPLAY-INITIAL_STATE_IMMUTABLE | test_m3_replay.gd | PASS / M3.5 Replay |
+| 67 | M35-REPLAY-CARD_CONSERVATION | test_m3_replay.gd | PASS / M3.5 Replay |
+| 68 | M35-REPLAY-MONOTONIC_EVENT_SEQUENCE | test_m3_replay.gd | PASS / M3.5 Replay |
+| 69 | M35-REPLAY-EXACT_EVENT_COUNT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 70 | M35-REPLAY-COMMAND_RECEIPTS_1_PER_STEP | test_m3_replay.gd | PASS / M3.5 Replay |
+| 71 | M35-REPLAY-FINAL_RECEIPT_HASH | test_m3_replay.gd | PASS / M3.5 Replay |
+| 72 | M35-REPLAY-INITIAL_SHA_RECORDED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 73 | M35-REPLAY-RECEIPT_COMMAND_IDS | test_m3_replay.gd | PASS / M3.5 Replay |
+| 74 | M35-REPLAY-EVERY_RECEIPT_HAS_HASH | test_m3_replay.gd | PASS / M3.5 Replay |
+| 75 | M35-REPLAY-FIRST_TURN_RP_ZERO | test_m3_replay.gd | PASS / M3.5 Replay |
+| 76 | M35-REPLAY-END_ROUND3 | test_m3_replay.gd | PASS / M3.5 Replay |
+| 77 | M35-REPLAY-BOTH_ROUNDS_ENEMY_DECLARED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 78 | M35-REPLAY-EACH_ENEMY_ACTION_FINISHED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 79 | M35-REPLAY-EMPTY_WINDOW_EVENT_PRESENT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 80 | M35-REPLAY-PROTECT_REDIRECT_EVENT_PRESENT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 81 | M35-REPLAY-GUARD_EVENT_PRESENT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 82 | M35-REPLAY-SP_CANCEL_AND_FREE_SKIP_PRESENT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 83 | M35-REPLAY-TWO_PLAYER_RESOURCE_RENEWS | test_m3_replay.gd | PASS / M3.5 Replay |
+| 84 | M35-REPLAY-RP_EXPIRY_COUNT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 85 | M35-REPLAY-SMART_VIEW_DOES_NOT_MODIFY_DOMAIN | test_m3_replay.gd | PASS / M3.5 Replay |
+| 86 | M35-REPLAY-ALWAYS_ASK_VIEW_DOES_NOT_MODIFY_DOMAIN | test_m3_replay.gd | PASS / M3.5 Replay |
+| 87 | M35-REPLAY-QUICK_VIEW_DOES_NOT_MODIFY_DOMAIN | test_m3_replay.gd | PASS / M3.5 Replay |
+| 88 | M35-REPLAY-THREE_MODES_FINAL_STATE_EQUAL | test_m3_replay.gd | PASS / M3.5 Replay |
+| 89 | M35-REPLAY-THREE_MODES_EVENT_HASH_EQUAL | test_m3_replay.gd | PASS / M3.5 Replay |
+| 90 | M35-REPLAY-NO_WALL_CLOCK_IN_STATE | test_m3_replay.gd | PASS / M3.5 Replay |
+| 91 | M35-REPLAY-STALE_STEP_REJECTED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 92 | M35-REPLAY-STALE_STOPS_BEFORE_ANY_LATER_STEP | test_m3_replay.gd | PASS / M3.5 Replay |
+| 93 | M35-REPLAY-DUPLICATE_ID_REJECTED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 94 | M35-REPLAY-DUPLICATE_FAILS_CLOSED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 95 | M35-REPLAY-NO_PREMATURE_ACTION | test_m3_replay.gd | PASS / M3.5 Replay |
+| 96 | M35-REPLAY-CONTENT_CHANGE_NOT_SILENT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 97 | M35-REPLAY-SEED_DISTINGUISHES_STATES | test_m3_replay.gd | PASS / M3.5 Replay |
+| 98 | M35-REPLAY-DIFFERENT_SEED_NOT_IDENTICAL | test_m3_replay.gd | PASS / M3.5 Replay |
+| 99 | M35-REPLAY-COST_EVENT_BEFORE_EFFECT | test_m3_replay.gd | PASS / M3.5 Replay |
+| 100 | M35-REPLAY-CARD_INSTANCE_NOT_DUPLICATED | test_m3_replay.gd | PASS / M3.5 Replay |
+| 101 | M35-REPLAY-NO_REAL_HP_DAMAGE_CLAIM | test_m3_replay.gd | PASS / M3.5 Replay |
+
+Canonical replay seed 20261014; initial SHA256 435fe62907f8f5006bfb5fb201db0a54207bc06694173dc172c2757b94dc5430; event SHA256 05599b881ad2ba6ee37e9cd1b2cc89ce9b6d97ce1e7b53e1ec58ea439ae17717; final SHA256 25ca6dfaee05dc68d175adcea0392a679248b477d8d3bbdc9611a96714611b66. Exact evidence: above CI raw logs. `M3 DOMAIN VERIFIED` applies ONLY to headless fixture scope.

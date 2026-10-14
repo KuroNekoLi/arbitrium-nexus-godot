@@ -210,3 +210,21 @@ Official Godot 4.7.2 GitHub Actions https://github.com/KuroNekoLi/arbitrium-nexu
 | i18n/Presentation boundary | Policy only provides reaction.mode.* identifier, no UI changes | Real HUD, old scripts/main.gd countdown replacement, translated strings and input modes NOT_IMPLEMENTED in this milestone |
 
 See PH3_M3_4_ENGINEERING_NOTE.md for SHA256 replay evidence. M3.5 complete M3 domain integration remains NOT_EXECUTED and blocks the top-level M3 DOMAIN VERIFIED marker. M4 casting and M5 actual damage remain separate milestones.
+
+
+## M3.5 — Integrated headless M3 Domain gate (2026-10-14)
+
+Source SHA e638626a3c9fe44c2c4d172d04e1b409a9af08e0. Official Godot 4.7.2 [full M3.5 Actions run](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38601022642): two new suites 61/61 Integration and 40/40 seeded Replay, previous M3.4 83/83, M3.3 54/54, M3.2 50/50, M3.1 61/61, M1–M2 249/249. Total **598/598 named Domain cases PASS**, four legacy smoke scripts exit0.
+
+| Approved or delegated requirement | Actual implementation / tests | Domain outcome |
+|---|---|---|
+| P1-D01 M3.1 player action order and phase life cycle | m3/integration/m3_domain_resolver.gd delegates PhaseEngine; tests/test_m3_integration.gd P1-D01-PLAYER_ACTION_ORDER_AABA | PASS 2 full rounds, round3 Player opening |
+| P1-D03/D04/PRE3-R04 queued reaction JIT, skip/no cost | test_m3_integration.gd PH3-M3-QUEUE-001, PRE3-R04-SKIP_WITHOUT_PAYMENT, M35-QUEUE-ONLY_TWO_REAL_PAYMENTS | PASS real M2 SP/resource/zone transaction with explicit cancellation FIXTURE |
+| PRE3-R01/R02/R03/R17 Guard multihit, Protect prior to hit and AOE restrictions | PH3-M3-PROTECT-001, PRE3-R02-GUARD_ALL_HITS, M35-AOE-NO_PROTECT, M35-PROTECT-M5_HANDOFF_BEFORE_HIT | PASS protection metadata (damage M5 NOT_IMPLEMENTED) |
+| PRE3-R05/P1-D03 RP cap and expiration | M35-END2END-RP_CAP6_FROM_AP, M35-WINDOW-RP_CONTINUES_AS4, M35-AOE-GUARD1RP, M35-RP_ZERO-EMPTY_WINDOW | PASS real shared M2 RP, empty Window only at truly 0 RP |
+| CORE-04 P1-D05 Smart/Always Ask/Quick strict consent/no time based advancement | tests/test_m3_replay.gd M35-REPLAY-THREE_MODES_FINAL_STATE_EQUAL, M35-REPLAY-NO_WALL_CLOCK_IN_STATE | PASS pure Domain output; legacy UI not migrated |
+| P2-D16/CardZone invariant fixed seeded Replay | M35-REPLAY-EXACT_EVENT_HASH, M35-REPLAY-CARD_CONSERVATION, M35-REPLAY-DUPLICATE_ID_REJECTED | PASS 47 command tape and canonical event/final-state SHA256 |
+| CORE-03 no player movement added | P2-VIS-02-NO_MOVE_COMMAND | PASS fail-closed unsupported MOVE |
+| M4/M5 and Presentation boundaries | Report PH3_M3_5_ACCEPTANCE_REPORT.md | Headless Domain PASS; live magic/damage/UI still deferred |
+
+**VERDICT: M3 DOMAIN VERIFIED — HEADLESS FIXTURE SCOPE (M3.1–M3.5)**. Do not call the Godot app PLAYABLE VERIFIED, casting VERIFIED, hit/damage VERIFIED or old countdown removed. See acceptance report for full SHA256 replay proof and exact remaining dependencies.
