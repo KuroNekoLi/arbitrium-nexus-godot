@@ -10,7 +10,7 @@ const Debt = preload("res://scripts/domain/m2/economy/overload_debt.gd")
 const KINDS: Array[String] = [
 	"SPEND_AP", "GRANT_AP", "PAY_MP", "RECOVER_MP",
 	"BASIC_ATTACK_RESOURCE_ONLY", "CONVERT_AP_TO_RP",
-	"SPEND_RP", "GRANT_RP", "EXPIRE_RP", "START_PLAYER_RESOURCES"
+	"SPEND_RP", "GRANT_RP", "PAY_REACTION_COST_FIXTURE", "EXPIRE_RP", "START_PLAYER_RESOURCES"
 ]
 
 static func _reject(state: Dictionary, reason: String) -> Dictionary:
@@ -167,6 +167,29 @@ static func apply(state: Dictionary, instruction: Dictionary, provisional: Dicti
 			next_state["party_resources"]["rp"] = after
 			return _finish(next_state, instruction, "RPSpent" if kind == "SPEND_RP" else "RPGranted",
 				{"requested": amount, "actual": abs(after - before), "before": before, "after": after})
+		"PAY_REACTION_COST_FIXTURE":
+			# Exact RP+MP in one transaction; no extra reaction economy.
+			# Caller must separately validate Window/target/card eligibility.
+			if phase != "ENEMY_PHASE":
+				return _reject(state, "INVALID_PHASE")
+			if not _can_act(state, actor_id):
+				return _reject(state, "ACTOR_UNAVAILABLE")
+			if not instruction.get("rp_cost", null) is int or not instruction.get("mp_cost", null) is int:
+				return _reject(state, "INVALID_REACTION_COST")
+			var rp_cost: int = int(instruction["rp_cost"])
+			var mp_cost: int = int(instruction["mp_cost"])
+			if rp_cost < 0 or mp_cost < 0:
+				return _reject(state, "INVALID_REACTION_COST")
+			if rp_cost > int(r["rp"]):
+				return _reject(state, "INSUFFICIENT_RP")
+			if mp_cost > int(state["actors"][actor_id]["mp"]):
+				return _reject(state, "INSUFFICIENT_MP")
+			next_state = Model.snapshot(state)
+			next_state["party_resources"]["rp"] = int(r["rp"]) - rp_cost
+			next_state["actors"][actor_id]["mp"] = int(state["actors"][actor_id]["mp"]) - mp_cost
+			return _finish(next_state, instruction, "ReactionResourcesCommitted",
+				{"actor_id": actor_id, "rp_paid": rp_cost, "mp_paid": mp_cost,
+					"source": "M3_2_REACTION_SP_FIXTURE"})
 		"EXPIRE_RP":
 			if phase != "ENEMY_PHASE":
 				return _reject(state, "INVALID_PHASE")

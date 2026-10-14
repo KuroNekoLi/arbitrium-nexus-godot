@@ -187,6 +187,38 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 				return _rejected(state, str(basic["error"]))
 			next["battle"] = basic["state"]
 			_log(next, "resources", basic["events"], produced)
+		"COMMIT_REACTION_SP_FIXTURE":
+			# Canonical M2 transaction: real RP+MP ledger then exact
+			# CardInstance hand->discard. No M3 duplicate spend model.
+			if battle["phase"] != "ENEMY_PHASE" or not _actor_available(battle, actor_id):
+				return _rejected(state, "ACTOR_UNAVAILABLE_OR_PHASE")
+			var card_id: String = str(instruction.get("card_instance_id", ""))
+			if Zones.location(cards, actor_id, card_id) != "hand":
+				return _rejected(state, "CARD_NOT_IN_OWN_HAND")
+			var definition_id: String = str(cards["actors"][actor_id]["instances"][card_id]["definition_id"])
+			var catalogue: Variant = config.get("reaction_definitions", null)
+			if not catalogue is Dictionary or not catalogue.has(definition_id):
+				return _rejected(state, "MISSING_REACTION_DEFINITION")
+			var definition: Variant = catalogue[definition_id]
+			if not definition is Dictionary or not definition.get("rp_cost", null) is int or not definition.get("mp_cost", null) is int:
+				return _rejected(state, "INVALID_REACTION_DEFINITION")
+			if str(definition.get("kind", "")) != "REACTION_SP":
+				return _rejected(state, "NOT_REACTION_SP")
+			var spent: Dictionary = Ledger.apply(battle, {
+				"type": "PAY_REACTION_COST_FIXTURE", "command_id": command_id,
+				"expected_event_seq": int(battle["event_seq"]),
+				"actor_id": actor_id, "rp_cost": int(definition["rp_cost"]),
+				"mp_cost": int(definition["mp_cost"])
+			}, config.get("resources", {}))
+			if not spent["accepted"]:
+				return _rejected(state, str(spent["error"]))
+			var discarded: Dictionary = Zones.move(cards, actor_id, card_id, "hand", "discard")
+			if not discarded["accepted"]:
+				return _rejected(state, str(discarded["error"]))
+			next["battle"] = spent["state"]
+			next["cards"] = discarded["state"]
+			_log(next, "resources", spent["events"], produced)
+			_log(next, "cards", discarded["events"], produced)
 		"FREE_SWAP":
 			if battle["phase"] != "PLAYER_PHASE":
 				return _rejected(state, "INVALID_PHASE")

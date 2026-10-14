@@ -7,6 +7,8 @@ const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Integrated = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Scheduler = preload("res://scripts/domain/m3/enemy/enemy_action_scheduler.gd")
 const Boundary = preload("res://scripts/domain/m3/phase/phase_boundary_resolver.gd")
+const Window = preload("res://scripts/domain/m3/reaction/reaction_window_resolver.gd")
+const ReactionQueue = preload("res://scripts/domain/m3/reaction/reaction_queue_resolver.gd")
 const SCHEMA: String = "m3.1-phase-fixture-v1"
 const PLAYER_KINDS: Array[String] = [
 	"COMMIT_SP_CARD_FIXTURE", "FREE_SWAP", "EXTRA_DRAW_FIXTURE",
@@ -27,6 +29,7 @@ static func make_state(core: Dictionary, published_intents: Array = [],
 		"phase": "PLAYER_PHASE", "published_intents": published_intents.duplicate(true),
 		"pending_boundary_hooks": boundary_hooks.duplicate(true),
 		"enemy_actions": [], "enemy_cursor": 0, "active_enemy_action_id": "",
+		"reaction_window": {},
 		"event_seq": 0, "events": [], "seen_command_ids": []}
 	return state if validate_state(state) else {}
 
@@ -45,6 +48,30 @@ static func validate_state(state: Dictionary) -> bool:
 		return false
 	if not state.get("enemy_actions", null) is Array or not state.get("enemy_cursor", null) is int:
 		return false
+	if not state.get("reaction_window", null) is Dictionary:
+		return false
+	if not state["reaction_window"].is_empty():
+		var rw: Dictionary = state["reaction_window"]
+		if not ["DRAFTING", "RESOLVING", "CLOSED"].has(str(rw.get("status", ""))):
+			return false
+		if str(rw.get("enemy_action_id", "")) != str(state.get("active_enemy_action_id", "")):
+			return false
+		if not rw.get("draft", null) is Array or not rw.get("executed_actor_ids", null) is Array:
+			return false
+		if not rw.get("action_active", null) is bool:
+			return false
+		var draft_actors: Dictionary = {}
+		for option: Variant in rw["draft"]:
+			if not option is Dictionary or not option.get("actor_id", null) is String:
+				return false
+			if draft_actors.has(option["actor_id"]):
+				return false
+			draft_actors[option["actor_id"]] = true
+		var executed_actors: Dictionary = {}
+		for option: Variant in rw["executed_actor_ids"]:
+			if not option is String or executed_actors.has(option):
+				return false
+			executed_actors[option] = true
 	if not state.get("active_enemy_action_id", null) is String:
 		return false
 	if not state.get("published_intents", null) is Array or not Boundary.validate_hooks(state.get("pending_boundary_hooks", [])):
@@ -180,18 +207,61 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 		_emit(next, emitted, "EnemyActionDeclared", command_id,
 			{"enemy_action_id": str(action["enemy_action_id"]),
 				"enemy_id": str(action["enemy_id"]), "public_intent": action["public_intent"]}, "enemy")
+	elif kind == "OPEN_REACTION_WINDOW":
+		if phase != "ENEMY_PHASE" or str(next["active_enemy_action_id"]).is_empty():
+			return _reject(original, "NO_DECLARED_ENEMY_ACTION")
+		if not next["reaction_window"].is_empty():
+			return _reject(original, "REACTION_WINDOW_ALREADY_OPENED")
+		var action_id: String = str(next["active_enemy_action_id"])
+		if str(instruction.get("enemy_action_id", "")) != action_id:
+			return _reject(original, "STALE_ENEMY_ACTION_ID")
+		var catalogue: Variant = config.get("reaction_definitions", null)
+		if not catalogue is Dictionary:
+			return _reject(original, "MISSING_REACTION_CATALOGUE")
+		var selected_action: Dictionary = next["enemy_actions"][int(next["enemy_cursor"])]
+		var opened: Dictionary = Window.open(next["core"], selected_action, catalogue)
+		if not opened["ok"]:
+			return _reject(original, str(opened["error"]))
+		next["reaction_window"] = opened["window"]
+		_emit(next, emitted, "ReactionWindowOpened" if opened["has_legal_options"]
+			else "ReactionWindowEmptySkipped", command_id,
+			{"window_id": str(opened["window"]["window_id"]),
+				"enemy_action_id": action_id, "has_legal_options": bool(opened["has_legal_options"])},
+			"reaction")
+	elif ["QUEUE_REACTION", "REMOVE_REACTION", "REORDER_REACTIONS",
+			"CONFIRM_REACTIONS", "PASS_REACTION"].has(kind):
+		if phase != "ENEMY_PHASE" or str(next["active_enemy_action_id"]).is_empty():
+			return _reject(original, "NO_DECLARED_ENEMY_ACTION")
+		var processed: Dictionary = ReactionQueue.apply(next, instruction, config)
+		if not processed["ok"]:
+			return _reject(original, str(processed["error"]))
+		next = processed["state"]
+		for record: Dictionary in processed["records"]:
+			if str(record["kind"]) == "CORE_EVENTS":
+				_core_events(next, emitted, record["events"], command_id)
+			else:
+				_emit(next, emitted, str(record["kind"]), command_id,
+					record.get("details", {}), "reaction")
 	elif kind == "COMPLETE_ENEMY_ACTION_FIXTURE":
 		if phase != "ENEMY_PHASE":
 			return _reject(original, "INVALID_PHASE")
 		var active: String = str(next["active_enemy_action_id"])
+		if not next["reaction_window"].is_empty():
+			if str(next["reaction_window"]["status"]) != "CLOSED":
+				return _reject(original, "REACTION_WINDOW_NOT_RESOLVED")
 		if active.is_empty():
 			return _reject(original, "NO_ACTIVE_ENEMY_ACTION")
 		if str(instruction.get("enemy_action_id", "")) != active:
 			return _reject(original, "STALE_ENEMY_ACTION_ID")
+		var current_action: Dictionary = next["enemy_actions"][int(next["enemy_cursor"])]
+		if bool(current_action["public_intent"].get("requires_reaction_window", false)):
+			if next["reaction_window"].is_empty() or str(next["reaction_window"]["status"]) != "CLOSED":
+				return _reject(original, "REACTION_WINDOW_REQUIRED")
 		var cursor: int = int(next["enemy_cursor"])
 		next["enemy_actions"][cursor]["status"] = "FIXTURE_RESOLVED"
 		next["enemy_cursor"] = cursor + 1
 		next["active_enemy_action_id"] = ""
+		next["reaction_window"] = {}
 		_emit(next, emitted, "EnemyActionFixtureResolved", command_id,
 			{"enemy_action_id": active, "damage_status": "DEFERRED_TO_M5",
 				"reaction_status": "DEFERRED_TO_M3_2"}, "enemy")
@@ -223,6 +293,7 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 		next["enemy_actions"] = []
 		next["enemy_cursor"] = 0
 		next["active_enemy_action_id"] = ""
+		next["reaction_window"] = {}
 		for event: Dictionary in opened["timeline"]:
 			if str(event["kind"]) == "core_event":
 				_core_events(next, emitted, [event["raw"]], command_id)
