@@ -5,7 +5,7 @@ const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Draw = preload("res://scripts/domain/m2/cards/draw_resolver.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
-const Engine = preload("res://scripts/domain/m3/phase/phase_engine.gd")
+const PhaseEngine = preload("res://scripts/domain/m3/phase/phase_engine.gd")
 const Scheduler = preload("res://scripts/domain/m3/enemy/enemy_action_scheduler.gd")
 const Boundary = preload("res://scripts/domain/m3/phase/phase_boundary_resolver.gd")
 const SEED: int = 20261014
@@ -53,7 +53,7 @@ func _intents() -> Array:
 	]
 
 func _state(intents: Array = [], hooks: Array = [], seed: int = SEED) -> Dictionary:
-	return Engine.make_state(_core(seed), intents, hooks)
+	return PhaseEngine.make_state(_core(seed), intents, hooks)
 
 func _cmd(s: Dictionary, kind: String, id: String, params: Dictionary = {}) -> Dictionary:
 	var instruction: Dictionary = {"type": kind, "command_id": id,
@@ -63,7 +63,7 @@ func _cmd(s: Dictionary, kind: String, id: String, params: Dictionary = {}) -> D
 	return instruction
 
 func _apply(s: Dictionary, kind: String, id: String, params: Dictionary = {}) -> Dictionary:
-	return Engine.apply(s, _cmd(s, kind, id, params), config)
+	return PhaseEngine.apply(s, _cmd(s, kind, id, params), config)
 
 func _hand(s: Dictionary, actor: String) -> Array:
 	return s["core"]["cards"]["actors"][actor]["zones"]["hand"]
@@ -99,7 +99,7 @@ func _init() -> void:
 		"definitions": {"burst": {"card_id": "burst", "ap_cost": 1, "mp_cost": 1}},
 		"trigger_rules": []}
 	var state: Dictionary = _state(_intents())
-	if not Engine.validate_state(state):
+	if not PhaseEngine.validate_state(state):
 		printerr("M3_1_SETUP_FAILED")
 		quit(1)
 		return
@@ -141,7 +141,7 @@ func _init() -> void:
 		var cmd: Dictionary = _cmd(current, "COMMIT_SP_CARD_FIXTURE",
 			"sp-" + str(i), _cost(current, actor_id))
 		tape.append(cmd)
-		var result: Dictionary = Engine.apply(current, cmd, config)
+		var result: Dictionary = PhaseEngine.apply(current, cmd, config)
 		if not result["accepted"]:
 			printerr("M3_1_PLAYER_FIXTURE_FAIL ", result["error"])
 			quit(1)
@@ -160,10 +160,10 @@ func _init() -> void:
 
 	var stale: Dictionary = _cmd(current, "COMMIT_SP_CARD_FIXTURE", "stale", _cost(current, "A"))
 	stale["expected_event_seq"] = int(state["event_seq"])
-	_expect("M3_1_STALE_NO_MUTATION", _reject_unchanged(Engine.apply(current, stale, config),
+	_expect("M3_1_STALE_NO_MUTATION", _reject_unchanged(PhaseEngine.apply(current, stale, config),
 		current, "STALE_STATE"))
 	var repeated: Dictionary = _cmd(current, "COMMIT_SP_CARD_FIXTURE", "sp-0", _cost(current, "A"))
-	_expect("M3_1_DUPLICATE_NO_MUTATION", _reject_unchanged(Engine.apply(current, repeated, config),
+	_expect("M3_1_DUPLICATE_NO_MUTATION", _reject_unchanged(PhaseEngine.apply(current, repeated, config),
 		current, "DUPLICATE_COMMAND"))
 	_expect("M3_1_ILLEGAL_OWNER_NO_PAYMENT", _reject_unchanged(
 		_apply(current, "COMMIT_SP_CARD_FIXTURE", "wrong-owner",
@@ -178,7 +178,7 @@ func _init() -> void:
 
 	var ended_command: Dictionary = _cmd(current, "END_PLAYER_PHASE", "end-player")
 	tape.append(ended_command)
-	var ended: Dictionary = Engine.apply(current, ended_command, config)
+	var ended: Dictionary = PhaseEngine.apply(current, ended_command, config)
 	if not ended["accepted"]:
 		printerr("M3_1_END_PHASE_FAILED ", ended["error"])
 		quit(1)
@@ -203,7 +203,7 @@ func _init() -> void:
 	for i: int in range(3):
 		var dc: Dictionary = _cmd(enemy, "DECLARE_NEXT_ENEMY_ACTION", "declare-" + str(i))
 		tape.append(dc)
-		var declared: Dictionary = Engine.apply(enemy, dc, config)
+		var declared: Dictionary = PhaseEngine.apply(enemy, dc, config)
 		if not declared["accepted"]:
 			printerr("M3_1_DECLARE_FAILED ", declared["error"])
 			quit(1)
@@ -220,7 +220,7 @@ func _init() -> void:
 		var cc: Dictionary = _cmd(enemy, "COMPLETE_ENEMY_ACTION_FIXTURE",
 			"finish-" + str(i), {"enemy_action_id": action_id})
 		tape.append(cc)
-		var closed: Dictionary = Engine.apply(enemy, cc, config)
+		var closed: Dictionary = PhaseEngine.apply(enemy, cc, config)
 		if not closed["accepted"]:
 			printerr("M3_1_COMPLETE_FAILED ", closed["error"])
 			quit(1)
@@ -234,7 +234,7 @@ func _init() -> void:
 		_apply(enemy, "DECLARE_NEXT_ENEMY_ACTION", "too-many"), enemy, "NO_PENDING_ENEMY_ACTION"))
 	var ee: Dictionary = _cmd(enemy, "END_ENEMY_PHASE", "enemy-end")
 	tape.append(ee)
-	var expired: Dictionary = Engine.apply(enemy, ee, config)
+	var expired: Dictionary = PhaseEngine.apply(enemy, ee, config)
 	if not expired["accepted"]:
 		printerr("M3_1_EXPIRE_FAILED ", expired["error"])
 		quit(1)
@@ -247,7 +247,7 @@ func _init() -> void:
 		awaiting, "INVALID_PHASE"))
 	var sc: Dictionary = _cmd(awaiting, "START_PLAYER_PHASE", "round-two-start")
 	tape.append(sc)
-	var opened: Dictionary = Engine.apply(awaiting, sc, config)
+	var opened: Dictionary = PhaseEngine.apply(awaiting, sc, config)
 	if not opened["accepted"]:
 		printerr("M3_1_OPEN_FAILED ", opened["error"])
 		quit(1)
@@ -265,8 +265,8 @@ func _init() -> void:
 	_expect("M3_1_FREE_SWAP_QUOTA_RENEWED", not round_two["core"]["cards"]["swap_used_by_actor"]["A"])
 	_expect("M3_1_PHASE_REPLAY_CARD_RNG_PRESERVED", Zones.validate_state(round_two["core"]["cards"]))
 
-	var repeated_run: Dictionary = Engine.replay(state, tape, config)
-	var other_run: Dictionary = Engine.replay(state, tape, config)
+	var repeated_run: Dictionary = PhaseEngine.replay(state, tape, config)
+	var other_run: Dictionary = PhaseEngine.replay(state, tape, config)
 	_expect("M3_1_SEEDED_FULL_PHASE_REPLAY", repeated_run["accepted"]
 		and other_run["accepted"] and repeated_run["state_hash"] == other_run["state_hash"]
 		and repeated_run["event_hash"] == other_run["event_hash"]
@@ -275,7 +275,7 @@ func _init() -> void:
 		and round_two["event_seq"] == repeated_run["events"].size())
 	var poisoned: Array[Dictionary] = tape.duplicate(true)
 	poisoned.append(tape[0].duplicate(true))
-	var stopped: Dictionary = Engine.replay(state, poisoned, config)
+	var stopped: Dictionary = PhaseEngine.replay(state, poisoned, config)
 	_expect("M3_1_REPLAY_DUPLICATE_STOPS", not stopped["accepted"]
 		and stopped["error"] == "DUPLICATE_COMMAND"
 		and stopped["state_hash"] == Model.state_hash(round_two))
@@ -326,7 +326,7 @@ func _init() -> void:
 		{"hook_id": "status-low", "kind": "STATUS_FIXTURE", "execute_round": 2,
 			"priority": 1, "created_seq": 2, "fixture_only": true}
 	]
-	var timed: Dictionary = Engine.make_state(_core(), [], hooks)
+	var timed: Dictionary = PhaseEngine.make_state(_core(), [], hooks)
 	var tf: Dictionary = _apply(timed, "COMMIT_SP_CARD_FIXTURE", "tf", _cost(timed, "A", "FULL"))
 	var te: Dictionary = _apply(tf["state"], "END_PLAYER_PHASE", "te")
 	var tx: Dictionary = _apply(te["state"], "END_ENEMY_PHASE", "tx")
@@ -375,7 +375,7 @@ func _init() -> void:
 	_expect("M3_1_ACTUAL_RNG_STABLE", state["core"]["battle"]["rng"] ==
 		round_two["core"]["battle"]["rng"])
 	var different: Dictionary = _state(_intents(), [], SEED + 1)
-	var other_seed: Dictionary = Engine.replay(different, tape, config)
+	var other_seed: Dictionary = PhaseEngine.replay(different, tape, config)
 	_expect("M3_1_DIFFERENT_SEED_REPLAY_DISTINCT", not other_seed["accepted"]
 		or other_seed["state_hash"] != repeated_run["state_hash"])
 	print("M3_1_REPLAY seed=", SEED, " initial=", seed_initial,
