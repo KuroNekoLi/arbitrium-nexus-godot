@@ -161,3 +161,19 @@ Code SHA 4c5e77fbce21aa354935296e42803019b43133ad. Godot CI https://github.com/K
 | P2-D16 and replay | phase_engine.gd, M1 hash adapter | M3_1_SEEDED_FULL_PHASE_REPLAY, M3_1_REPLAY_DUPLICATE_STOPS | M3.1 PASS, integrated Reaction replay M3.5 pending |
 
 M3.2 Reaction Queue, M3.3 Guard/Protect, M3.4 presentation-mode invariants and M3.5 overall M3 regression all remain NOT_EXECUTED. No M3 DOMAIN VERIFIED assertion.
+
+
+## M3.2 Reaction Window & Queue — verified Domain (2026-10-14)
+
+Final code SHA 3c26267cb2e314cf07e3a6ba269f07133852222e; Godot4.7.2 [CI #38594159424](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38594159424) 50/50 M3.2 PASS, M3.1 61/61 PASS, M1–M2 249/249 PASS; 360/360 total Domain assertions, four legacy smoke scripts exit0. Detail, replay hashes and first parser failure correction: PH3_M3_2_ENGINEERING_NOTE.md.
+
+| Requirement | Source and exact oracles | Bounded verification |
+|---|---|---|
+| P1-D03/D04/D15 and EnemyAction Window ID | phase_engine.gd, reaction_window_resolver.gd; M3_2_WINDOW_ID, M3_2_SINGLE_WINDOW_THREE_HITS, M3_2_WINDOW_IDS_NONREUSED | M3.2 VERIFIED one action/one window, no repeated declaration |
+| P1-D15 draft, ordering, no premature fee | reaction_queue_resolver.gd; M3_2_QUEUE_DOES_NOT_PAY, M3_2_PURE_PREVIEW, M3_2_USER_ORDER_NOT_SPEED, M3_2_REMOVE_DRAFT_NO_CARD_SPEND | M3.2 VERIFIED pure editing and explicit Confirm |
+| P1-D16, PRE3-R04 deferred skips | eligibility + Queue + existing M2 atomic ResourceLedger; M3_2_PRE3_R04_JIT_SKIP, M3_2_ONLY_TWO_REAL_SPENDS, M3_2_ONLY_TWO_CARDS_DISCARDED | VERIFIED with fixture-only counter and independent support; real Spell Counter postponed to M4 |
+| P1-D03, M-D08/09 RP/MP per window | resource_ledger.gd, m2_domain_resolver.gd; M3_2_RP_PERSISTS_BETWEEN_WINDOWS, M3_2_RP_EXPIRES_AT_PHASE_END, M3_2_CONFIRM_REJECTS_KNOWN_BUDGET_DEFICIT | VERIFIED real RP/MP/card transaction; card spell effect fixture |
+| CORE-04 no timeout/no autopass | M3_2_PASS_EXPLICIT_ONLY, M3_2_NO_AUTO_PASS_WITH_ELAPSED_DATA | M3.2 Domain VERIFIED; old UI timer removal M3.4/Presentation deferred |
+| Basic Guard/Protect available without SP | M3_2_BASIC_GUARD_CANNOT_BE_SILENTLY_SKIPPED, M3_2_GUARD_PROTECT_NOT_FALSELY_IMPLEMENTED | **M3.3 NOT_IMPLEMENTED**; eligible Guard-only encounter blocked, not silently skipped |
+
+M3.3 Guard/Protect, M3.4 Smart/Always Ask/Quick contract, M3.5 full-phase integrated M3 replay and M4/M5 gameplay remain UNVERIFIED. Do not label M3 DOMAIN VERIFIED.

@@ -441,3 +441,63 @@ Godot official 4.7.2, seed 20261014, source SHA 4c5e77fbce21aa354935296e42803019
 | 61 | M3_1_DIFFERENT_SEED_REPLAY_DISTINCT | test_m3_phase.gd | PASS / M3.1 ONLY |
 
 M3.2–M3.5, real Casting ticks, Guard/Protect, Reaction, UI modes and boss damage remain unexecuted.
+
+
+### M3.2 Reaction Window & Queue — 50 executed headless cases (2026-10-14)
+
+Official Godot 4.7.2 [CI #38594159424](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38594159424) on SHA 3c26267cb2e314cf07e3a6ba269f07133852222e, seed 20261014. All **50/50** named M3.2 cases passed; earlier M3.1 61/61, M1–M2 249/249, four legacy scripts exit0. The executed M3.2 suite uses fixture-only Reaction SP effects, not real Guard/Protect or Spell Counter.
+
+| # | Exact case ID from Godot stdout | Runner | Verdict |
+|---:|---|---|---|
+| 1 | `M3_2_ENEMY_ACTION_PINNED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 2 | `M3_2_RP_REAL_M2_LEDGER` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 3 | `M3_2_MUST_OPEN_WINDOW` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 4 | `M3_2_WINDOW_ID` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 5 | `M3_2_SINGLE_WINDOW_THREE_HITS` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 6 | `M3_2_WRONG_ACTION_ID_REJECTED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 7 | `M3_2_WRONG_WINDOW_ID_REJECTED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 8 | `M3_2_MULTIACTOR_QUEUE` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 9 | `M3_2_QUEUE_DOES_NOT_PAY` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 10 | `M3_2_PURE_PREVIEW` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 11 | `M3_2_SAME_ACTOR_REPLACES_DRAFT` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 12 | `M3_2_REMOVE_DRAFT_NO_CARD_SPEND` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 13 | `M3_2_INVALID_REORDER_ATOMIC` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 14 | `M3_2_USER_ORDER_NOT_SPEED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 15 | `M3_2_CONFIRM_CLOSES_WINDOW` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 16 | `M3_2_PRE3_R04_JIT_SKIP` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 17 | `M3_2_ONLY_EXECUTED_ACTORS_COUNT` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 18 | `M3_2_ONLY_TWO_REAL_SPENDS` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 19 | `M3_2_ONLY_TWO_CARDS_DISCARDED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 20 | `M3_2_ORDER_CONFIRM_PAY_EXECUTE_SKIP` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 21 | `M3_2_NO_PRECONFIRM_CORE_TRANSACTION` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 22 | `M3_2_AFTER_CONFIRM_REJECTS_EDITS` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 23 | `M3_2_DOUBLE_CONFIRM_ATOMIC` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 24 | `M3_2_DUPLICATE_COMMAND` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 25 | `M3_2_ACTION_COMPLETION_AFTER_WINDOW` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 26 | `M3_2_PRIOR_CANCEL_IS_FIXTURE_ONLY` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 27 | `M3_2_EXPIRED_WINDOW_AFTER_ACTION` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 28 | `M3_2_WINDOW_IDS_NONREUSED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 29 | `M3_2_RP_PERSISTS_BETWEEN_WINDOWS` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 30 | `M3_2_RP_EXPIRES_AT_PHASE_END` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 31 | `M3_2_PASS_NO_COST_OR_CARD` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 32 | `M3_2_PASS_EXPLICIT_ONLY` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 33 | `M3_2_NO_AUTO_PASS_WITH_ELAPSED_DATA` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 34 | `M3_2_WRONG_ACTOR_CARD` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 35 | `M3_2_INVALID_TARGET` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 36 | `M3_2_INCAPACITATED_INVALID` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 37 | `M3_2_EXHAUSTED_INVALID` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 38 | `M3_2_CONCENTRATION_FAIL_CLOSED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 39 | `M3_2_INSUFFICIENT_RP` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 40 | `M3_2_INSUFFICIENT_MP` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 41 | `M3_2_GUARD_PROTECT_NOT_FALSELY_IMPLEMENTED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 42 | `M3_2_CONFIRM_REJECTS_KNOWN_BUDGET_DEFICIT` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 43 | `M3_2_NO_FAKE_RESOURCE_PAYMENT` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 44 | `M3_2_BASIC_GUARD_CANNOT_BE_SILENTLY_SKIPPED` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 45 | `M3_2_NO_LEGAL_OPTIONS_EMPTY_WINDOW` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 46 | `M3_2_SEEDED_QUEUE_REPLAY` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 47 | `M3_2_REPLAY_NO_INITIAL_MUTATION` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 48 | `M3_2_REPLAY_CARD_CONSERVATION` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 49 | `M3_2_REPLAY_EVENT_SEQUENCING` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+| 50 | `M3_2_REPLAY_STALE_DUPLICATE_ATOMIC` | test_m3_reaction_window.gd | PASS / M3.2 domain |
+
+Replay event SHA256 a37005b13323e86d4068fef74519adf1c95a1ff03da7b76d6d3e276b51cf414e; final state SHA256 c05baecca6080f83dd15608317d588fde6b2ca5260381ccc9ea8b9f1f6dbb6f7. M3.3 onward still requires its own named suites/CI and real gameplay verification.
