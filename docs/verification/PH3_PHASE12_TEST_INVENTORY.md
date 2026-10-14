@@ -826,3 +826,72 @@ Official PASS: https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/
 | 47 | CAST-002-NO_FORGED_EFFECT_ON_REJECT | test_m4_dual_cast.gd | PASS / M4.1 only |
 
 Fixed seed 20261014; event SHA256 6225fa6eb9949575437d7305057be8b7ad743d000e42625f8c8df9427118151b; final state SHA256 42b5f311978d20fea048cf5a85e075ff79998d540c7332ae69343ad595794871. M4.2–M4.5 pending.
+
+
+### M4.2 Casting Disruption & Focus Ward — 59 actual Godot cases (2026-10-15)
+
+Successful official Godot4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38656070665 at tested SHA 8a808cb0ef685fa48633740c6ae4a3f60f370c83. M4.2 **59/59 PASS**; previous stages **645/645 PASS**, cumulative **704/704 named Domain tests**, four prototype headless scripts exit0. These are authorized casting/hit fixtures, not a live M5 damage engine.
+
+| # | Observed Godot test ID | Runner | Verdict |
+|---:|---|---|---|
+| 1 | M22-CAST-002-PAID_MP_TRACED_FROM_M2 | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 2 | M42-INDEPENDENT_TWO_CASTS | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 3 | M42-BOSS_BREAK_UNTOUCHED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 4 | CAST-004-WARD_NO_HP_ABSORPTION | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 5 | M22-CAST-002-REFUND_QUOTE_FROM_PAID_MP | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 6 | M22-CAST-002-PROVISIONAL_NOT_CANON | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 7 | M22-CAST-002-UNKNOWN_REFUND_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 8 | M22-CAST-002-REFUND_NOT_FULL_RATIO | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 9 | M42-NO_DIRECT_REFUND_WITHOUT_INTERRUPT | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 10 | M42-DIRECT_REQUIRES_WINDOW_RESOLUTION | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 11 | CAST-004-CONCENTRATION_BASIC_GUARD_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 12 | CAST-004-CONFIRM_ONLY_NO_EARLY_FEE | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 13 | CAST-004-QUEUED_CARD_IN_HAND_UNTIL_CONFIRM | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 14 | CAST-004-CAST_COMPATIBLE_EXECUTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 15 | CAST-004-FOCUS_WARD_APPLIED_VIA_M3_QUEUE | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 16 | CAST-004-CONCENTRATING_REMAINS | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 17 | CAST-004-FOCUS_WARD_SP_PAYS_REAL_RP_MP | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 18 | CAST-004-FOCUS_WARD_CARD_DISCARDED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 19 | P1-PRT-006-M3_REDIRECT_FIRST | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 20 | P1-PRT-006-NO_AUTOPASS | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 21 | P1-PRT-006-HIT_NOT_PROVEN_DENIED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 22 | P1-PRT-006-PROTECT_STOPS_ON_HIT_DISRUPTION | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 23 | P1-PRT-007-PROTECT_HP_UNCHANGED_M5_DEFERRED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 24 | P1-PRT-006-NON_MUTATING_PROTECT_CAST | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 25 | CAST-005-INVALID_SOURCE_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 26 | CAST-005-UNTRUSTED_SOURCE_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 27 | CAST-005-UNREGISTERED_POWER_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 28 | CAST-005-DIRECT_CASTING_ID_REQUIRED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 29 | CAST-004-WARD_FIRST_FULLY_ABSORBS | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 30 | CAST-004-DIRECT_BYPASSES_PROTECT | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 31 | CAST-004-FOCUS_WARD_EVENT_NOT_BARRIER | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 32 | CAST-005-DUPLICATE_DISRUPTION_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 33 | CAST-004-WARD_DEPLETED_BEFORE_STABILITY | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 34 | CAST-005-INDEPENDENT_CASTING_STABILITY | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 35 | CAST-005-STABILITY_ZERO_INTERRUPTS | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 36 | M22-CAST-002-IMMEDIATE_MP_REFUND | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 37 | M22-CAST-002-AP_DEBT_NOT_REFUNDED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 38 | CAST-005-REFUND_EVENT_ORDER | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 39 | CAST-005-A_CARD_CASTING_TO_DISCARD | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 40 | CAST-005-A_CONCENTRATION_CLEARED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 41 | CAST-005-B_CAST_STILL_ACTIVE | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 42 | CAST-005-EXACT_CARD_INSTANCE_CONSERVATION | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 43 | CAST-005-NO_HP_OR_BOSS_BREAK_AFFECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 44 | CAST-005-REPEAT_AFTER_INTERRUPT_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 45 | M42-SEEDED_REPLAY_EXECUTES | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 46 | M42-SEEDED_REPLAY_IDENTICAL_STATE_HASH | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 47 | M42-SEEDED_REPLAY_IDENTICAL_EVENT_HASH | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 48 | M42-REPLAY_INPUT_UNCHANGED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 49 | M42-REPLAY_STALE_FAILS_CLOSED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 50 | M22-CAST-002-MP_MAX_CAP | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 51 | P1-PRT-008-REAL_WINDOW_EXPLICIT_PASS | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 52 | P1-PRT-008-UNTRUSTED_HIT_FIXTURE_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 53 | P1-PRT-008-UNPROTECTED_ON_HIT_APPLIES | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 54 | P1-PRT-008-CONTENT_POWER_NOT_CLIENT_OVERRIDE | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 55 | P1-PRT-008-HP_REMAINS_M5_DEFERRED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 56 | P1-PRT-008-DUPLICATE_HIT_EVENT_REJECTED | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 57 | P1-PRT-008-CAST_CARD_REMAINS_IN_CASTING | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 58 | P1-PRT-008-CANNOT_DISRUPT_UNTARGETED_CASTER | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+| 59 | M42-NO_ORDINARY_REACTION_FROM_CONCENTRATING | test_m4_disruption.gd | PASS — M4.2 headless fixture |
+
+Seed 20261014, 12 accepted commands, initial SHA256 5aa5e836f5ed4812b932a4d33d64697a6163f3ebc9d41722ef158a64fc651426; event SHA256 d9f3f8781b59e0e61bd82112f9cad5f86e298400aaa1c8bda4b13aa9d4bc919c; final SHA256 fa38ea93d554ea1dc8b63966a07647c2ecd7eb369b50c39709768bf34119e1d7. M4.3–M4.5 not executed.

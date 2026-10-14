@@ -244,3 +244,20 @@ Source 8fcd65ee075664593a08448f3d44eede21a5c2bf; official [Godot4.7.2 CI #386540
 | Replay / fail-closed | CAST-002-M4_REPLAY_ENTIRE_PHASE, CAST-NEG-INSUFFICIENT_MP_ATOMIC, CAST-NEG-DUPLICATE_COMMAND | PASS at fixed Seed 20261014 |
 
 **M4.2–M4.5 not executed, overall M4 DOMAIN VERIFIED not claimed.**
+
+
+## M4.2 Casting Disruption & Focus Ward — independent verified Domain (2026-10-15)
+
+Official Godot4.7.2 https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38656070665 on source **8a808cb0ef685fa48633740c6ae4a3f60f370c83**: **59/59 M4.2**, **47/47 M4.1**, **598/598 M1–M3.5**, grand total **704/704 named assertions**, 4 legacy smoke scripts passed. See PH3_M4_2_ENGINEERING_NOTE.md for actual replay SHA256 and repair history.
+
+| Requirement / decision | Executed Godot test IDs | Bounded outcome |
+|---|---|---|
+| CAST-004 Ward absorbs before independent Stability; not HP Barrier | CAST-004-WARD_FIRST_FULLY_ABSORBS; CAST-004-WARD_DEPLETED_BEFORE_STABILITY; CAST-004-FOCUS_WARD_EVENT_NOT_BARRIER | PASS M4.2 per-instance, real HP deferred |
+| CAST-005 ordinary Full Chant interruption | CAST-005-STABILITY_ZERO_INTERRUPTS; CAST-005-A_CARD_CASTING_TO_DISCARD; CAST-005-A_CONCENTRATION_CLEARED | PASS real CardInstance zone and concentration, Last Spell excluded |
+| M-D22–M-D24 partial immediate MP refund without AP/debt refund | M22-CAST-002-PAID_MP_TRACED_FROM_M2; M22-CAST-002-IMMEDIATE_MP_REFUND; M22-CAST-002-AP_DEBT_NOT_REFUNDED; M22-CAST-002-MP_MAX_CAP | PASS M2 ledger; provisional ratio, no canonical percent |
+| P1-D14 Protect prevents on-hit interruption, direct disruption bypasses it | P1-PRT-006-PROTECT_STOPS_ON_HIT_DISRUPTION; CAST-004-DIRECT_BYPASSES_PROTECT; P1-PRT-008-UNPROTECTED_ON_HIT_APPLIES; P1-PRT-008-UNTRUSTED_HIT_FIXTURE_REJECTED | PASS authorized hit fixture only, no M5 hit pipeline |
+| Explicit CAST_COMPATIBLE Concentrating actor Reaction SP | CAST-004-CAST_COMPATIBLE_EXECUTED; CAST-004-CONCENTRATION_BASIC_GUARD_REJECTED; CAST-004-FOCUS_WARD_SP_PAYS_REAL_RP_MP | PASS actual M3 Queue, M2 payment, card movement on explicit Confirm |
+| P2-D12 CastingInstance vs Boss Break & 2 casters | M42-INDEPENDENT_TWO_CASTS; CAST-005-INDEPENDENT_CASTING_STABILITY; M42-BOSS_BREAK_UNTOUCHED | PASS separate independent casting fields |
+| Replay and invalid commands | M42-SEEDED_REPLAY_IDENTICAL_STATE_HASH; M42-SEEDED_REPLAY_IDENTICAL_EVENT_HASH; M42-REPLAY_STALE_FAILS_CLOSED | PASS Seed 20261014, 12-command tape |
+
+M4.3/M4.4/M4.5 and full M4 gate remain NOT_VERIFIED; M5 hit/HP/status and UI not complete.
