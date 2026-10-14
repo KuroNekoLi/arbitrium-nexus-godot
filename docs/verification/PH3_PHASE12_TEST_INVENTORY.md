@@ -320,3 +320,53 @@ Godot `4.7.2.stable.official.ed1daf0bf`, source commit `7b115720716c5fd155088313
 - `M2_4-SEEDED_REPLAY`: card-domain seeded event hash `f8003dc11c5831b29a7e07c9fcae1b085c45fdb6d85a95e58933ebd077c5add4`, final state hash `dd5c7d9896614711c522cc17ab3091f05635fb3b7708acacb55a599457cdd3f2`. Full M2.5 replay remains blocked.
 
 `PRE3-12` is not Library `PRE3-R12`, which covers Full Chant Casting.
+
+
+### M2.5 integrated core Domain: 40 actually executed oracles (2026-10-14)
+
+At [CI #38586164025](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38586164025), Godot 4.7.2, source SHA 418607f954f40a38eff0de0b830eb83bed7080d6, seed 20261014, all **40/40** cases from tests/test_m2_integration.gd PASSED; this adds integration coverage to rather than replacing source spec13's full-gameplay oracles.
+
+| # | Exact case ID in Godot stdout | Source | Status |
+|---:|---|---|---|
+| 1 | M2_5_INT_INITIAL_36_CARDS | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 2 | M2_5_INT_COST_ZONE_ATOMIC | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 3 | M2_5_INT_COST_BEFORE_ZONE | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 4 | M2_5_INT_INPUT_NOT_MUTATED | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 5 | M2_5_INT_DOUBLE_SP_REJECT | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 6 | M2_5_INT_OWNER_REJECT | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 7 | M2_5_INT_COST_CATALOG_REJECT | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 8 | M2_5_INT_MP_NO_CARD_LOSS | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 9 | M2_5_INT_AP_NO_CARD_LOSS | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 10 | M2_5_INT_ZERO_AP_SWAP | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 11 | M2_5_INT_SWAP_ONCE | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 12 | M2_5_INT_GLOBAL_DUPLICATE_COMMAND | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 13 | M2_5_INT_GLOBAL_STALE_COMMAND | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 14 | M2_5_INT_CASTING_ZONE_EXCLUSIVE | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 15 | M2_5_INT_CASTING_TO_DISCARD | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 16 | M2_5_INT_CASTING_NOT_DRAWABLE | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 17 | M2_5_INT_OVERLOAD_LINKED_CARD | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 18 | M2_5_INT_AP_DEBT_SWAP_FREE | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 19 | M2_5_INT_NO_POOL_FIXTURE_VALID | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 20 | M2_5_INT_PRECHECK_ATOMIC | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 21 | M2_5_INT_PRE3_R11_NOT_ROLLED_BACK | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 22 | M2_5_INT_PRE3_R11_ORDER | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 23 | M2_5_INT_PRE3_R11_NO_RESOURCE_CHANGE | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 24 | M2_5_INT_HAND_CAP8 | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 25 | M2_5_INT_HAND_CAP8_NO_PHANTOM | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 26 | M2_5_INT_INCAPACITATED_DENIED | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 27 | M2_5_INT_COST_DISCARD_TRIGGER_DRAW | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 28 | M2_5_INT_TRIGGER_REPLAY_EXACT_HASH | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 29 | M2_5_INT_TRIGGER_CARD_GLOBAL_CONSERVATION | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 30 | M2_5_INT_PRE3_R11_REPLAY_EXACT | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 31 | M2_5_INT_NEXT_PHASE_REFILL | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 32 | M2_5_INT_FULL_CROSS_MODULE_REPLAY | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 33 | M2_5_INT_REPLAY_EVENT_ORDER | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 34 | M2_5_INT_REPLAY_RNG_EQUAL | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 35 | M2_5_INT_REPLAY_QUOTA_RESET_REUSED | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 36 | M2_5_INT_REPLAY_ZERO_RP | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 37 | M2_5_INT_REPLAY_DISTINCT_INITIAL_SEED | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 38 | M2_5_INT_REPLAY_FAILURE_ATOMIC | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 39 | M2_5_INT_EVENT_SEQUENCE_MONOTONIC | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+| 40 | M2_5_INT_REPLAY_INITIAL_UNTOUCHED | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
+
+Historical M2.5 resource-only 14+6 runner comments saying M2.3/M2.4 are missing refer only to original separated test scope; the current combined gate independently executes both suites. Full spec13 M30 MP-on-discard + Buff-on-draw remains NOT_EXECUTED beyond MOVE_CARD trigger ordering, along with M3–M5 gameplay. Integrated replay event SHA256 c26cbea2b560924fb568be1d4dcbadc6c26b26379293f16f6981aa43964fe061; final state SHA256 8118b9cc9dc2c30b0d009934e8a3ab5385909d73ca021e958100b41d9509349a.

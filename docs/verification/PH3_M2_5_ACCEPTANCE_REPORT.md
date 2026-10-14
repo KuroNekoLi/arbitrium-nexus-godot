@@ -1,6 +1,6 @@
 # Phase 3 M2.5 — Integration Acceptance and Regression
 
-Status: **BLOCKED_DEPENDENCY / M2 DOMAIN NOT VERIFIED**.
+Current status: **M2_CORE_DOMAIN_VERIFIED / FULL RPG GAMEPLAY NOT VERIFIED**. Historical dependency-blocked baseline and earlier red CI attempts remain documented below as provenance; they are no longer the current assessment.
 
 ## Baseline inspected (2026-10-14)
 
@@ -80,3 +80,27 @@ Initial M2.3-missing observations above are historical, scoped to the former bas
 ## Status addendum after M2.3 and M2.4 (2026-10-14)
 
 Historical 'M2.3/M2.4 missing' statements above are accurate for the recorded **M2.5 initial baseline** SHA, not current master. M2.3 was independently verified 46/46 ([run #38580461921](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38580461921)); M2.4 independently verified 32/32 ([run #38582070292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38582070292)). The M2.5 workflow [run #38581850850](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38581850850) executed both new suites successfully but deliberately emitted **`BLOCKED_M2_FULL_INTEGRATION` / exit2**, because actual Cost→CardZone→CardDiscarded→trigger→CardDrawn+CostResource unified reducer/replay remains absent. **M2.5 and the full M2 domain are NOT verified.** Do not alter the fail-closed gate until genuine cross-module verification exists.
+
+
+## Final integrated M2.5 certification — 2026-10-14
+
+- **Final Godot CI:** [run #38586164025](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38586164025), source SHA 418607f954f40a38eff0de0b830eb83bed7080d6. Job 115928633555: completed/success. Official 4.7.2.stable.official.ed1daf0bf binary, SHA512 validated, import and all runner exits 0. Full raw stdout and artifact are available on the workflow.
+- Executed assertions in SAME CI: M1 30/30, M2.1 resources 38/38, M2.2 costs 43/43, M2.3 cards 46/46, M2.4 FreeSwap 32/32, earlier M2.5 resource invariants 14/14, resource replay 6/6, NEW integrated M2.5 40/40; **249/249 total Domain test assertions**, plus 4 legacy prototype test scripts (exit0, not included in numeric Domain count).
+- Official green markers **M2_5_CROSS_MODULE_DOMAIN_VERIFIED** and **M2_DOMAIN_VERIFIED: core M2 resource, card-instance, FreeSwap and replay mechanics; M3/M4/M5 gameplay deferred** appear in raw Actions logs.
+- Previous attempts: c922795 produced invalid YAML before any runner started; 07d85e2 corrected CI syntax but the new GDScript test had a multiline parse error; aec6a54 fixed that parse, [run 38585825453](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38585825453) passed 36/36 integration. Four additional cross-trigger replay tests were then added at 418607f, and final run 38586164025 passed 40/40. No acceptance assertion was disabled or removed.
+
+### Execution architecture and boundaries
+
+New source: scripts/domain/m2/integration/m2_domain_resolver.gd. New cases: tests/test_m2_integration.gd. The reducer holds ACTUAL M1 resource state and ACTUAL M2.3/4 card zone state together, with a global command ID ledger, strictly ordered source-tagged events, deterministic seeded RNG snapshots and canonical event/state SHA256. A failed command returns an unmodified deep copy and zero events. No UI timing enters any transition.
+
+COMMIT_SP_CARD_FIXTURE looks up the cost from an externally fixed definition catalogue (action cannot supply arbitrary cost). It executes real M2.2 CostResolver.apply, then moves that exact owned CardInstance Hand→Discard or Hand→Casting, atomically. Free Swap delegates the real M2.4 resolver, including formal CardDiscarded, legal MOVE_CARD triggers, CardDrawn, PRECHECK failure and PRE3-R11 CardDrawFailed(POOL_CHANGED) without rolling back already executed discard-trigger moves. Extra draw respects cap8 and zones. Resource phase transitions call the real M2.1 Ledger and synchronize quota resetting and eligible actor draw-to-four; M3 remains authoritative over status/casting tick ordering.
+
+The 40 actual integration assertions cover: three allies and 36 unique CardInstanceIDs; AP/MP debit + physical CardInstance movement; actor ownership; double-play/duplicate/stale command; insufficient AP/MP atomicity; provisional Overload/AP debt; zero-AP Free Swap and one-per-phase quota; Casting exclusion; no replacement PRECHECK; post-event POOL_CHANGED preserving prior effects with no phantom CardDrawn; hand cap8; incapacitated actor rejection; across-phase AP→RP/expiry/hand refill/quota refresh; and exact two-run seeded Replay after a mixed Cost→CardZone→Discard→Trigger→Draw command tape, including **both successful CardDrawn and PRE3-R11 failed draw branches**.
+
+Replay seed: 20261014. Canonical initial state SHA256 **e18806c0a2007ea79856b7302a01b35a5ac571e9d9b9d65c700774d452c74b13**; integrated events SHA256 **c26cbea2b560924fb568be1d4dcbadc6c26b26379293f16f6981aa43964fe061**; final state SHA256 **8118b9cc9dc2c30b0d009934e8a3ab5385909d73ca021e958100b41d9509349a**. The seed, initial state, configuration and command tape are deterministic inputs; rejects do not advance RNG or corrupt card zones.
+
+### Important remaining acceptance obligations
+
+This verdict covers **M2 CORE MECHANICS**, not playable SP effects. Spell damage, hit/crit/status, Guard/Protect/Barrier, actual HP/MP/Buff trigger content, Full Chant spell release/interrupt refund, boss AI, real M3 phase tick ordering, Last Spell, and UI integration remain **NOT IMPLEMENTED / NOT CERTIFIED** by this M2.5 suite. M2.4 currently dispatches bounded MOVE_CARD triggers; full spec13 M30 scenario with actual discard-trigger MP restoration and draw-trigger Buff remains **PARTIAL**, not falsely promoted to PASS. Original legacy 8-card UI is still separate. M-D04 long-term APDebt balance and its Max8 test parameter remain **BALANCE_PROVISIONAL**. The earlier missing-dependency bullets in the historical baseline above do not describe the current repository HEAD.
+
+**Conclusion: close the core M2 integration gate as M2_CORE_DOMAIN_VERIFIED, and retain these precise M3–M5 gameplay dependencies.**

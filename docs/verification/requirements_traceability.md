@@ -130,3 +130,19 @@ Source [Library 19 M-D26–30 / Library 20 PRE3-R11], source code `scripts/domai
 | G0-R25 / P2-D16 | `M2_4-SEEDED_REPLAY`, `M2_4-EVENT_SEQ_MONOTONIC` | CARD_DOMAIN_ONLY_VERIFIED replay hashes | Integrated M2.5 replay and M3/M4/M5 |
 
 Do not interpret `PRE3-12` (spec13 changed-pool test) as Library `PRE3-R12` (Casting). Existing M2.5 baseline narrative of missing M2.3/M2.4 describes its **historical old SHA**, not the current source tree. The entire M2.5 workflow still deliberately returns exit2 `BLOCKED_M2_FULL_INTEGRATION`; **M2 DOMAIN VERIFIED is NOT claimed**.
+
+
+## M2.5 verified integrated core Domain — 2026-10-14
+
+Authoritative [CI #38586164025](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38586164025), tested SHA 418607f954f40a38eff0de0b830eb83bed7080d6: official Godot 4.7.2, M1 30/30 + M2.1 38/38 + M2.2 43/43 + M2.3 46/46 + M2.4 32/32 + resource M2.5 14/14 + 6/6 + new integrated M2.5 40/40 = **249 passed, zero failed**, plus four legacy scripts exit0. This supercedes only the historical dependency-blocked baseline; original decision approvals and deferred feature statuses are unchanged.
+
+| Trace / authority | Actual implementation | Executed tests | Honest verdict |
+|---|---|---|---|
+| G0-R01/R02; M-D01–17; PRE3-R10 | CostResolver + m2/integration/m2_domain_resolver.gd | COST_ZONE_ATOMIC, MP_NO_CARD_LOSS, AP_NO_CARD_LOSS, OVERLOAD_LINKED_CARD | M2 CORE DOMAIN VERIFIED; balance PROVISIONAL |
+| G0-R10/R11/R12; DECK-001–004, M25-HAND-001/002 | CardInstance + ZoneResolver + DrawResolver + Integrator | INITIAL_36_CARDS, HAND_CAP8, HAND_CAP8_NO_PHANTOM, CASTING_ZONE_EXCLUSIVE | M2 card instances and conservation VERIFIED |
+| G0-R13; M-D26–30, PRE3-R11 | FreeSwapResolver + CardTriggerDispatcher + Integrator | ZERO_AP_SWAP, SWAP_ONCE, PRECHECK_ATOMIC, PRE3_R11_REPLAY_EXACT, COST_DISCARD_TRIGGER_DRAW | M2 event order, bounded MOVE_CARD triggers VERIFIED; real MP/Buff effects deferred |
+| G0-R25; P2-D16 | M1 canonical hashes + Integrator unified source-tagged event log | FULL_CROSS_MODULE_REPLAY, TRIGGER_REPLAY_EXACT_HASH, REPLAY_FAILURE_ATOMIC, EVENT_SEQUENCE_MONOTONIC | M2 cross-module replay VERIFIED; M5 full-encounter replay deferred |
+| G0-R27 | m2/persistence/deck_profile_v2.gd | M2.3 46 acceptance assertions | 12-card V2 storage VERIFIED; legacy UI migration deferred |
+| G0-R14–24/R26 | Future M3/M4/M5 gameplay | No full gameplay assertions | NOT_IMPLEMENTED / NOT_EXECUTED |
+
+Do NOT use the presence of the CI marker M2_DOMAIN_VERIFIED as evidence of M3/M4/M5 gameplay implementation. Detailed execution and replay hashes: [PH3_M2_5_ACCEPTANCE_REPORT.md](PH3_M2_5_ACCEPTANCE_REPORT.md).
