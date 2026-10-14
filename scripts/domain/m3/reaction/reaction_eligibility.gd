@@ -1,11 +1,13 @@
 extends RefCounted
-## M3.2 card-only Reaction SP eligibility. Basic Guard/Protect and the
-## M4 casting-compatible exception are NOT implemented at this milestone.
+## M3.3 shared eligibility for card-backed SP and SP-free basic Guard/Protect.
+## M4 CAST_COMPATIBLE special cases remain explicitly unsupported.
 ## Costs are versioned content, never accepted from client-side commands.
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
+const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
 
 static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
-		catalogue: Dictionary, action_active: bool = true) -> Dictionary:
+		catalogue: Dictionary, action_active: bool = true, window: Dictionary = {}) -> Dictionary:
 	var battle: Dictionary = core["battle"]
 	var cards: Dictionary = core["cards"]
 	var actor_id: String = str(entry.get("actor_id", ""))
@@ -18,8 +20,14 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 		# Explicitly deferred M4 exception; never charge an unsupported
 		# Concentrating actor for merely owning a CAST_COMPATIBLE SP.
 		return {"ok": false, "error": "CONCENTRATING_UNSUPPORTED_M4"}
-	if str(entry.get("kind", "")) != "REACTION_SP_FIXTURE":
-		return {"ok": false, "error": "FEATURE_NOT_IMPLEMENTED_M3_3"}
+	var kind: String = str(entry.get("kind", ""))
+	if kind == "BASIC_GUARD":
+		return BasicGuard.check(core, action, window, actor_id, action_active)
+	if kind == "BASIC_PROTECT":
+		return BasicProtect.check(core, action, window, actor_id,
+			str(entry.get("target_actor_id", "")), action_active)
+	if kind != "REACTION_SP_FIXTURE":
+		return {"ok": false, "error": "FEATURE_NOT_IMPLEMENTED_M3_3" if ["GUARD", "PROTECT"].has(kind) else "UNKNOWN_REACTION_KIND"}
 	var card_id: String = str(entry.get("card_instance_id", ""))
 	if Zones.location(cards, actor_id, card_id) != "hand":
 		return {"ok": false, "error": "CARD_NOT_IN_OWN_HAND"}
@@ -79,4 +87,17 @@ static func any_legal(core: Dictionary, action: Dictionary, catalogue: Dictionar
 					"target_actor_id": str(target)}, catalogue)
 				if preview["ok"]:
 					return true
+	return false
+
+
+## Detect availability of approved basic reactions without requiring an SP.
+## Only intents explicitly describing eligible HP attacks are accepted.
+static func any_basic_legal(core: Dictionary, action: Dictionary) -> bool:
+	var empty: Dictionary = {}
+	for ally: Variant in core["battle"]["allies"]:
+		if BasicGuard.check(core, action, empty, str(ally))["ok"]:
+			return true
+		for target: Variant in core["battle"]["allies"]:
+			if BasicProtect.check(core, action, empty, str(ally), str(target))["ok"]:
+				return true
 	return false

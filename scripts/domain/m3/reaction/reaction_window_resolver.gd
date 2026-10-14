@@ -10,8 +10,11 @@ static func open(core: Dictionary, action: Dictionary, catalogue: Dictionary) ->
 		return {"ok": false, "error": "INVALID_PUBLIC_INTENT"}
 	if not action["public_intent"].get("target_ids", null) is Array:
 		return {"ok": false, "error": "MISSING_PUBLIC_TARGETS"}
-	var possible: bool = Eligibility.any_legal(core, action, catalogue)
-	if not possible and int(core["battle"]["party_resources"]["rp"]) >= 1:
+	var possible: bool = (Eligibility.any_legal(core, action, catalogue)
+		or Eligibility.any_basic_legal(core, action))
+	if not possible and int(core["battle"]["party_resources"]["rp"]) >= 1 \
+		and str(action["public_intent"].get("damage_type", "")).is_empty() \
+		and not bool(action["public_intent"].get("direct_casting_disruption", false)):
 		# M3.3 Basic Guard is an APPROVED reaction without any SP in
 		# Hand. Until M3.3 is actually implemented, never misclassify
 		# a targeted active ally's attack as an empty Reaction Window.
@@ -29,4 +32,6 @@ static func open(core: Dictionary, action: Dictionary, catalogue: Dictionary) ->
 		"window": {"window_id": action_id + ":window:0", "enemy_action_id": action_id,
 			"status": "DRAFTING" if possible else "CLOSED",
 			"draft": [], "executed_actor_ids": [], "action_active": true,
+			"guard_actor_ids": [], "protected_by_actor_id": "",
+			"damage_recipient_actor_id": "", "original_target_actor_id": "",
 			"closure_reason": "" if possible else "NO_LEGAL_REACTION"}}

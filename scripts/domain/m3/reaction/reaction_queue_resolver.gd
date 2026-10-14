@@ -4,6 +4,8 @@ extends RefCounted
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Eligibility = preload("res://scripts/domain/m3/reaction/reaction_eligibility.gd")
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
+const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
+const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
 
 static func _fail(state: Dictionary, reason: String) -> Dictionary:
 	return {"ok": false, "error": reason, "state": state.duplicate(true), "records": []}
@@ -27,17 +29,18 @@ static func preview(state: Dictionary, definition_catalogue: Dictionary) -> Dict
 	var cards_by_actor: Dictionary = {}
 	for entry: Dictionary in window["draft"]:
 		var validation: Dictionary = Eligibility.check(state["core"], action, entry,
-			definition_catalogue, bool(window["action_active"]))
+			definition_catalogue, bool(window["action_active"]), window)
 		if not validation["ok"]:
 			return {"ok": false, "error": str(validation["error"]),
 				"invalid_actor_id": str(entry["actor_id"])}
 		total_rp += int(validation["rp_cost"])
 		var actor_id: String = str(entry["actor_id"])
 		mp_by_actor[actor_id] = int(mp_by_actor.get(actor_id, 0)) + int(validation["mp_cost"])
-		var card_id: String = str(entry["card_instance_id"])
-		if cards_by_actor.has(card_id):
+		var card_id: String = str(entry.get("card_instance_id", ""))
+		if not card_id.is_empty() and cards_by_actor.has(card_id):
 			return {"ok": false, "error": "DUPLICATE_CARD_INSTANCE"}
-		cards_by_actor[card_id] = true
+		if not card_id.is_empty():
+			cards_by_actor[card_id] = true
 	if total_rp > int(state["core"]["battle"]["party_resources"]["rp"]):
 		return {"ok": false, "error": "INSUFFICIENT_RP_DRAFT"}
 	for actor_key: Variant in mp_by_actor:
@@ -71,7 +74,8 @@ static func apply(state: Dictionary, instruction: Dictionary,
 			if not instruction.get("entry", null) is Dictionary:
 				return _fail(state, "INVALID_DRAFT_ENTRY")
 			var entry: Dictionary = instruction["entry"].duplicate(true)
-			var check: Dictionary = Eligibility.check(updated["core"], action, entry, catalogue)
+			var check: Dictionary = Eligibility.check(updated["core"], action, entry, catalogue,
+				bool(w["action_active"]), w)
 			if not check["ok"]:
 				return _fail(state, str(check["error"]))
 			# Retain exactly one DRAFT per actor. Replacing a draft preserves
@@ -85,7 +89,7 @@ static func apply(state: Dictionary, instruction: Dictionary,
 			if not replaced:
 				w["draft"].append(entry)
 			records.append(_record("ReactionQueued", {"window_id": str(w["window_id"]),
-				"actor_id": str(entry["actor_id"]), "card_instance_id": str(entry["card_instance_id"]),
+				"actor_id": str(entry["actor_id"]), "card_instance_id": str(entry.get("card_instance_id", "")),
 				"replaced": replaced}))
 		"REMOVE_REACTION":
 			var actor_id: String = str(instruction.get("actor_id", ""))
@@ -136,7 +140,7 @@ static func apply(state: Dictionary, instruction: Dictionary,
 				var reaction: Dictionary = w["draft"][i]
 				var actor_id: String = str(reaction["actor_id"])
 				var can: Dictionary = Eligibility.check(updated["core"], action, reaction,
-					catalogue, bool(w["action_active"]))
+					catalogue, bool(w["action_active"]), w)
 				if w["executed_actor_ids"].has(actor_id):
 					can = {"ok": false, "error": "ACTOR_ALREADY_REACTED"}
 				if not can["ok"]:
@@ -144,26 +148,47 @@ static func apply(state: Dictionary, instruction: Dictionary,
 					# effects; only still-pending entries are skipped.
 					records.append(_record("ReactionSkipped", {"window_id": str(w["window_id"]),
 						"actor_id": actor_id, "reason": str(can["error"]),
-						"card_instance_id": str(reaction["card_instance_id"])}))
+						"card_instance_id": str(reaction.get("card_instance_id", ""))}))
 					continue
-				var paid: Dictionary = M2.apply(updated["core"], {
-					"type": "COMMIT_REACTION_SP_FIXTURE",
+				var basic_kind: String = str(reaction.get("kind", ""))
+				var prepared: Dictionary = {}
+				if basic_kind == "BASIC_GUARD":
+					prepared = BasicGuard.apply(w, actor_id, action)
+				elif basic_kind == "BASIC_PROTECT":
+					prepared = BasicProtect.apply(w, actor_id,
+						str(reaction.get("target_actor_id", "")), action)
+				if ["BASIC_GUARD", "BASIC_PROTECT"].has(basic_kind) and not prepared["ok"]:
+					records.append(_record("ReactionSkipped", {"window_id": str(w["window_id"]),
+						"actor_id": actor_id, "reason": str(prepared["error"]), "card_instance_id": ""}))
+					continue
+				var command: Dictionary = {
+					"type": "COMMIT_BASIC_REACTION" if not prepared.is_empty()
+						else "COMMIT_REACTION_SP_FIXTURE",
 					"command_id": str(instruction["command_id"]) + ":reaction:" + str(i),
 					"expected_event_seq": int(updated["core"]["event_seq"]),
-					"actor_id": actor_id,
-					"card_instance_id": str(reaction["card_instance_id"])
-				}, config)
+					"actor_id": actor_id
+				}
+				if not prepared.is_empty():
+					command["basic_kind"] = "GUARD" if basic_kind == "BASIC_GUARD" else "PROTECT"
+				else:
+					command["card_instance_id"] = str(reaction.get("card_instance_id", ""))
+				var paid: Dictionary = M2.apply(updated["core"], command, config)
 				if not paid["accepted"]:
 					records.append(_record("ReactionSkipped", {"window_id": str(w["window_id"]),
 						"actor_id": actor_id, "reason": str(paid["error"]),
-						"card_instance_id": str(reaction["card_instance_id"])}))
+						"card_instance_id": str(reaction.get("card_instance_id", ""))}))
 					continue
 				updated["core"] = paid["state"]
 				records.append({"kind": "CORE_EVENTS", "events": paid["events"]})
+				if not prepared.is_empty():
+					updated["reaction_window"] = prepared["window"]
+					w = updated["reaction_window"]
+					var effect: Dictionary = prepared["effect"]
+					records.append(_record(str(effect["kind"]), effect))
 				w["executed_actor_ids"].append(actor_id)
 				records.append(_record("ReactionExecuted",
 					{"window_id": str(w["window_id"]), "actor_id": actor_id,
-						"card_instance_id": str(reaction["card_instance_id"]),
+						"card_instance_id": str(reaction.get("card_instance_id", "")),
 						"rp_paid": int(can["rp_cost"]), "mp_paid": int(can["mp_cost"]),
 						"fixture_effect": str(can["effect"])}))
 				if str(can["effect"]) == "CANCEL_ACTION_FIXTURE":

@@ -60,6 +60,19 @@ static func validate_state(state: Dictionary) -> bool:
 			return false
 		if not rw.get("action_active", null) is bool:
 			return false
+		if not rw.get("guard_actor_ids", null) is Array:
+			return false
+		for guarded: Variant in rw["guard_actor_ids"]:
+			if not guarded is String or not state["core"]["battle"]["allies"].has(guarded):
+				return false
+		for basic_field: String in ["protected_by_actor_id", "damage_recipient_actor_id", "original_target_actor_id"]:
+			if not rw.get(basic_field, null) is String:
+				return false
+		if not str(rw["protected_by_actor_id"]).is_empty():
+			if str(rw["protected_by_actor_id"]) != str(rw["damage_recipient_actor_id"]):
+				return false
+			if str(rw["original_target_actor_id"]).is_empty():
+				return false
 		var draft_actors: Dictionary = {}
 		for option: Variant in rw["draft"]:
 			if not option is Dictionary or not option.get("actor_id", null) is String:
@@ -258,13 +271,30 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 			if next["reaction_window"].is_empty() or str(next["reaction_window"]["status"]) != "CLOSED":
 				return _reject(original, "REACTION_WINDOW_REQUIRED")
 		var cursor: int = int(next["enemy_cursor"])
+		var defense: Dictionary = {
+			"source_enemy_action_id": active, "guard_actor_ids": [],
+			"protected_by_actor_id": "", "original_target_actor_id": "",
+			"damage_recipient_actor_id": "",
+			"hit_count": current_action["public_intent"].get("hit_count", 0),
+			"apply_to_hits": "ALL_ELIGIBLE_HP_HITS",
+			"hit_and_damage_status": "DEFERRED_TO_M5",
+			"follows_damage_recipient": "EXPLICIT_TAG_ONLY"
+		}
+		if not next["reaction_window"].is_empty():
+			var window_state: Dictionary = next["reaction_window"]
+			defense["guard_actor_ids"] = window_state["guard_actor_ids"].duplicate(true)
+			defense["protected_by_actor_id"] = str(window_state["protected_by_actor_id"])
+			defense["original_target_actor_id"] = str(window_state["original_target_actor_id"])
+			defense["damage_recipient_actor_id"] = str(window_state["damage_recipient_actor_id"])
+			defense["enemy_action_cancelled_fixture"] = not bool(window_state["action_active"])
 		next["enemy_actions"][cursor]["status"] = "FIXTURE_RESOLVED"
 		next["enemy_cursor"] = cursor + 1
 		next["active_enemy_action_id"] = ""
 		next["reaction_window"] = {}
 		_emit(next, emitted, "EnemyActionFixtureResolved", command_id,
 			{"enemy_action_id": active, "damage_status": "DEFERRED_TO_M5",
-				"reaction_status": "DEFERRED_TO_M3_2"}, "enemy")
+				"reaction_status": "M3_3_BASIC_DEFENSE_DOMAIN",
+				"defense_snapshot": defense}, "enemy")
 	elif kind == "END_ENEMY_PHASE":
 		if phase != "ENEMY_PHASE":
 			return _reject(original, "INVALID_PHASE")

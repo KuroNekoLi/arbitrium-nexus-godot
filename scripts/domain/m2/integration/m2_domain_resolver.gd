@@ -187,6 +187,26 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 				return _rejected(state, str(basic["error"]))
 			next["battle"] = basic["state"]
 			_log(next, "resources", basic["events"], produced)
+		"COMMIT_BASIC_REACTION":
+			# APPROVED M3.3 Guard=1RP/Protect=2RP, no cards or MP.
+			# Cost table is internal, not client-controlled. ResourceLedger
+			# remains the sole authority for atomic shared RP spending.
+			if battle["phase"] != "ENEMY_PHASE" or not _actor_available(battle, actor_id):
+				return _rejected(state, "ACTOR_UNAVAILABLE_OR_PHASE")
+			var basic_kind: String = str(instruction.get("basic_kind", ""))
+			if not ["GUARD", "PROTECT"].has(basic_kind):
+				return _rejected(state, "INVALID_BASIC_REACTION")
+			var fixed_rp: int = 1 if basic_kind == "GUARD" else 2
+			var basic_paid: Dictionary = Ledger.apply(battle, {
+				"type": "PAY_REACTION_COST_FIXTURE",
+				"command_id": command_id, "actor_id": actor_id,
+				"expected_event_seq": int(battle["event_seq"]),
+				"rp_cost": fixed_rp, "mp_cost": 0
+			}, config.get("resources", {}))
+			if not basic_paid["accepted"]:
+				return _rejected(state, str(basic_paid["error"]))
+			next["battle"] = basic_paid["state"]
+			_log(next, "resources", basic_paid["events"], produced)
 		"COMMIT_REACTION_SP_FIXTURE":
 			# Canonical M2 transaction: real RP+MP ledger then exact
 			# CardInstance hand->discard. No M3 duplicate spend model.
