@@ -42,8 +42,13 @@ static func create_party(loadouts: Dictionary, contexts: Dictionary, definitions
 			"zones": {"draw": ordered_ids, "hand": [], "discard": [], "casting": [], "isolated": []}}
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value
+	var swap_used: Dictionary = {}
+	for actor_key: Variant in ids:
+		swap_used[str(actor_key)] = false
 	var state: Dictionary = {"schema_version": SCHEMA, "seed": seed_value,
-		"rng_state": rng.state, "actors": actors, "event_seq": 0, "events": []}
+		"rng_state": rng.state, "actors": actors, "event_seq": 0, "events": [],
+		"phase": "PLAYER_PHASE", "player_phase_index": 1,
+		"swap_used_by_actor": swap_used, "seen_swap_command_ids": []}
 	if not validate_state(state):
 		return rejected({}, "INVALID_INITIAL_ZONES")
 	return accepted(state)
@@ -57,6 +62,22 @@ static func validate_state(state: Dictionary) -> bool:
 		return false
 	if not state.get("rng_state", null) is int or not state.get("seed", null) is int:
 		return false
+	if not state.get("phase", null) is String or not state.get("player_phase_index", null) is int:
+		return false
+	if int(state["player_phase_index"]) < 1:
+		return false
+	if not state.get("swap_used_by_actor", null) is Dictionary or not state.get("seen_swap_command_ids", null) is Array:
+		return false
+	if state["swap_used_by_actor"].size() != 3:
+		return false
+	var unique_commands: Dictionary = {}
+	for command_id: Variant in state["seen_swap_command_ids"]:
+		if not command_id is String or str(command_id).is_empty() or unique_commands.has(command_id):
+			return false
+		unique_commands[command_id] = true
+	for swap_actor: Variant in state["actors"]:
+		if not state["swap_used_by_actor"].has(swap_actor) or not state["swap_used_by_actor"][swap_actor] is bool:
+			return false
 	var global_ids: Dictionary = {}
 	for actor_key: Variant in state["actors"]:
 		var actor_id: String = str(actor_key)
@@ -126,3 +147,17 @@ static func move(state: Dictionary, actor_id: String, instance_id: String, from_
 	var event: Dictionary = emit(next_state, event_kind, actor_id, {"instance_id": instance_id,
 		"from_zone": from_zone, "to_zone": to_zone})
 	return accepted(next_state, [event])
+
+
+## Legal replacement pool does NOT include Hand, Casting or Isolated. M2.4
+## explicitly excludes the selected CardInstanceID as a defensive guard.
+static func replacement_ids(state: Dictionary, actor_id: String, excluded_id: String = "") -> Array:
+	var result: Array = []
+	if not validate_state(state) or not state["actors"].has(actor_id):
+		return result
+	var zones: Dictionary = state["actors"][actor_id]["zones"]
+	for name: String in ["draw", "discard"]:
+		for instance_id: Variant in zones[name]:
+			if str(instance_id) != excluded_id:
+				result.append(instance_id)
+	return result
