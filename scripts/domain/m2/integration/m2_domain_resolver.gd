@@ -210,7 +210,7 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 		"COMMIT_REACTION_SP_FIXTURE":
 			# Canonical M2 transaction: real RP+MP ledger then exact
 			# CardInstance hand->discard. No M3 duplicate spend model.
-			if battle["phase"] != "ENEMY_PHASE" or not _actor_available(battle, actor_id):
+			if battle["phase"] != "ENEMY_PHASE" or not battle["allies"].has(actor_id):
 				return _rejected(state, "ACTOR_UNAVAILABLE_OR_PHASE")
 			var card_id: String = str(instruction.get("card_instance_id", ""))
 			if Zones.location(cards, actor_id, card_id) != "hand":
@@ -224,8 +224,12 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 				return _rejected(state, "INVALID_REACTION_DEFINITION")
 			if str(definition.get("kind", "")) != "REACTION_SP":
 				return _rejected(state, "NOT_REACTION_SP")
+			var compatible: bool = bool(definition.get("cast_compatible", false))
+			var actor_status: String = str(battle["actors"][actor_id]["status"])
+			if not _actor_available(battle, actor_id) and not (compatible and actor_status == "CONCENTRATING" and int(battle["actors"][actor_id]["hp"]) > 0):
+				return _rejected(state, "ACTOR_UNAVAILABLE_OR_PHASE")
 			var spent: Dictionary = Ledger.apply(battle, {
-				"type": "PAY_REACTION_COST_FIXTURE", "command_id": command_id,
+				"type": "PAY_REACTION_COST_COMPATIBLE_M4" if compatible and actor_status == "CONCENTRATING" else "PAY_REACTION_COST_FIXTURE", "command_id": command_id,
 				"expected_event_seq": int(battle["event_seq"]),
 				"actor_id": actor_id, "rp_cost": int(definition["rp_cost"]),
 				"mp_cost": int(definition["mp_cost"])
@@ -266,6 +270,20 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 				return _rejected(state, str(drawn["error"]))
 			next["cards"] = drawn["state"]
 			_log(next, "cards", drawn["events"], produced)
+		"RECOVER_CASTING_INTERRUPT_MP_M4":
+			# Internal M4.2 refund bridge; not a public recovery action.
+			# Only called after CastingInterrupted with a M4 quote.
+			if config.get("m4_2_internal_refund", false) != true:
+				return _rejected(state, "M4_2_REFUND_NOT_AUTHORIZED")
+			var recover: Dictionary = Ledger.apply(battle, {
+				"type": "RECOVER_MP", "command_id": command_id,
+				"expected_event_seq": int(battle["event_seq"]),
+				"actor_id": actor_id, "amount": instruction.get("amount", -1)
+			}, config.get("resources", {}))
+			if not recover["accepted"]:
+				return _rejected(state, str(recover["error"]))
+			next["battle"] = recover["state"]
+			_log(next, "resources", recover["events"], produced)
 		"RESOLVE_CAST_ZONE_FIXTURE", "SETTLE_CASTING_CARD_M4":
 			var cast_id: String = str(instruction.get("card_instance_id", ""))
 			var moved: Dictionary = Zones.move(cards, actor_id, cast_id, "casting", "discard")

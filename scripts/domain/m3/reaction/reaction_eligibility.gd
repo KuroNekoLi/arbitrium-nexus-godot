@@ -16,11 +16,18 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 	var actor: Dictionary = battle["actors"][actor_id]
 	if int(actor.get("hp", 0)) <= 0 or str(actor.get("status", "")) in ["INCAPACITATED", "EXHAUSTED"]:
 		return {"ok": false, "error": "ACTOR_UNAVAILABLE"}
-	if str(actor.get("status", "")) != "ACTIVE":
-		# Explicitly deferred M4 exception; never charge an unsupported
-		# Concentrating actor for merely owning a CAST_COMPATIBLE SP.
-		return {"ok": false, "error": "CONCENTRATING_UNSUPPORTED_M4"}
 	var kind: String = str(entry.get("kind", ""))
+	if str(actor.get("status", "")) != "ACTIVE":
+		# A concentrating caster may ONLY use a specifically tagged card-backed
+		# CAST_COMPATIBLE Reaction. Basic Guard/Protect never receive this right.
+		if str(actor.get("status", "")) != "CONCENTRATING" or kind != "REACTION_SP_FIXTURE":
+			return {"ok": false, "error": "CONCENTRATING_UNSUPPORTED_M4"}
+		var eligible_card: String = str(entry.get("card_instance_id",""))
+		if Zones.location(cards,actor_id,eligible_card) != "hand":
+			return {"ok": false, "error": "CARD_NOT_IN_OWN_HAND"}
+		var eligible_def: String = str(cards["actors"][actor_id]["instances"][eligible_card]["definition_id"])
+		if not catalogue.has(eligible_def) or not catalogue[eligible_def] is Dictionary or not bool(catalogue[eligible_def].get("cast_compatible",false)):
+			return {"ok": false, "error": "CONCENTRATING_UNSUPPORTED_M4"}
 	if kind == "BASIC_GUARD":
 		return BasicGuard.check(core, action, window, actor_id, action_active)
 	if kind == "BASIC_PROTECT":
@@ -44,8 +51,17 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 	if rp_cost < 0 or mp_cost < 0:
 		return {"ok": false, "error": "INVALID_REACTION_COST"}
 	var effect: String = str(definition.get("fixture_effect", ""))
-	if not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE"].has(effect):
+	if not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
 		return {"ok": false, "error": "UNIMPLEMENTED_REACTION_EFFECT"}
+	if effect == "FOCUS_WARD_FIXTURE":
+		if not definition.get("focus_ward_amount",null) is int or int(definition["focus_ward_amount"]) <= 0:
+			return {"ok": false, "error": "INVALID_FOCUS_WARD_DEFINITION"}
+		var cast_found: bool = false
+		for casting: Variant in battle["casting_instances"].values():
+			if str(casting.get("caster_id","")) == str(entry.get("target_actor_id","")) and str(casting.get("state","")) == "CASTING":
+				cast_found = true
+		if not cast_found:
+			return {"ok": false, "error": "NO_TARGET_CASTING_INSTANCE"}
 	if str(definition.get("reaction_trigger", "")) != "ENEMY_ACTION":
 		return {"ok": false, "error": "REACTION_TRIGGER_MISMATCH"}
 	var required_scope: String = str(definition.get("target_scope", "ANY"))

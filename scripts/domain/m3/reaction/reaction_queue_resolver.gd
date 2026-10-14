@@ -6,6 +6,7 @@ const Eligibility = preload("res://scripts/domain/m3/reaction/reaction_eligibili
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
 const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
+const FocusWard = preload("res://scripts/domain/m4/casting/focus_ward_resolver.gd")
 
 static func _fail(state: Dictionary, reason: String) -> Dictionary:
 	return {"ok": false, "error": reason, "state": state.duplicate(true), "records": []}
@@ -180,6 +181,26 @@ static func apply(state: Dictionary, instruction: Dictionary,
 					continue
 				updated["core"] = paid["state"]
 				records.append({"kind": "CORE_EVENTS", "events": paid["events"]})
+				if str(can["effect"]) == "FOCUS_WARD_FIXTURE":
+					var card: String = str(reaction["card_instance_id"])
+					var definition_id: String = str(state["core"]["cards"]["actors"][actor_id]["instances"][card]["definition_id"])
+					var content: Dictionary = catalogue[definition_id]
+					var target: String = str(reaction.get("target_actor_id",""))
+					var cast_id: String = ""
+					for id: Variant in updated["core"]["battle"]["casting_instances"]:
+						if str(updated["core"]["battle"]["casting_instances"][id].get("caster_id","")) == target:
+							cast_id = str(id)
+					if cast_id.is_empty():
+						return _fail(state, "NO_TARGET_CASTING_INSTANCE")
+					var ward: Dictionary = FocusWard.grant(updated["core"]["battle"]["casting_instances"][cast_id],int(content["focus_ward_amount"]))
+					if not ward["ok"]:
+						return _fail(state, str(ward["error"]))
+					updated["core"]["battle"]["casting_instances"][cast_id] = ward["instance"]
+					records.append(_record("FocusWardGranted", {
+						"casting_id": cast_id, "caster_id": target, "source_actor_id": actor_id,
+						"before": ward["before"], "after": ward["after"],
+						"amount": int(content["focus_ward_amount"]),
+						"hp_barrier_affected": false}))
 				if not prepared.is_empty():
 					updated["reaction_window"] = prepared["window"]
 					w = updated["reaction_window"]

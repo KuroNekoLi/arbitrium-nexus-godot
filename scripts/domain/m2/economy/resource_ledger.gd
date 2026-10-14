@@ -10,7 +10,7 @@ const Debt = preload("res://scripts/domain/m2/economy/overload_debt.gd")
 const KINDS: Array[String] = [
 	"SPEND_AP", "GRANT_AP", "PAY_MP", "RECOVER_MP",
 	"BASIC_ATTACK_RESOURCE_ONLY", "CONVERT_AP_TO_RP",
-	"SPEND_RP", "GRANT_RP", "PAY_REACTION_COST_FIXTURE", "EXPIRE_RP", "START_PLAYER_RESOURCES"
+	"SPEND_RP", "GRANT_RP", "PAY_REACTION_COST_FIXTURE", "PAY_REACTION_COST_COMPATIBLE_M4", "EXPIRE_RP", "START_PLAYER_RESOURCES"
 ]
 
 static func _reject(state: Dictionary, reason: String) -> Dictionary:
@@ -167,12 +167,14 @@ static func apply(state: Dictionary, instruction: Dictionary, provisional: Dicti
 			next_state["party_resources"]["rp"] = after
 			return _finish(next_state, instruction, "RPSpent" if kind == "SPEND_RP" else "RPGranted",
 				{"requested": amount, "actual": abs(after - before), "before": before, "after": after})
-		"PAY_REACTION_COST_FIXTURE":
+		"PAY_REACTION_COST_FIXTURE", "PAY_REACTION_COST_COMPATIBLE_M4":
 			# Exact RP+MP in one transaction; no extra reaction economy.
 			# Caller must separately validate Window/target/card eligibility.
 			if phase != "ENEMY_PHASE":
 				return _reject(state, "INVALID_PHASE")
-			if not _can_act(state, actor_id):
+			var special: bool = kind == "PAY_REACTION_COST_COMPATIBLE_M4"
+			var concentrating: bool = _valid_actor(state, actor_id) and str(state["actors"][actor_id]["status"]) == "CONCENTRATING" and int(state["actors"][actor_id]["hp"]) > 0
+			if not _can_act(state, actor_id) and not (special and concentrating):
 				return _reject(state, "ACTOR_UNAVAILABLE")
 			if not instruction.get("rp_cost", null) is int or not instruction.get("mp_cost", null) is int:
 				return _reject(state, "INVALID_REACTION_COST")
