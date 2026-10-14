@@ -1,0 +1,117 @@
+name: Godot Phase3 M2 domain gate (fail closed until M2.3 and M2.4)
+# M2.1/M2.2 resources can pass independently. This workflow must not label
+# the full M2 domain VERIFIED while M2.3 cards or M2.4 swap are missing.
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/godot-m2-domain.yml'
+      - 'scripts/domain/m1/**'
+      - 'scripts/domain/m2/**'
+      - 'tests/test_m2*.gd'
+      - 'resources/combat/rulesets/**'
+      - 'docs/verification/PH3_M2_5_ACCEPTANCE_REPORT.md'
+  pull_request:
+    paths:
+      - '.github/workflows/godot-m2-domain.yml'
+      - 'scripts/domain/m2/**'
+      - 'tests/test_m2*.gd'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  m2-domain-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2 and verify hash
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/godot" "$RUNNER_TEMP/m2-5-logs"
+          release="https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable"
+          zip="Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -fLsS --retry 3 "$release/$zip" -o "$RUNNER_TEMP/godot/$zip"
+          curl -fLsS --retry 3 "$release/SHA512-SUMS.txt" -o "$RUNNER_TEMP/godot/SHA512-SUMS.txt"
+          cd "$RUNNER_TEMP/godot"
+          grep -F "$zip" SHA512-SUMS.txt > checksum
+          test "$(wc -l < checksum)" -eq 1
+          mv checksum selected.sha512
+          sed -i 's@  @  @' selected.sha512
+          sha512sum -c selected.sha512
+          unzip -q "$zip" -d extracted
+          bin="$(find "$RUNNER_TEMP/godot/extracted" -type f -name 'Godot_v4.7.2-stable_linux.x86_64' -print -quit)"
+          test -n "$bin"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - name: Engine, import, version
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          "$GODOT_BIN" --version | tee "$RUNNER_TEMP/m2-5-logs/version.log"
+          grep -q '^4\.7\.2\.' "$RUNNER_TEMP/m2-5-logs/version.log"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit             > "$RUNNER_TEMP/m2-5-logs/import.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m2-5-logs/import.log"; exit 1;
+          }
+      - name: Verified predecessor M1/M2.1/M2.2 and partial M2.5 resource invariants/replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_combat_m1 test_m2_resources test_m2_costs test_m2_invariants test_m2_replay; do
+            echo "::group::$script"
+            timeout 120s "$GODOT_BIN" --headless --path .               --script "res://tests/$script.gd" > "$RUNNER_TEMP/m2-5-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m2-5-logs/$script.log"; exit 1;
+            }
+            cat "$RUNNER_TEMP/m2-5-logs/$script.log"
+            echo "::endgroup::"
+          done
+          grep -q 'M1_TEST_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/m2-5-logs/test_combat_m1.log"
+          grep -q 'M2_1_TEST_REPORT executed=38 passed=38 failed=0' "$RUNNER_TEMP/m2-5-logs/test_m2_resources.log"
+          grep -q 'M2_2_TEST_REPORT executed=43 passed=43 failed=0' "$RUNNER_TEMP/m2-5-logs/test_m2_costs.log"
+          grep -Eq 'M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=[0-9]+ passed=[0-9]+ failed=0' "$RUNNER_TEMP/m2-5-logs/test_m2_invariants.log"
+          grep -Eq 'M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=[0-9]+ passed=[0-9]+ failed=0' "$RUNNER_TEMP/m2-5-logs/test_m2_replay.log"
+      - name: Legacy prototype regression (does not validate approved card rules)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
+            timeout 120s "$GODOT_BIN" --headless --path .               --script "res://tests/$script.gd" > "$RUNNER_TEMP/m2-5-logs/legacy-$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m2-5-logs/legacy-$script.log"; exit 1;
+            }
+            echo "legacy $script exit=0"
+          done
+      - name: M2.3 and M2.4 full-domain prerequisites (must fail closed)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          missing=()
+          for path in             scripts/domain/m2/cards/card_instance.gd             scripts/domain/m2/cards/deck_validator.gd             scripts/domain/m2/cards/card_zone_resolver.gd             scripts/domain/m2/cards/draw_resolver.gd             scripts/domain/m2/persistence/deck_profile_v2.gd             scripts/domain/m2/cards/free_swap_resolver.gd             scripts/domain/m2/cards/card_trigger_dispatcher.gd             tests/test_m2_cards.gd             tests/test_m2_free_swap.gd; do
+              [[ -f "$path" ]] || missing+=("$path")
+          done
+          if (( ${#missing[@]} > 0 )); then
+            printf '%s\n' "${missing[@]}" > "$RUNNER_TEMP/m2-5-logs/missing-m2-prerequisites.txt"
+            echo "::error::M2_DOMAIN_BLOCKED_DEPENDENCY — M2.3/M2.4 source and tests missing"
+            cat "$RUNNER_TEMP/m2-5-logs/missing-m2-prerequisites.txt"
+            exit 2
+          fi
+          # Modules existing does not prove their contracts. Execute each real runner.
+          for script in test_m2_cards test_m2_free_swap; do
+            timeout 120s "$GODOT_BIN" --headless --path .               --script "res://tests/$script.gd" > "$RUNNER_TEMP/m2-5-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m2-5-logs/$script.log"; exit 1;
+            }
+            cat "$RUNNER_TEMP/m2-5-logs/$script.log"
+          done
+          # M2.5 resource-only suites are NOT enough to establish cross-card/swap replay.
+          echo "::error::BLOCKED_M2_FULL_INTEGRATION: card ownership + swap replay oracles not yet authored"
+          exit 2
+      - name: Upload reproducible results (including known gate failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-phase3-m2-5-blocked-gate-logs
+          path: ${{ runner.temp }}/m2-5-logs/
+          if-no-files-found: warn
+          retention-days: 14
