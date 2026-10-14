@@ -97,3 +97,7 @@
 7. **M5**：Damage/Hit/Status/Break/Exposed/Combo/Outcome、跨整場 deterministic replay。
 
 **停損界線：** 在 headless runner 實測可重現以前，不宣稱 Phase3 M1/2/3/4/5 VERIFIED。這份報告只授權工程稽核結案，不代表允許把 Provisional 係數改成新 Canon。
+
+## 附錄 — G0.1 CI 後續驗證（2026-10-14）
+
+原始稽核時尚無 CI，因此上述 `CI NOT_VERIFIED` 是當時快照。後續已新增 GitHub Actions 並完成實際驗證：詳見 [PH3_G0_CI_SETUP.md](PH3_G0_CI_SETUP.md)。[GitHub Actions Run #38563701908](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38563701908) 在 commit `bcc7bdcb5df3e1cb63d64581ae094410a8e04115` 以 Godot `4.7.2.stable.official.ed1daf0bf` 執行成功；SHA512及專案匯入成功；故意失敗 Probe exit17 已被正確偵測；原有四個 **LEGACY** 測試 exit0。**G0.1 ENVIRONMENT VERIFIED**，但不代表新版 Phase1/2 規格或新 M1～M5 驗收；全量 RTM 與 Domain 遷移仍未完成。CI log 存在 UI 物件/資源清理警告，需獨立追蹤。

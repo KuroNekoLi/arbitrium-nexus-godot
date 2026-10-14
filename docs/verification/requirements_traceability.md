@@ -1,6 +1,6 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
-> 日期：2026-10-14；程式基準 `c9678782b818f825b85561313bd142130c330fdf`；本表依 GitHub **靜態程式檢視**。所有 `Actual Test Result = NOT_EXECUTED`，不把文件指定的 Test ID 等同已跑 PASS。Spec 詳情參見 `../combat/00`～`24`。此表優先盤點工程關鍵不變量；完整逐一展開規格檔 13 的全部 test IDs，列為 M1 RTM 擴充義務。
+> 日期：2026-10-14；程式基準 `c9678782b818f825b85561313bd142130c330fdf`；本表依 GitHub **靜態程式檢視**。除附錄 G0.1 CI 環境/舊版基線測試之外，所有**新版 Phase1/2** `Actual Test Result = NOT_EXECUTED`，不把文件指定的 Test ID 等同已跑 PASS。Spec 詳情參見 `../combat/00`～`24`。此表優先盤點工程關鍵不變量；完整逐一展開規格檔 13 的全部 test IDs，列為 M1 RTM 擴充義務。
 
 | RTM | 正式需求 / Source | Legacy code / evidence | 稽核判定 | 新版驗收要求 | 工作包 |
 |---|---|---|---|---|---|
@@ -31,8 +31,8 @@
 | G0-R25 | deterministic PRNG/command tape/state event hash（12/22） | Godot RandomNumberGenerator固定seed，log為中文字signal | PARTIAL | State+seed+commands 重播同 hash，非法命令 RNG unchanged | M1 |
 | G0-R26 | domain authoritative independent of animation（12/22） | UI動畫後呼叫 `play_card()`；`test_combat_ui.gd` 以延後扣血為成功 | CONFLICT | 動畫播放不控制 domain 單次結算 | M1/UI adaptation |
 | G0-R27 | deck persistence migration（04/22） | `deck_profile_store.gd` version1/8張/NoDuplicates | CONFLICT | 版本化向新版轉換，保護舊資料 | M2 |
-| G0-R28 | Godot headless negative failure exit probe（23） | 現有測試可 quit(1)，未見專用failure probe | NOT_VERIFIED | 實跑失敗必 nonzero；成功必0 | G0/M1 |
-| G0-R29 | CI與實測版本（23） | `.github/workflows` 查詢404 | MISSING | Github Actions runtime、logs、artifacts、Godot版本 | G0 |
+| G0-R28 | Godot headless negative failure exit probe（23） | `tests/ci_failure_probe.gd` 的 CI Run #38563701908 明確確認 exit17+marker | **G0.1 VERIFIED** | 負例結果可辨識，不能把命令失敗當 PASS | G0.1 CLOSED |
+| G0-R29 | CI與實測版本（23） | workflow `godot-g0-legacy-baseline.yml`，Godot `4.7.2.stable.official.ed1daf0bf`，SHA512/匯入/四組 legacy tests exit0 | **G0.1 VERIFIED — LEGACY ONLY** | 新版 Phase1/2 測試尚 NOT_EXECUTED；留存 run ID + logs | G0.1 CLOSED |
 | G0-R30 | 測試 oracle 更新（13/21） | `test_battle_state.gd` 預期8卡/兩次；`test_turn_flow.gd` 預期timeout | CONFLICT | 明確標 LEGACY_SUPERSEDED，新增新版正/負/邊界測試 | M1–M5 |
 
 ## 必須延伸的工作
@@ -40,3 +40,7 @@
 - 第13號規格文內所有 P1/P2/M/PRE3/CORE testcase ID，M1 建立全量 machine-readable mapping（ID、spec source、expected state/event、fixture、runnable test、actual output、status）。
 - 禁止把本表 `PARTIAL` 直接升級 `PASS`；需在 **本 Godot repo** 同 Godot runtime 執行 headless，留下 stdout/stderr, exit code, SHA, seed, state hashes。
 - 需要新 `docs/verification/PH3_G0_BASELINE_RUN.md` 保存實際二進位、CI、命令與測試結果；未跑前不可產生假紀錄。
+
+## G0.1 實測補充
+
+[Run #38563701908](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38563701908) = `success`，四組舊版測試均 exit0，故意失敗 exit17。這是**環境與既有原型 Regression baseline** 的結果，而非新版功能驗收。G0-R01～27、R30 仍依其 CONFLICT/MISSING/PARTIAL 判定，不因 CI 綠燈而改為通過。詳見 [PH3_G0_CI_SETUP.md](PH3_G0_CI_SETUP.md)。
