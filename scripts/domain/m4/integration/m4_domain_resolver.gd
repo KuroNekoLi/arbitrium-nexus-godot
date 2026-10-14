@@ -213,6 +213,16 @@ static func apply(original: Dictionary, command: Dictionary,
 		if not created["ok"]:
 			return _reject(original, str(created["error"]))
 		var cast: Dictionary = created["instance"]
+		# Actual M2 cost transaction receipt is the sole refund base.
+		# No client-supplied MP quote is ever trusted.
+		var saw_authoritative_payment: bool = false
+		for paid_event: Dictionary in committed["events"]:
+			if str(paid_event["event"]["kind"]) == "SPCostReservedOnly":
+				cast["paid_mp"] = int(paid_event["event"]["details"]["mp_cost"])
+				cast["paid_ap"] = int(paid_event["event"]["details"]["ap_cost"])
+				saw_authoritative_payment = true
+		if not saw_authoritative_payment:
+			return _reject(original, "MISSING_AUTHORITATIVE_PAYMENT_RECEIPT")
 		next["core"]["battle"]["casting_instances"][cast["casting_id"]] = cast
 		next["core"]["battle"]["actors"][resolved["actor_id"]]["status"] = "CONCENTRATING"
 		_event(next, output, "CastingStarted", id,
