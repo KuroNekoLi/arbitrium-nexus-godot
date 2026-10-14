@@ -1,11 +1,11 @@
-# Phase 1–2 / Phase 3 — 全量 Test ID 追溯清單（G0.2 + M1）
+# Phase 1–2 / Phase 3 — 全量 Test ID 追溯清單（G0.2 + M1 + M2.1）
 
-> Repo: `KuroNekoLi/arbitrium-nexus-godot`；建立日期：2026-10-14。來源：[`docs/combat/13_TEST_MATRIX_ACCEPTANCE.md`](../combat/13_TEST_MATRIX_ACCEPTANCE.md)。**此表完整列出該規格中的 128 個具名測試案例**，外加新 M1 30 個具名測試。狀態以實際 CI 執行證據為準；`SPECIFIED` 不代表測試已執行。
+> Repo: `KuroNekoLi/arbitrium-nexus-godot`；建立日期：2026-10-14。來源：[`docs/combat/13_TEST_MATRIX_ACCEPTANCE.md`](../combat/13_TEST_MATRIX_ACCEPTANCE.md)。**此表完整列出該規格中的 128 個具名測試案例**，外加新 M1 30 個具名測試與 M2.1 38 個具名資源測試。狀態以實際 CI 執行證據為準；`SPECIFIED` 不代表測試已執行。
 
 ## 1. 核查結論與判定
 
 - 來源規格13的 Test ID：**128/128 已建立追溯記錄，無重複 ID**。每項保留來源行號、輸入／期望摘要、負責里程碑與目前執行狀態。
-- 當前可執行 M1 domain runner 實測：**30/30 PASS**，其余 **128 個 legacy/source-level 完整 gameplay oracle 均未因 M1 被宣稱 PASS**。
+- 當前可執行 M1 Domain runner：**30/30 PASS**，M2.1 Resource runner：**38/38 PASS**。來源 128 個完整 gameplay oracle 仍不可因這些子合約測試升格為完整驗收。
 - 目前的 `PARTIAL_M1_ONLY` 只有 deterministic replay／RNG 抽象骨架相關需求，因為尚未有正式卡牌牌序、Boss、多段效果、2.5D FPS 交叉驗證，仍待 M5 完整測試。
 - `REVIEW_SUPERSEDED_EXPECTATION` 代表舊範例的 `BLOCKED_BY_DECISION` 等文字或未定範圍已被後續核准／委派預設影響，測試實作前必須重新閱讀 19/20/21 的最新版裁決。**不代表規則被本工具重新定義**。
 - 第13號文件已提及其他 ADR / Test ID 的概念，但只有表格中實際出現的具名案例計入此 128；若後續另檔新增 ID 須額外追溯。
@@ -17,7 +17,7 @@
 | SPECIFIED / NOT_EXECUTED | 已有完整規格 oracle，尚未在正確 Godot Repo 以新版規則執行 |
 | PARTIAL_M1_ONLY | M1 符合該測試的「確定性設施」子條件，完整玩法測試仍未執行 |
 | REVIEW_SUPERSEDED_EXPECTATION | 舊期望存在新版規格修正，先核對裁決再寫測試 |
-| VERIFIED (M1-only) | 實際 Godot CI 中有對應具名 Case 的 PASS stdout、退出碼與 commit |
+| RESOURCE_LEDGER_ONLY_VERIFIED | M2.1 已在新資源模組驗證該項的資源子條件；整體攻擊／SP／Reaction／Boss 尚未整合通過 |\n| VERIFIED (M1-only) | 實際 Godot CI 中有對應具名 Case 的 PASS stdout、退出碼與 commit |
 
 ## 2. Phase 1–2 規格案例 128 項
 
@@ -195,3 +195,50 @@
 - [舊原型回歸 run #38565198000](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38565198000)：舊 `8-card / 2-play / timed Reaction` 回歸屬 **LEGACY baseline**，即使成功也不是新版玩法驗收。
 - **M2 必補**：全隊 AP、MP 與 RP、12SP、手牌上限8、免費換牌／APDebt 等。**M3**：無 countdown 的多人 Reaction Guard/Protect。**M4**：雙詠唱、干擾、Last Spell。**M5**：Hit/Damage/Status/Break/Combo/Outcome、全戰 replay。
 - 規格測試未明文逐卡配置／平衡數值者依 `BALANCE_PROVISIONAL` 或 `BLOCKED_FIXTURE` 保留，不造假最終 Canon。
+
+## 5. M2.1 Resource-domain cases — verified 38/38
+
+Source runner: `tests/test_m2_resources.gd` @ `5812a8883e87cb5cd30665d100875f7bb75c0e59`. [CI run #38568919479](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38568919479). All cases verified with exit0; some names overlap source13 but they assert **resource-only**, not fully completed gameplay.
+
+| M2.1 actual case ID | Scope | Status |
+|---|---|---|
+| `M2_1_SETUP` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_JSON_INTEGRAL_FIXTURE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_FRACTIONAL_COST_REJECTED` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-001` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_ATTACK_INDEPENDENT` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_ATTACK_NO_DAMAGE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-002` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-003` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-004` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-005` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-006` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-007` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-008` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `P1-ECO-009-UPDATED` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_RP_CAP_OVERRIDE_FIXTURE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M18-AP-001` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M18-RP-002` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M19-MP-001` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M20-MP-002` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M31-MP-001` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_NO_NATURAL_MP` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_MP_CLAIM_RESETS` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_MP_UNDERFLOW` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_MP_PAY` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_INVALID_AMOUNTS` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_IDEMPOTENCY` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_INVALID_PHASE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_ACTOR_GUARDS` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_NO_SILENT_BALANCE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_FULL_MP_CLAIM` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_IMMUTABLE_INPUT` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_DEBT_DEFERRED` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_MP_STATE_INVARIANT` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_PUBLIC_ATTACK_NOT_READY` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_REPLAY_IDENTICAL` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_RNG_PRESERVED` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_EVENT_SEQUENCING` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+| `M2_1_REPLAY_FAILURE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
+
+The first CI attempt #38568308477 failed due to Godot JSON parsing integral literals as float; correction added explicit integer-valued JSON handling and two regression cases. The source of gameplay policy remains `docs/combat/03,18,19,20`; fixtures do not approve permanent MP/AP balance values.

@@ -1,6 +1,6 @@
 # Phase 3 / M2.1 — AP, MP and RP Resource Domain Engineering Note
 
-> **Status: IMPLEMENTED_NOT_VERIFIED** until this repo's GitHub Actions finishes green and logs are read. Created 2026-10-14. The authoritative specs are Library-synced `docs/combat/` files, **not** this implementation note. This M2.1 gate does not certify M2.2–M5.
+> **Status: M2.1 RESOURCE_LEDGER VERIFIED** (resource-only gate; no gameplay integration). Created 2026-10-14. The authoritative specs are Library-synced `docs/combat/` files, **not** this implementation note. This M2.1 gate does not certify M2.2–M5.
 
 ## Source authority, exact requirements
 
@@ -45,3 +45,35 @@ On success runner prints `M2_1_TEST_REPORT executed=<n> passed=<n> failed=0 skip
 ## M2.2 handoff
 
 Start with `SPEND_AP`/`PAY_MP` insufficiency and debt/discount rules in `docs/combat/18,19,20`. Build authoritative *combined* `PayCardCost` with atomic validation, SetCost→sum discounts→minimum→Overload shortfall; AP refund enters CurrentAP but never silently clears APDebt. No global CurrentAP cap, no global play-count cap. Do not silently enable Attack or SP functionality until actual effect commit exists.
+
+## 2026-10-14 Verified acceptance — run after JSON fixture correction
+
+The initial CI run [#38568308477](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38568308477) **FAILED**: Godot's JSON parser returned integral numeric literals as floats, so `is int` rejected a legitimate provisional AP cost; the test subsequently tried to access a nonexistent event and raised a runtime error. We did not weaken the approved rules. Fix commit `5812a8883e87cb5cd30665d100875f7bb75c0e59` accepts finite safe *integral-valued JSON numbers* while still rejecting fractional amounts; two new regression tests guard this defect, and the test runner now detects the prerequisite failure before indexing its events.
+
+| Evidence | Verified value |
+|---|---|
+| Repo / branch | `KuroNekoLi/arbitrium-nexus-godot` / `master` |
+| Tested commit | [`5812a8883e87cb5cd30665d100875f7bb75c0e59`](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/5812a8883e87cb5cd30665d100875f7bb75c0e59) |
+| M2.1 CI Run | [#38568919479](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38568919479) — `completed / success` |
+| M1 regression | `M1_TEST_REPORT executed=30 passed=30 failed=0 skipped=0` (same workflow, same commit) |
+| M2.1 case count | `M2_1_TEST_REPORT executed=38 passed=38 failed=0 skipped=0` |
+| G0 legacy regression | [Run #38568920097](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38568920097) — `completed / success` (old prototype only) |
+| Runtime | Godot `4.7.2.stable.official.ed1daf0bf`, Linux x86_64 |
+| Resource fixture authority | `BALANCE_PROVISIONAL` / `m2.1-resource-fixture-v1` |
+| Ruleset / content | `arbitrium-phase3-m2.1-v1` / `m2.1-placeholder-content-v1` |
+| Seed | `20261014` |
+| Initial hash | `58f878a4b08f5f12f60e313bcc9a3e34e799081546245dd0851cf357a70b1d75` |
+| Event hash | `ff9e382209519f6d29fb3ee88b666a54912fe45b9137c6a67e01f590db4f1c67` |
+| Final hash | `45c70e5102c1e92896669526589d9fe0e61730b63c936943dd8cb2b5c6600bd5` |
+| Artifacts | `godot-phase3-m2-1-logs`, ID `11897250058` (short-lived Actions attachment) |
+| Gate | **M2.1 RESOURCE_LEDGER VERIFIED**. M2.2–M2.5 NOT STARTED, M3–M5 NOT STARTED. |
+
+The complete command tape is in GitHub Actions log `M2_1_REPLAY_PROOF`. It includes: GRANT_AP(8) → BASIC_ATTACK_RESOURCE_ONLY(A) → BASIC_ATTACK_RESOURCE_ONLY(A) → CONVERT_AP_TO_RP → SPEND_RP(2) → EXPIRE_RP → START_PLAYER_RESOURCES.
+
+### Practical limitations to preserve for Codex
+
+- The M2.1 internal `ResourceLedger.apply()` operations verify *resource logic*, not legal SP or EnemyAction triggers. They must never be called from UI as unrestricted gameplay commands.
+- `START_PLAYER_RESOURCES` is a resource-only seam and does not implement PRE3-R09 status/cast/outcome first; M3 must integrate correct ordering.
+- No real `BASIC_ATTACK` public action is enabled and no damage is applied. M2.2's combined transaction (AP+MP+cost reduction+Overload) is **not** covered by separated `SPEND_AP/PAY_MP` smoke operations.
+- MaxMP 6/8/12 and BasicAttack AP1/MP+2 are provisional fixture-only. Default RP cap6 is approved, whereas special cap9 is fixture demonstration until an eligible SP has been implemented.
+- Legacy UI still uses its own 8-card/2-play/timed reaction engine. Passing legacy regression means *no accidental regression*, not Phase1/2 gameplay acceptance.

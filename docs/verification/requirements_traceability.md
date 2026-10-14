@@ -1,6 +1,6 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
-> 日期：2026-10-14；程式基準 `c9678782b818f825b85561313bd142130c330fdf`；本表依 GitHub **靜態程式檢視**。除附錄 G0.1 CI 環境/舊版基線測試之外，所有**新版 Phase1/2** `Actual Test Result = NOT_EXECUTED`，不把文件指定的 Test ID 等同已跑 PASS。Spec 詳情參見 `../combat/00`～`24`。此表優先盤點工程關鍵不變量；完整逐一展開規格檔 13 的全部 test IDs，列為 M1 RTM 擴充義務。
+> 日期：2026-10-14；程式基準 `c9678782b818f825b85561313bd142130c330fdf`；本表依 GitHub **靜態程式檢視**。除 G0.1、M1 scaffold 與 M2.1 **資源子契約**的已驗證案例之外，完整 **Phase1/2 gameplay** 仍多數 `NOT_EXECUTED`，不把文件指定的 Test ID 等同已跑 PASS。Spec 詳情參見 `../combat/00`～`24`。此表優先盤點工程關鍵不變量；完整逐一展開規格檔 13 的全部 test IDs，列為 M1 RTM 擴充義務。
 
 | RTM | 正式需求 / Source | Legacy code / evidence | 稽核判定 | 新版驗收要求 | 工作包 |
 |---|---|---|---|---|---|
@@ -51,3 +51,17 @@
 - [同 commit 舊版 Regression Run #38565198000](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38565198000)：completed / success；目前 legacy 系統與 UI 尚**未**切換新版 M1 Domain，不能因此把 G0-R01～24 和 26～30 當成新規格已合格。
 - **G0-R25**（決定性 Domain scaffold / Replay）：`M1_SCAFFOLD_VERIFIED`，測到命令驗證拒絕原子性、RNG 純函式、固定 Event Seq/Replay Hash；**全戰 P2-D16/P2-REPLAY-01 仍未完整實作**。
 - 來源 `docs/combat/13_TEST_MATRIX_ACCEPTANCE.md` 的 **128個具名 Test IDs 及 30個新M1 ID** 已完整列於 [PH3_PHASE12_TEST_INVENTORY.md](PH3_PHASE12_TEST_INVENTORY.md)，包括來源行號、責任 Milestone、現行狀態；不得把 `SPECIFIED` 誤寫成 `PASS`。
+
+## M2.1 — 新資源模組與受限的驗收範圍（2026-10-14）
+
+[CI Run #38568919479](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38568919479), commit `5812a8883e87cb5cd30665d100875f7bb75c0e59`：Godot 4.7.2，**38/38 M2.1 PASS + 30/30 M1 regression PASS**；同 commit 的 [G0 legacy run #38568920097](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38568920097) 為 success。這證明新 `scripts/domain/m2/economy/` 的 resource-only 合約，**不代表舊 `scripts/domain/battle_state.gd` 已遷移完成**。
+
+| RTM | 新實作檔 | 已驗證的子範圍 | Remaining Gate |
+|---|---|---|---|
+| G0-R01 | `scripts/domain/m2/economy/resource_ledger.gd` | BaseAP6、共享池、CurrentAP超過6、普通攻擊*資源模擬*不限同人次數 | M2.2 真正 SP 合法性／M5 傷害、UI |
+| G0-R02 | `basic_attack_mp_policy.gd` + `resource_ledger.gd` | 每角第一次成功的資源操作才回MP；不自然回滿；MaxMP clamp | M3 正式階段邊界／M5 真正攻擊 |
+| G0-R04 | `resource_ledger.gd` | AP→RP按有效cap；敵方階段末RP清零；不可二次轉換 | M3 EnemyAction/Reaction 真正 RP 支出 |
+| G0-R25 | `m1/combat_model.gd` + `resource_ledger.gd` | 同 seed/resource command tape 事件及state hash一致，拒絕不動 RNG | M2.5 全卡區不變量／M5 全戰 replay |
+| G0-R26 | `m2/economy/*.gd` | Domain 不依賴 UI 動畫/計時器 | 舊 `main.gd` 尚未接新版 Domain |
+
+**驗收級別：`RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED`。** 測試案例詳見 [PH3_PHASE12_TEST_INVENTORY.md](PH3_PHASE12_TEST_INVENTORY.md)；實際證據及失敗後修復原因見 [PH3_M2_1_ENGINEERING_NOTE.md](PH3_M2_1_ENGINEERING_NOTE.md)。
