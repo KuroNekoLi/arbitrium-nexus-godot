@@ -335,6 +335,50 @@ func _init() -> void:
 	var cap_quote: Dictionary = Refund.quote(fa["state"]["core"]["battle"]["casting_instances"]["cast:full-A"],capped_actor,cap)
 	_yes("M22-CAST-002-MP_MAX_CAP",cap_quote["ok"] and cap_quote["requested"] == 1
 		and cap_quote["actual"] == 0)
+	# Additional positive control for P1-D14: absent Protect and with a
+	# trusted M5 hit FIXTURE, on-hit disruption MUST reduce the original
+	# caster Stability. No untrusted client-supplied power may override it.
+	var solo: Dictionary = _initial(SEED + 1)
+	var solo_cast: Dictionary = _cast(solo,"A","solo-full")
+	var solo_enemy: Dictionary = _apply(solo_cast["state"],"END_PLAYER_PHASE","solo-end")
+	var solo_declared: Dictionary = _apply(solo_enemy["state"],"DECLARE_NEXT_ENEMY_ACTION","solo-declare")
+	var solo_opened: Dictionary = _apply(solo_declared["state"],"OPEN_REACTION_WINDOW","solo-open",
+		{"enemy_action_id":str(solo_declared["state"]["active_enemy_action_id"])})
+	var solo_pass: Dictionary = _apply(solo_opened["state"],"PASS_REACTION","solo-pass",
+		{"window_id":str(solo_opened["state"]["reaction_window"]["window_id"])})
+	_yes("P1-PRT-008-REAL_WINDOW_EXPLICIT_PASS",solo_pass["accepted"]
+		and solo_pass["state"]["reaction_window"]["closure_reason"] == "PLAYER_PASSED")
+	var solo_before: Dictionary = solo_pass["state"]
+	var claimed_hit: Dictionary = {
+		"source_enemy_action_id":str(solo_before["active_enemy_action_id"]),
+		"casting_id":"cast:solo-full","effect_id":"arrow",
+		"hit_index":0,"hit_fixture_confirmed":true,"disruption_power":9999}
+	var no_hit_cfg: Dictionary = config.duplicate(true)
+	no_hit_cfg["m4_2_verified_hit_fixture"] = false
+	_yes("P1-PRT-008-UNTRUSTED_HIT_FIXTURE_REJECTED",_failed(_apply(
+		solo_before,"APPLY_CASTING_DISRUPTION_M4_FIXTURE","untrusted-hit",
+		claimed_hit,no_hit_cfg),solo_before,"M5_HIT_RESOLUTION_NOT_AVAILABLE"))
+	var solo_hit: Dictionary = _apply(solo_before,"APPLY_CASTING_DISRUPTION_M4_FIXTURE",
+		"real-onhit-fixture",claimed_hit)
+	_yes("P1-PRT-008-UNPROTECTED_ON_HIT_APPLIES",solo_hit["accepted"]
+		and _active(solo_hit["state"],"cast:solo-full")["current_stability"] == 6)
+	_yes("P1-PRT-008-CONTENT_POWER_NOT_CLIENT_OVERRIDE",solo_hit["accepted"]
+		and solo_hit["events"][_ix(solo_hit["events"],"CastingDisruptionEvaluated")]["details"]["power"] == 4)
+	_yes("P1-PRT-008-HP_REMAINS_M5_DEFERRED",solo_hit["accepted"]
+		and solo_hit["state"]["core"]["battle"]["actors"]["A"]["hp"] == 100
+		and solo_hit["state"]["core"]["battle"]["actors"]["Boss"]["hp"] == 100)
+	_yes("P1-PRT-008-DUPLICATE_HIT_EVENT_REJECTED",_failed(_apply(
+		solo_hit["state"],"APPLY_CASTING_DISRUPTION_M4_FIXTURE","duplicate-hit",
+		claimed_hit),solo_hit["state"],"DUPLICATE_DISRUPTION_EFFECT"))
+	_yes("P1-PRT-008-CAST_CARD_REMAINS_IN_CASTING",solo_hit["accepted"]
+		and Instance.valid(solo_hit["state"]["core"])
+		and Zones.validate_state(solo_hit["state"]["core"]["cards"]))
+	_yes("P1-PRT-008-CANNOT_DISRUPT_UNTARGETED_CASTER",_failed(_apply(
+		confirmed["state"],"APPLY_CASTING_DISRUPTION_M4_FIXTURE","wrong-hit-target",{
+		"source_enemy_action_id":str(confirmed["state"]["active_enemy_action_id"]),
+		"casting_id":"cast:full-B","effect_id":"arrow",
+		"hit_index":0,"hit_fixture_confirmed":true
+	}),confirmed["state"],"CASTER_NOT_ORIGINAL_HIT_TARGET"))
 	_yes("M42-NO_ORDINARY_REACTION_FROM_CONCENTRATING",_active(s,"cast:full-B")["concentration"]
 		and s["core"]["battle"]["actors"]["B"]["status"] == "CONCENTRATING")
 	print("M4_2_REPLAY seed=",SEED," commands=",tape.size()," initial=",initial_hash,
