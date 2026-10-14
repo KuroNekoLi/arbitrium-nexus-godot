@@ -62,11 +62,11 @@ func _init() -> void:
 	var contexts: Dictionary = _contexts()
 	var definitions: Dictionary = _definitions()
 	var owned: Dictionary = _owned()
-	_expect("PRE3-16-EXACT_12", Deck.validate_party(decks, contexts, definitions, owned)["ok"])
+	_expect("PRE3-R16-EXACT_12", Deck.validate_party(decks, contexts, definitions, owned)["ok"])
 	_expect("DECK-REPEATS_ALLOWED", Deck.validate_loadout(contexts["A"], decks["A"], definitions, owned["A"])["ok"])
 	var fewer: Array = decks["A"].duplicate()
 	fewer.pop_back()
-	_expect("PRE3-16-NO_AUTO_PADDING", Deck.validate_loadout(contexts["A"], fewer, definitions, owned["A"])["error"] == "LOADOUT_REQUIRES_EXACTLY_12_SP")
+	_expect("PRE3-R16-NO_AUTO_PADDING", Deck.validate_loadout(contexts["A"], fewer, definitions, owned["A"])["error"] == "LOADOUT_REQUIRES_EXACTLY_12_SP")
 	var more: Array = decks["A"].duplicate()
 	more.append("burst")
 	_expect("DECK-REJECT_13", not Deck.validate_loadout(contexts["A"], more, definitions, owned["A"])["ok"])
@@ -121,6 +121,22 @@ func _init() -> void:
 	var no_refill: Dictionary = Draw.draw_to_four(refilled["state"], "A")
 	_expect("M25-HAND-001", no_refill["accepted"] and no_refill["events"].is_empty()
 		and JSON.stringify(no_refill["state"]) == JSON.stringify(refilled["state"]))
+	# Exact spec-13 M25-HAND-001 cases: 3 / 4 / 7 at phase boundary.
+	var hand3: Dictionary = _move(s, "A", str(_zone(s, "A", "hand")[0]), "hand", "discard")
+	var hand3_refill: Dictionary = Draw.draw_to_four(hand3["state"], "A")
+	var hand7: Dictionary = Draw.draw_cards(s, "A", 3)
+	var hand7_refill: Dictionary = Draw.draw_to_four(hand7["state"], "A")
+	_expect("M25-HAND-001-THREE_FOUR_SEVEN", hand3["accepted"] and hand3_refill["accepted"]
+		and hand3_refill["events"].size() == 1
+		and _zone(hand3_refill["state"], "A", "hand").size() == 4
+		and hand7["accepted"] and hand7_refill["accepted"]
+		and hand7_refill["events"].is_empty() and _zone(hand7_refill["state"], "A", "hand").size() == 7)
+	# Exact spec-13 PRE3-20: hand 7, request draw 3, take just 1.
+	var cap_from7: Dictionary = Draw.draw_cards(hand7["state"], "A", 3)
+	_expect("PRE3-20-CAP_SEVEN_REQUEST_THREE", cap_from7["accepted"]
+		and cap_from7["events"].size() == 1 and _zone(cap_from7["state"], "A", "hand").size() == 8
+		and _zone(cap_from7["state"], "A", "draw").size() == 4
+		and Zones.validate_state(cap_from7["state"]))
 	var extra: Dictionary = Draw.draw_cards(refilled["state"], "A", 10)
 	_expect("M25-HAND-002", extra["accepted"] and _zone(extra["state"], "A", "hand").size() == 8
 		and _zone(extra["state"], "A", "draw").size() == 2
@@ -152,7 +168,7 @@ func _init() -> void:
 		var step: Dictionary = _move(empty, "A", str(_zone(empty, "A", "draw")[0]), "draw", "casting")
 		empty = step["state"]
 	var no_supply: Dictionary = Draw.draw_to_four(empty, "A")
-	_expect("DECK-003-NO_SUPPLY_FINITE", no_supply["accepted"]
+	_expect("DECK-004-EMPTY_POOL_NO_LOOP", no_supply["accepted"]
 		and _zone(no_supply["state"], "A", "hand").size() == 2 and no_supply["events"].is_empty()
 		and JSON.stringify(no_supply["state"]) == JSON.stringify(empty))
 	var to_discard: Dictionary = empty
@@ -168,6 +184,31 @@ func _init() -> void:
 		and _zone(shuffled["state"], "A", "hand").size() == 4
 		and _zone(shuffled["state"], "A", "draw").size() == 8
 		and _zone(shuffled["state"], "A", "discard").is_empty())
+	# Exact spec-13 DECK-003: draw 1 + discard 10 + hand 1.
+	# Must draw the one remaining card, shuffle discard, then draw two.
+	var mixed: Dictionary = s
+	for i: int in range(3):
+		var step: Dictionary = _move(mixed, "A", str(_zone(mixed, "A", "hand")[0]), "hand", "discard")
+		mixed = step["state"]
+	for i: int in range(7):
+		var step: Dictionary = _move(mixed, "A", str(_zone(mixed, "A", "draw")[0]), "draw", "discard")
+		mixed = step["state"]
+	var mixed_before: bool = _zone(mixed, "A", "hand").size() == 1
+		and _zone(mixed, "A", "draw").size() == 1 and _zone(mixed, "A", "discard").size() == 10
+	var mixed_result: Dictionary = Draw.draw_to_four(mixed, "A")
+	var drawn_count: int = 0
+	var recycled_count: int = 0
+	for event: Dictionary in mixed_result["events"]:
+		if event["kind"] == "CardDrawn":
+			drawn_count += 1
+		if event["kind"] == "DiscardReshuffled":
+			recycled_count += 1
+	_expect("DECK-003-ONE_DRAW_TEN_DISCARD", mixed_before and mixed_result["accepted"]
+		and drawn_count == 3 and recycled_count == 1
+		and _zone(mixed_result["state"], "A", "hand").size() == 4
+		and _zone(mixed_result["state"], "A", "draw").size() == 8
+		and _zone(mixed_result["state"], "A", "discard").is_empty()
+		and Zones.validate_state(mixed_result["state"]))
 	var corrupted: Dictionary = s.duplicate(true)
 	corrupted["actors"]["A"]["zones"]["hand"].append(corrupted["actors"]["A"]["zones"]["draw"][0])
 	var refused: Dictionary = Draw.draw_cards(corrupted, "A", 1)
@@ -185,19 +226,19 @@ func _init() -> void:
 		"C": ["a", "b", "c", "d", "e", "f", "g", "h"]}}
 	var original_text: String = JSON.stringify(legacy)
 	var inspected: Dictionary = Profile.inspect_profile(legacy)
-	_expect("PRE3-20-LEGACY_RECOGNIZED", inspected["status"] == "LEGACY_RECONFIGURATION_REQUIRED"
+	_expect("M2_3-PERSIST-LEGACY_RECOGNIZED", inspected["status"] == "LEGACY_RECONFIGURATION_REQUIRED"
 		and JSON.stringify(inspected["original"]) == original_text)
-	_expect("PRE3-16-LEGACY_NOT_READY", not Profile.validate_for_battle(legacy, contexts, definitions, owned)["ok"])
+	_expect("PRE3-R16-LEGACY_NOT_READY", not Profile.validate_for_battle(legacy, contexts, definitions, owned)["ok"])
 	var v2: Dictionary = {"version": 2, "loadouts": {}}
 	for actor_id: String in ["A", "B", "C"]:
 		v2["loadouts"][actor_id] = {"variant_id": "default", "cards": decks[actor_id].duplicate()}
-	_expect("PRE3-20-V2_VALID", Profile.validate_for_battle(v2, contexts, definitions, owned)["ok"])
+	_expect("M2_3-PERSIST-V2_VALID", Profile.validate_for_battle(v2, contexts, definitions, owned)["ok"])
 	var invalid_v2: Dictionary = v2.duplicate(true)
 	invalid_v2["loadouts"]["A"]["cards"].pop_back()
-	_expect("PRE3-16-V2_NO_PADDING", not Profile.validate_for_battle(invalid_v2, contexts, definitions, owned)["ok"])
+	_expect("PRE3-R16-V2_NO_PADDING", not Profile.validate_for_battle(invalid_v2, contexts, definitions, owned)["ok"])
 	var wrong_variant: Dictionary = v2.duplicate(true)
 	wrong_variant["loadouts"]["A"]["variant_id"] = "special"
-	_expect("PRE3-20-VARIANT_REVALIDATED", Profile.validate_for_battle(wrong_variant, contexts, definitions, owned)["error"] == "VARIANT_CHANGED_REVALIDATE")
+	_expect("M2_3-PERSIST-VARIANT_REVALIDATED", Profile.validate_for_battle(wrong_variant, contexts, definitions, owned)["error"] == "VARIANT_CHANGED_REVALIDATE")
 	_test_files(v2, legacy, contexts, definitions, owned)
 	_expect("M2_3_EVENT_SEQUENCING", int(shuffled["state"]["event_seq"]) == shuffled["state"]["events"].size())
 	print("M2_3_TEST_REPORT executed=", passed + failed, " passed=", passed, " failed=", failed, " seed=", SEED)
@@ -211,7 +252,7 @@ func _test_files(v2: Dictionary, legacy: Dictionary, contexts: Dictionary,
 	var v1_path: String = "user://m2_3_test_v1.json"
 	var source := FileAccess.open(v1_path, FileAccess.WRITE)
 	if source == null:
-		_expect("PRE3-20-DISK_SETUP", false)
+		_expect("M2_3-PERSIST-DISK_SETUP", false)
 		return
 	var original: String = JSON.stringify(legacy)
 	source.store_string(original)
@@ -239,12 +280,12 @@ func _test_files(v2: Dictionary, legacy: Dictionary, contexts: Dictionary,
 				if restored_actor["cards"] != v2["loadouts"][actor_id]["cards"]:
 					equivalent = false
 					break
-	_expect("PRE3-20-V2_SAVE_LOAD", saved["saved"] and equivalent)
-	_expect("PRE3-20-LEGACY_BYTES_UNCHANGED", FileAccess.get_file_as_string(v1_path) == original)
+	_expect("M2_3-PERSIST-V2_SAVE_LOAD", saved["saved"] and equivalent)
+	_expect("M2_3-PERSIST-LEGACY_BYTES_UNCHANGED", FileAccess.get_file_as_string(v1_path) == original)
 	var legacy_save: Dictionary = Profile.save_profile(legacy, contexts, definitions, owned, v2_path)
-	_expect("PRE3-20-LEGACY_SAVE_REJECT", not legacy_save["saved"])
+	_expect("M2_3-PERSIST-LEGACY_SAVE_REJECT", not legacy_save["saved"])
 	var invalid: Dictionary = v2.duplicate(true)
 	invalid["loadouts"]["B"]["cards"].pop_back()
 	var refused: Dictionary = Profile.save_profile(invalid, contexts, definitions, owned, v2_path)
-	_expect("PRE3-20-INVALID_CANNOT_OVERWRITE", not refused["saved"]
+	_expect("M2_3-PERSIST-INVALID_CANNOT_OVERWRITE", not refused["saved"]
 		and Profile.load_profile(v2_path)["status"] == "V2_CANDIDATE")
