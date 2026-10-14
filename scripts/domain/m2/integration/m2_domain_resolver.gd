@@ -172,6 +172,21 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 			next["cards"] = moved["state"]
 			_log(next, "resources", paid["events"], produced)
 			_log(next, "cards", moved["events"], produced)
+		"BASIC_ATTACK_RESOURCE_ONLY":
+			# M3.1 entry-point to the EXISTING per-actor M2.1 cost/MP policy.
+			# The enemy hit and damage remain M5, not a second combat engine.
+			if battle["phase"] != "PLAYER_PHASE" or not _actor_available(battle, actor_id):
+				return _rejected(state, "ACTOR_UNAVAILABLE_OR_PHASE")
+			var basic: Dictionary = Ledger.apply(battle, {
+				"type": "BASIC_ATTACK_RESOURCE_ONLY",
+				"command_id": command_id,
+				"actor_id": actor_id,
+				"expected_event_seq": int(battle["event_seq"])
+			}, config.get("resources", {}))
+			if not basic["accepted"]:
+				return _rejected(state, str(basic["error"]))
+			next["battle"] = basic["state"]
+			_log(next, "resources", basic["events"], produced)
 		"FREE_SWAP":
 			if battle["phase"] != "PLAYER_PHASE":
 				return _rejected(state, "INVALID_PHASE")
