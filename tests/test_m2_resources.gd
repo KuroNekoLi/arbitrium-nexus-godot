@@ -3,6 +3,7 @@ extends SceneTree
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Resolver = preload("res://scripts/domain/m1/combat_resolver.gd")
 const Ledger = preload("res://scripts/domain/m2/economy/resource_ledger.gd")
+const BasicAttackMP = preload("res://scripts/domain/m2/economy/basic_attack_mp_policy.gd")
 var passed: int = 0
 var failed: int = 0
 var provisional: Dictionary = {}
@@ -47,9 +48,21 @@ func _init() -> void:
 	var s: Dictionary = _state()
 	_expect("M2_1_SETUP", Model.validate_shell(s) and provisional["authority"] == "BALANCE_PROVISIONAL"
 		and Model.RULESET_VERSION == provisional["ruleset_version"])
+	var quote: Dictionary = BasicAttackMP.quote(s, "A", provisional, Model.RULESET_VERSION)
+	_expect("M2_1_JSON_INTEGRAL_FIXTURE", quote["accepted"] and quote["ap_cost"] == 1
+		and quote["mp_restored"] == 2, str(quote.get("error", "")))
+	var fractional: Dictionary = provisional.duplicate(true)
+	fractional["basic_attack_ap_cost"] = 1.5
+	var bad_cost: Dictionary = BasicAttackMP.quote(s, "A", fractional, Model.RULESET_VERSION)
+	_expect("M2_1_FRACTIONAL_COST_REJECTED", not bad_cost["accepted"]
+		and bad_cost["error"] == "INVALID_ATTACK_COST_CONFIG")
 
 	# P1-D01: two attacks by same actor, MP gain only on the first accepted one.
 	var a1: Dictionary = _do(s, "BASIC_ATTACK_RESOURCE_ONLY", "a-1", {"actor_id": "A"})
+	if not a1["accepted"]:
+		printerr("FAIL M2_1_PREREQUISITE: ", a1["error"])
+		quit(1)
+		return
 	var a2: Dictionary = _do(a1["state"], "BASIC_ATTACK_RESOURCE_ONLY", "a-2", {"actor_id": "A"})
 	_expect("P1-ECO-001", a1["accepted"] and a2["accepted"]
 		and int(a1["state"]["actors"]["A"]["mp"]) == 3 and int(a2["state"]["actors"]["A"]["mp"]) == 3
