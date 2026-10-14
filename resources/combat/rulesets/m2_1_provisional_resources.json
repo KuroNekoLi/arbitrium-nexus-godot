@@ -1,0 +1,13 @@
+{
+  "schema_version": "m2.1-resource-fixture-v1",
+  "ruleset_version": "arbitrium-phase3-m2.1-v1",
+  "authority": "BALANCE_PROVISIONAL",
+  "basic_attack_ap_cost": 1,
+  "basic_attack_mp_gain": 2,
+  "actor_mp_fixture": {
+    "A": {"mp": 1, "max_mp": 6},
+    "B": {"mp": 5, "max_mp": 8},
+    "C": {"mp": 10, "max_mp": 12}
+  },
+  "disclaimer": "Costs, MP gain and caps are test fixture examples, NOT approved gameplay balance. RP cap 6 and base AP 6 are approved."
+}

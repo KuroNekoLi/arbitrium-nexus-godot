@@ -2,8 +2,8 @@ extends RefCounted
 ## PH3-M1-STATE: pure snapshot/domain shape; no Nodes/Resources/Scenes/clock.
 ## This is only an M1 scaffold; HP=100 and max_mp=0 are FIXTURE_ONLY, not game balance.
 const Rng = preload("res://scripts/domain/m1/combat_rng.gd")
-const RULESET_VERSION: String = "arbitrium-phase3-m1-v1"
-const CONTENT_VERSION: String = "m1-placeholder-content-v1"
+const RULESET_VERSION: String = "arbitrium-phase3-m2.1-v1"
+const CONTENT_VERSION: String = "m2.1-placeholder-content-v1"
 
 static func make_state(ally_ids: Array[String], enemy_ids: Array[String], seed_value: int) -> Dictionary:
 	if ally_ids.is_empty() or enemy_ids.is_empty():
@@ -16,8 +16,10 @@ static func make_state(ally_ids: Array[String], enemy_ids: Array[String], seed_v
 			return {}
 		used.append(candidate_id)
 	var actors: Dictionary = {}
+	var first_attack_mp_claimed: Dictionary = {}
 	for ally_id: String in ally_ids:
 		actors[ally_id] = _actor_fixture(ally_id, "ALLY")
+		first_attack_mp_claimed[ally_id] = false
 	for enemy_id: String in enemy_ids:
 		actors[enemy_id] = _actor_fixture(enemy_id, "ENEMY")
 	return {
@@ -29,6 +31,7 @@ static func make_state(ally_ids: Array[String], enemy_ids: Array[String], seed_v
 		"phase": "PLAYER_PHASE",
 		"outcome": "ONGOING",
 		"selected_actor_id": "",
+		"basic_attack_mp_restore_used_by_actor": first_attack_mp_claimed,
 		"action_seq": 0,
 		"event_seq": 0,
 		"seen_command_ids": [],
@@ -97,6 +100,27 @@ static func validate_shell(state: Dictionary) -> bool:
 		return false
 	var resources: Dictionary = state["party_resources"]
 	for key: String in ["base_ap", "current_ap", "rp", "rp_cap", "ap_debt"]:
-		if int(resources.get(key, -1)) < 0:
+		if not resources.get(key, null) is int or int(resources[key]) < 0:
+			return false
+	if int(resources["rp"]) > int(resources["rp_cap"]):
+		return false
+	if not state.has("basic_attack_mp_restore_used_by_actor"):
+		return false
+	if not state["basic_attack_mp_restore_used_by_actor"] is Dictionary:
+		return false
+	var claims: Dictionary = state["basic_attack_mp_restore_used_by_actor"]
+	var actors: Dictionary = state["actors"]
+	for ally_id: Variant in state["allies"]:
+		if not actors.has(ally_id) or not claims.has(ally_id):
+			return false
+		if not claims[ally_id] is bool:
+			return false
+	for actor_id: Variant in actors.keys():
+		var actor: Variant = actors[actor_id]
+		if not actor is Dictionary:
+			return false
+		if not actor.get("mp", null) is int or not actor.get("max_mp", null) is int:
+			return false
+		if int(actor["mp"]) < 0 or int(actor["max_mp"]) < 0 or int(actor["mp"]) > int(actor["max_mp"]):
 			return false
 	return true
