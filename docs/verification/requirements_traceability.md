@@ -78,3 +78,25 @@
 | M-D16/17 | `M2_2_AP_REFUND_CURRENT_ONLY`, `M2_2_REFUND_DOES_NOT_REPAY`, `M2_2_REDUCE_DEBT_NO_AP` | AP refund vs debt reduction separated; source/effect binding still fixture |
 | M-D21 | `M2_2_DUAL_CAST_SAME_MP` | Default shared MP quote verified; real casting deferred |
 | G0-R25 Replay | `M2_2_REPLAY_DETERMINISTIC`, `M2_2_REPLAY_FAILED_ATOMICALLY` | Fixed-seed replay VERIFIED for cost fixture only |
+
+
+## M2.5 partial engineering verification — 2026-10-14
+
+Starting HEAD: `495a2df504135c748cf53e29756fc521b5fad0f7`.
+Tested SHA: `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`.
+Official Godot `4.7.2.stable.official.ed1daf0bf`.
+Evidence: [M2.5 blocked gate run 38576033292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033292), [legacy pass 38576033499](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033499).
+M1 30/30, M2.1 38/38, M2.2 43/43, partial M2.5 resource invariants 14/14 and partial replay 6/6; **full M2.5 fails closed with exit2 because M2.3/M2.4 do not exist**. These tests were actually executed; the four source-of-truth card/swap modules were **not**.
+
+| Requirement / authority / source | Implementation | Test case IDs (executed at SHA above) | Status |
+|---|---|---|---|
+| M-D01/02/03/05/15 APPROVED; `18 §2` | `scripts/domain/m2/economy/cost_resolver.gd`; `overload_debt.gd` | `M2_5_OVERLOAD_RESOURCE_INVARIANT`, `M2_5_DUPLICATE_COST_ATOMIC`, `M2_5_INSUFFICIENT_MP_ATOMIC`, `M2_5_STALE_COMMAND_ATOMIC` | RESOURCE_ONLY_VERIFIED |
+| M-D06/07/08/09/16/17 APPROVED; `18 §2`; M-D18 `19 §1` | `resource_ledger.gd`, `cost_effect_resolver.gd` | `M2_5_REFUND_DEBT_SEPARATE`, `M2_5_REFUND_NO_REPEAT`, `M2_5_REDUCE_DEBT_NOT_AP`, `M2_5_RP_FROM_REMAINING`, `M2_5_RP_DOES_NOT_CARRY`, `M2_5_AP_DEBT_REPAID_BEFORE_REFRESH`, `M2_5_AP_UNCAPPED_RP_CAPPED` | RESOURCE_ONLY_VERIFIED |
+| M-D04 PROVISIONAL; `18 §2`, `20 §4` | `overload_debt.gd` | `M2_5_PROVISIONAL_ZERO_AP_PHASE` | PROVISIONAL_RESOURCE_ONLY_VERIFIED |
+| M1 deterministic model / P2-D16 APPROVED DIRECTION; `12`, `19 §4`, `22 §5` | `combat_model.gd`, M2 cost/effect/ledger | `M2_5_RESOURCE_INITIAL_VALID`, `M2_5_COST_INPUT_PURE`, `M2_5_CROSS_RESOLVER_REPLAY_EQUAL`, `M2_5_REPLAY_EVENTS_MONOTONIC`, `M2_5_REPLAY_RNG_UNCHANGED`, `M2_5_REPLAY_AP_RP_DEBT`, `M2_5_REPLAY_DISTINCT_TAPE_HASH`, `M2_5_REPLAY_FAILURE_ATOMIC` | RESOURCE_ONLY_VERIFIED; full card/swap replay BLOCKED |
+| M-D25 APPROVED, PRE3-R16 DELEGATED_DEFAULT; `04 §1–4/8`, `19 §3`, `20 §3 D` | **M2.3 missing** | `DECK-001/002/003/004`, `M25-HAND-001/002` | BLOCKED_DEPENDENCY, NOT EXECUTED |
+| M-D26–30 APPROVED, PRE3-R11 DELEGATED_DEFAULT; `04 §8`, `19 §3`, `20 §3 C` | **M2.4 missing** | `M26-SWAP-001`, `M27-SWAP-002`, `M29-SWAP-003`, `M30-SWAP-004`, PRE3-R11 valid-precheck/changed-pool negative | BLOCKED_DEPENDENCY, NOT EXECUTED |
+| PRE3-R12 DELEGATED_DEFAULT; `20 §3 C` | M4 casting lifecycle future | Casting zone resolution after spell/interrupt | DEFERRED_TO_M4 |
+
+New tests: `tests/test_m2_invariants.gd` and `tests/test_m2_replay.gd`. Test script exit0 on passing partial coverage; the new `.github/workflows/godot-m2-domain.yml` intentionally exits2 on missing dependencies to prevent **M2 DOMAIN VERIFIED** being misreported.
+Replay evidence: seed 20261014, event `28de6c96641655057122a210a73f9c3fa77890c0c20eded0417d5e62ebb7ce85`, final state `7389a7975f13b209982a3ba83dd4fd7ceeeb0c4947bda77f3712f4b8da70d9a9`. See `PH3_M2_5_ACCEPTANCE_REPORT.md` for full tape, initial hash, first parse-failure and second execution.

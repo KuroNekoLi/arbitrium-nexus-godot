@@ -292,3 +292,12 @@ Evidence: [GitHub Actions Run #38571553461](https://github.com/KuroNekoLi/arbitr
 | `M2_2_REPLAY_FAILED_ATOMICALLY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
 | `M2_2_NO_GLOBAL_PLAY_LIMIT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
 | `M2_2_NO_PUBLIC_SP_EFFECT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+
+
+## M2.5 supplemental test IDs — 2026-10-14
+
+Source-of-truth 128 test IDs above remain unchanged. This new section adds **20 internal resource-only cases**; it does **not** mark `DECK-001..004`, M-D25, M-D26..30, PRE3-R11, or full M2 integration as verified.
+
+- `tests/test_m2_invariants.gd`: 14/14 PASS — `M2_5_RESOURCE_INITIAL_VALID`, `M2_5_OVERLOAD_RESOURCE_INVARIANT`, `M2_5_COST_INPUT_PURE`, `M2_5_DUPLICATE_COST_ATOMIC`, `M2_5_INSUFFICIENT_MP_ATOMIC`, `M2_5_REFUND_DEBT_SEPARATE`, `M2_5_REFUND_NO_REPEAT`, `M2_5_REDUCE_DEBT_NOT_AP`, `M2_5_RP_FROM_REMAINING`, `M2_5_RP_DOES_NOT_CARRY`, `M2_5_AP_DEBT_REPAID_BEFORE_REFRESH`, `M2_5_AP_UNCAPPED_RP_CAPPED`, `M2_5_PROVISIONAL_ZERO_AP_PHASE`, `M2_5_STALE_COMMAND_ATOMIC`.
+- `tests/test_m2_replay.gd`: 6/6 PASS — `M2_5_CROSS_RESOLVER_REPLAY_EQUAL`, `M2_5_REPLAY_EVENTS_MONOTONIC`, `M2_5_REPLAY_RNG_UNCHANGED`, `M2_5_REPLAY_AP_RP_DEBT`, `M2_5_REPLAY_DISTINCT_TAPE_HASH`, `M2_5_REPLAY_FAILURE_ATOMIC`.
+- Evidence: Godot `4.7.2.stable.official.ed1daf0bf`; seed `20261014`; tested SHA `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`; [Actions run 38576033292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033292). All 20 executed cases passed, **but the full-domain gate failed with exit 2** because M2.3 and M2.4 source/test files were absent. See `PH3_M2_5_ACCEPTANCE_REPORT.md`. The 20 new cases do not cover card identity/zone invariant or swap event ordering.

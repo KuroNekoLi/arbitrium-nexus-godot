@@ -49,6 +49,24 @@ A red M2.5 gate caused by missing dependencies is **expected BLOCKED_DEPENDENCY*
 
 **The legacy UI, real SP effect execution, M3 enemy action and M4 casting are not certified by M2.5.**
 
-## CI evidence
+## Executed CI evidence (2026-10-14, Godot 4.7.2)
 
-Not yet run for the new M2.5 tests when this report is initially written. Record the actual CI run URL, tested commit SHA, Godot binary version, test counts and replay seed / hashes from stdout below after fetching the completed run. Do not use fabricated outputs.
+The test code was committed as `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`.
+
+- **Attempt 1**: [run 38575810018](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38575810018). M1 30/30, M2.1 38/38, M2.2 43/43; new `test_m2_invariants.gd` could not parse due to adjacent string literals (line 140). This was a test syntax error, not a gameplay rule conflict; no card/swap gate was reached.
+- **Attempt 2**: [run 38576033292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033292), final `completed/failure` **intentionally** because readiness gate returned exit **2** for missing M2.3/M2.4 code. All **executed test scripts passed** before the gate: M1 30/30, M2.1 38/38, M2.2 43/43, M2.5 partial invariants **14/14**, M2.5 partial replay **6/6**, four legacy prototype scripts exit0. Official `4.7.2.stable.official.ed1daf0bf`; Godot ZIP SHA512 verification OK; editor import OK.
+- Independent legacy regression: [run 38576033499](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033499) `completed/success` at the same test commit.
+- Command (CI): `"$GODOT_BIN" --headless --path . --script res://tests/test_m2_invariants.gd` and analogous `test_m2_replay.gd`. Exit **0** for each partial test, **2** at prerequisite-gate step. Raw logs are in run artifact `godot-phase3-m2-5-blocked-gate-logs`.
+- Partial fixed seed: `20261014`; `ruleset=arbitrium-phase3-m2.1-v1`, `content=m2.1-placeholder-content-v1`, `config=m2.2-cost-fixture-v1` (PROVISIONAL).
+- Partial replay initial SHA256: `1cbc1e9c568be6458b92f9641e32bb4375273a1e946df0e7a51f5e46aae4bb2e`.
+- Partial replay event SHA256: `28de6c96641655057122a210a73f9c3fa77890c0c20eded0417d5e62ebb7ce85`.
+- Partial replay final state SHA256: `7389a7975f13b209982a3ba83dd4fd7ceeeb0c4947bda77f3712f4b8da70d9a9`.
+- Tape: `PAY_SP_COST_ONLY(AP8/MP2, Overload2)` → `AP_REFUND_EFFECT(+3)` → `REDUCE_AP_DEBT_EFFECT(1)` → `GRANT_AP(+2)` → `CONVERT_AP_TO_RP` → `SPEND_RP(2)` → `EXPIRE_RP` → `START_PLAYER_RESOURCES`. A cost receipt is NOT a played card.
+- The only skipped/blocked scenarios are *not included* in the numeric test execution counts: actual card unique-instance/12-card/hand≤8/draw reshuffle and Free Swap/PRE3-R11. These are **BLOCKED_DEPENDENCY**, not counted as passes.
+
+### Verified deliverable scope and exit criteria
+
+**Resource-only test sub-gate: VERIFIED (14+6 PASS); full M2.5/M2 DOMAIN: BLOCKED_DEPENDENCY**. No attempt to implement M2.3, M2.4, M3 or UI in this commit. The deliberately failing readiness gate is not a regression in M1/M2.1/M2.2.
+
+Next owner must implement and separately verify M2.3 → M2.4, replace the `BLOCKED_M2_FULL_INTEGRATION` guard with real cross-module case(s), execute the entire gate, capture full card/swap hashes and only then update the verdict to `M2 DOMAIN VERIFIED`.
+
