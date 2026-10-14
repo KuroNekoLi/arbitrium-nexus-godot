@@ -257,6 +257,59 @@ func _init() -> void:
 	_expect("M2_5_INT_INCAPACITATED_DENIED", _snapshot_result(
 		not_act, invalid_actor, "ACTOR_UNAVAILABLE"))
 
+	# Confirm exact ordered CardDiscarded trigger + CardDrawn within the
+	# SAME cost-card-swap replay, not merely separate unit-suite hashes.
+	var good_target: String = str(_zone(initial, "A", "draw")[0])
+	var lawful_trigger: Dictionary = {"effect_id": "good-trigger", "on": "CardDiscarded",
+		"source_definition_id": "burst", "source_actor_id": "A",
+		"operation": "MOVE_CARD", "actor_id": "A", "instance_id": good_target,
+		"from_zone": "draw", "to_zone": "casting"}
+	var good_config: Dictionary = config.duplicate(true)
+	good_config["trigger_rules"] = [lawful_trigger]
+	var pay_cmd: Dictionary = _cmd(initial, "COMMIT_SP_CARD_FIXTURE", "trace-pay",
+		_cost("A", selected))
+	var paid_state: Dictionary = Integrated.apply(initial, pay_cmd, good_config)
+	if not paid_state["accepted"]:
+		_expect("M2_5_INT_TRIGGER_REPLAY_SETUP", false, str(paid_state["error"]))
+		quit(1)
+		return
+	var swap_cmd: Dictionary = _cmd(paid_state["state"], "FREE_SWAP", "trace-swap",
+		_swap("A", str(_hand(paid_state["state"], "A")[0])))
+	var good_tape: Array[Dictionary] = [pay_cmd, swap_cmd]
+	var traced: Dictionary = Integrated.replay(initial, good_tape, good_config)
+	var traced_twice: Dictionary = Integrated.replay(initial, good_tape, good_config)
+	_expect("M2_5_INT_COST_DISCARD_TRIGGER_DRAW", traced["accepted"]
+		and _index(traced["events"], "SPCostReservedOnly") <
+		_index(traced["events"], "CardDiscarded")
+		and _index(traced["events"], "CardDiscarded") <
+		_index(traced["events"], "CardTriggerResolved")
+		and _index(traced["events"], "CardTriggerResolved") <
+		_index(traced["events"], "CardDrawn")
+		and _zone(traced["state"], "A", "casting").has(good_target)
+		and Integrated.validate_state(traced["state"]))
+	_expect("M2_5_INT_TRIGGER_REPLAY_EXACT_HASH", traced["accepted"] and traced_twice["accepted"]
+		and traced["event_hash"] == traced_twice["event_hash"]
+		and traced["state_hash"] == traced_twice["state_hash"]
+		and traced["state"]["cards"]["rng_state"] == traced_twice["state"]["cards"]["rng_state"])
+	_expect("M2_5_INT_TRIGGER_CARD_GLOBAL_CONSERVATION", traced["accepted"]
+		and Zones.validate_state(traced["state"]["cards"])
+		and _zone(traced["state"], "A", "discard").size() == 2
+		and _hand(traced["state"], "B").size() == 4)
+	# PRE3-R11 itself must also be reproducible: a valid precheck later
+	# loses its last replacement, emits CardDrawFailed not CardDrawn.
+	var pool_cmd: Dictionary = _cmd(one, "FREE_SWAP", "pool-changed",
+		_swap("A", original))
+	var pool_tape: Array[Dictionary] = [pool_cmd]
+	var failed_pool_replay: Dictionary = Integrated.replay(one, pool_tape, with_trigger)
+	var failed_pool_twice: Dictionary = Integrated.replay(one, pool_tape, with_trigger)
+	_expect("M2_5_INT_PRE3_R11_REPLAY_EXACT", failed_pool_replay["accepted"]
+		and failed_pool_twice["accepted"]
+		and failed_pool_replay["event_hash"] == failed_pool_twice["event_hash"]
+		and failed_pool_replay["state_hash"] == failed_pool_twice["state_hash"]
+		and failed_pool_replay["state_hash"] == Model.state_hash(pool_changed["state"])
+		and _index(failed_pool_replay["events"], "CardDrawFailed") >= 0
+		and _index(failed_pool_replay["events"], "CardDrawn") == -1)
+
 	# A true mixed command tape, with quoted AP/MP, actual SP movement,
 	# M2.4 events, AP->RP/expiry, debt-phase refill, and a second swap.
 	var tape: Array[Dictionary] = []
