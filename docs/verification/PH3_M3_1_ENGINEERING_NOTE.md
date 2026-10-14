@@ -19,4 +19,16 @@ At phase-start, only explicit fixture-only pending CASTING or STATUS hooks are a
 
 State is immutable by rejected commands, seeded and hashed via M1 canonical SHA256, with strict command IDs, event sequence and no UI timer. Balancing values such as MP gain2 and MaxAPDebt8 remain configurable BALANCE_PROVISIONAL, not approved permanent.
 
-Status: SPECIFIED_NOT_TESTED until actual Godot 4.7.2 GitHub Actions verifies named positive and negative M3.1 tests plus M1-M2 regressions. M3 DOMAIN VERIFIED is explicitly NOT allowed at M3.1 alone.
+Status: M3_1_PHASE_DOMAIN_VERIFIED based on actual Godot 4.7.2 GitHub Actions; M3 DOMAIN VERIFIED remains prohibited until M3.2–M3.5 pass independently.
+
+
+## Executed M3.1 certification — 2026-10-14
+
+- Source commit 4c5e77fbce21aa354935296e42803019b43133ad. Official GitHub Actions run: https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38590076311, job 115942290809, completed/success.
+- Godot 4.7.2.stable.official.ed1daf0bf, release ZIP SHA512 pass, editor import pass; M3.1 tests 61/61 PASS and failed=0. Same workflow re-ran all 249/249 M1–M2 Domain tests with no failures; four legacy scripts exit0. Named Domain assertion total: 310/310.
+- First run https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38589915776 failed to parse the test because its Engine constant shadowed the native Godot Engine singleton; subsequent commit 4c5e77f renamed the constant to PhaseEngine. No oracle was removed or weakened.
+- Seed 20261014. Initial state SHA256: 07d689c2e6d9ae72c02558b729623ad263f1233f56fd32d9fd396b3b440b8bdc. Event SHA256: a4fe01dcd239d3f2943c82879eb1848f06fe524dfb9eebceaaa7d9a57b6bdb5c. Final state SHA256: 1cf0ad2d7473c594ab4f687260f390db81ba3b224cd50cd6c9643f510bfab593.
+- A->A->B->A immediate player action execution, explicit EndPlayerPhase, zero-AP valid Free Swap, public EnemyAction stable sort, duplicate/stale atomic rejects, 1:1 AP->RP cap, RP expiry, next Player Phase draw-to-four and quota refresh, fixture Casting and Status trace ordering, fail-closed real unresolved effects, simultaneous all-dead victory priority, and seeded full-phase replay have actual positive/negative test evidence.
+- Explicit non-coverage: actual enemy damage, real Reaction Window/Queue, Guard/Protect, Smart/Always Ask/Quick UI contract, real Casting/Status tick effects, M5 enemy AI, UI countdown replacement. M3.2–M3.5 remain NOT_IMPLEMENTED, and the existing UI remains unchanged. APDebt Max8 and basic MP gain2 are BALANCE_PROVISIONAL, not USER_APPROVED.
+
+Acceptance verdict: M3.1 PASS, allow subsequent M3.2 work only as a separate CI-gated work package. Do not announce M3 DOMAIN VERIFIED.

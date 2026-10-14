@@ -370,3 +370,74 @@ At [CI #38586164025](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions
 | 40 | M2_5_INT_REPLAY_INITIAL_UNTOUCHED | tests/test_m2_integration.gd | PASS — M2 CORE DOMAIN ONLY |
 
 Historical M2.5 resource-only 14+6 runner comments saying M2.3/M2.4 are missing refer only to original separated test scope; the current combined gate independently executes both suites. Full spec13 M30 MP-on-discard + Buff-on-draw remains NOT_EXECUTED beyond MOVE_CARD trigger ordering, along with M3–M5 gameplay. Integrated replay event SHA256 c26cbea2b560924fb568be1d4dcbadc6c26b26379293f16f6981aa43964fe061; final state SHA256 8118b9cc9dc2c30b0d009934e8a3ab5385909d73ca021e958100b41d9509349a.
+
+
+### M3.1 Phase Engine: actually executed 61 named cases (2026-10-14)
+
+Godot official 4.7.2, seed 20261014, source SHA 4c5e77fbce21aa354935296e42803019b43133ad, successful GitHub Actions run https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38590076311. M3.1 61/61 PASS and M1–M2 249/249 regression PASS. These are Phase fixture Domain oracles, NOT real enemy damage/Reaction/Status oracles.
+
+| # | Actual case ID | Runner | Verdict |
+|---:|---|---|---|
+| 1 | M3_1_INITIAL_PHASE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 2 | M3_1_ACTUAL_36_CARDS | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 3 | M3_1_NO_PREDECLARED_ENEMY_ACTION | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 4 | M3_1_ACTION_ORDER_STABLE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 5 | M3_1_ACTION_IDS_ROUND_SCOPED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 6 | M3_1_NO_HIDDEN_INTENT | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 7 | M3_1_DUPLICATE_INTENT_REJECT | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 8 | M3_1_ENEMY_OWNERSHIP_REJECT | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 9 | M3_1_NEW_ROUND_NEW_IDS | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 10 | M3_1_P1_D01_AABA | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 11 | M3_1_PLAYER_ACTIONS_IMMEDIATE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 12 | M3_1_NO_AUTOMATIC_END | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 13 | M3_1_SEED_INPUT_IMMUTABLE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 14 | M3_1_STALE_NO_MUTATION | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 15 | M3_1_DUPLICATE_NO_MUTATION | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 16 | M3_1_ILLEGAL_OWNER_NO_PAYMENT | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 17 | M3_1_INCAPACITATED_CANNOT_ACT | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 18 | M3_1_END_PLAYER_AP_TO_RP | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 19 | M3_1_END_BOUNDARY_BEFORE_ENEMY | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 20 | M3_1_END_NEEDS_USER_COMMAND | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 21 | M3_1_ENEMY_PENDING_BLOCKS_END | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 22 | M3_1_ENEMY_CANNOT_PLAY_CARD | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 23 | M3_1_DECLARED_0 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 24 | M3_1_DOUBLE_DECLARE_0 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 25 | M3_1_WRONG_ENEMY_ID_0 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 26 | M3_1_ENEMY_FIXTURE_NO_DAMAGE_0 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 27 | M3_1_DECLARED_1 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 28 | M3_1_DOUBLE_DECLARE_1 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 29 | M3_1_WRONG_ENEMY_ID_1 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 30 | M3_1_ENEMY_FIXTURE_NO_DAMAGE_1 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 31 | M3_1_DECLARED_2 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 32 | M3_1_DOUBLE_DECLARE_2 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 33 | M3_1_WRONG_ENEMY_ID_2 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 34 | M3_1_ENEMY_FIXTURE_NO_DAMAGE_2 | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 35 | M3_1_ALL_ENEMY_ACTIONS_CONSUMED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 36 | M3_1_NO_REDECLARATION | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 37 | M3_1_RP_EXPIRES_AT_ENEMY_END | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 38 | M3_1_NO_PLAYER_ACTION_WHILE_AWAITING | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 39 | M3_1_PHASE_TWO_RESOURCES | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 40 | M3_1_PHASE_TWO_HAND_REFILL | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 41 | M3_1_PHASE_TWO_ORDERED_EVENTS | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 42 | M3_1_FREE_SWAP_QUOTA_RENEWED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 43 | M3_1_PHASE_REPLAY_CARD_RNG_PRESERVED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 44 | M3_1_SEEDED_FULL_PHASE_REPLAY | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 45 | M3_1_REPLAY_EVENT_SEQUENCE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 46 | M3_1_REPLAY_DUPLICATE_STOPS | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 47 | M3_1_ZERO_AP_SWAP_STILL_LEGAL | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 48 | M3_1_ZERO_AP_STILL_NO_AUTOPHASE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 49 | M3_1_ZERO_AP_CAN_END_EXPLICITLY | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 50 | M3_1_FIRST_BASIC_MP_ONLY | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 51 | M3_1_B_ACTS_AFTER_A | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 52 | M3_1_CASTING_NOT_SILENTLY_RESOLVED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 53 | M3_1_PRE3_R09_CASTING_FIXTURE_FIRST | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 54 | M3_1_PRE3_R09_STABLE_FIXTURE_ORDER | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 55 | M3_1_UNRESOLVED_REAL_CASTING_BLOCKED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 56 | M3_1_REAL_STATUS_FAIL_CLOSED | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 57 | M3_1_CORE_01_VICTORY_PRIORITY | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 58 | M3_1_TERMINAL_NO_ACTION | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 59 | M3_1_DEFEAT_WITH_SURVIVING_BOSS | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 60 | M3_1_ACTUAL_RNG_STABLE | test_m3_phase.gd | PASS / M3.1 ONLY |
+| 61 | M3_1_DIFFERENT_SEED_REPLAY_DISTINCT | test_m3_phase.gd | PASS / M3.1 ONLY |
+
+M3.2–M3.5, real Casting ticks, Guard/Protect, Reaction, UI modes and boss damage remain unexecuted.

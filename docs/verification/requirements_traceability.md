@@ -146,3 +146,18 @@ Authoritative [CI #38586164025](https://github.com/KuroNekoLi/arbitrium-nexus-go
 | G0-R14–24/R26 | Future M3/M4/M5 gameplay | No full gameplay assertions | NOT_IMPLEMENTED / NOT_EXECUTED |
 
 Do NOT use the presence of the CI marker M2_DOMAIN_VERIFIED as evidence of M3/M4/M5 gameplay implementation. Detailed execution and replay hashes: [PH3_M2_5_ACCEPTANCE_REPORT.md](PH3_M2_5_ACCEPTANCE_REPORT.md).
+
+
+## M3.1 Battle Phase Engine — independently verified (2026-10-14)
+
+Code SHA 4c5e77fbce21aa354935296e42803019b43133ad. Godot CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38590076311: M3.1 61/61, preceding M1–M2 249/249, legacy scripts exit0. Detail and replay hashes in PH3_M3_1_ENGINEERING_NOTE.md.
+
+| Approved authority | Source files | Real oracles | Bounded result |
+|---|---|---|---|
+| P1-D01, 02/03 | m3/phase/phase_engine.gd and M2 integrated resolver | M3_1_P1_D01_AABA, M3_1_PLAYER_ACTIONS_IMMEDIATE, M3_1_NO_AUTOMATIC_END | M3.1 PASS; player action effects fixture only |
+| PRE3-R09, public Enemy Intent | m3/enemy/enemy_action_scheduler.gd | M3_1_ACTION_ORDER_STABLE, M3_1_ACTION_IDS_ROUND_SCOPED, M3_1_NO_HIDDEN_INTENT | M3.1 PASS; AI and damage deferred |
+| M-D08/09 and M2 resources | phase_engine.gd, existing M2 ResourceLedger | M3_1_END_PLAYER_AP_TO_RP, M3_1_RP_EXPIRES_AT_ENEMY_END | M3.1 PASS; APDebt carry PROVISIONAL |
+| PRE3-R09, CORE-01 and M-D25 | m3/phase/phase_boundary_resolver.gd, M2 DrawResolver | M3_1_PRE3_R09_CASTING_FIXTURE_FIRST, M3_1_REAL_STATUS_FAIL_CLOSED, M3_1_CORE_01_VICTORY_PRIORITY, M3_1_PHASE_TWO_HAND_REFILL | M3.1 PASS with fixture hooks; real Status/Casting unresolved |
+| P2-D16 and replay | phase_engine.gd, M1 hash adapter | M3_1_SEEDED_FULL_PHASE_REPLAY, M3_1_REPLAY_DUPLICATE_STOPS | M3.1 PASS, integrated Reaction replay M3.5 pending |
+
+M3.2 Reaction Queue, M3.3 Guard/Protect, M3.4 presentation-mode invariants and M3.5 overall M3 regression all remain NOT_EXECUTED. No M3 DOMAIN VERIFIED assertion.
