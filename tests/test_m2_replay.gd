@@ -101,7 +101,8 @@ func _init() -> void:
 	var changed: Dictionary = _replay(initial, change, config)
 	_expect("M2_5_REPLAY_DISTINCT_TAPE_HASH", changed["accepted"]
 		and changed["event_hash"] != a["event_hash"]
-		and changed["state_hash"] == a["state_hash"])
+		and changed["state_hash"] != a["state_hash"]
+		and changed["state"]["party_resources"] == a["state"]["party_resources"])
 	var bad: Array[Dictionary] = _tape()
 	bad[2]["expected_event_seq"] = 0
 	var stopped: Dictionary = _replay(initial, bad, config)
@@ -116,6 +117,5 @@ func _init() -> void:
 		" final_state_hash=", a["state_hash"], " tape=", Model.canonical(tape),
 		" coverage=M2_1_M2_2_ONLY")
 	print("M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=", passed + failed,
-		" passed=", passed, " failed=", failed, " skipped=0"
-		" card_instance_and_swap=BLOCKED_M2_3_M2_4")
+		" passed=", passed, " failed=", failed, " skipped=0", " card_instance_and_swap=BLOCKED_M2_3_M2_4")
 	quit(1 if failed > 0 else 0)

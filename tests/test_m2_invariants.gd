@@ -137,6 +137,5 @@ func _init() -> void:
 		and late["error"] == "STALE_STATE"
 		and late["state_hash"] == Model.state_hash(paid["state"]))
 	print("M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=", passed + failed,
-		" passed=", passed, " failed=", failed, " skipped=0"
-		" card_instance_and_swap=BLOCKED_M2_3_M2_4")
+		" passed=", passed, " failed=", failed, " skipped=0", " card_instance_and_swap=BLOCKED_M2_3_M2_4")
 	quit(1 if failed > 0 else 0)
