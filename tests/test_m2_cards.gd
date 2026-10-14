@@ -193,8 +193,8 @@ func _init() -> void:
 	for i: int in range(7):
 		var step: Dictionary = _move(mixed, "A", str(_zone(mixed, "A", "draw")[0]), "draw", "discard")
 		mixed = step["state"]
-	var mixed_before: bool = _zone(mixed, "A", "hand").size() == 1
-		and _zone(mixed, "A", "draw").size() == 1 and _zone(mixed, "A", "discard").size() == 10
+	var mixed_before: bool = (_zone(mixed, "A", "hand").size() == 1
+		and _zone(mixed, "A", "draw").size() == 1 and _zone(mixed, "A", "discard").size() == 10)
 	var mixed_result: Dictionary = Draw.draw_to_four(mixed, "A")
 	var drawn_count: int = 0
 	var recycled_count: int = 0
