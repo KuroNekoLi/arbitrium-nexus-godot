@@ -44,3 +44,10 @@
 ## G0.1 實測補充
 
 [Run #38563701908](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38563701908) = `success`，四組舊版測試均 exit0，故意失敗 exit17。這是**環境與既有原型 Regression baseline** 的結果，而非新版功能驗收。G0-R01～27、R30 仍依其 CONFLICT/MISSING/PARTIAL 判定，不因 CI 綠燈而改為通過。詳見 [PH3_G0_CI_SETUP.md](PH3_G0_CI_SETUP.md)。
+
+## 附錄：M1 新 Domain CI 與 Spec13 全量追溯（2026-10-14）
+
+- [新 M1 Domain CI Run #38565197994](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38565197994)：commit `ad8333dd1a00c9efa042273f6535accb1ea43e31`，Godot `4.7.2.stable.official.ed1daf0bf`，30個具名 M1 Domain Case **30 PASS / 0 FAIL / 0 SKIPPED**。
+- [同 commit 舊版 Regression Run #38565198000](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38565198000)：completed / success；目前 legacy 系統與 UI 尚**未**切換新版 M1 Domain，不能因此把 G0-R01～24 和 26～30 當成新規格已合格。
+- **G0-R25**（決定性 Domain scaffold / Replay）：`M1_SCAFFOLD_VERIFIED`，測到命令驗證拒絕原子性、RNG 純函式、固定 Event Seq/Replay Hash；**全戰 P2-D16/P2-REPLAY-01 仍未完整實作**。
+- 來源 `docs/combat/13_TEST_MATRIX_ACCEPTANCE.md` 的 **128個具名 Test IDs 及 30個新M1 ID** 已完整列於 [PH3_PHASE12_TEST_INVENTORY.md](PH3_PHASE12_TEST_INVENTORY.md)，包括來源行號、責任 Milestone、現行狀態；不得把 `SPECIFIED` 誤寫成 `PASS`。

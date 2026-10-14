@@ -1,7 +1,7 @@
 # Phase 3 — M1 Engineering Note：獨立 Domain Engine 骨架
 
 > 2026-10-14。Repo：`KuroNekoLi/arbitrium-nexus-godot`；Scope=**M1 only**。
-> 狀態：`IMPLEMENTED_NOT_VERIFIED`（GitHub Actions Run 確認前）。正式交付需 M1 domain CI PASS，G0 legacy baseline PASS；不代表 M2–M5 Gameplay 已完成。
+> 狀態：**`M1 SCAFFOLD VERIFIED`**（本專案 GitHub Actions M1 30/30 PASS，保留 M2–M5 功能缺口）。正式交付需 M1 domain CI PASS，G0 legacy baseline PASS；不代表 M2–M5 Gameplay 已完成。
 
 ## Scope / source of truth
 
@@ -50,4 +50,36 @@ CI 需回報 Godot 版本、SHA512 校驗、各 test ID、exit code、`M1_REPLAY
 - M3：EnemyPhase、Reaction Queue、Guard/Protect、無時間自動Pass未實作（舊 UI 仍有舊 timeout）。
 - M4：完整詠唱、CastingInstance、Interrupt/LastSpell未實作。
 - M5：Damage/Status/Break/Combo/Boss/Outcome未實作。
-- RTM：`requirements_traceability.md` 尚需逐一展開 spec13 所有 Test IDs 及其 `SUPERSEDED / DEFERRED / BLOCKED_FIXTURE / M1_COVERED`。
+- RTM：Spec13 **128/128 個**具名案例，以及新 M1 **30/30** 測試，已記錄於 [`PH3_PHASE12_TEST_INVENTORY.md`](PH3_PHASE12_TEST_INVENTORY.md)。128 個完整 Gameplay oracle 均未因 M1 30 PASS 而擅自升格為 VERIFIED。
+
+## 2026-10-14 M1 實際執行後驗收（覆蓋本檔最初的 PENDING 狀態）
+
+| 欄位 | 實際驗證結果 |
+|---|---|
+| **正確 Repository** | `KuroNekoLi/arbitrium-nexus-godot` (`master`) |
+| 受測 Code Commit | [`ad8333dd1a00c9efa042273f6535accb1ea43e31`](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/ad8333dd1a00c9efa042273f6535accb1ea43e31) |
+| 新 M1 CI | [Run #38565197994](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38565197994)；`completed / success` |
+| 舊原型 Regression CI | [Run #38565198000](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38565198000)；`completed / success`（舊版約束仍待 M2–M5 修正） |
+| Godot binary | `4.7.2.stable.official.ed1daf0bf`；正式 zip SHA512 `OK` |
+| 新 M1 cases | `M1_TEST_REPORT executed=30 passed=30 failed=0 skipped=0` |
+| 當次 M1 流程 | Download SHA512 / Import / M1 test / Artifact 全部成功 |
+| 測試 seed | `12345` |
+| `ruleset_version` | `arbitrium-phase3-m1-v1` |
+| `content_version` | `m1-placeholder-content-v1`；此內容 **FIXTURE_ONLY** |
+| `initial_hash` | `c3d766f7c46e1483a2ad2d438936cfba957d50ddfe5dc3cad9c3b11ee7d2004b` |
+| `event_hash` | `eaf1e9f1cff1334f0b9e099f9a8e13cb446412acfc457d023b72c9b0378f90fc` |
+| `final_state_hash` | `76d6aed206608b907f2b44d7b842e6e1cc11222a8fc4ea12e4c649159535f573` |
+| CI Evidence Artifact | `godot-phase3-m1-logs`，ID `11894401236` |
+| **Gate** | **M1 SCAFFOLD VERIFIED；M2–M5 NOT IMPLEMENTED / NOT VERIFIED** |
+
+Replay command tape（完整命令內容另由 CI 日誌 `M1_REPLAY_PROOF` 保存）：
+
+```json
+[
+  {"actor_id":"A","command_id":"tape-1","expected_event_seq":0,"type":"SELECT_ACTOR"},
+  {"actor_id":"B","command_id":"tape-2","expected_event_seq":1,"type":"SELECT_ACTOR"},
+  {"actor_id":"A","command_id":"tape-3","expected_event_seq":2,"type":"SELECT_ACTOR"}
+]
+```
+
+**邊界聲明**：這是 Domain scaffold 30個驗收，不是完整 `P2-REPLAY-01`「不同 FPS / 完整戰鬥」的實測；後者仍列為 M5。既有 UI 尚使用舊 `scripts/domain/battle_state.gd`，不存在新/舊 Domain 整合成功的證據。Godot 保留舊卡牌編輯器與動畫，M2 應先完成 AP/MP/RP + 12SP CardZones + profile schema，再安排 UI adapter。完整 128+30 案例索引見 [Phase 1–2 完整 Test Inventory](PH3_PHASE12_TEST_INVENTORY.md)。
