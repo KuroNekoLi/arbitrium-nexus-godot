@@ -102,8 +102,9 @@ func _setup(state: Dictionary) -> Dictionary:
 	return d["state"]
 
 func _open(state: Dictionary) -> Dictionary:
-	return _apply(state,"OPEN_REACTION_WINDOW","setup-open",
-		{"enemy_action_id":str(state["active_enemy_action_id"])})
+	var action_id: String = str(state["active_enemy_action_id"])
+	return _apply(state,"OPEN_REACTION_WINDOW","setup-open:" + action_id,
+		{"enemy_action_id":action_id})
 
 func _event_index(events: Array, name: String) -> int:
 	for i: int in range(events.size()):
