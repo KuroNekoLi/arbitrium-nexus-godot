@@ -10,7 +10,9 @@ static func inspect_profile(raw: Variant) -> Dictionary:
 	if not raw is Dictionary:
 		return {"status": "INVALID_PROFILE", "original": raw}
 	var version: Variant = raw.get("version", null)
-	if not version is int:
+	# JSON.parse_string represents integral JSON numerals as float in Godot.
+	# Accept only mathematically integral numeric versions, never "2" or 2.5.
+	if not (version is int or version is float) or not float(version) == float(int(version)):
 		return {"status": "INVALID_PROFILE", "original": raw.duplicate(true)}
 	if version == 1:
 		var legacy: Variant = raw.get("decks", null)

@@ -2,6 +2,9 @@ extends RefCounted
 ## Eligibility is explicit catalogue data. No engine-wide same-name cap,
 ## rarity quota or default ownership is inferred from absent configuration.
 
+static func _whole_number(value: Variant) -> bool:
+	return (value is int or value is float) and float(value) >= 0.0 and float(value) == float(int(value))
+
 static func _fail(reason: String, index: int = -1) -> Dictionary:
 	return {"ok": false, "error": reason, "index": index}
 
@@ -48,10 +51,10 @@ static func validate_loadout(context: Dictionary, card_ids: Variant,
 				return _fail("TAG_INELIGIBLE", i)
 		counts[card_id] = int(counts.get(card_id, 0)) + 1
 		# Card collection ownership is a hard validation prerequisite.
-		if not owned_counts.has(card_id) or not owned_counts[card_id] is int or int(owned_counts[card_id]) < counts[card_id]:
+		if not owned_counts.has(card_id) or not _whole_number(owned_counts[card_id]) or int(owned_counts[card_id]) < counts[card_id]:
 			return _fail("INSUFFICIENT_OWNED_COPIES", i)
 		if limits.has(card_id):
-			if not limits[card_id] is int or int(limits[card_id]) < 0:
+			if not _whole_number(limits[card_id]):
 				return _fail("INVALID_DECK_RULES", i)
 			if int(counts[card_id]) > int(limits[card_id]):
 				return _fail("CONFIGURED_COPY_LIMIT", i)
