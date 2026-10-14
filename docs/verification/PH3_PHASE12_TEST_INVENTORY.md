@@ -48,15 +48,15 @@
 | `LAST-004` | 40 | 第二次destabilization | 不會無限延遲、依參數削弱 | M4 | SPECIFIED / NOT_EXECUTED |
 | `LAST-005` | 41 | 成功結算 | Exhausted；同角色所有新行動被拒絕；全隊AP配額不被直接降低 | M4 | SPECIFIED / NOT_EXECUTED |
 | `RNG-001` | 42 | 同版本／deck／seed／命令 | 事件序列和最終hash一致 | M1/M5 | PARTIAL_M1_ONLY / FULL_NOT_EXECUTED |
-| `P1-ECO-001` | 67 | 6 AP，角色A連續普通攻擊兩次，各次成本暫為1AP | 兩次攻擊可成功；只有首個**成功執行**普通攻擊觸發A的MP回復；B的首次獨立計數 | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-002` | 68 | A普通攻擊因不足AP/非法狀態拒絕，稍後合法攻擊 | 首次回魔資格不可被遭拒命令消耗；失敗不扣資源 | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-003` | 69 | A攻擊、B出牌、A再攻擊、C出牌 | 可以交錯使用共享AP，無每角色固定行動次數限制 | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-004` | 70 | 玩家階段末AP=6，無任何花費 | 敵方階段開始 RP=6、AP=0，不截斷到2/3/4 | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-005` | 71 | 玩家階段末AP=3 | RP=3，AP=0；總量守恆 | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-006` | 72 | 玩家階段末AP=0 | RP=0，任何付費Reaction不可執行 | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-007` | 73 | 敵方階段開始RP=4，只花1，然後敵方階段結束 | 無論是否仍有後續攻擊，RP歸零；下輪不能沿用3RP | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-008` | 74 | 敵方階段內兩次不同敵方行動，前者花2RP | 後者看見的是扣費後剩餘RP，不重新轉換AP | M2 | SPECIFIED / NOT_EXECUTED |
-| `P1-ECO-009` | 75 | 未來額外生成RP的卡未定義 | 應標 `BLOCKED_BY_DECISION`，不可臆測「RP6 cap」或無限產生 | M2 | REVIEW_SUPERSEDED_EXPECTATION |
+| `P1-ECO-001` | 67 | 6 AP，角色A連續普通攻擊兩次，各次成本暫為1AP | 兩次攻擊可成功；只有首個**成功執行**普通攻擊觸發A的MP回復；B的首次獨立計數 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-002` | 68 | A普通攻擊因不足AP/非法狀態拒絕，稍後合法攻擊 | 首次回魔資格不可被遭拒命令消耗；失敗不扣資源 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-003` | 69 | A攻擊、B出牌、A再攻擊、C出牌 | 可以交錯使用共享AP，無每角色固定行動次數限制 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-004` | 70 | 玩家階段末AP=6，無任何花費 | 敵方階段開始 RP=6、AP=0，不截斷到2/3/4 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-005` | 71 | 玩家階段末AP=3 | RP=3，AP=0；總量守恆 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-006` | 72 | 玩家階段末AP=0 | RP=0，任何付費Reaction不可執行 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-007` | 73 | 敵方階段開始RP=4，只花1，然後敵方階段結束 | 無論是否仍有後續攻擊，RP歸零；下輪不能沿用3RP | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-008` | 74 | 敵方階段內兩次不同敵方行動，前者花2RP | 後者看見的是扣費後剩餘RP，不重新轉換AP | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `P1-ECO-009` | 75 | 未來額外生成RP的卡未定義 | 應標 `BLOCKED_BY_DECISION`，不可臆測「RP6 cap」或無限產生 | M2 | SUPERSEDED_ORACLE; M-D08_RESOURCE_ONLY_VERIFIED |
 | `P1-RXN-001` | 81 | actor手牌無任何Reaction SP、RP=1、合法自身受到攻擊 | Basic Guard仍合法，支付1RP；不消耗任何CardInstance | M3 | SPECIFIED / NOT_EXECUTED |
 | `P1-RXN-002` | 82 | actor手牌無任何Reaction SP、RP=2、可守護單體隊友受擊 | Basic Protect仍合法，支付2RP；不消耗任何CardInstance | M3 | SPECIFIED / NOT_EXECUTED |
 | `P1-RXN-003` | 83 | RP=0/1時Protect | 不合法且不扣RP；RP=1時Guard仍可合法 | M3 | SPECIFIED / NOT_EXECUTED |
@@ -95,10 +95,10 @@
 | `P1-QUEUE-010` | 131 | Smart／AlwaysAsk／Quick，輸入同一已確認reaction queue | 引擎狀態／事件/資源計算一致（UI提示數量可不同）；禁止自動花RP | M3 | SPECIFIED / NOT_EXECUTED |
 | `P1-QUEUE-011` | 132 | 有合法重大Reaction事件且Smart開啟 | 應提供可用的清楚回應方式；重大分類門檻待UI ADR，不能在未核准超時下自動沒收 | M3 | SPECIFIED / NOT_EXECUTED |
 | `P1-QUEUE-012` | 133 | 敵行動無任何合法反應 | Smart/AlwaysAsk皆不可彈出空白阻塞選單 | M3 | SPECIFIED / NOT_EXECUTED |
-| `M18-AP-001` | 154 | BaseAP6；SP 花2得8 | CurrentAP=12，不以6截斷 | M2 | SPECIFIED / NOT_EXECUTED |
-| `M18-RP-002` | 155 | Player Phase 末剩9 AP；RP cap6 | RP=6，多餘3不可延續 | M2 | SPECIFIED / NOT_EXECUTED |
-| `M19-MP-001` | 156 | 無自然回魔來源的角色跨 Player Phase | MP不因過回合而增加 | M2 | SPECIFIED / NOT_EXECUTED |
-| `M20-MP-002` | 157 | CurrentMP9 MaxMP10；合法恢復4 | MP=10，超額3消失 | M2 | SPECIFIED / NOT_EXECUTED |
+| `M18-AP-001` | 154 | BaseAP6；SP 花2得8 | CurrentAP=12，不以6截斷 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `M18-RP-002` | 155 | Player Phase 末剩9 AP；RP cap6 | RP=6，多餘3不可延續 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `M19-MP-001` | 156 | 無自然回魔來源的角色跨 Player Phase | MP不因過回合而增加 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
+| `M20-MP-002` | 157 | CurrentMP9 MaxMP10；合法恢復4 | MP=10，超額3消失 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
 | `M21-CAST-001` | 158 | 同一正常雙模式 SP | Chantless／Full Chant 預設 MP 成本相同、Full 提交支付後延遲生效 | M4 | SPECIFIED / NOT_EXECUTED |
 | `M22-CAST-002` | 159 | Full Chant Casting Interrupt 成立 | 立即按配置比例部分退 MP，不退 AP，不消除 Overload Debt；退 MP capped MaxMP | M4 | SPECIFIED / NOT_EXECUTED |
 | `M25-HAND-001` | 160 | 手上3/4/7 張且開始新 Player Phase | 分別抽1/0/0；任時手牌不得 >8 | M2 | SPECIFIED / NOT_EXECUTED |
@@ -107,7 +107,7 @@
 | `M27-SWAP-002` | 163 | 抽牌堆空，棄牌堆有其他合法實例 | 重洗也絕不立刻抽回剛換掉的原 CardInstance | M2 | SPECIFIED / NOT_EXECUTED |
 | `M29-SWAP-003` | 164 | 除原卡外沒有合法替代實例 | 操作拒絕、手牌/區域/次數不變、不發抽棄牌事件 | M2 | SPECIFIED / NOT_EXECUTED |
 | `M30-SWAP-004` | 165 | 有棄牌回 MP + 抽牌 Buff | `CardDiscarded` 及回 MP 先於 `CardDrawn` 及其效果；事件可重播 | M2 | SPECIFIED / NOT_EXECUTED |
-| `M31-MP-001` | 166 | 角色各自 BaseMaxMP 不同，特性提高其中一名 | 各自 MaxMP 與回復 cap 獨立；不能改隊友 MP | M2 | SPECIFIED / NOT_EXECUTED |
+| `M31-MP-001` | 166 | 角色各自 BaseMaxMP 不同，特性提高其中一名 | 各自 MaxMP 與回復 cap 獨立；不能改隊友 MP | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
 | `P2-D10-001` | 167 | 同命令、同 seed、同戰鬥資料 | 完整傷害事件與 HP 結果一致，可追溯防禦／暴擊／抗性／盾 | M5 | SPECIFIED / NOT_EXECUTED |
 | `P2-D11-001` | 168 | 多階段小數傷害配置 | 僅最終取整；不可在未配置時暗定最低1傷 | M5 | SPECIFIED / NOT_EXECUTED |
 | `P2-D12-001` | 169 | 同時有 Barrier 與 Focus Ward | 前者只處理HP傷害、後者只處理詠唱干擾 | M5 | SPECIFIED / NOT_EXECUTED |
