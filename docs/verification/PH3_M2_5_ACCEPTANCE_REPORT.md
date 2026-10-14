@@ -70,3 +70,9 @@ The test code was committed as `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`.
 
 Next owner must implement and separately verify M2.3 → M2.4, replace the `BLOCKED_M2_FULL_INTEGRATION` guard with real cross-module case(s), execute the entire gate, capture full card/swap hashes and only then update the verdict to `M2 DOMAIN VERIFIED`.
 
+
+## Dependency update after M2.3 implementation — 2026-10-14
+
+Initial M2.3-missing observations above are historical, scoped to the former baseline (495a2df). M2.3 now exists in new standalone scripts/domain/m2/cards and scripts/domain/m2/persistence, with **46/46 Godot 4.7.2 PASS** at de2178e175846c2eeae5aba7f3f96995bb61323c ([CI run #38580461921](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38580461921)). Spec-13 exact DECK-003 and PRE3-20 oracles were exercised.
+
+**Overall M2.5 verdict remains BLOCKED_DEPENDENCY** because M2.4 Free Swap/trigger dispatcher/test runner do not yet exist and the full Cost→CardZones→EventTrigger→Replay integration is not implemented/tested. The full-domain [run #38580461996](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38580461996) still intentionally fails closed; the independent M2.3 green signal is the correct acceptance evidence for this milestone. Full domain must not emit M2 DOMAIN VERIFIED yet.

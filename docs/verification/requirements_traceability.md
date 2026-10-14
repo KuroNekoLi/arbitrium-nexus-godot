@@ -100,3 +100,19 @@ M1 30/30, M2.1 38/38, M2.2 43/43, partial M2.5 resource invariants 14/14 and par
 
 New tests: `tests/test_m2_invariants.gd` and `tests/test_m2_replay.gd`. Test script exit0 on passing partial coverage; the new `.github/workflows/godot-m2-domain.yml` intentionally exits2 on missing dependencies to prevent **M2 DOMAIN VERIFIED** being misreported.
 Replay evidence: seed 20261014, event `28de6c96641655057122a210a73f9c3fa77890c0c20eded0417d5e62ebb7ce85`, final state `7389a7975f13b209982a3ba83dd4fd7ceeeb0c4947bda77f3712f4b8da70d9a9`. See `PH3_M2_5_ACCEPTANCE_REPORT.md` for full tape, initial hash, first parse-failure and second execution.
+
+## M2.3 — Independent 12-SP cards and zones verification (2026-10-14)
+
+Executed code on commit de2178e175846c2eeae5aba7f3f96995bb61323c. Evidence: [M2.3 46/46 Godot run #38580461921](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38580461921) (4.7.2, seed=20261014; independent legacy regressions pass). Legacy deck_profile_store.gd remains untouched and serves the older 8-unique-card prototype, not the new domain.
+
+| RTM | Approved source | M2.3 implementation | Executed acceptance | Precise status |
+|---|---|---|---|---|
+| G0-R10 | Library 04, M-D25 | card_zone_resolver.gd, draw_resolver.gd | DECK-001, DECK-002, M25-HAND-001 | CARD_DOMAIN_VERIFIED, M3 phase wiring deferred |
+| G0-R11 | Library 04, PRE3-R16 delegated | card_instance.gd, deck_validator.gd | PRE3-R16-EXACT_12, DECK-004-36_UNIQUE, repeated-definition accepted, eligibility and inventory negative checks | CARD_DOMAIN_VERIFIED, content fixture only |
+| G0-R12 | Library 19 M-D25 | draw_resolver.gd, card_zone_resolver.gd | M25-HAND-002, PRE3-20-CAP_SEVEN_REQUEST_THREE, ninth-card rejection | CARD_DOMAIN_VERIFIED |
+| G0-R25 | P2-D16 seeded determinism | draw_resolver.gd | DECK-SEEDED_REPLAY, DECK-003-ONE_DRAW_TEN_DISCARD, RNG and zone events | M2.3 seed-only VERIFIED; integrated M2.5 replay still blocked |
+| G0-R27 | Library 04, 20 PRE3-R16 | deck_profile_v2.gd | M2_3-PERSIST V1 recognized unchanged, V2 structurally validated read/write, no auto-padding | CARD_DOMAIN_VERIFIED, legacy migration UI deferred |
+| G0-R13 | M-D26–30, PRE3-R11 | M2.4 not implemented | None | BLOCKED_DEPENDENCY |
+| PRE3-16 (spec-13) | Last Spell caster HP0 | M4 | None | SPECIFIED_NOT_EXECUTED (not loadout PRE3-R16) |
+
+The old M2.5 report's initial missing-M2.3 finding refers only to its historical baseline SHA. Current status: M2.3 independently verified, M2.4 still missing and full cross-card/Free Swap replay not executed. Do not promote the full M2.5 gate to VERIFIED.

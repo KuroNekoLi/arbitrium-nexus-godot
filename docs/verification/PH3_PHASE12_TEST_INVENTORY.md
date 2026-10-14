@@ -23,10 +23,10 @@
 
 | Case ID | 13文件行 | 輸入情境（依來源摘要） | 預期／Oracle（依來源摘要） | 負責階段 | 執行狀態 |
 |---|---:|---|---|---|---|
-| `DECK-001` | 18 | 12卡開戰 | 每角手牌4、牌庫8、棄牌0 | M2 | SPECIFIED / NOT_EXECUTED |
-| `DECK-002` | 19 | 打出2卡後開始新回合 | 手牌2補到4、卡進棄牌 | M2 | SPECIFIED / NOT_EXECUTED |
-| `DECK-003` | 20 | draw剩1、discard10、hand1 | 抽完1→洗棄牌→再抽2；不重複 | M2 | SPECIFIED / NOT_EXECUTED |
-| `DECK-004` | 21 | 牌庫和棄牌都空、hand<4 | 不死循環、不憑空產牌 | M2 | SPECIFIED / NOT_EXECUTED |
+| `DECK-001` | 18 | 12卡開戰 | 每角手牌4、牌庫8、棄牌0 | M2 | M2.3 CARD_DOMAIN_VERIFIED; FULL_M2_PENDING |
+| `DECK-002` | 19 | 打出2卡後開始新回合 | 手牌2補到4、卡進棄牌 | M2 | M2.3 CARD_LOGIC_VERIFIED; M3 PHASE_WIRING_PENDING |
+| `DECK-003` | 20 | draw剩1、discard10、hand1 | 抽完1→洗棄牌→再抽2；不重複 | M2 | M2.3 CARD_DOMAIN_VERIFIED; FULL_M2_PENDING |
+| `DECK-004` | 21 | 牌庫和棄牌都空、hand<4 | 不死循環、不憑空產牌 | M2 | M2.3 CARD_DOMAIN_VERIFIED; FULL_M2_PENDING |
 | `ECON-001` | 22 | 三人共6 AP，出牌費用合計>6 | 超額動作拒絕，沒有部分扣費 | M2 | SPECIFIED / NOT_EXECUTED |
 | `ECON-002` | 23 | 角色普通攻擊多次 | 回魔次數符合已核准設定（原型每角首次） | M2 | SPECIFIED / NOT_EXECUTED |
 | `ECON-003` | 24 | MP不足使用Full Chant | 拒絕，卡不移區 | M2 | SPECIFIED / NOT_EXECUTED |
@@ -101,8 +101,8 @@
 | `M20-MP-002` | 157 | CurrentMP9 MaxMP10；合法恢復4 | MP=10，超額3消失 | M2 | RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED |
 | `M21-CAST-001` | 158 | 同一正常雙模式 SP | Chantless／Full Chant 預設 MP 成本相同、Full 提交支付後延遲生效 | M4 | SPECIFIED / NOT_EXECUTED |
 | `M22-CAST-002` | 159 | Full Chant Casting Interrupt 成立 | 立即按配置比例部分退 MP，不退 AP，不消除 Overload Debt；退 MP capped MaxMP | M4 | SPECIFIED / NOT_EXECUTED |
-| `M25-HAND-001` | 160 | 手上3/4/7 張且開始新 Player Phase | 分別抽1/0/0；任時手牌不得 >8 | M2 | SPECIFIED / NOT_EXECUTED |
-| `M25-HAND-002` | 161 | 手牌7，合法額外抽3且無打牌先移區 | 只抽1，餘下需求不將牌從 draw pile 移除 | M2 | SPECIFIED / NOT_EXECUTED |
+| `M25-HAND-001` | 160 | 手上3/4/7 張且開始新 Player Phase | 分別抽1/0/0；任時手牌不得 >8 | M2 | M2.3 CARD_LOGIC_VERIFIED; M3 PHASE_WIRING_PENDING |
+| `M25-HAND-002` | 161 | 手牌7，合法額外抽3且無打牌先移區 | 只抽1，餘下需求不將牌從 draw pile 移除 | M2 | M2.3 CARD_DOMAIN_VERIFIED; FULL_M2_PENDING |
 | `M26-SWAP-001` | 162 | 每角色第一次合法免費換牌 | 0 AP/MP、換1卡、扣該角色一次；其他角色不受影響 | M2 | SPECIFIED / NOT_EXECUTED |
 | `M27-SWAP-002` | 163 | 抽牌堆空，棄牌堆有其他合法實例 | 重洗也絕不立刻抽回剛換掉的原 CardInstance | M2 | SPECIFIED / NOT_EXECUTED |
 | `M29-SWAP-003` | 164 | 除原卡外沒有合法替代實例 | 操作拒絕、手牌/區域/次數不變、不發抽棄牌事件 | M2 | SPECIFIED / NOT_EXECUTED |
@@ -134,7 +134,7 @@
 | `PRE3-17` | 197 | Boss 與最後一位我方角色在同一合法行動事件結算後都 HP0 | 行動及必要觸發結算完成後 `VICTORY`（USER_APPROVED，劇情通關） | M5 | SPECIFIED / NOT_EXECUTED |
 | `PRE3-18` | 198 | Quick UI/動畫加速、seed/state/tape相同 | domain events/outcome 完全一致；不能用真實按鍵延遲決定自動扣費或 Pass | M3/M5 | SPECIFIED / NOT_EXECUTED |
 | `PRE3-19` | 199 | 各角色不同MaxMP，普通攻擊回魔2與Casting Interrupt退50% floor | fixture值可調，不超過當前MaxMP；測試 log 必顯示 BALANCE_PROVISIONAL | M2/M4 | SPECIFIED / NOT_EXECUTED |
-| `PRE3-20` | 200 | 有9張抽入請求而hand已7張，牌庫中有其他實例 | 最多抽1張至8；不把超出容量的牌從牌庫移除，且不得造出同一CardInstance兩份 | M2 | SPECIFIED / NOT_EXECUTED |
+| `PRE3-20` | 200 | 有9張抽入請求而hand已7張，牌庫中有其他實例 | 最多抽1張至8；不把超出容量的牌從牌庫移除，且不得造出同一CardInstance兩份 | M2 | M2.3 CARD_DOMAIN_VERIFIED; FULL_M2_PENDING |
 | `P2-OUT-01` | 208 | 正例 | 同一完整合法多段技能令最後 Boss 與最後可戰鬥隊員 HP0 / 所有應合法結算事件完成後，`VICTORY`（不會 DRAW） | M5 | SPECIFIED / NOT_EXECUTED |
 | `P2-OUT-02` | 209 | 對照 | 所有我方 HP0，但仍至少一敵人 HP>0 / `DEFEAT` | M5 | SPECIFIED / NOT_EXECUTED |
 | `P2-OUT-03` | 210 | 邊界 | Boss HP0 而仍有我方存活 / `VICTORY`；勝敗檢查不截斷單張技能合法事件 | M5 | SPECIFIED / NOT_EXECUTED |
@@ -301,3 +301,9 @@ Source-of-truth 128 test IDs above remain unchanged. This new section adds **20 
 - `tests/test_m2_invariants.gd`: 14/14 PASS — `M2_5_RESOURCE_INITIAL_VALID`, `M2_5_OVERLOAD_RESOURCE_INVARIANT`, `M2_5_COST_INPUT_PURE`, `M2_5_DUPLICATE_COST_ATOMIC`, `M2_5_INSUFFICIENT_MP_ATOMIC`, `M2_5_REFUND_DEBT_SEPARATE`, `M2_5_REFUND_NO_REPEAT`, `M2_5_REDUCE_DEBT_NOT_AP`, `M2_5_RP_FROM_REMAINING`, `M2_5_RP_DOES_NOT_CARRY`, `M2_5_AP_DEBT_REPAID_BEFORE_REFRESH`, `M2_5_AP_UNCAPPED_RP_CAPPED`, `M2_5_PROVISIONAL_ZERO_AP_PHASE`, `M2_5_STALE_COMMAND_ATOMIC`.
 - `tests/test_m2_replay.gd`: 6/6 PASS — `M2_5_CROSS_RESOLVER_REPLAY_EQUAL`, `M2_5_REPLAY_EVENTS_MONOTONIC`, `M2_5_REPLAY_RNG_UNCHANGED`, `M2_5_REPLAY_AP_RP_DEBT`, `M2_5_REPLAY_DISTINCT_TAPE_HASH`, `M2_5_REPLAY_FAILURE_ATOMIC`.
 - Evidence: Godot `4.7.2.stable.official.ed1daf0bf`; seed `20261014`; tested SHA `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`; [Actions run 38576033292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033292). All 20 executed cases passed, **but the full-domain gate failed with exit 2** because M2.3 and M2.4 source/test files were absent. See `PH3_M2_5_ACCEPTANCE_REPORT.md`. The 20 new cases do not cover card identity/zone invariant or swap event ordering.
+
+### M2.3 executed card-oracle supplement (2026-10-14)
+
+Godot4.7.2 M2.3 tests **46/46 PASS** in [run #38580461921](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38580461921), commit de2178e175846c2eeae5aba7f3f96995bb61323c. Exact DECK-003 mixed draw1/discard10 and PRE3-20 hand7/request3 scenarios are included. DECK-002 and M25-HAND-001 execute the M2.3 explicit draw-to-four function, not a real M3 phase reducer. V2 store and PRE3-R16 deck entry validation are verified as independent M2.3 rules.
+
+Do not conflate **PRE3-R16** (deck rule) with **PRE3-16** (existing spec-13 Last Spell HP0 testcase owned by M4). The latter is unexecuted. M2.4 Free Swap and full M2.5 replay remain blocked; legacy G0 behavior is not magically migrated.
