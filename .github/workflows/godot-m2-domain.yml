@@ -1,6 +1,6 @@
-name: Godot Phase3 M2 domain gate (fail closed until M2.3 and M2.4)
-# M2.1/M2.2 resources can pass independently. This workflow must not label
-# the full M2 domain VERIFIED while M2.3 cards or M2.4 swap are missing.
+name: Godot Phase3 M2 integrated domain acceptance
+# M2.5 gate: M2.1–M2.4 suites + REAL Cost->Card->Event->Replay
+# integration; fail closed on missing code or any unverified cross-module case.
 on:
   push:
     branches: [master]
@@ -83,12 +83,12 @@ jobs:
             }
             echo "legacy $script exit=0"
           done
-      - name: M2.3 and M2.4 full-domain prerequisites (must fail closed)
+      - name: M2.3 and M2.4 and M2.5 combined domain acceptance
         shell: bash
         run: |
           set -Eeuo pipefail
           missing=()
-          for path in             scripts/domain/m2/cards/card_instance.gd             scripts/domain/m2/cards/deck_validator.gd             scripts/domain/m2/cards/card_zone_resolver.gd             scripts/domain/m2/cards/draw_resolver.gd             scripts/domain/m2/persistence/deck_profile_v2.gd             scripts/domain/m2/cards/free_swap_resolver.gd             scripts/domain/m2/cards/card_trigger_dispatcher.gd             tests/test_m2_cards.gd             tests/test_m2_free_swap.gd; do
+          for path in             scripts/domain/m2/cards/card_instance.gd             scripts/domain/m2/cards/deck_validator.gd             scripts/domain/m2/cards/card_zone_resolver.gd             scripts/domain/m2/cards/draw_resolver.gd             scripts/domain/m2/persistence/deck_profile_v2.gd             scripts/domain/m2/cards/free_swap_resolver.gd             scripts/domain/m2/cards/card_trigger_dispatcher.gd             scripts/domain/m2/integration/m2_domain_resolver.gd             tests/test_m2_cards.gd             tests/test_m2_free_swap.gd             tests/test_m2_integration.gd; do
               [[ -f "$path" ]] || missing+=("$path")
           done
           if (( ${#missing[@]} > 0 )); then
@@ -104,9 +104,33 @@ jobs:
             }
             cat "$RUNNER_TEMP/m2-5-logs/$script.log"
           done
-          # M2.5 resource-only suites are NOT enough to establish cross-card/swap replay.
-          echo "::error::BLOCKED_M2_FULL_INTEGRATION: card ownership + swap replay oracles not yet authored"
-          exit 2
+          grep -q '^M2_3_TEST_REPORT executed=46 passed=46 failed=0' "$RUNNER_TEMP/m2-5-logs/test_m2_cards.log"
+          grep -q '^M2_4_TEST_REPORT executed=32 passed=32 failed=0' "$RUNNER_TEMP/m2-5-logs/test_m2_free_swap.log"
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m2_integration.gd > "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
+          grep -Eq '^M2_5_INTEGRATION_REPORT executed=[0-9]+ passed=[0-9]+ failed=0
+      - name: Upload reproducible results (including known gate failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-phase3-m2-5-acceptance-logs
+          path: ${{ runner.temp }}/m2-5-logs/
+          if-no-files-found: warn
+          retention-days: 14
+ "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
+          grep -q '^M2_5_CROSS_MODULE_DOMAIN_VERIFIED
+      - name: Upload reproducible results (including known gate failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-phase3-m2-5-blocked-gate-logs
+          path: ${{ runner.temp }}/m2-5-logs/
+          if-no-files-found: warn
+          retention-days: 14
+ "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
+          echo "M2_DOMAIN_VERIFIED: core M2 resource, card-instance, FreeSwap and replay mechanics; M3/M4/M5 gameplay deferred"
       - name: Upload reproducible results (including known gate failure)
         if: always()
         uses: actions/upload-artifact@v4
