@@ -1,0 +1,12 @@
+{
+  "schema_version": "m2.2-cost-fixture-v1",
+  "ruleset_version": "arbitrium-phase3-m2.1-v1",
+  "authority": "BALANCE_PROVISIONAL",
+  "max_ap_debt": 8,
+  "ap_debt_policy": "PROVISIONAL_MULTI_PHASE",
+  "warnings": [
+    "MaxAPDebt 8 is a BALANCE_PROVISIONAL test candidate, not approved balance.",
+    "Cross-round debt repayment is M-D04 PROVISIONAL B trial.",
+    "All card IDs, AP/MP prices, discounts, refund magnitudes and SP effects are FIXTURE_ONLY."
+  ]
+}

@@ -6,6 +6,7 @@ extends RefCounted
 ## Boundary steps only update resources; M3 owns full phase/status/casting sequencing.
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const BasicAttackMP = preload("res://scripts/domain/m2/economy/basic_attack_mp_policy.gd")
+const Debt = preload("res://scripts/domain/m2/economy/overload_debt.gd")
 const KINDS: Array[String] = [
 	"SPEND_AP", "GRANT_AP", "PAY_MP", "RECOVER_MP",
 	"BASIC_ATTACK_RESOURCE_ONLY", "CONVERT_AP_TO_RP",
@@ -178,17 +179,22 @@ static func apply(state: Dictionary, instruction: Dictionary, provisional: Dicti
 		"START_PLAYER_RESOURCES":
 			if phase != "AWAITING_PLAYER_START":
 				return _reject(state, "INVALID_PHASE")
-			if int(r["ap_debt"]) != 0:
-				return _reject(state, "DEFERRED_TO_M2_2_AP_DEBT")
+			var opened: Dictionary = Debt.open_player_phase(r, provisional)
+			if not opened["ok"]:
+				return _reject(state, str(opened["error"]))
 			next_state = Model.snapshot(state)
 			next_state["phase"] = "PLAYER_PHASE"
 			next_state["round"] = int(state["round"]) + 1
-			next_state["party_resources"]["current_ap"] = int(r["base_ap"])
+			next_state["party_resources"]["current_ap"] = int(opened["current_ap"])
+			next_state["party_resources"]["ap_debt"] = int(opened["ap_debt"])
+			next_state["party_resources"]["next_player_ap_bonus"] = 0
 			next_state["party_resources"]["rp"] = 0
 			for ally_id: String in state["allies"]:
 				next_state["basic_attack_mp_restore_used_by_actor"][ally_id] = false
 			return _finish(next_state, instruction, "PlayerResourcesOpened",
 				{"round": int(next_state["round"]), "base_ap": int(r["base_ap"]),
+					"pool": int(opened["pool"]), "old_debt_repaid": int(opened["repaid"]),
+					"debt_carried": int(opened["ap_debt"]),
 					"note": "M3_TICK_AND_DRAW_NOT_IMPLEMENTED"})
 	return _reject(state, "UNKNOWN_RESOURCE_OPERATION")
 

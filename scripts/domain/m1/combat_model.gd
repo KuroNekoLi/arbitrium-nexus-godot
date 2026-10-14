@@ -35,7 +35,10 @@ static func make_state(ally_ids: Array[String], enemy_ids: Array[String], seed_v
 		"action_seq": 0,
 		"event_seq": 0,
 		"seen_command_ids": [],
-		"party_resources": {"base_ap": 6, "current_ap": 6, "rp": 0, "rp_cap": 6, "ap_debt": 0},
+		"paid_cost_command_ids": [],
+		"consumed_effect_instance_ids": [],
+		"cost_modifiers": [],
+		"party_resources": {"base_ap": 6, "current_ap": 6, "rp": 0, "rp_cap": 6, "ap_debt": 0, "next_player_ap_bonus": 0},
 		"allies": ally_ids.duplicate(),
 		"enemies": enemy_ids.duplicate(),
 		"actors": actors,
@@ -99,11 +102,34 @@ static func validate_shell(state: Dictionary) -> bool:
 	if not state.has("party_resources") or not state["party_resources"] is Dictionary:
 		return false
 	var resources: Dictionary = state["party_resources"]
-	for key: String in ["base_ap", "current_ap", "rp", "rp_cap", "ap_debt"]:
+	for key: String in ["base_ap", "current_ap", "rp", "rp_cap", "ap_debt", "next_player_ap_bonus"]:
 		if not resources.get(key, null) is int or int(resources[key]) < 0:
 			return false
 	if int(resources["rp"]) > int(resources["rp_cap"]):
 		return false
+	for key: String in ["paid_cost_command_ids", "consumed_effect_instance_ids", "cost_modifiers"]:
+		if not state.has(key) or not state[key] is Array:
+			return false
+	# Modifiers must have unique stable ids; all gameplay-specific eligibility
+	# and expiry remains deferred until M2.3/M3.
+	var modifier_ids: Array = []
+	for modifier: Variant in state["cost_modifiers"]:
+		if not modifier is Dictionary:
+			return false
+		var instance_id: String = str(modifier.get("instance_id", ""))
+		if instance_id.is_empty() or modifier_ids.has(instance_id):
+			return false
+		modifier_ids.append(instance_id)
+		if not modifier.get("remaining_uses", null) is int or int(modifier["remaining_uses"]) < 0:
+			return false
+		if not modifier.get("grant_seq", null) is int or int(modifier["grant_seq"]) < 0:
+			return false
+		if not modifier.get("priority", null) is int:
+			return false
+		if not modifier.get("value", null) is int or int(modifier["value"]) < 0:
+			return false
+		if not ["SET_COST", "DISCOUNT"].has(str(modifier.get("kind", ""))):
+			return false
 	if not state.has("basic_attack_mp_restore_used_by_actor"):
 		return false
 	if not state["basic_attack_mp_restore_used_by_actor"] is Dictionary:

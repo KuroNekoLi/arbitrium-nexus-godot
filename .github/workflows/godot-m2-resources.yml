@@ -1,4 +1,4 @@
-name: Godot Phase3 M2.1 - resource domain
+name: Godot Phase3 M2.1 + M2.2 - resource and cost domains
 
 # M2.1 resource-only gate. This is NOT complete M2 or full combat acceptance.
 on:
@@ -9,6 +9,8 @@ on:
       - 'scripts/domain/m1/**'
       - 'scripts/domain/m2/economy/**'
       - 'tests/test_m2_resources.gd'
+      - 'tests/test_m2_costs.gd'
+      - 'resources/combat/rulesets/m2_2_provisional_costs.json'
       - 'resources/combat/rulesets/m2_1_provisional_resources.json'
       - 'project.godot'
   pull_request:
@@ -79,6 +81,18 @@ jobs:
           cat "$RUNNER_TEMP/m2-logs/m2.1-resources.log"
           grep -Eq 'M2_1_TEST_REPORT executed=[0-9]+ passed=[0-9]+ failed=0 skipped=0' "$RUNNER_TEMP/m2-logs/m2.1-resources.log"
           grep -q 'M2_1_REPLAY_PROOF' "$RUNNER_TEMP/m2-logs/m2.1-resources.log"
+      - name: M2.2 Cost and Overload Domain cases
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m2_costs.gd > "$RUNNER_TEMP/m2-logs/m2.2-costs.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m2-logs/m2.2-costs.log"
+            exit 1
+          }
+          cat "$RUNNER_TEMP/m2-logs/m2.2-costs.log"
+          grep -Eq 'M2_2_TEST_REPORT executed=[0-9]+ passed=[0-9]+ failed=0 skipped=0' "$RUNNER_TEMP/m2-logs/m2.2-costs.log"
+          grep -q 'M2_2_REPLAY_PROOF' "$RUNNER_TEMP/m2-logs/m2.2-costs.log"
+
       - name: Save verifiable CI logs
         if: always()
         uses: actions/upload-artifact@v4
