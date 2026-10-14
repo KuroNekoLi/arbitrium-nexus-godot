@@ -4,6 +4,8 @@ extends RefCounted
 const Integrated = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+const CastingTimeline = preload("res://scripts/domain/m4/casting/casting_timeline_resolver.gd")
+const CastingInstance = preload("res://scripts/domain/m4/casting/casting_instance_resolver.gd")
 
 static func outcome(battle: Dictionary) -> String:
 	var any_enemy_alive: bool = false
@@ -73,7 +75,9 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 	if not validate_hooks(hooks):
 		return _failure(core, "INVALID_BOUNDARY_HOOKS")
 	# Fail closed instead of silently dropping unscheduled actual M4/M5 work.
-	if not core["battle"]["casting_instances"].is_empty() or not core["battle"]["statuses"].is_empty():
+	if not core["battle"]["statuses"].is_empty():
+		return _failure(core, "UNIMPLEMENTED_REAL_STATUS_TICKS")
+	if not core["battle"]["casting_instances"].is_empty() and config.get("m4_dual_cast_enabled", false) != true:
 		return _failure(core, "UNIMPLEMENTED_REAL_TICKS")
 	var next_round: int = int(core["battle"]["round"]) + 1
 	var due: Array[Dictionary] = []
@@ -89,6 +93,14 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 	due.sort_custom(_due_before)
 	var state: Dictionary = core.duplicate(true)
 	var timeline: Array = []
+	# M4.1 actual CastingInstance releases before legacy fixture hooks,
+	# Outcome, M2 AP renewal and M2 draw-to-four.
+	if config.get("m4_dual_cast_enabled", false) == true:
+		var released: Dictionary = CastingTimeline.settle_due(state, next_round, config, command_id)
+		if not released["ok"]:
+			return _failure(core, str(released["error"]))
+		state = released["core"]
+		timeline.append_array(released["timeline"])
 	for hook: Dictionary in due:
 		if str(hook["kind"]) == "CASTING_FIXTURE":
 			# Strictly a physical Casting -> Discard fixture; DOES NOT cast
@@ -110,10 +122,18 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 		timeline.append({"kind": "BoundaryHookFixtureResolved",
 			"hook_id": str(hook["hook_id"]), "fixture_kind": str(hook["kind"]),
 			"effect_resolution": "DEFERRED_TO_M4_M5"})
-	# Unhandled real casting cards MUST have a due fixture, not silent expiry.
+	# Remaining cards in Casting are legal ONLY if paired with an active
+	# later-due CastingInstance. M3 fixtures still fail closed.
+	if not CastingInstance.valid(state):
+		return _failure(core, "INVALID_CASTING_INSTANCE_LINK")
 	for ally: Variant in state["cards"]["actors"]:
-		if not state["cards"]["actors"][ally]["zones"]["casting"].is_empty():
-			return _failure(core, "UNRESOLVED_CASTING_ZONE")
+		for card_id: Variant in state["cards"]["actors"][ally]["zones"]["casting"]:
+			var accounted: bool = false
+			for instance: Variant in state["battle"]["casting_instances"].values():
+				if str(instance["caster_id"]) == str(ally) and str(instance["card_instance_id"]) == str(card_id) and int(instance["planned_resolve_round"]) > next_round:
+					accounted = true
+			if not accounted:
+				return _failure(core, "UNRESOLVED_CASTING_ZONE")
 	var checked: Dictionary = check_action_outcome(state)
 	if not checked["ok"]:
 		return _failure(core, str(checked["error"]))

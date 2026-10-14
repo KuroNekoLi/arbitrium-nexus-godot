@@ -266,7 +266,7 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 				return _rejected(state, str(drawn["error"]))
 			next["cards"] = drawn["state"]
 			_log(next, "cards", drawn["events"], produced)
-		"RESOLVE_CAST_ZONE_FIXTURE":
+		"RESOLVE_CAST_ZONE_FIXTURE", "SETTLE_CASTING_CARD_M4":
 			var cast_id: String = str(instruction.get("card_instance_id", ""))
 			var moved: Dictionary = Zones.move(cards, actor_id, cast_id, "casting", "discard")
 			if not moved["accepted"]:
