@@ -1,6 +1,6 @@
 name: Godot Phase3 M2 integrated domain acceptance
-# M2.5 gate: M2.1–M2.4 suites + REAL Cost->Card->Event->Replay
-# integration; fail closed on missing code or any unverified cross-module case.
+# M2.5 gate requires genuine Cost/Card/FreeSwap/replay integration.
+# Keep M3/M4/M5 gameplay outcomes excluded from M2 verification.
 on:
   push:
     branches: [master]
@@ -83,7 +83,7 @@ jobs:
             }
             echo "legacy $script exit=0"
           done
-      - name: M2.3 and M2.4 and M2.5 combined domain acceptance
+      - name: M2.3 M2.4 and M2.5 combined acceptance
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -110,32 +110,14 @@ jobs:
             cat "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"; exit 1;
           }
           cat "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
-          grep -Eq '^M2_5_INTEGRATION_REPORT executed=[0-9]+ passed=[0-9]+ failed=0
-      - name: Upload reproducible results (including known gate failure)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: godot-phase3-m2-5-acceptance-logs
-          path: ${{ runner.temp }}/m2-5-logs/
-          if-no-files-found: warn
-          retention-days: 14
- "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
-          grep -q '^M2_5_CROSS_MODULE_DOMAIN_VERIFIED
-      - name: Upload reproducible results (including known gate failure)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: godot-phase3-m2-5-blocked-gate-logs
-          path: ${{ runner.temp }}/m2-5-logs/
-          if-no-files-found: warn
-          retention-days: 14
- "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
+          grep -Eq '^M2_5_INTEGRATION_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
+          grep -q '^M2_5_CROSS_MODULE_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m2-5-logs/test_m2_integration.log"
           echo "M2_DOMAIN_VERIFIED: core M2 resource, card-instance, FreeSwap and replay mechanics; M3/M4/M5 gameplay deferred"
       - name: Upload reproducible results (including known gate failure)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: godot-phase3-m2-5-blocked-gate-logs
+          name: godot-phase3-m2-5-acceptance-logs
           path: ${{ runner.temp }}/m2-5-logs/
           if-no-files-found: warn
           retention-days: 14
