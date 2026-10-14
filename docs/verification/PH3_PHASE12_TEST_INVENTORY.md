@@ -242,3 +242,53 @@ Source runner: `tests/test_m2_resources.gd` @ `5812a8883e87cb5cd30665d100875f7bb
 | `M2_1_REPLAY_FAILURE` | `scripts/domain/m2/economy/` + fixture, unit/replay | RESOURCE_LEDGER_ONLY_VERIFIED |
 
 The first CI attempt #38568308477 failed due to Godot JSON parsing integral literals as float; correction added explicit integer-valued JSON handling and two regression cases. The source of gameplay policy remains `docs/combat/03,18,19,20`; fixtures do not approve permanent MP/AP balance values.
+
+## 6. M2.2 verified internal Cost Engine cases
+
+Evidence: [GitHub Actions Run #38571553461](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38571553461), tested `907d406d13dc1fb841e0a52e4364121f5f819fcd`. Godot `4.7.2.stable.official.ed1daf0bf`: **43 PASS, 0 FAIL, 0 SKIPPED**. All rows below are internal fixture tests; complete SP/card/gameplay acceptance is NOT_EXECUTED.
+
+| M2.2 Case ID | Evidence file | Coverage |
+|---|---|---|
+| `M2_2_CONFIG_AUTHORITY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_ATOMIC_AP_MP` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_INPUT_IMMUTABLE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_RECEIPT_NOT_CARD` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_MP_INSUFFICIENT_ATOMIC` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `ECON-001-RESOURCE_ONLY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_INVALID_ACTOR` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_UNAVAILABLE_ACTOR` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_OVERLOAD_SHORTFALL` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_CARD_BORROW_LIMIT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_TEAM_BORROW_LIMIT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_NO_VOLUNTARY_BORROW` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_BORROW_ONLY_GAP` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_NO_SILENT_DEBT_LIMIT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `PRE3-10-RESOURCE_ONLY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DISCOUNT_CONSUMPTION` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_VARIABLE_INVESTMENT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_INVESTMENT_REQUIRED` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_INVESTMENT_RANGE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_FIXED_CARD_NO_INVESTMENT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DUAL_CAST_SAME_MP` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_MIN_AP_COST` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DISCOUNT_FILTER` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_MULTIPLE_SET_COST_TBD` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DUPLICATE_MODIFIER_ID` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_REPLAY_REJECTS_DUPLICATE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_COST_PLAYER_ONLY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_NO_UNFUNDED_EFFECT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_AP_REFUND_CURRENT_ONLY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_EFFECT_CONSUME_ONCE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_REFUND_DOES_NOT_REPAY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_REDUCE_DEBT_NO_AP` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DEBT_CLAMP` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_FUTURE_BONUS_NOT_IMMEDIATE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DEBT_CROSS_PHASE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DEBT_MULTI_PHASE` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_DEBT_POLICY_EXPLICIT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_AP_BONUS_REPAYS_FIRST` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_NEXT_PHASE_AP_BONUS` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_REPLAY_DETERMINISTIC` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_REPLAY_FAILED_ATOMICALLY` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_NO_GLOBAL_PLAY_LIMIT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |
+| `M2_2_NO_PUBLIC_SP_EFFECT` | `tests/test_m2_costs.gd` | COST_DOMAIN_ONLY_VERIFIED |

@@ -65,3 +65,16 @@
 | G0-R26 | `m2/economy/*.gd` | Domain 不依賴 UI 動畫/計時器 | 舊 `main.gd` 尚未接新版 Domain |
 
 **驗收級別：`RESOURCE_LEDGER_ONLY_VERIFIED / FULL_GAMEPLAY_NOT_EXECUTED`。** 測試案例詳見 [PH3_PHASE12_TEST_INVENTORY.md](PH3_PHASE12_TEST_INVENTORY.md)；實際證據及失敗後修復原因見 [PH3_M2_1_ENGINEERING_NOTE.md](PH3_M2_1_ENGINEERING_NOTE.md)。
+
+## M2.2 — Cost Engine + Overload verified (2026-10-14)
+
+[CI #38571553461](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38571553461), SHA `907d406d13dc1fb841e0a52e4364121f5f819fcd`: Godot4.7.2 verified M1=30/30, M2.1=38/38, M2.2=43/43. `M2.2_COST_DOMAIN_VERIFIED` is **internal transaction scope only**; real SP, card zone consumption and UI integration remain `NOT_EXECUTED`.
+
+| Requirement | Test evidence | Status / gap |
+|---|---|---|
+| M-D01/11/13/14, PRE3-R10 | `M2_2_ATOMIC_AP_MP`, `PRE3-10-RESOURCE_ONLY`, `M2_2_VARIABLE_INVESTMENT`, `M2_2_MIN_AP_COST` | Quote, ordered discounts, effective cost, atomic AP+MP payment VERIFIED internally |
+| M-D02/03/05/15 | `M2_2_OVERLOAD_SHORTFALL`, `M2_2_CARD_BORROW_LIMIT`, `M2_2_TEAM_BORROW_LIMIT`, `M2_2_NO_VOLUNTARY_BORROW` | Explicit Overload + shortfall caps VERIFIED; 8AP limit PROVISIONAL |
+| M-D04/06/07 | `M2_2_DEBT_CROSS_PHASE`, `M2_2_DEBT_MULTI_PHASE`, `M2_2_AP_BONUS_REPAYS_FIRST` | Provisional multi-phase debt repayment VERIFIED as configured |
+| M-D16/17 | `M2_2_AP_REFUND_CURRENT_ONLY`, `M2_2_REFUND_DOES_NOT_REPAY`, `M2_2_REDUCE_DEBT_NO_AP` | AP refund vs debt reduction separated; source/effect binding still fixture |
+| M-D21 | `M2_2_DUAL_CAST_SAME_MP` | Default shared MP quote verified; real casting deferred |
+| G0-R25 Replay | `M2_2_REPLAY_DETERMINISTIC`, `M2_2_REPLAY_FAILED_ATOMICALLY` | Fixed-seed replay VERIFIED for cost fixture only |
