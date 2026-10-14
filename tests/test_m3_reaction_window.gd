@@ -304,6 +304,15 @@ func _init() -> void:
 	_expect("M3_2_CONFIRM_REJECTS_KNOWN_BUDGET_DEFICIT", _atomic(insufficient,
 		qlow2["state"], "INSUFFICIENT_RP_DRAFT"))
 	_expect("M3_2_NO_FAKE_RESOURCE_PAYMENT", qlow2["state"]["core"]["battle"]["party_resources"]["rp"] == 2)
+	# Guard is approved as an SP-free basic reaction, but implemented
+	# only in M3.3. A targeted, RP-positive attack must NOT silently
+	# close as "no legal reaction" just because M3.2 lacks Guard.
+	var no_sp_catalogue: Dictionary = config.duplicate(true)
+	no_sp_catalogue["reaction_definitions"] = {}
+	_expect("M3_2_BASIC_GUARD_CANNOT_BE_SILENTLY_SKIPPED", _atomic(
+		Phase.apply(pending, _cmd(pending, "OPEN_REACTION_WINDOW",
+			"guard-not-yet-implemented", {"enemy_action_id": active_id}),
+			no_sp_catalogue), pending, "BASIC_REACTIONS_DEFERRED_M3_3"))
 	var empty: Dictionary = pending.duplicate(true)
 	empty["core"]["battle"]["party_resources"]["rp"] = 0
 	var skipped: Dictionary = _do(empty, "OPEN_REACTION_WINDOW", "empty-open",
