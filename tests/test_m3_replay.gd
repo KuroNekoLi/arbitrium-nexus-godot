@@ -66,9 +66,12 @@ func _init() -> void:
 	verify("M35-REPLAY-RECEIPT_COMMAND_IDS", run1["receipts"].map(
 		func(r: Dictionary) -> String: return str(r["command_id"])) ==
 		tape.map(func(c: Dictionary) -> String: return str(c["command_id"])))
-	verify("M35-REPLAY-EVERY_RECEIPT_HAS_HASH", run1["receipts"].all(
-		func(r: Dictionary) -> bool: return str(r.get("state_hash","")).length() == 64
-			and str(r.get("event_hash","")).length() == 64))
+	var all_hashed: bool = true
+	for item: Dictionary in run1["receipts"]:
+		if str(item.get("state_hash", "")).length() != 64 \
+			or str(item.get("event_hash", "")).length() != 64:
+			all_hashed = false
+	verify("M35-REPLAY-EVERY_RECEIPT_HAS_HASH", all_hashed)
 	verify("M35-REPLAY-FIRST_TURN_RP_ZERO", run1["state"]["core"]["battle"]["party_resources"]["rp"] == 0)
 	verify("M35-REPLAY-END_ROUND3", run1["state"]["core"]["battle"]["round"] == 3
 		and run1["state"]["phase"] == "PLAYER_PHASE")
