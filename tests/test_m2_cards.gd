@@ -218,8 +218,28 @@ func _test_files(v2: Dictionary, legacy: Dictionary, contexts: Dictionary,
 	source.close()
 	var saved: Dictionary = Profile.save_profile(v2, contexts, definitions, owned, v2_path)
 	var loaded: Dictionary = Profile.load_profile(v2_path)
-	_expect("PRE3-20-V2_SAVE_LOAD", saved["saved"] and loaded["status"] == "V2_CANDIDATE"
-		and JSON.stringify(loaded["original"]) == JSON.stringify(v2))
+	# JSON round-trip sorts Dictionary keys and may parse 2 as 2.0.
+	# Check real schema fields/ordered card IDs rather than raw key order.
+	var equivalent: bool = loaded["status"] == "V2_CANDIDATE"
+	if equivalent:
+		var restored: Dictionary = loaded["original"]
+		equivalent = int(restored.get("version", -1)) == 2
+		if not restored.get("loadouts", null) is Dictionary:
+			equivalent = false
+		else:
+			var saved_loadouts: Dictionary = restored["loadouts"]
+			for actor_id: String in ["A", "B", "C"]:
+				if not saved_loadouts.has(actor_id) or not saved_loadouts[actor_id] is Dictionary:
+					equivalent = false
+					break
+				var restored_actor: Dictionary = saved_loadouts[actor_id]
+				if str(restored_actor.get("variant_id", "")) != "default" or not restored_actor.get("cards", null) is Array:
+					equivalent = false
+					break
+				if restored_actor["cards"] != v2["loadouts"][actor_id]["cards"]:
+					equivalent = false
+					break
+	_expect("PRE3-20-V2_SAVE_LOAD", saved["saved"] and equivalent)
 	_expect("PRE3-20-LEGACY_BYTES_UNCHANGED", FileAccess.get_file_as_string(v1_path) == original)
 	var legacy_save: Dictionary = Profile.save_profile(legacy, contexts, definitions, owned, v2_path)
 	_expect("PRE3-20-LEGACY_SAVE_REJECT", not legacy_save["saved"])
