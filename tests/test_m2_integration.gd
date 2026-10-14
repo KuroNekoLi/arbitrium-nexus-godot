@@ -78,9 +78,9 @@ func _index(events: Array, kind: String) -> int:
 	return -1
 
 func _snapshot_result(result: Dictionary, original: Dictionary, reason: String) -> bool:
-	return not result["accepted"] and str(result["error"]) == reason
+	return (not result["accepted"] and str(result["error"]) == reason
 		and result["events"].is_empty()
-		and Model.state_hash(result["state"]) == Model.state_hash(original)
+		and Model.state_hash(result["state"]) == Model.state_hash(original))
 
 func _init() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
