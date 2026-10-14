@@ -194,3 +194,19 @@ Final tested source SHA 42d0ac055b457f96123b4a669e558b0bcc3bcb65. Successful God
 | P2-D16 seed/event Replay | M3_3_SEEDED_GUARD_PROTECT_REPLAY, M3_3_REPLAY_DUPLICATE_ATOMIC, M3_3_GUARD_COST_PER_DISTINCT_ACTION | Same-seed M3.3 replay and RP across action windows VERIFIED |
 
 M3.4 presentation modes, M3.5 integrated acceptance, M4 spell/casting and M5 real HP damage, and legacy UI replacement remain NOT_VERIFIED. **Do not declare overall M3 DOMAIN VERIFIED at M3.3.**
+
+
+## M3.4 — Reaction UI Mode Contract independently verified (2026-10-14)
+
+Official Godot 4.7.2 GitHub Actions https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38598430159, tested source SHA **513129fc12c4de8b754041d4547a77f07b17a2f1**, M3.4 **83/83**, M3.3 **54/54**, M3.2 **50/50**, M3.1 **61/61**, M1–M2 **249/249**, grand total **497/497** named Domain cases, plus four legacy scripts exit0.
+
+| Decision | Actual code / Godot oracle | Bounded verdict |
+|---|---|---|
+| P1-D05 SMART / ALWAYS_ASK / QUICK display policy | m3/reaction/reaction_presentation_policy.gd; M3_4_DEFAULT_SMART, M3_4_SMART_MINOR_QUIET_BUT_BLOCKS, M3_4_ALWAYS_ASK_ALWAYS_MODAL, M3_4_QUICK_COMPACT_NOT_MODAL | M3.4 pure Domain policy VERIFIED; visual HUD and real translation resources deferred |
+| CORE-04 time-independent explicit Confirm or Pass | M3_4_QUICK_WAIT_120, M3_4_SMART_WAIT_86400, M3_4_QUICK_CANNOT_ADVANCE, M3_4_PASS_EXPLICIT_NO_RP | VERIFIED with simulated UI time metadata, no actual on-screen 120-second test |
+| P1-D03/04/15/16, basic Guard/Protect and SP legality unchanged | M3_4_GUARD_ONLY_WINDOW_REAL, M3_4_DRAFT_FEE_IS_SAME, M3_4_QUICK_FIXED_COST, M3_4_QUICK_REORDER_JIT | Verified same actual M2 RP spend, JIT skip and M3.3 coverage across UI modes |
+| P2-D16 deterministic state and event replay | M3_4_THREE_MODES_IDENTICAL_STATE_HASH, M3_4_THREE_MODES_IDENTICAL_EVENT_HASH, M3_4_THREE_MODES_IDENTICAL_DOMAIN_EVENTS | VERIFIED exact cross-mode deterministic command replay |
+| No legal option => no empty prompt | M3_4_QUICK_EMPTY_SKIPS_PROMPT, M3_4_EMPTY_CAN_FINISH_ACTION | VERIFIED automatic empty window dismissal does not auto-pass a legal window |
+| i18n/Presentation boundary | Policy only provides reaction.mode.* identifier, no UI changes | Real HUD, old scripts/main.gd countdown replacement, translated strings and input modes NOT_IMPLEMENTED in this milestone |
+
+See PH3_M3_4_ENGINEERING_NOTE.md for SHA256 replay evidence. M3.5 complete M3 domain integration remains NOT_EXECUTED and blocks the top-level M3 DOMAIN VERIFIED marker. M4 casting and M5 actual damage remain separate milestones.

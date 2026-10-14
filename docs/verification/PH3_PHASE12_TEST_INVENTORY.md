@@ -565,3 +565,96 @@ Final official Godot 4.7.2 Actions run https://github.com/KuroNekoLi/arbitrium-n
 | 54 | M3_3_REPLAY_DUPLICATE_ATOMIC | test_m3_guard_protect.gd | PASS — M3.3 Domain only |
 
 Canonical replay event hash SHA256 33da67eb4cd91d0e1b3ce0a5ca3d59d76ac6f5ff993f85fd57f5e6593853d077; final state SHA256 153aa594a108b70cecd4bb5e12188429cf636ad555e2727963c508455d6da9fa. Damage, Barrier/Guard mitigation, M4 magic and M3.4–M3.5 remain unexecuted.
+
+
+### M3.4 Reaction UI Mode Contract — 83 actually executed named cases (2026-10-14)
+
+Official Godot 4.7.2 successful workflow https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38598430159, code SHA 513129fc12c4de8b754041d4547a77f07b17a2f1, seed 20261014. Exactly **83/83** test_m3_ui_modes.gd PASS from actual raw CI stdout. Same run M3.3 54/54, M3.2 50/50, M3.1 61/61, M1–M2 249/249, plus four legacy scripts exit0. These are Domain and simulated time-metadata tests, not a rendered 120-second UI test.
+
+| # | Actual Godot case ID | Test source | Verdict |
+|---:|---|---|---|
+| 1 | M3_4_DEFAULT_SMART | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 2 | M3_4_INVALID_MODE_REJECTED | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 3 | M3_4_INVALID_STATE_REJECTED | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 4 | M3_4_GUARD_ONLY_WINDOW_REAL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 5 | M3_4_NO_SP_CATALOGUE_YET_GUARD_ELIGIBLE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 6 | M3_4_SMART_PENDING | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 7 | M3_4_SMART_SAME_WINDOW | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 8 | M3_4_SMART_VIEW_ONLY | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 9 | M3_4_SMART_NO_AUTO_SPEND | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 10 | M3_4_SMART_PRESENTATION_KEY | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 11 | M3_4_SMART_CANNOT_ADVANCE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 12 | M3_4_ALWAYS_ASK_PENDING | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 13 | M3_4_ALWAYS_ASK_SAME_WINDOW | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 14 | M3_4_ALWAYS_ASK_VIEW_ONLY | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 15 | M3_4_ALWAYS_ASK_NO_AUTO_SPEND | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 16 | M3_4_ALWAYS_ASK_PRESENTATION_KEY | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 17 | M3_4_ALWAYS_ASK_CANNOT_ADVANCE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 18 | M3_4_QUICK_PENDING | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 19 | M3_4_QUICK_SAME_WINDOW | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 20 | M3_4_QUICK_VIEW_ONLY | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 21 | M3_4_QUICK_NO_AUTO_SPEND | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 22 | M3_4_QUICK_PRESENTATION_KEY | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 23 | M3_4_QUICK_CANNOT_ADVANCE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 24 | M3_4_SMART_UNKNOWN_SAFER_MODAL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 25 | M3_4_ALWAYS_ASK_ALWAYS_MODAL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 26 | M3_4_QUICK_COMPACT_NOT_MODAL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 27 | M3_4_SMART_MINOR_QUIET_BUT_BLOCKS | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 28 | M3_4_SMART_MAJOR_PROMINENT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 29 | M3_4_SMART_UNKNOWN_HINT_PROMINENT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 30 | M3_4_ALWAYS_ASK_IGNORES_THREAT_LEVEL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 31 | M3_4_QUICK_IGNORES_THREAT_LEVEL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 32 | M3_4_STYLES_DISTINCT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 33 | M3_4_SMART_WAIT_0 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 34 | M3_4_ALWAYS_ASK_WAIT_0 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 35 | M3_4_QUICK_WAIT_0 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 36 | M3_4_SMART_WAIT_120 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 37 | M3_4_ALWAYS_ASK_WAIT_120 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 38 | M3_4_QUICK_WAIT_120 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 39 | M3_4_SMART_WAIT_86400 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 40 | M3_4_ALWAYS_ASK_WAIT_86400 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 41 | M3_4_QUICK_WAIT_86400 | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 42 | M3_4_NO_ACTION_ON_ELAPSED_TIME | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 43 | M3_4_FPS_AND_DEVICE_NEUTRAL | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 44 | M3_4_SNAPSHOT_DOES_NOT_STORE_UI_MODE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 45 | M3_4_DRAFT_NO_RP_DEBIT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 46 | M3_4_DRAFT_NO_CARD_MOVE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 47 | M3_4_PREVIEW_UNCHANGED_WITH_MODE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 48 | M3_4_DRAFT_FEE_IS_SAME | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 49 | M3_4_DRAFT_STILL_CANNOT_AUTO_COMPLETE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 50 | M3_4_SMART_REPLAY_EXACT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 51 | M3_4_SMART_FIXED_COST | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 52 | M3_4_SMART_SAME_CARD_ZONES | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 53 | M3_4_SMART_REORDER_JIT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 54 | M3_4_SMART_ENEMY_FINISHES_ONLY_AFTER_CONFIRM | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 55 | M3_4_ALWAYS_ASK_REPLAY_EXACT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 56 | M3_4_ALWAYS_ASK_FIXED_COST | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 57 | M3_4_ALWAYS_ASK_SAME_CARD_ZONES | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 58 | M3_4_ALWAYS_ASK_REORDER_JIT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 59 | M3_4_ALWAYS_ASK_ENEMY_FINISHES_ONLY_AFTER_CONFIRM | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 60 | M3_4_QUICK_REPLAY_EXACT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 61 | M3_4_QUICK_FIXED_COST | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 62 | M3_4_QUICK_SAME_CARD_ZONES | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 63 | M3_4_QUICK_REORDER_JIT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 64 | M3_4_QUICK_ENEMY_FINISHES_ONLY_AFTER_CONFIRM | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 65 | M3_4_THREE_MODES_IDENTICAL_STATE_HASH | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 66 | M3_4_THREE_MODES_IDENTICAL_EVENT_HASH | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 67 | M3_4_THREE_MODES_IDENTICAL_DOMAIN_EVENTS | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 68 | M3_4_THREE_MODES_IDENTICAL_COMMAND_LEDGER | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 69 | M3_4_PASS_EXPLICIT_NO_RP | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 70 | M3_4_PASS_NO_CARD_CHANGE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 71 | M3_4_SMART_CLOSED_NO_PROMPT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 72 | M3_4_ALWAYS_ASK_CLOSED_NO_PROMPT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 73 | M3_4_QUICK_CLOSED_NO_PROMPT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 74 | M3_4_MANUAL_PASS_ENEMY_CAN_COMPLETE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 75 | M3_4_DUPLICATE_PASS_REJECTS | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 76 | M3_4_NO_LEGAL_OPTIONS_DETECTED | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 77 | M3_4_EMPTY_NO_AUTO_RESOURCE_CHANGE | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 78 | M3_4_SMART_EMPTY_SKIPS_PROMPT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 79 | M3_4_ALWAYS_ASK_EMPTY_SKIPS_PROMPT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 80 | M3_4_QUICK_EMPTY_SKIPS_PROMPT | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 81 | M3_4_EMPTY_CAN_FINISH_ACTION | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 82 | M3_4_NO_DECISION_BEFORE_WINDOW_OPENED | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+| 83 | M3_4_PLAYER_PHASE_NO_WINDOW | test_m3_ui_modes.gd | PASS / M3.4 Domain only |
+
+Seed replay event SHA256 1643d46796699e9eea86115bf1cb1960c8aa66f93302659f29f59d5e5b652642; final state SHA256 4cac348cc321900fcb65343ee8420d4ff3cc78f2529ab65ad4e24fa408de421f. M3.5 pending and all true Presentation UI work remains separate.
