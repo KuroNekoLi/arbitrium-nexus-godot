@@ -70,7 +70,7 @@ jobs:
             }
             echo "$script exit=0"
           done
-          grep -q 'M2_3_TEST_REPORT executed=43 passed=43 failed=0' "$RUNNER_TEMP/m2-4-logs/test_m2_cards.log"
+          grep -q 'M2_3_TEST_REPORT executed=46 passed=46 failed=0' "$RUNNER_TEMP/m2-4-logs/test_m2_cards.log"
           grep -q 'M1_TEST_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/m2-4-logs/test_combat_m1.log"
           grep -q 'M2_1_TEST_REPORT executed=38 passed=38 failed=0' "$RUNNER_TEMP/m2-4-logs/test_m2_resources.log"
           grep -q 'M2_2_TEST_REPORT executed=43 passed=43 failed=0' "$RUNNER_TEMP/m2-4-logs/test_m2_costs.log"
