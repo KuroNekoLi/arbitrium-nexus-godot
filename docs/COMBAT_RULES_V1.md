@@ -1,53 +1,42 @@
-# 仲裁核心戰鬥規則 v1.0
+# 仲裁核心戰鬥規格 — Library 最新整合入口
 
-## 範圍
+> **Source of Truth：** `docs/combat/` 內 25 份由 ChatGPT Library `/docs/combat/` 匯入的完整 Markdown。  
+> **此文件已取代舊 v1.0 戰鬥玩法規格。** 原有 Godot 程式、Scene、測試、存檔可能仍遵循舊原型；此次文件更新**不代表程式已完成遷移、CI 已通過**。
 
-Godot 4.x 單人 2D 橫向回合制卡牌 JRPG 原型。戰鬥模擬與 UI 分離；固定亂數種子可重現牌序與戰鬥狀態。
+## 正式閱讀順序
 
-## 角色與牌組
+1. [00 戰鬥系統規格入口](combat/00_README_COMBAT_RULES_BASELINE_V0_8.md)
+2. [01 核准決策與衝突優先順序](combat/01_DECISIONS_AND_CONFLICTS.md)
+3. [20 Phase 1–2 實作前 ADR 與未決事項](combat/20_PHASE12_PREIMPLEMENTATION_ADR_AND_OPEN_ITEMS.md)
+4. [21 Phase 2 文件驗收](combat/21_PHASE2_SPEC_ACCEPTANCE_REPORT.md)
+5. [22 Agent 實作契約](combat/22_PHASE12_AGENT_IMPLEMENTATION_CONTRACT.md)
+6. [23 Phase 3 G0/M1–M5 計畫](combat/23_PHASE3_EXECUTION_PLAN.md)
+7. [24 歷史 G0/M1 工程紀錄](combat/24_PHASE3_G0_M1_EXECUTION_REPORT.md)
 
-- 可用角色：克蕾雅、諾瓦、尤拉。
-- 每位角色各自持有 8 張牌的牌組、抽牌堆、棄牌堆、手牌、能量池及反應狀態。
-- 開局每位角色抽 4 張；每個我方階段補牌至 4 張，手牌上限 6 張。
-- 卡牌定義由獨立 `CardData` Resource 驅動；首版共享卡牌目錄、各角色擁有獨立牌組與手牌。
-- 目前提供 12 種卡牌 Resource；牌組編輯器可為每位角色選擇 8 張不重複卡牌，設定存於 `user://deck_profile.json`，並可匯出 JSON。
+其餘卡牌、AP/RP/MP、詠唱、Reaction、Boss、Damage、Combo、Last Spell、測試矩陣等完整規則均在 `docs/combat/` 對應獨立文件，**不得僅看本入口就實作**。
 
-## 回合與資源
+## 版本優先級
 
-- 戰鬥由第 1 回合「我方階段」開始。
-- 每個我方階段，全隊最多普通出牌 2 次。
-- 每位角色於我方階段開始時回滿能量。
-- 未使用的能量保留至敵方階段，用於即時施放反應牌。
-- 結束回合後進入敵方階段；首領執行預告意圖後進入下一個我方階段。
-- 只有卡牌所屬角色可以出牌；角色能量須足以支付卡牌費用。
+**使用者最新明確核准 USER_APPROVED** > 其他已核准 Phase 1/2/M 決議 > 經明確委派的實作預設 > **PROVISIONAL** 平衡係數 > **HISTORICAL/SUPERSEDED** 舊規格。文件歷史快照可能保留 OPEN 提案，依最新核准 ADR 解決；數值未正式核准不得自作主張。
 
-## 首領：仲裁核心
+## 舊版 v1.0 必須遷移的矛盾
 
-- 生命：300。
-- 穩定度：50。降至 0 時暴露弱點節點；首領行動後穩定度恢復 4，最高為 50。
-- 弱點節點：穩定度為 0 時，下一次普通攻擊傷害提高 50%，之後穩定度回復至 20。
-- 敵方意圖：敵方階段前預告。原型依序輪替「核心長槍」（對生命最低的角色造成 24 傷害）與「穩定度脈衝」（首領穩定度 +10，全隊各受 12 傷害）。
-- 分析：每次普通出牌增加分析值；達到 3 時，完成分析並重設為 0。
-- 中斷：敵方階段可支付保留能量施放反應牌，每階段最多中斷一次，取消當回合意圖。
+| 原 Godot v1.0 實作／文件 | Library 新權威規格 |
+|---|---|
+| 每角色 8 張牌、手牌最多6 | 每角 **12 張**獨立 SP；起手及每玩家階段補至4，**手牌上限8** |
+| 全隊每階段最多普通出牌2次 | 三人共享基礎 **6 AP**，允許多次合法出牌，不另設兩次硬上限 |
+| 個人能量每玩家階段回滿 | 每人獨立 MP 跨回合，普通攻擊首次符合回魔條件 |
+| 未用個人能量當作反應資源 | 隊伍 AP 與 RP 轉換規則；基本 Guard=1 RP、Protect=2 RP |
+| 每敵方階段最多打斷一次 | 敵方行動 Reaction Window 多角色排隊，一人同窗口實際 React 最多一次 |
+| Boss 穩定度兼任弱點指標 | Casting Stability 與本體 Break Gauge 分離 |
+| 普通出牌三次觸發分析 | Analyze 為獨立共通命令（以完整文件最新核准為準） |
+| 老版 M0–M5 以 UI／牌組編輯器為主 | 新 Phase 3：G0 環境與需求追溯、M1 Domain、M2 資源牌區、M3 回合反應、M4 詠唱 Last Spell、M5 傷害狀態 Combo Outcome |
 
-## 固定亂數與驗證
+原舊檔中的 Boss HP 300、固定傷害、種子104729等**只屬歷史 prototype**，不因此升格為新平衡 Canon。
 
-- `BattleState` 使用 `v1_seed=104729` 作為固定種子。
-- 領域測試涵蓋起始抽牌、補牌、手牌上限、普通出牌上限、能量保留、傷害、卡牌穩定度效果、弱點節點與固定意圖順序；M5 測試另外涵蓋牌組編輯、存讀檔及 JSON 匯出。
-- UI 與動畫只消費戰鬥狀態訊號，不持有規則判定。角色動畫、卡牌外觀及互動均可獨立替換。
+## 重要工程與驗收邊界
 
-## M0–M5 里程碑
-
-- M0：專案骨架、工具鏈偵測、規格文件與無頭測試入口。
-- M1：純戰鬥引擎與固定亂數測試。
-- M2：可操作 16:9 戰鬥介面、拖曳手牌、階段流程與敵方意圖。
-- M3：首領分析、中斷、反應與弱點節點回饋。
-- M4：原創美術、角色逐格動作、卡牌分類樣式與命中特效。
-- M5：牌組編輯器、存讀檔與匯出設定（`tests/test_deck_builder.gd`）。
-
-## 原型歧義的收斂
-
-- 「每玩家階段最多兩次普通出牌」採全隊共用兩次上限；反應牌不佔普通出牌次數。
-- 每位角色起始能量 3；首版卡牌費用為 0–3。
-- 每回合先回滿能量，再補牌至 4 張。
-- 首版共用 12 種卡牌定義；每位角色各自從目錄選出 8 張不重複牌卡。
+- Library `24_PHASE3_G0_M1_EXECUTION_REPORT.md` 的 M1 已驗證紀錄指向 **另一個** Godot 專案 `KuroNekoLi/Astraea-Academy`，**不可直接宣稱此 `arbitrium-nexus-godot` 已通過 M1**。
+- 下一步應對**本 repository 的真實程式與 CI**執行 G0 稽核：`project.godot`、Godot 版本、runner、行為差異、requirements traceability；分類為 ALREADY_IMPLEMENTED / CONFLICTING_LEGACY / MISSING / UNVERIFIED。
+- 區分 `SPEC_ACCEPTANCE` 與 `ENGINE_TEST_PASS`；在此專案執行實測前，不得宣稱 M1–M5 VERIFIED。
+- 後續規則變更需同步 Library 與本 repo 對應模組、ADR、測試矩陣，勿只改本入口。
