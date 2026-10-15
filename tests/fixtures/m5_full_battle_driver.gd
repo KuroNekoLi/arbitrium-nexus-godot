@@ -75,6 +75,8 @@ static func _receipt(ctx: Dictionary, kind: String,
 
 static func _try_sp(ctx: Dictionary, actor: String, definition: String,
 		mode: String = "NORMAL") -> bool:
+	if str(ctx["state"]["core"]["battle"]["outcome"]) != "ONGOING":
+		return true
 	if not _available(ctx,actor):
 		return true
 	var b: Dictionary = ctx["state"]["core"]["battle"]
@@ -102,6 +104,8 @@ static func _try_sp(ctx: Dictionary, actor: String, definition: String,
 	return _receipt(ctx,kind,fields)
 
 static func _try_full(ctx: Dictionary) -> bool:
+	if str(ctx["state"]["core"]["battle"]["outcome"]) != "ONGOING":
+		return true
 	if not _available(ctx,"C"):
 		return true
 	var card: String = _hand(ctx,"C","regular")
@@ -113,6 +117,8 @@ static func _try_full(ctx: Dictionary) -> bool:
 		"card_instance_id":card,"target_actor_id":"Boss","casting_mode":"FULL"})
 
 static func _try_last(ctx: Dictionary) -> bool:
+	if str(ctx["state"]["core"]["battle"]["outcome"]) != "ONGOING":
+		return true
 	if not _available(ctx,"A"):
 		return true
 	var b: Dictionary = ctx["state"]["core"]["battle"]
@@ -123,6 +129,8 @@ static func _try_last(ctx: Dictionary) -> bool:
 		"target_actor_id":"Boss","confirmed":true,"casting_mode":"FULL"})
 
 static func _try_basic(ctx: Dictionary, actor: String) -> bool:
+	if str(ctx["state"]["core"]["battle"]["outcome"]) != "ONGOING":
+		return true
 	if not _available(ctx,actor):
 		return true
 	var b: Dictionary = ctx["state"]["core"]["battle"]
@@ -237,10 +245,16 @@ static func run(seed: int) -> Dictionary:
 		"config":ctx["config"]}
 	return report
 
+static func typed_tape(report: Dictionary) -> Array[Dictionary]:
+	var typed: Array[Dictionary] = []
+	for item: Dictionary in report["tape"]:
+		typed.append(item.duplicate(true))
+	return typed
+
 static func replay(report: Dictionary) -> Dictionary:
 	if not report.get("ok",false):
 		return {"ok":false,"error":"M55_INVALID_BATTLE_REPORT"}
-	var result: Dictionary = M5.replay(report["initial"],report["tape"],report["config"])
+	var result: Dictionary = M5.replay(report["initial"],typed_tape(report),report["config"])
 	if not result["accepted"]:
 		return {"ok":false,"error":"M55_REPLAY_COMMAND_REJECTED:"+str(result["error"])}
 	if result["event_hash"] != report["event_hash"] or \
