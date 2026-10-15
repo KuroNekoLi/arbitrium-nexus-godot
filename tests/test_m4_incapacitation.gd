@@ -244,7 +244,7 @@ func _init() -> void:
 	check("P2-LAST-02-M5_DAMAGE_NOT_INVENTED",s["core"]["battle"]["actors"]["Boss"]["hp"] == 100)
 	check("P2-LAST-02-OUTCOME_STILL_ONGOING",s["core"]["battle"]["outcome"] == "ONGOING")
 	check("P2-LAST-02-A_CANNOT_REACT_OR_ATTACK",wrong(s,"BASIC_ATTACK_RESOURCE_ONLY",
-		"attack-while-zero",{"actor_id":"A"},"ACTOR_UNAVAILABLE_OR_PHASE"))
+		"attack-while-zero",{"actor_id":"A"},"INVALID_PHASE"))
 	check("P2-LAST-02-CANT_REPEAT_HP_ZERO",wrong(s,"APPLY_INCAPACITATION_M4_FIXTURE",
 		"second-kill",{"source_enemy_action_id":str(s["active_enemy_action_id"]),
 			"effect_id":"hp0_A","verified_hit_fixture":true},"ACTOR_ALREADY_AT_ZERO_HP"))
