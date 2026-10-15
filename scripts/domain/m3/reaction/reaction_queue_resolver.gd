@@ -7,6 +7,7 @@ const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
 const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
 const FocusWard = preload("res://scripts/domain/m4/casting/focus_ward_resolver.gd")
+const Lv40Reaction = preload("res://scripts/domain/m5/lv40/lv40_reaction.gd")
 
 static func _fail(state: Dictionary, reason: String) -> Dictionary:
 	return {"ok": false, "error": reason, "state": state.duplicate(true), "records": []}
@@ -181,6 +182,13 @@ static func apply(state: Dictionary, instruction: Dictionary,
 					continue
 				updated["core"] = paid["state"]
 				records.append({"kind": "CORE_EVENTS", "events": paid["events"]})
+				if config.get("m5_lv40_enabled",false) == true and ["LV40_PROTECT_COUNTER","LV40_BARRIER"].has(str(can["effect"])):
+					var lv40_effect: Dictionary = Lv40Reaction.execute(updated,action,reaction,str(can["effect"]))
+					if not lv40_effect["ok"]:
+						return _fail(state,str(lv40_effect["error"]))
+					updated = lv40_effect["state"]
+					w = updated["reaction_window"]
+					records.append_array(lv40_effect["records"])
 				if str(can["effect"]) == "FOCUS_WARD_FIXTURE":
 					var card: String = str(reaction["card_instance_id"])
 					var definition_id: String = str(state["core"]["cards"]["actors"][actor_id]["instances"][card]["definition_id"])
