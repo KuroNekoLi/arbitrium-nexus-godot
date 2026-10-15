@@ -112,3 +112,101 @@ content_id,variant_id,reviewer,status,notes
 - Inkscape files-made license clarification: https://inkscape.org/en/about/license/
 
 所有資料為 2026-10-15 閱讀頁面所得之候選清單。新增前 Agent 必須再次開官方來源確認條款與檔案版本。
+
+---
+
+## 8. 2026-10-15 — 從資源研究升級為「任務驅動 Asset Library」作業規則
+
+**使用者已授權的未來操作方向**：收到「製作 XX 場景」「生產 XX 圖片」「替 Boss 製作 XX 攻擊動畫」這種成果指令時，Agent **不必要求使用者指定素材網站／每張圖片**，而要自動查找可重用資產、取得授權明確的相關免費素材庫、分類索引、選型、加工／生成、匯入 Godot、驗證。**本輪仍只寫規劃與 Skills，沒有真的下載、轉檔、建立外部 Vault 或改動 Godot Scene。**
+
+正式執行依序啟動：
+
+```text
+Task goal / visual brief
+  → godot-card-rpg-orchestrator（範圍／規格）
+  → godot-resource-library-manager（現有資源／外部 Vault → Scout/License/Download/Index/Rank）
+  → Major Decision Report?（只針對重大採用，低風險自動執行）
+  → godot-game-asset-pipeline（裁切／轉檔／透明背景／manifest／Godot import）
+  → UIUX / Rendering / Architecture agent（Scene／卡牌／Boss／動畫）
+  → godot-qa-ci-engineer（真實 Godot 截圖、重播／回歸、授權檢查）
+```
+
+所有步驟需要相應工具能力，不會因 SKILL.md 存在而自動取得網路／磁碟／圖像模型／運行 Godot 權限；缺權限標 `BLOCKED_BY_TOOLING`，不得虛稱有可用 Asset Vault。
+
+### 8.1 批次下載，但不要全站鏡像
+
+- **優先完整下載**與目前遊戲及未來階段相關、授權清楚的 **pack**，而非每用一個 icon 就重新搜尋下載；資料夾放在 Godot Repo **外部的共用 Asset Vault**，不把所有原始 zip／3D 高解析貼圖都推入 GitHub。
+- 初期高相關候選：Kenney（UI Borders、UI Adventure、Particles、音效及可能的 RPG UI）、Lucide、已確認授權且適合風格的 Game-icons.net 個別素材；需要 2.5D 時再考慮 Poly Haven／Quaternius。已有於 `addons/` 的 Kenney 優先**不重下載**。
+- 同一個來源包按 release/tag+sha256 缓存，同檔 hash 去重；附官方 URL／作者／license／下載日期／縮圖／尺寸／格式／alpha／用途標籤；Indexer 需要可按 `boss_hit_vfx`、`card_magic`、`ui_fantasy_frame` 等意圖檢索。
+- 首次批次作業先估計包數、容量、下載時間、磁碟空間；一般小包可自動執行（建議每批不超過 5 包／500 MiB，可由 workspace 授權更改）；大型檔案或超量先列比較報告，不自動吞下付費合輯或全站內容。
+- 下載檔不執行不可信腳本／二進位程式；防止 Zip Slip、zip bomb、symlink escape 和偽裝檔型；新的 Godot Editor plugin 要當可執行依賴另審。
+
+### 8.2 共用 Vault、Metadata 與正式遊戲資源分離
+
+```text
+<ASSET_VAULT_ROOT>/
+  sources/<provider>/<pack>/<version>/         # 原始包，保留 hash/license
+  extracted/<provider>/<pack>/<version>/       # 合規安全解壓
+  index/catalog.jsonl                          # 各檔分類／索引
+  index/packs.jsonl                            # pack 授權與版本
+  index/thumbnails/                            # 預覽縮圖
+  reports/<task_id>/candidate_report.md
+  reports/<task_id>/decision_report.md
+  licenses/<provider>/<pack>/<version>/
+  quarantine/                                  # 授權／安全尚待確認
+
+Godot project/
+  assets/                                      # **只有真正採用的素材**
+  CREDITS.md                                   # 正式納入後的授權資訊
+```
+
+- Vault 實體根目錄由使用者允許的 `ASSET_VAULT_ROOT` 指定。若 Agent 工作機是暫存容器，必須說明 cache 不會自動跨會話持續、需選定持久儲存或下次重新下載。
+- Catalog **不能只記 Pack**：包含每張圖／每個 clip 的相對路徑、hash、tag、色系、用途、尺寸、透明度、preview、原作者、license、已用於哪些 Scene／Card。
+- 原圖／可編輯原稿／衍生 WebP／Godot Resource 各自可追溯；任意資產替換可回退，不因 Vault 重建而失去 `res://` 引用。
+- `DISCOVERED`、`DOWNLOADED`、`INDEXED`、`SELECTED_FOR_TASK`、`APPROVED_FOR_CANON`、`INTEGRATED`、`VERIFIED` 必須區分。只有研究 URL 的內容不能冒充已下載。
+
+### 8.3 自主選材與重大採用報告（核心新增）
+
+| 例子 | Agent 可以做的事 | 採用規則 |
+| --- | --- | --- |
+| 普通 UI 箭頭、按鈕、血條裝飾 | 先用既有 Kenney 或適合的 CC0 pack，補做 Theme | **AUTO**；報告最終資產與 license 即可 |
+| 卡牌普通法術圖示、攻擊火花、短 UI 音效 | 從 Vault 選或用已授權生成工具重製、加工 | **AUTO**；需要符合既定 Style Bible 和可回退 |
+| 主角／重要 NPC／Boss 最終立繪及動畫風格 | 搜尋／比對／必要時製作可逆預覽；附多個候選 | **MAJOR**：推薦 1 案 + 2–4 個有真來源的備選、先等核准再固定 Canon |
+| 世界主要場景美術風格、大型主線地圖、卡牌外框體系全面換版 | 候選與分層試驗、量化整合成本 | **MAJOR**：先報告，未核准不破壞舊 Scene／資產 |
+| Godot renderer 切換、新的可執行插件、付費資產／API | 先調查 license、兼容、權限、風險、預算 | **MAJOR/STOP**：不得靜默安裝或付款 |
+| 許可模糊、NC/ND 限制、轉載不明的第三方圖片 | 索引候選頁但不正式採用 | **BLOCKED_BY_LICENSE** |
+
+**重大採用報告最低包含：** 任務目標、選擇理由與推薦 A、備選 B/C（若真實候選不足，註明）、官方來源與能檢視的預覽、授權/商用與署名、成本與尺寸、Godot 整合影響／渲染相容性、風格一致性、可替換性、回退方案、哪些事項等使用者核准。
+
+同一任務有多個小資產時不應每天詢問几十次；可合併為**一份重大選型報告**，低風險操作先完成。若沒有符合需求的免費候選，Agent 明確提出「由圖像模型 clean-room 生成」並留下來源／權利與品質風險，不能硬選一張風格不符的圖片。
+
+### 8.4 端到端驗收示範
+
+**指令：**「製作一個魔法學院的訓練場場景。」
+
+期待 Agent 自動分解：
+- 背景：不含 HUD／角色文字的場景圖與景深；
+- 道具：可復用地板、石柱、法陣，先查 Vault；
+- 角色／Boss：使用 Canon Appearance，不能以概念圖臨時角色冒名；
+- 戰鬥效果：粒子、技能 icon、合法配色；
+- UI：使用既有 reusable HUD，文字從 i18n 出；
+- 音效：配合法陣、攻擊、命中；聲源與授權記錄。
+
+決策：普通背景道具／粒子可以自動取用；若涉及**正式學院主場景視覺定調**，先交 Major Asset Decision Report。實作真正 Game Scene 後需要 Godot 截圖與測試，並回填被採用的 Vault asset IDs。
+
+**指令：**「生產 10 張不同的卡牌技能圖片。」  
+每張只有 Spell Artwork、不能加卡框／卡名／消耗／文字；可以批次生成不同個體（有工具與授權時）或選入 10 個已審 Artworks，不能用一張複合圖當 10 個已完成 Assets。
+
+### 8.5 更多限制與上游連結
+
+- [Kenney FAQ（官方 CC0 說明）](https://kenney.nl/support)：個別素材包的 CC0 不等於全部付費合集可以免費取得。
+- [Godot 官方匯入流程](https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/import_process.html)：實際選用素材才進 `res://`，匯入設定與生成 cache 分離。
+- [Godot Editor Plugin 安裝文件](https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html)：下載 plugin 等於引入可執行程式碼，需額外核准。
+- [OpenGameArt FAQ](https://opengameart.org/node/5571)：必須遵守各作品授權與署名；不能一站統一 license。
+
+**正式技能入口：**
+- `.codex/skills/godot-resource-library-manager/SKILL.md` — 搜尋、下載、建立外部 Vault、索引、比較與 Major Report。
+- `.codex/skills/godot-game-asset-pipeline/SKILL.md` — 轉檔、清權、匯入 Godot、Asset Manifest、Scene QA。
+- `.codex/skills/godot-card-rpg-orchestrator/SKILL.md` — 自動辨識「製作 XX」並將工作串接。
+
+此章為未來任務的預設 SOP；目前沒有執行任何下載或程式碼實作。
