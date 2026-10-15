@@ -379,3 +379,25 @@ Full source, hashes and limits: [PH3_M5_3_ENGINEERING_NOTE.md](PH3_M5_3_ENGINEER
 | Analyze/Enemy Intel & Spell Counter | none | **DEFERRED_CONTENT / BLOCKED_CONTENT / NOT_VERIFIED** |
 
 Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGINEERING_NOTE.md) and [PH3_PHASE12_TEST_INVENTORY.md](PH3_PHASE12_TEST_INVENTORY.md). Numeric registered recoil and fixture starting HP are explicitly `BALANCE_PROVISIONAL`, not new approved card canon. All existing M2–M5.3 engine integrations are retained.
+
+## M5.5 — True three-person Boss battle, Replay and 100 seeds — VERIFIED in branch CI 2026-10-15
+
+**Source of evidence:** [Godot 4.7.2 Actions #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295), tested code SHA `7d6f961d7bcff7e0ae0f1435a02ac013a92f0569`; 32/32 golden integration, 15/15 deterministic Replay, **110/110 for exactly 100 fixed seeded complete battles**, all M1–M5.4 1,081/1,081 regressions PASS, four legacy headless smoke runners PASS. Cumulative **1,238/1,238 named Domain** (fixture-only, not UI). Branch acceptance completed; `master` post-merge must be verified separately before final promotion.
+
+| Requirement / authorized source | Actual test IDs | Verified behavior and limitations |
+|---|---|---|
+| M5.5 full encounter; docs/combat/23 §6, PH3_M5_EXECUTION_PLAN M5.5 | M55-INT-01～M55-INT-09, M55-INT-24～28 | Three ACTIVE actors / three distinct seeded 12-card decks / Boss HP290, true CardInstance payment + draw, multiround terminal outcome, no fake final HP |
+| P2-D16-001 / P2-REPLAY-01 / RNG-001 | M55-INT-29～32, M55-REP-01～12, M55-SEED-20261014～M55-SEED-20261113 | Full 49-command golden Command Tape, exact initial/tape/event/final SHA256, 100 independently replayed complete encounters, no event/state/RNG mutations on tampered/stale/terminal replay |
+| P2-VIS-01/02, CORE-04 explicit reactions (no auto-pass) | M55-INT-21, M55-REP-13-PRESENTATION_ALWAYS_ASK/SMART/QUICK, M55-INT-31 | Golden Explicit Guard/Confirm or Pass within authorized M3 Reaction window; 3 UI mode configuration values leave Domain traces unchanged, no FPS or timer-driven reaction |
+| BREAK-001 / P2-S25～31 | M55-INT-10～14, M55-100-09 | Public Boss Intent, actual M5.1 Boss hits, BreakTriggered, real one-shot BossBreakRecovered; provisional Boss skill profiles |
+| COMBO-001～004 / P2-S17～24 | M55-INT-15～17 | Different actors pay distinct SP, Exposed created/consumed in later SP, actual Combo and real HP, retained all prior M53 negatives |
+| M4 Full/Last / CORE-02; PRE3-R09 | M55-INT-18～20, M55-INT-27, M55-INT-29 | Real Full Chant and Last Spell release + exhausted, status tick/phase order, no extra payment; prior M4.4 CORE-02 regression still passes |
+| P2-D12/13 Status HP Barrier/HoT/DoT / resource properties | M55-INT-22～26, M55-100-04/05, 100 per-seed reports | Registered status with live tick, card zone conservation, nonnegative HP/AP/MP/RP, no invalid policy command |
+| 100 fixed-seed engineering resilience / exhaustion safeguards | M55-100-01～10, M55-SEED-20261014～M55-SEED-20261113 | 100 terminal outcomes and full deterministic Replay; 5244 accepted commands / 0 rejects; 100 VICTORY / 0 DEFEAT; max 6 rounds, max 282 events, 100 distinct tapes. No gameplay balance conclusion. |
+| Core M5.4 Outcome / VICTORY > DEFEAT / post-terminal atomic | M55-INT-07/28, M55-REP-12, preceding M54-01～48 | Same existing Boundary outcome authority, legal fight end then no post-terminal commands; prior 48/48 M5.4 checks still pass |
+| Spell Counter P2-S15/S16 | none | **BLOCKED_CONTENT / NOT VERIFIED**, no approved Counter card/window |
+| Analyze / Enemy Intel P2-S02～12 | none | **DEFERRED_CONTENT / NOT VERIFIED** |
+| All-party positive-HP but EXHAUSTED edge | M54-46/47 predecessor | **CORE_RULE_EDGE_PENDING**, not silently defeated |
+| Presentation/2.5D bilingual playable human verification | none | **NOT VERIFIED**; next Presentation Spike + actual real-player playtest |
+
+**Limit:** seeded-shuffled duplicate SP instances reflect fixture content, not all possible retail skills/Boss patterns. Neither all 100 fixture victories nor 1,238 Domain assertions certify real-game balance or PLAYABLE VERIFIED. See [PH3_M5_5_ACCEPTANCE_REPORT.md](PH3_M5_5_ACCEPTANCE_REPORT.md) and [PH3_M5_HANDOFF.md](PH3_M5_HANDOFF.md) for actual hashes, commands, architecture and future work.
