@@ -1,0 +1,59 @@
+# Combat Documentation Consistency Audit — 2026-10-15
+
+> **DOCS-ONLY / EVIDENCE-BOUNDED**：審查對象為原 `docs/combat/` 35 份 Markdown（含 archive），不改 Godot Engine 或素材；不宣稱文件修訂後 Domain CI 重新執行。核對來源：現行 GitHub master Tree、逐檔全文的標題/權威/歷史快照/核准內容、`AGENTS.md`、最新 M5.4 工程筆記與官方 CI。
+
+## 1. 每個原始檔案的處理紀錄
+
+| 檔案 | 類型／真實現行角色 | 主要一致性處理 |
+|---|---|---|
+| 00 | Canonical historical rules index | 明確從現行索引進入；舊 Library-only 提示標為原快照 |
+| 01 | Approved P1 decision registry | 後續 M/P2 決策優先；不反問 P2-D08 |
+| 02 | Approved lifecycle detail / historical TBD | CORE-01～04、M5.4 優先於歷史勝敗/事件待決表 |
+| 03 | Approved AP/MP/RP detail | M-D18 CurrentAP 無全域硬 cap、RP 正常6上限、MP 不自然補滿 |
+| 04 | Approved deck/detail | 每角12、補至4／cap8、免費換牌；舊 TODO 僅史料 |
+| 05 | Approved casting detail | Last Spell CORE-02；一般中斷 MP 部分退款 vs 釋放死亡取消分開 |
+| 06 | Approved Boss design | M5.3 單 Boss fixture verified，不等於所有 Boss 內容或 Casting 分支 |
+| 07 | Approved Reaction & Protect | CORE-04 無倒數、Protect→Guard→Barrier、窗口由玩家確認 |
+| 08 | Approved Last Spell | HP0 pre-release forced invalidate；post-release irreversible；Exhausted≠Incapacitated |
+| 09 | Approved Combo | 第二張卡不同角色真實付費；Full Chant CastingCombo 尚未完整驗證 |
+| 10 | Approved Variant concepts | 主角初期劍士 25 §1，後續新 Variant 解鎖 |
+| 11 | Detailed damage/status with historical d20 | d20/Nat1/Nat20 已過時；M5.1–M5.4 各自驗證範圍 |
+| 12 | Engineering architecture | 只允許單一 BattleState/Domain Reducer；M1 replay |
+| 13 | Acceptance matrix | SPECIFIED 舊表與真正 CI run 必須分開 |
+| 14 | Historical decisions backlog | 舊 OPEN 不覆蓋 18/19/20/21 後續核准 |
+| 15 | Historical v0.7.1 simulator | 不視作已批准新版數值 |
+| 16 | P2 approvals snapshot to D07 | P2-D08/D09 已在18選擇；舊「下一題」歷史 |
+| 17 | Historical handoff/open questions | M-D18～31、CORE-01～04 已處理，舊下一題不可重問 |
+| 18 | Approved M-D01–17 & P2-D08/09 | 部分先前 OPEN 以 19/20/21 解決 |
+| 19 | Approved M-D18–31 & P2-D10–16 direction | 單一現行檔名；archive 異名 19 只供稽核 |
+| 20 | Delegated defaults + user CORE-01–04 | 最終 §7 USER_APPROVED 高於前文舊 CORE 方案 |
+| 21 | Phase 2 spec acceptance record | 只證明文件規格，不能當 Godot 測試；CORE 最終 |
+| 22 | Agent process contract | 過時「docs-only / 找不到 Godot」為原撰寫背景；本倉有 project.godot |
+| 23 | Historical Phase3 execution plan | `NOT IMPLEMENTED` 是當時狀態；M1～M5.4 已有實際 CI，M5.5 未證實 |
+| 24 | Historical G0/M1 execution report | 舊源 repo 和 M1 14/14 只能描述當時，不是現 master 綜合進度 |
+| 25 | Approved Variant direction + content candidates | 26 v0.3 覆蓋 25 的通用卡池／起始 decks；其他內容值 provisional |
+| 26 | Latest approved universal basic magic direction | 起始 12SP 配牌 v0.3 為候選，角色限制不排斥基本治療 |
+| 27 | Level40 Boss provisional spec | 尚不能宣稱 Godot playable/parity verified |
+| 28 | Historical Python v0.1 simulation | 與 v0.2、Godot 引擎測試分開 |
+| 29 | Python v0.2 balance research | 實際 Python 數據不等於 Godot parity 或平衡批准 |
+| 30 | Historical Godot Agent handoff | `NO GITHUB PUSH` 是原 handoff 當時紀錄；目前已存在目標倉 |
+| 31 | Historical other-repo Agent handoff | 執行目標改以本倉、保留外部 repo 作 provenance；勿自動改場景 |
+| UPSTREAM_RECONCILIATION_A | 2026-10-15 A semantic merge audit | 原文件保留；後續非同批改動應另追溯 |
+| UPSTREAM_TRANSFER_STATUS | Original import progress | 初期 `UNRESOLVED` 是移交前狀態，A 已完成 |
+| archive/upstream_19 | Explicit historical upstream copy | 不是另一份生效 19，僅來源比較 |
+
+## 2. 衝突處理方式
+
+- **沒有刪除原核准決議**；舊快照正文保留以利 ADR/時間序列追溯，於檔首加上 `Documentation status / 2026-10-15` 醒目欄位，統一導向 Index 和當前測試範圍。
+- 已核准的跨檔優先順序與版本繼承寫入 Index；已批准玩法與候選數字清楚分層。
+- 對 22/23/24/30/31 舊 repo/狀態及 00/01/02/…「LIBRARY ONLY」原文：**不做範圍外的歷史竄改**；後續 Agent 必读檔首現行說明而非摘錄舊正文斷章取義。
+- 已核准但仍沒有完整內容／窗口測試者（Spell Counter、Analyze）、全隊 Exhausted 正HP Outcome、Lv40 Godot-parity、M5.5 單獨列出，避免誤報。
+- 文件巡覽參考 [COMBAT_SPEC_INDEX.md](COMBAT_SPEC_INDEX.md)；工程 API 接合及遷移參考 [COMBAT_IMPLEMENTATION_CONTRACT.md](COMBAT_IMPLEMENTATION_CONTRACT.md)。
+
+## 3. 驗證方法與限制
+
+以 GitHub Tree 列出所有 `docs/combat/**/*.md`，逐檔檢查正文、追溯其核准/過時文字，確認索引相對連結指向實際檔案。**此報告不是新 Godot 程式碼的執行證據**。比對各階段數字：897+44+48+44+48=1,081；M5.5 尚無相應工程筆記/CI gate。GitHub Actions 的 success 是舊 Commit 的可信紀錄，不保證日後更動永不回歸。
+
+## 4. 後續維護
+
+每次更新：同步 Index、Open Issues、Requirements Traceability，保留原始規格決策來源；新版規格必須有新決策 ID、測試、及正反情境。UI/美術與 Python 平衡可逐步做，但不擅自修改 core Gameplay。
