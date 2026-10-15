@@ -2,6 +2,8 @@
 
 ## V2 Review 2026-10-15
 
+正式收據：V2來源822b1ce已由d9e6e2a merge；最終程式d1a971a9c4800e04196ba648416f900148ea122d已在master，Master Fast38743758109／Render38743758086／Full38743758255均success。V27 8/8、13組P4契約576、1238 Domain/100seeds保持；V26第三次47/47只在d9e6e2a staged驗證，Master沒有第4次。下表CI_PENDING保留為施工時快照，最終狀態以本收據及V2_REVIEW_AND_MERGE_REPORT為準。
+
 | Requirement | Source | Implementation / evidence | Status |
 |---|---|---|---|
 | V2 layout/hand/context | V2 notes / user V2 review | 822b1ce reviewed with master adb7582；layout18/context23/hand39本地PASS | CI_PENDING |

@@ -1,6 +1,6 @@
 # V2 Review, Missing UX Implementation and Merge Gate
 
-日期：2026-10-15。狀態：IMPLEMENTED_NOT_VERIFIED；CI/master收據待回填。
+日期：2026-10-15。狀態：VERIFIED — V2技術／版面整合範圍；已merge master。不是V3美術、原GUI或真人平衡驗收。
 
 ## 來源／權限
 master基準 adb758206787aac62f1dd1109f5bbf1c67a3c095；V2來源 ui/v2-layout-fidelity-20261015@822b1ce6d573cad6634b11c161634d5360eda456。
@@ -25,7 +25,7 @@ master基準 adb758206787aac62f1dd1109f5bbf1c67a3c095；V2來源 ui/v2-layout-fi
 |---|---|---|
 | 新V26第1次 | 47執行/44PASS/3FAIL | 專案外../v26-attempt1.log；drag座標與Pass遮罩 |
 | 新V26第2次 | 47執行/40PASS/7FAIL | ../v26-attempt2.log；drag/付款/Pass已成功，Tab逃逸 |
-| 新V26第3次（最後） | CI_PENDING | 僅integration分支首次push跑；若失敗停止，不換名第4次；master不再自動跑 |
+| 新V26第3次（最後） | 47/47 PASS | Actions38742124854，source d9e6e2a；master明確skipped，沒有第4次 |
 | V2 headless | layout18/context23/hand39全PASS | ../v2-layout-contracts1/execution.json及logs |
 | 舊接線 | Scene8/HUD36/P43integration31/Lv40positive32全PASS | ../v2-import1/execution.json及logs |
 | 舊GUI／V25 | NOT_RERUN | 原P44第三次14/16及V25第三次31/31紀錄保留 |
@@ -49,8 +49,19 @@ CI第3次V26只在integration/v2-reviewed首次發布分支執行；master執行
 
 ### 真實畫面目視後追加修正
 主控目視V23九張原生截圖發現4-card底部裁切；原V24只量Card hit rect而非內層face。新增test_p4_v27_face_bounds量實際face旋轉四角（0/1/4/8張、繁中/英文），首輪8執行/2PASS/6FAIL，face高度可達510/1062，Card hit rect仍218。
-修正CardView摘要已知wrap寬144及最多3行（不可用卡2行），超出以ellipsis並保留tooltip/右側完整詳情。不修改Card根節點尺寸/slot/hit算法/拖曳引擎。V27修正後等待CI；V26第三次47/47在d9e6e2a成功，後續不第4次重跑；此追加僅卡內文字/face minimum size，該GUI收據限定其原SHA，不冒充新SHA再驗證。
-V26 staged第三次：[38742124854](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38742124854)，同時V23 30/30；fast38742124852與integration38742124634 success；Full38742124849待核對。追加V27納入fast平行P4：13 suites/576 assertions。
+修正CardView摘要已知wrap寬144及最多3行（不可用卡2行），超出以ellipsis並保留tooltip/右側完整詳情。不修改Card根節點尺寸/slot/hit算法/拖曳引擎。V27修正後staged與Master均8/8；V26第三次47/47在d9e6e2a成功，後續不第4次重跑；此追加僅卡內文字/face minimum size，該GUI收據限定其原SHA，不冒充新SHA再驗證。
+V26 staged第三次：[38742124854](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38742124854)，同時V23 30/30；fast38742124852、integration38742124634及Full38742124849均success。追加V27納入fast平行P4：13 suites/576 assertions。
+
+## 正式合併／最終收據
+- 合併commit：d9e6e2ab8acf95c231180577a829a31836070c96（兩個parents包含最新master基準與V2來源822b1ce）；保留原V2歷史，無force push、無PR、未刪分支。
+- 卡面修復／Master受測程式：d1a971a9c4800e04196ba648416f900148ea122d；已fast-forward推送master。
+- staged最終 [Fast38743195904](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38743195904)、[Render38743196007](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38743196007)：completed/success；V27 8/8、V23 30/30。
+- 正式 [Master Fast38743758109](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38743758109)：completed/success；13組P4契約576、4Legacy、V2 geometry及既有接線通過。
+- 正式 [Master Render38743758086](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38743758086)：completed/success；九張PNG／30assertions，V26步驟明確skipped，不冒充Master重跑GUI。
+- 正式 [Master Full38743758255](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38743758255)：completed/success；維持1238 Domain／100固定Seeds完整戰鬥與Replay／4Legacy。scripts/domain與canonical Full runner相對master基準完全無差異。
+- 主控另於GTX1650原生補拍九張並目視：outputs/p4_input_capture/v2_review_fixed_20261015/（v23_idle_1280_zh.png、v23_hand8_1920_en.png等），../v2-render-local2.log為30/30。已確認4張實際卡面底部不裁切，0張水平空狀態與8張扇形維持；不是只看Control hit rect或exit0。
+- 後續僅文件收據commit不改受測程式，不宣稱該docs SHA重跑CI。原本地使用者8張未提交PNG未改動；新工作樹的兩個SimpleCards自動cache修改不納入提交。
+- 遠端並行ui/v3-visual-foundation-20261015不在本次範圍，未合併或覆寫。
 
 V2不是V3正式Art/Theme。原概念PNG尚未穩定pin在repo；既有Boss鄰角碎片/角色映射仍placeholder及provenance pending。無像素級/商用品質/真人平衡完成聲明。
 第三次V26若失敗，不merge此未過Gate。同步master先fetch，不force push不刪branch；回退本merge可恢復原V1 UI而不動Domain。
