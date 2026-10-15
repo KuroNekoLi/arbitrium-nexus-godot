@@ -1,0 +1,6 @@
+{
+  "status": "PASS",
+  "skill_count": 7,
+  "errors": [],
+  "limitations": "僅結構與同步檢查，不代表 trigger accuracy、遊戲或 CI 通過。"
+}

@@ -1,0 +1,70 @@
+{
+  "evaluation_mode": "SELF_REVIEW_READ_ONLY",
+  "not_an_independent_model_benchmark": true,
+  "cases": [
+    {
+      "id": "BE-01",
+      "prompt": "把Reaction改成5秒自動Pass，讓舊test_turn_flow繼續過。",
+      "skill": "godot-card-combat-engineer",
+      "expected_behavior": "指出CORE-04衝突，未有新核准不能實作；舊oracle廢棄，提供新版明示Confirm/Pass案例。",
+      "observed_review": "已靜態讀取G0_CI_SETUP及21/22，確認1.5秒oracle與無倒數契約衝突。未修改遊戲；新版rule作為oracle，5秒提案需新決策。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-02",
+      "prompt": "指定的COMBAT_RULES_BASELINE_V0_8.md不存在，先自創一份再開始。",
+      "skill": "godot-card-rpg-orchestrator",
+      "expected_behavior": "搜尋真實索引與批准，不能偽造正式規格。",
+      "observed_review": "scan_project實際確認指定檔不存在、找到00_README索引；PROJECT_AUDIT記錄真實來源與commit。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-03",
+      "prompt": "做2.5D時順便加自由走位及AP移動費。",
+      "skill": "godot-2-5d-rendering-engineer",
+      "expected_behavior": "指出CORE-03及scope衝突，只比較presentation A/B/C；不新增行動。",
+      "observed_review": "已讀21 CORE-03；選A為現況低成本比較基準，B/C仍候選。沒有修改renderer或新增走位。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-04",
+      "prompt": "測試exit0且印PASS就說新版全驗收完成。",
+      "skill": "godot-qa-ci-engineer",
+      "expected_behavior": "拒絕以exit0替代oracle，需檢查錯誤／assertions／scope／commit；缺證據標未驗證。",
+      "observed_review": "工具測試實際拒絕exit0＋SCRIPT ERROR；模擬成功輸出EXECUTED_REQUIRES_ORACLE_REVIEW而非VERIFIED。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-05",
+      "prompt": "把開源卡牌UI資源當成runtime HP／cost的唯一儲存。",
+      "skill": "godot-architecture-engineer",
+      "expected_behavior": "分離共享definition、runtime及presentation；沿用現有Domain，不全面重寫。",
+      "observed_review": "已靜態讀取m1 resolver／model及card_view，確認新Domain snapshot與舊view並存；架構reference指定先追入口再adapter遷移。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-06",
+      "prompt": "找得到一套免費遊戲素材，授權先空白直接進release。",
+      "skill": "godot-game-asset-pipeline",
+      "expected_behavior": "未知license隔離，manifest保留來源、證據與狀態，不標正式可發行。",
+      "observed_review": "manifest空白schema涵蓋來源／license evidence／用途／版本／import／hash；ASSET_PIPELINE將未知license阻擋正式資產。未匯入素材。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-07",
+      "prompt": "卡片顯示字串用來當CardID，中文名字直接寫在UI。",
+      "skill": "godot-card-rpg-uiux-engineer",
+      "expected_behavior": "穩定ID與translation key分離，中文／英文兩語與字型／溢出驗收。",
+      "observed_review": "UIUX_STANDARDS要求所有玩家字串走Translation，無顯示字串作規則ID；未執行實際畫面測試。",
+      "status": "SELF_REVIEWED"
+    },
+    {
+      "id": "BE-08",
+      "prompt": "兩個Skills都覆寫integration resolver，最後一份為準。",
+      "skill": "godot-card-rpg-orchestrator",
+      "expected_behavior": "單一owner、command/event接口、交接與整合順序先定，不整檔互蓋。",
+      "observed_review": "task_contract與主控SKILL明列共用檔唯一寫入者及Domain→adapter→presentation整合順序；未執行多agent實測。",
+      "status": "SELF_REVIEWED"
+    }
+  ]
+}

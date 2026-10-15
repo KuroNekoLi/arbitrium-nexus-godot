@@ -1,0 +1,185 @@
+{
+  "status": "NOT_EXECUTED_MODEL_ROUTING",
+  "cases": [
+    {
+      "id": "TR-01",
+      "prompt": "新增卡片效果，包含Domain、HUD與驗收，先檢查Arbitrium Nexus新版規格。",
+      "expected_primary_skills": [
+        "godot-card-rpg-orchestrator"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-02",
+      "prompt": "接續目前M4.2里程碑，安排跨系統交付與整合順序。",
+      "expected_primary_skills": [
+        "godot-card-rpg-orchestrator"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-03",
+      "prompt": "幫我重構場景切換的signal連線，離場再回來會觸發兩次。",
+      "expected_primary_skills": [
+        "godot-architecture-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-04",
+      "prompt": "deck_profile_v2載入損毀資料會覆蓋可用存檔，請修正與審查。",
+      "expected_primary_skills": [
+        "godot-architecture-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-05",
+      "prompt": "Typed GDScript的as得到null，檢查既有Node注入設計。",
+      "expected_primary_skills": [
+        "godot-architecture-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-06",
+      "prompt": "免費換牌把剛棄的CardInstance抽回來，照04/19/20修正。",
+      "expected_primary_skills": [
+        "godot-card-combat-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-07",
+      "prompt": "Last Spell施法者HP0後仍結算，依CORE-02建立負例。",
+      "expected_primary_skills": [
+        "godot-card-combat-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-08",
+      "prompt": "敵人AI相同seed選擇不同目標，找tie-break和RNG問題。",
+      "expected_primary_skills": [
+        "godot-card-combat-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-09",
+      "prompt": "比較既有Compatibility場景採2D fake depth、Sprite3D或SubViewport。",
+      "expected_primary_skills": [
+        "godot-2-5d-rendering-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-10",
+      "prompt": "Boss入場鏡頭穿模且alpha排序錯，保留固定戰場規則修視覺。",
+      "expected_primary_skills": [
+        "godot-2-5d-rendering-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-11",
+      "prompt": "卡片hover和Container排版搶position，請改善滑鼠與鍵盤focus。",
+      "expected_primary_skills": [
+        "godot-card-rpg-uiux-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-12",
+      "prompt": "繁體中文卡名缺字、英文tooltip溢出，建立兩語驗收。",
+      "expected_primary_skills": [
+        "godot-card-rpg-uiux-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-13",
+      "prompt": "Reaction queue確認前的取消操作很難理解，改善UI但無倒數。",
+      "expected_primary_skills": [
+        "godot-card-rpg-uiux-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-14",
+      "prompt": "整理spritesheet的pivot、filter與來源授權，建立manifest。",
+      "expected_primary_skills": [
+        "godot-game-asset-pipeline"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-15",
+      "prompt": "AI角色資產需要記錄reference、provider與輸出hash，完善管線。",
+      "expected_primary_skills": [
+        "godot-game-asset-pipeline"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-16",
+      "prompt": "請核對最新CI head SHA、M4.2 scope及是否有真實logs。",
+      "expected_primary_skills": [
+        "godot-qa-ci-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-17",
+      "prompt": "Godot export缺中文字型，規劃產物啟動與資源包含驗證。",
+      "expected_primary_skills": [
+        "godot-qa-ci-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-18",
+      "prompt": "測試exit0但stderr有SCRIPT ERROR，修驗證工具並加失敗探針。",
+      "expected_primary_skills": [
+        "godot-qa-ci-engineer"
+      ],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-19",
+      "prompt": "幫Unity的Slay the Spire風格卡牌UI寫C#。",
+      "expected_primary_skills": [],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-20",
+      "prompt": "把這些客戶卡片資料整理成Excel，沒有遊戲工程。",
+      "expected_primary_skills": [],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-21",
+      "prompt": "我只想知道歧路旅人的故事劇情，不做Godot開發。",
+      "expected_primary_skills": [],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-22",
+      "prompt": "Godot 3.x舊專案要用yield，與這個4.x JRPG無關。",
+      "expected_primary_skills": [],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-23",
+      "prompt": "寫一封郵件詢問卡牌美術報價，不操作Godot資產。",
+      "expected_primary_skills": [],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    },
+    {
+      "id": "TR-24",
+      "prompt": "只翻譯這段英文描述成中文，不需要修改遊戲。",
+      "expected_primary_skills": [],
+      "grading": "以實際選用Skill與不誤觸專案寫入判定；允許任務需要的輔助Skill。"
+    }
+  ]
+}

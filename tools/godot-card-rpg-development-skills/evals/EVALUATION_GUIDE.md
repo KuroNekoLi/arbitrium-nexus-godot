@@ -1,0 +1,11 @@
+# Skills 評估與迭代
+
+trigger_cases.json有24個路由正／負與鄰近案例；本輪未執行模型路由benchmark，不報precision／recall。behavior_cases.json有8個情境自我審閱與具體觀察，不能當成獨立Agent行為通過。
+
+後續評估時，在隔離工作區提供Skill與最小原始fixture，以正常自動發現測trigger，另明示Skill測行為。記實際載入Skill、工具與修改、source／oracle、無Skill baseline及原始輸出；避免把預期答案提供給受測Agent。有授權才委派額外Agent。
+
+路由以true positive／false positive／false negative與混合任務合理輔助Skill判定；行為以有效規格是否保護、舊oracle是否廢棄、修改是否限scope、真實證據是否保存判定。未執行＝NOT_EXECUTED，缺環境＝BLOCKED。不要用文件關鍵字命中假裝模型正確。
+
+修改description或reference後只重跑受影響案例，加held-out近似案例避免過擬合。保留iteration目錄與差異、失敗原因和使用者回饋；只有實際觀察支持才新增指令。
+
+helper regression可用Python執行evals/test_skill_tools.py；真實repo唯讀盤點測試需GODOT_SKILL_TEST_WORKSPACE指向研究工作區（其下含work/project），不存在則明確skip。這些測試包含模擬Godot回應，驗證工具失敗處理，並非引擎測試。
