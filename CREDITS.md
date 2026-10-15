@@ -2,7 +2,7 @@
 
 ## V3.5 incremental HUD assets
 
-`assets/ui/v35/ap_core.svg` and `ap_crystal.svg` are original editable repository-native vector code authored for this task, not extracted from the user's reference images or an external pack. They contain no baked UI text. The resource frame reuses the existing Kenney Fantasy UI Borders CC0 asset and bundled notice below. No new external downloads, fonts or plugins were adopted. Reference A/B JPEGs under docs/ui/references/v35 are user-supplied comparison material only; commercial redistribution rights are not inferred.
+`assets/ui/v35/ap_core.svg`, `ap_crystal.svg` and the V3.5.1–V3.5.3 icon set (`cmd_*.svg`, `status_*.svg`, `intent_skill.svg`) are original editable repository-native vector code authored for this task, not extracted from the user's reference images or an external pack. They contain no baked UI text. The resource frame reuses the existing Kenney Fantasy UI Borders CC0 asset and bundled notice below. No new external downloads, fonts or plugins were adopted. Reference A/B JPEGs under docs/ui/references/v35 are user-supplied comparison material only; commercial redistribution rights are not inferred.
 
 ## Phase 4 reused prototype artwork
 

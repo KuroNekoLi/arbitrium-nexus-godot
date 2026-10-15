@@ -12,6 +12,10 @@ var crystal_row: HBoxContainer
 const CORE = preload("res://assets/ui/v35/ap_core.svg")
 const CRYSTAL = preload("res://assets/ui/v35/ap_crystal.svg")
 const FRAME = preload("res://addons/kenney_fantasy_ui_borders/panel-border-000.png")
+const FRAME_TINT: Color = Color("#B59C6D")
+const CAPTION_COLOR: Color = Color("#D9C294")
+const AP_COLOR: Color = Color("#F4E7C2")
+const RP_COLOR: Color = Color("#7FE3FF")
 
 func _add_island(node_name: String, area: Rect2) -> HBoxContainer:
 	var panel := PanelContainer.new()
@@ -34,8 +38,9 @@ func _ready() -> void:
 	resources.hide() # Compatibility facade; all visible values read the same projection.
 	var panel: PanelContainer = resource_row.get_parent()
 	var inset: StyleBoxFlat = panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
-	inset.content_margin_top = 5
-	inset.content_margin_bottom = 5
+	# 4px insets keep the larger V3.5.1 caption inside the 64px TopBar contract.
+	inset.content_margin_top = 4
+	inset.content_margin_bottom = 4
 	panel.add_theme_stylebox_override("panel", inset)
 	var ornament := NinePatchRect.new()
 	ornament.name = "ResourceFrame"
@@ -46,6 +51,8 @@ func _ready() -> void:
 	ornament.patch_margin_top = 12
 	ornament.patch_margin_bottom = 12
 	ornament.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# V3.5.1: converge the white Kenney frame toward the target's dark gold.
+	ornament.modulate = FRAME_TINT
 	# PanelContainer measures direct children. An unmeasured overlay prevents
 	# NinePatch's source texture minimum size from enlarging this HUD island.
 	var overlay := Control.new()
@@ -66,16 +73,24 @@ func _ready() -> void:
 	resource_row.add_child(column)
 	var caption := HBoxContainer.new()
 	column.add_child(caption)
-	var caption_label: Label = UI.label(caption, "BATTLE_TEAM_AP", 11)
+	var caption_label: Label = UI.label(caption, "BATTLE_TEAM_AP", 13)
+	caption_label.name = "APCaption"
 	caption_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	caption_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	rp_value = UI.label(caption, "", 11)
+	caption_label.add_theme_color_override("font_color", CAPTION_COLOR)
+	rp_value = UI.label(caption, "", 13)
+	rp_value.name = "RPValue"
 	rp_value.autowrap_mode = TextServer.AUTOWRAP_OFF
+	rp_value.add_theme_color_override("font_color", RP_COLOR)
 	var values := HBoxContainer.new()
+	values.add_theme_constant_override("separation", 6)
 	column.add_child(values)
 	ap_value = UI.label(values, "", 24)
 	ap_value.name = "APValue"
 	ap_value.autowrap_mode = TextServer.AUTOWRAP_OFF
+	ap_value.add_theme_color_override("font_color", AP_COLOR)
+	ap_value.add_theme_color_override("font_outline_color", Color("#07111D"))
+	ap_value.add_theme_constant_override("outline_size", 4)
 	crystal_row = HBoxContainer.new()
 	crystal_row.name = "APCrystalRow"
 	crystal_row.add_theme_constant_override("separation", 2)

@@ -63,17 +63,21 @@ const COMMAND_END: Color = Color("#D4AE71")
 
 static func hero_surface(accent: Color, selected: bool, hover: bool = false) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#142D43") if selected else Color("#12283C") if hover else Color("#081725")
+	style.bg_color = Color("#173550") if selected else Color("#12283C") if hover else Color("#081725")
 	style.border_color = accent.lerp(METAL, 0.25) if selected else accent.darkened(0.12) if hover else Color("#31495C")
-	style.set_border_width_all(2 if selected or hover else 1)
+	# V3.5.1: selected identity is thicker and glows; hover stays a lighter step.
+	style.set_border_width_all(3 if selected else 2 if hover else 1)
 	style.set_corner_radius_all(8)
 	style.content_margin_left = 7
 	style.content_margin_right = 7
 	style.content_margin_top = 5
 	style.content_margin_bottom = 5
 	if selected:
-		style.shadow_color = Color(accent.r, accent.g, accent.b, 0.24)
-		style.shadow_size = 4
+		style.shadow_color = Color(accent.r, accent.g, accent.b, 0.42)
+		style.shadow_size = 8
+	elif hover:
+		style.shadow_color = Color(accent.r, accent.g, accent.b, 0.18)
+		style.shadow_size = 3
 	return style
 
 static func hero_portrait_surface(accent: Color, selected: bool) -> StyleBoxFlat:
@@ -84,6 +88,41 @@ static func hero_portrait_surface(accent: Color, selected: bool) -> StyleBoxFlat
 	style.content_margin_top = 3
 	style.content_margin_bottom = 3
 	return style
+
+## V3.5.1 party identity. Status colors only label projection.actor.status.
+const FOCUS_RING: Color = Color("#70D8F6")
+const STATUS_COLORS: Dictionary = {
+	"ACTIVE": Color("#5FCB9A"), "CONCENTRATING": Color("#B48CF0"),
+	"EXHAUSTED": Color("#E0A75C"), "INCAPACITATED": Color("#E36A78")}
+
+static func status_pill(status: String) -> StyleBoxFlat:
+	var tint: Color = STATUS_COLORS.get(status, COMMAND_UTILITY)
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(tint.r, tint.g, tint.b, 0.20)
+	style.border_color = tint
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(7)
+	style.content_margin_left = 6
+	style.content_margin_right = 6
+	style.content_margin_top = 0
+	style.content_margin_bottom = 0
+	return style
+
+static func focus_ring() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color.TRANSPARENT
+	style.draw_center = false
+	style.border_color = FOCUS_RING
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(9)
+	style.set_expand_margin_all(2)
+	return style
+
+static func hero_bar_track() -> StyleBoxFlat:
+	var box := bar_track()
+	box.border_color = METAL.darkened(0.15)
+	box.set_corner_radius_all(3)
+	return box
 
 static func command_surface(accent: Color, active: bool, hover: bool = false) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()

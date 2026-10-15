@@ -122,3 +122,8 @@ BATTLE_CUE_VICTORY,Victory,戰鬥勝利
 BATTLE_CUE_DEFEAT,Defeat,戰鬥失敗
 BATTLE_REACTION_FOCUS_WARD,Focus Ward,專注護盾
 BATTLE_REACTION_COST,RP %d · MP %d,反應 RP %d · 魔力 MP %d
+BATTLE_BASIC_SUB,First hit restores MP,本階段首擊回復 MP
+BATTLE_UNIMPLEMENTED_SUB,Not implemented,尚未實作
+BATTLE_SWAP_SUB,0 AP · 1 per phase,0 AP · 每階段 1 次
+BATTLE_LAST_SUB,Irreversible finale,不可逆的終式
+BATTLE_END_SUB,Pass to enemy phase,結束我方階段
