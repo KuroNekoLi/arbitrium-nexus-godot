@@ -39,3 +39,11 @@ quit(0)只表達回碼，退出清理可能另印ERROR。只grep PASS會漏錯�
 
 ## 限制／交付
 IMPLEMENTED_NOT_VERIFIED（遠端CI待查）。P4.4 GUI仍未驗收，未重跑。export_presets.cfg不存在，APPDATA/Godot/export_templates無已安裝版本；僅盤點，未匯出／下載templates。原dirty截圖／使用者memory不納入commit，不merge其他AI分支。Rollback僅本commit CI／test清理，不reset使用者檔。
+
+## 遠端驗收（取代上列待查狀態）
+
+程式SHA `90f2ded3aa673050ba76062a96d0829cfe35d986`，分支CI [38693224299](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38693224299) completed/success，全部steps成功。19基建自測、1238 Domain assertions、100 fixed-seed完整戰鬥與Replay、4Legacy、Scene8/HUD36/Integration31通過；總gate檢查37份log，errors0/warnings0。原始雲端log保留於Actions artifact，摘要為outputs/p4_logs/ci_evidence/remote-receipt.json。
+
+CI-EVIDENCE-01/02 = VERIFIED（此程式SHA與基建scope），不代表P4.4 GUI／Lv40／平衡／匯出驗收。已確認master沒有他人新提交後，將同SHA非強制fast-forward push至master；master自動產生的獨立run另核對，不將分支run冒稱master觸發。
+
+正式master CI [38693953249](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38693953249) 亦已核對completed/success，head SHA同為90f2ded3aa673050ba76062a96d0829cfe35d986。全部steps成功、37logs errors0/warnings0；19基建、1238 Domain、100完整seed/replay、4Legacy、P4.1～3的8/36/31 assertions全部通過。master另一組舊基線CI38693953070也success。收據為master-receipt.json；後續本報告／JSON-only commit不含runtimecode改動，測試程式SHA仍明列90f2ded，不能拿文件HEAD冒充重跑。

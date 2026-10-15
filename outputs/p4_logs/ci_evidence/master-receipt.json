@@ -1,0 +1,23 @@
+{
+  "code_sha": "90f2ded3aa673050ba76062a96d0829cfe35d986",
+  "run_id": 38693953249,
+  "url": "https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38693953249",
+  "status": "completed",
+  "conclusion": "success",
+  "job_id": 116286067230,
+  "all_steps_success": true,
+  "logs_checked": 37,
+  "log_errors": 0,
+  "log_warnings": 0,
+  "infrastructure_tests": 19,
+  "domain_assertions": 1238,
+  "seeded_full_battles": 100,
+  "legacy_suites": 4,
+  "p4_scene": 8,
+  "p4_hud": 36,
+  "p4_integration": 31,
+  "gui_p44": "NOT_EXECUTED_RETRY_LIMIT_PRESERVED",
+  "trigger": "push/master",
+  "branch_run_id": 38693224299,
+  "legacy_baseline_run_id": 38693953070
+}

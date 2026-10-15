@@ -2,7 +2,7 @@
 
 ## 2026-10-15 CI／GUI驗證補記
 
-- CI-EVIDENCE-01/02：補強回歸觸發與exit/log檢查；本機19項基建自測通過，legacy UI Ogg清理缺陷第三輪消除，遠端待核對。見[工程Note](../verification/CI_EVIDENCE_GATE_ENGINEERING_NOTE.md)，不改Domain規則。
+- CI-EVIDENCE-01/02：VERIFIED；19項基建自測與legacy UI清理通過，master程式90f2ded3aa673050ba76062a96d0829cfe35d986的Actions38693953249 success，1238 Domain／100seeds／4Legacy／P4.1～3回歸成功，37logs errors0/warnings0。見[工程Note](../verification/CI_EVIDENCE_GATE_ENGINEERING_NOTE.md)，不改Domain規則。
 - P4.4 GUI：使用者選擇「維持上限，先做其他驗證」。第三輪14/16保留，不額外重跑、不換分支重設配額；CI基建不代表P4.4通過。
 
 > **CURRENT GAP REGISTER**（2026-10-15；不自行決定遊戲玩法）。比起歷史 [14](14_DECISION_BACKLOG_AND_ADRS.md)、[17](17_PHASE2_HANDOFF_AND_OPEN_QUESTIONS.md) 的舊 OPEN，應優先以此表追蹤現在的**開放狀態**，不能反推撤銷原本核准項。
