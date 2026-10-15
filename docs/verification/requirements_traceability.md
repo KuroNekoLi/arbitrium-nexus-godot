@@ -401,3 +401,10 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | Presentation/2.5D bilingual playable human verification | none | **NOT VERIFIED**; next Presentation Spike + actual real-player playtest |
 
 **Limit:** seeded-shuffled duplicate SP instances reflect fixture content, not all possible retail skills/Boss patterns. Neither all 100 fixture victories nor 1,238 Domain assertions certify real-game balance or PLAYABLE VERIFIED. See [PH3_M5_5_ACCEPTANCE_REPORT.md](PH3_M5_5_ACCEPTANCE_REPORT.md) and [PH3_M5_HANDOFF.md](PH3_M5_HANDOFF.md) for actual hashes, commands, architecture and future work.
+
+## Phase 4 Presentation（2026-10-15，本輪範圍）
+
+| Requirement | Source | Implementation | Tests / evidence | Status |
+|---|---|---|---|---|
+| P4.1 / CORE-03 | COMBAT_PHASE4_HANDOFF §2、UI01/04 | scenes/battle/battle_screen.tscn、scripts/battle/presentation/battle_actor.gd | P41-SCENE-01～07（尺寸兩例，共8）；outputs/p4_1_1280.png、p4_1_1920.png、p4_1_sprite3d_spike.png；ui/P4_1_ENGINEERING_NOTE.md | 本機8/8，遠端CI待核對 |
+| Single authority / no UI mutation | COMBAT_IMPLEMENTATION_CONTRACT §2 | battle_presentation_adapter.gd | 真M5 fixture snapshot；回歸outputs/p4_logs/p41_regression | 本機驗證中；不變更Domain |

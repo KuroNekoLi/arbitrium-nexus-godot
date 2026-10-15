@@ -4,6 +4,12 @@ on:
     branches: [master, 'phase3/m5-5-full-battle-replay']
     paths:
       - '.github/workflows/godot-m5-5-acceptance.yml'
+      - 'scenes/battle/**'
+      - 'scripts/battle/**'
+      - 'resources/ui/**'
+      - 'tests/test_p4*'
+      - 'tests/capture_p4.gd'
+      - 'project.godot'
       - 'scripts/domain/m5/**'
       - 'scripts/domain/m3/phase/phase_engine.gd'
       - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
@@ -252,6 +258,14 @@ jobs:
               cat "$RUNNER_TEMP/m5-5-logs/legacy-$script.log"; exit 1;
             }
           done
+      - name: Phase 4 Scene smoke
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_p4_scene.gd > "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log" 2>&1
+          cat "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log"
+          grep -q '^P4_1_REPORT executed=8 passed=8 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log"
+          if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log"; then exit 1; fi
       - name: Upload full logs
         if: always()
         uses: actions/upload-artifact@v4

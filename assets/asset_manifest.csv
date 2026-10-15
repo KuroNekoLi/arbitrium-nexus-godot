@@ -1,0 +1,9 @@
+asset_id,category,output_path,source,license,status,dimensions,source_sha256,notes
+p4.background,background,assets/battlefield_bg.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1672x941,c8b7516143dd62a849a067f55e7006ceb806f2d4b0fec2deb8b0a501ae3b9d42,No HUD baked into image; no new Canon adoption
+p4.actor.a,sprite,assets/nova_atlas.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1254x1254,aa1ff4168610ac24e33f9abffeb22638124b784b7bc82015435b7cff749f63c2,A visual alias Kleya; 3x3 idle run strike
+p4.actor.b,sprite,assets/kleya_atlas.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1254x1254,ae88c0421d4c50b6ea54256a621f9e3a26d3b48563704f0d465ea211ca43d981,B visual alias Nova; no role changes
+p4.actor.c,sprite,assets/yora_atlas.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1254x1254,fb8218e7486aaa6f016208514b8c65246feb896f4353841ac9f8240f8cc11ae4,C visual alias Yora
+p4.boss,sprite,assets/nexus_party_splash.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1672x941,e7b2d5baf5c89049696e985096692abd23a4ae4bfb2e5d32ebe5f70626dce1eb,Region x960 width712; includes legacy neighbouring fragment; replace after art approval
+p4.cards,artwork,assets/card_art_atlas.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1536x1024,675c91b68c21d8da39f1cde4c6518019850bac1565162f3a4e5b425b945095bc,3x2 artwork only; Labels separate
+p4.portraits,portrait,assets/portraits/party_portraits.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,2172x724,4078996dc0c1a7d2ca40cfc92f3fff771e77a5d20fc78203e917dd34fdeaca82,3 portraits; inherited identity mapping
+p4.frame,ui,addons/kenney_fantasy_ui_borders/panel-border-000.png,https://kenney.nl/assets/fantasy-ui-borders,CC0-1.0,REUSED_LICENSE_VERIFIED,N/A,,Bundled LICENSE.txt inspected; no download

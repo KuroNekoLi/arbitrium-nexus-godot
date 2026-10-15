@@ -1,5 +1,9 @@
 # Third-party asset credits
 
+## Phase 4 reused prototype artwork
+
+The existing `assets/*.png` and `assets/portraits/party_portraits.png` are reused as reversible prototype placeholders, not adopted as new final character/Boss designs. Original provider/model/license evidence is not bundled in this checkout; commercial provenance remains pending. See `assets/asset_manifest.csv`. No new external artwork was downloaded for P4.1.
+
 ## Kenney Fantasy UI Borders
 
 - Author: Kenney (Kenney.nl).
