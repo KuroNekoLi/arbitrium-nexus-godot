@@ -418,3 +418,15 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | CI-EVIDENCE-01 | docs/combat/22 §5.2 / QA | tools/ci/assert_godot_logs.py / M5.5 workflow | 19/19；真Godot exit17；90f2ded3aa673050ba76062a96d0829cfe35d986 / Actions38693224299 success，37logs errors0/warnings0 | VERIFIED，非P4.4 GUI |
 | CI-EVIDENCE-02 | docs/combat/22 §5.5 / lifecycle | tests/test_combat_ui.gd | 原assertions保留；第三輪clean shutdown；同SHA雲端4Legacy通過 | VERIFIED（清理scope），非新版Gameplay驗收 |
 | CI-EVIDENCE official master | 同上，基建驗收 | 90f2ded3aa673050ba76062a96d0829cfe35d986 | Actions38693953249 / 38693953070 success；37logs errors0/warnings0 | VERIFIED，P4.4 GUI未重跑 |
+
+## P4 reviewed selective promotions (2026-10-15)
+
+| Requirement scope | Master source SHA | Accepted evidence | Status |
+|---|---|---|---|
+| Lv40 content/M5 adapters, independent M3/M4 fixes, stats/profile pure unit tests | `c2796e31` | staging [#38717257405](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38717257405) and master M5.5 100-seed regression | **HEADLESS VERIFIED ONLY**; content/balance provisional |
+| Bilingual name/description and read-only Lv40 projection | `d4d5b998` | 198 localization, 29 ReadModel, P4.1/2/3 regressions; [#38718051812](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38718051812) | **HEADLESS VERIFIED ONLY** |
+| Scene-component HUD / animation feedback | `f40686cd` | 24 component, 45 feedback, 80 edge; [#38718716573](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38718716573) | **HEADLESS VERIFIED; GUI_NOT_VERIFIED** |
+| Level40 Stage UI | `f40686cd` | `P4_LV40_UI_STAGING_REPORT 10/10` asserts no live snapshot/controller | **INTENTIONALLY_BLOCKED; NOT PLAYABLE** |
+| Real GUI input / balance / human QA | source branch checkpoint | GUI capture 14/16 on third; no authorized fourth | **NOT VERIFIED** |
+
+See [review and outstanding branches](../handoff/P4_APPROVED_MERGES_AND_PENDING_REVIEW_20261015.md) for exact remaining gaps and test-budget boundaries. This is a supplemental status entry; earlier historical Phase4 milestones are retained for traceability.
