@@ -1283,3 +1283,60 @@ Official [Godot Actions #38674222091](https://github.com/KuroNekoLi/arbitrium-ne
 | 44 | `M53-44-NO_CARD_DUPLICATION` | `test_m5_boss_combo.gd` | PASS |
 
 Seed **20261014**, **9 accepted commands**, initial SHA256 **c96738c4f4bc66e08aa6c5825648f086baac22d7527acf2275e554c045bfdbde**, events SHA256 **ab66610a558b00751c56920924dddb915b2bc11915768479ceb5cf7d970ff9bc**, final state SHA256 **a4d00e293e09cbb9f39b7a05e3f8eeb776ae972745b37e2f4f97099800fcdf22**. See PH3_M5_3_ENGINEERING_NOTE.md. M5.4–M5.5 NOT VERIFIED; Analyze and Spell Counter content explicitly NOT VERIFIED.
+
+## M5.4 — 48 named Outcome / CORE-01 / CORE-02 Domain oracles — 2026-10-15
+
+Official [Godot Actions #38676335088](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38676335088), source SHA `117a41772fcccc193ef9b40dceac595710ccab1f`: **48/48 new PASS, predecessor 1,033/1,033 PASS, cumulative 1,081/1,081 PASS**, all four legacy headless runners PASS. Fixture-only `BALANCE_PROVISIONAL`.
+
+| # | Named Case ID | Runner | Execution status |
+|---:|---|---|---|
+| 1 | `M54-01-BEFORE_COMMITTED_ACTION_ONGOING` | `test_m5_outcome.gd` | PASS |
+| 2 | `M54-02-NO_PUBLIC_RECOIL_DAMAGE` | `test_m5_outcome.gd` | PASS |
+| 3 | `M54-03-NO_FORGED_BATTLE_OUTCOME` | `test_m5_outcome.gd` | PASS |
+| 4 | `M54-04-PAID_SP_LEGAL_HP_ZERO_BOSS` | `test_m5_outcome.gd` | PASS |
+| 5 | `M54-05-PAID_SP_RECOIL_HP_ZERO_C` | `test_m5_outcome.gd` | PASS |
+| 6 | `M54-06-CORE01_SIMULTANEOUS_KO_VICTORY` | `test_m5_outcome.gd` | PASS |
+| 7 | `M54-07-NO_DRAW` | `test_m5_outcome.gd` | PASS |
+| 8 | `M54-08-M51_HP_DAMAGE_BEFORE_RECOIL` | `test_m5_outcome.gd` | PASS |
+| 9 | `M54-09-OUTCOME_AFTER_RECOIL` | `test_m5_outcome.gd` | PASS |
+| 10 | `M54-10-CORE02_HP0_IMMEDIATE_INCAPACITATION` | `test_m5_outcome.gd` | PASS |
+| 11 | `M54-11-ONE_PAYMENT_FOR_MULTI_EFFECT` | `test_m5_outcome.gd` | PASS |
+| 12 | `M54-12_CARD_CONSERVATION` | `test_m5_outcome.gd` | PASS |
+| 13 | `M54-13-INITIAL_STATE_UNCHANGED` | `test_m5_outcome.gd` | PASS |
+| 14 | `M54-14-TERMINAL_PHASE_REJECTED` | `test_m5_outcome.gd` | PASS |
+| 15 | `M54-15-TERMINAL_SP_REJECTED` | `test_m5_outcome.gd` | PASS |
+| 16 | `M54-16-TERMINAL_REACTION_REJECTED` | `test_m5_outcome.gd` | PASS |
+| 17 | `M54-17-TERMINAL_CAST_REJECTED` | `test_m5_outcome.gd` | PASS |
+| 18 | `M54-18-TERMINAL_RANDOM_BASIC_REJECTED` | `test_m5_outcome.gd` | PASS |
+| 19 | `M54-19-TERMINAL_UNTRUSTED_HP_DENIED` | `test_m5_outcome.gd` | PASS |
+| 20 | `M54-20-SEED_AND_TAPE_REPLAY_ACCEPTED` | `test_m5_outcome.gd` | PASS |
+| 21 | `M54-21-EVENT_HASH_IDENTICAL` | `test_m5_outcome.gd` | PASS |
+| 22 | `M54-22-STATE_HASH_IDENTICAL` | `test_m5_outcome.gd` | PASS |
+| 23 | `M54-23-TAPE_STOPS_AT_TERMINAL` | `test_m5_outcome.gd` | PASS |
+| 24 | `M54-24-REJECTED_TAPE_PRESERVES_TERMINAL_STATE` | `test_m5_outcome.gd` | PASS |
+| 25 | `M54-25-BOSS_DEAD_ALLY_LIVING_VICTORY` | `test_m5_outcome.gd` | PASS |
+| 26 | `M54-26-REAL_ENEMY_ACTION_ACCEPTED` | `test_m5_outcome.gd` | PASS |
+| 27 | `M54-27-BOSS_SURVIVES_TEAM_INCAP_DEFEAT` | `test_m5_outcome.gd` | PASS |
+| 28 | `M54-28-ENEMY_ACTION_SETTLED_BEFORE_DEFEAT` | `test_m5_outcome.gd` | PASS |
+| 29 | `M54-29-DEFEAT_LOCKS_ALL_COMMANDS` | `test_m5_outcome.gd` | PASS |
+| 30 | `M54-30-DOT_DOUBLE_KO_BOUNDARY_ACCEPTED` | `test_m5_outcome.gd` | PASS |
+| 31 | `M54-31-DOT_SAME_BOUNDARY_VICTORY` | `test_m5_outcome.gd` | PASS |
+| 32 | `M54-32-DOT_BOTH_TARGETS_ZERO` | `test_m5_outcome.gd` | PASS |
+| 33 | `M54-33-DOT_TICKS_BEFORE_OUTCOME` | `test_m5_outcome.gd` | PASS |
+| 34 | `M54-34-NO_RESOURCE_REFRESH_ON_TERMINAL` | `test_m5_outcome.gd` | PASS |
+| 35 | `M54-35-LAST_SPELL_REAL_PAYMENT_COMMITTED` | `test_m5_outcome.gd` | PASS |
+| 36 | `M54-36-LAST_NOT_PREMATURELY_RELEASED` | `test_m5_outcome.gd` | PASS |
+| 37 | `M54-37-LAST_RELEASE_ROUND_THREE` | `test_m5_outcome.gd` | PASS |
+| 38 | `M54-38-RELEASED_LAST_KILLS_BOSS_AND_CASTER` | `test_m5_outcome.gd` | PASS |
+| 39 | `M54-39-RELEASE_BEFORE_RECOIL_BEFORE_OUTCOME` | `test_m5_outcome.gd` | PASS |
+| 40 | `M54-40-RELEASED_LAST_NEVER_INVALIDATED` | `test_m5_outcome.gd` | PASS |
+| 41 | `M54-41-LAST_USED_NOT_RESTORED` | `test_m5_outcome.gd` | PASS |
+| 42 | `M54-42-PRE_RELEASE_DOT_INCAPACITATES` | `test_m5_outcome.gd` | PASS |
+| 43 | `M54-43-CORE02_STRICT_CANCEL_CHAIN` | `test_m5_outcome.gd` | PASS |
+| 44 | `M54-44-NO_PRE_RELEASE_REFUND_OR_QUOTA_RESET` | `test_m5_outcome.gd` | PASS |
+| 45 | `M54-45-NO_POSTHUMOUS_LAST_DAMAGE` | `test_m5_outcome.gd` | PASS |
+| 46 | `M54-46-EXHAUSTED_POSITIVE_HP_NOT_DEFEAT` | `test_m5_outcome.gd` | PASS |
+| 47 | `M54-47-EXHAUSTED_EDGE_EXPLICIT_PENDING` | `test_m5_outcome.gd` | PASS |
+| 48 | `M54-48-VERSIONED_RECOIL_CHANGES_REPLAY_EVENT` | `test_m5_outcome.gd` | PASS |
+
+Seed **20261014**; **1 actual M2-paid action**; initial SHA256 **dd1bbcb5cac91b62c6030e1f464eaca11f13fd1497b53450683c2748a58847ad**, events SHA256 **813a20b891cbb9c1c9c972121b1ab1b0c346b1c30430febca8b9aa1cf22f7372**, final state SHA256 **7ae630e6ce03100d01efa37830bfc23fe8de6fa946f30e68a06888016caba502**. [Engineering note](PH3_M5_4_ENGINEERING_NOTE.md). M5.5 full battle / 100 seeds NOT VERIFIED. Spell Counter / Analyze content NOT VERIFIED; all-positive-HP EXHAUSTED outcome CORE_RULE_EDGE_PENDING.
