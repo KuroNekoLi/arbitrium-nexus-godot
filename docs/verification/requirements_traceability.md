@@ -418,3 +418,5 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | CI-EVIDENCE-01 | docs/combat/22 §5.2 / QA | tools/ci/assert_godot_logs.py / M5.5 workflow | 19/19；真Godot exit17；90f2ded3aa673050ba76062a96d0829cfe35d986 / Actions38693224299 success，37logs errors0/warnings0 | VERIFIED，非P4.4 GUI |
 | CI-EVIDENCE-02 | docs/combat/22 §5.5 / lifecycle | tests/test_combat_ui.gd | 原assertions保留；第三輪clean shutdown；同SHA雲端4Legacy通過 | VERIFIED（清理scope），非新版Gameplay驗收 |
 | CI-EVIDENCE official master | 同上，基建驗收 | 90f2ded3aa673050ba76062a96d0829cfe35d986 | Actions38693953249 / 38693953070 success；37logs errors0/warnings0 | VERIFIED，P4.4 GUI未重跑 |
+| P4.4 event feedback | Handoff P4.4 / UI04 | cue_mapper / director / effects / actor / HUD | feedback45/45；edges80/80；p44_regression1238/100seeds/4Legacy | 本機部分驗證；GUI第三輪14/16，未標全Gate |
+| P4.5–6 scope | 使用者續作及「授權擴充既有M5」 | P4_TASK_CONTRACT.md | Lv40領域／多策略研究Agent施工中 | IMPLEMENTATION_IN_PROGRESS；Provisional |

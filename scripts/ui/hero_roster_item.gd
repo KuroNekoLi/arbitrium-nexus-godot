@@ -47,6 +47,24 @@ func update_projection(actor: Dictionary, state_text: String) -> void:
 	for item: Label in [hp_label, mana_label]:
 		item.add_theme_font_size_override("font_size", 15)
 	(get_node("Layout/Stats/Subtitle") as Label).add_theme_font_size_override("font_size", 14)
+	for item: Label in [hp_label,mana_label]:
+		var bar := item.get_node_or_null("ResourceBar") as ProgressBar
+		if bar == null:
+			bar = ProgressBar.new()
+			bar.name = "ResourceBar"
+			bar.show_percentage = false
+			bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			item.add_child(bar)
+			bar.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+			bar.offset_top = -2
+			var fill := StyleBoxFlat.new()
+			fill.bg_color = Color("70d6a0") if item == hp_label else Color("68caff")
+			bar.add_theme_stylebox_override("fill",fill)
+			var background := StyleBoxFlat.new()
+			background.bg_color = Color("182c40")
+			bar.add_theme_stylebox_override("background",background)
+		bar.max_value = actor["max_hp"] if item == hp_label else actor["max_mp"]
+		bar.value = actor["hp"] if item == hp_label else actor["mp"]
 
 func set_selected(selected: bool) -> void:
 	button_pressed = selected

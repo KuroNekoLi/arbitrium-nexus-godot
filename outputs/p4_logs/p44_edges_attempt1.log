@@ -1,0 +1,74 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+P44E_ENV engine=4.7.2-stable (official) seed=20261014 content=m5.5-three-party-boss-fixture-v1 authority=BALANCE_PROVISIONAL
+PASS P44E-SKIP-ACCEPTED
+PASS P44E-SKIP-PENDING-AWAIT
+PASS P44E-SKIP-CANCEL-GENERATION
+PASS P44E-SKIP-NO-LATE-DAMAGE-OR-IDLE
+PASS P44E-SKIP-DOMAIN-HASH
+PASS P44E-SKIP-ACTOR-HOME-C
+PASS P44E-SKIP-ACTOR-HOME-B
+PASS P44E-SKIP-ACTOR-HOME-A
+PASS P44E-SKIP-ACTOR-HOME-Boss
+PASS P44E-SKIP-EFFECTS-CLEARED
+PASS P44E-RESTART-OLD-ACCEPTED
+PASS P44E-RESTART-HISTORY-CLEARED
+PASS P44E-RESTART-INITIAL-HASH
+PASS P44E-RESTART-REUSED-ID-ACCEPTED
+PASS P44E-RESTART-NO-OLD-RECEIPT expected=1 actual=1
+PASS P44E-RESTART-REPLAY
+PASS P44E-DEDUPE-ACCEPTED
+PASS P44E-DEDUPE-WHILE-PENDING
+PASS P44E-DEDUPE-AFTER-IDLE
+PASS P44E-INVALID-REJECTED-0
+PASS P44E-INVALID-ATOMIC-0
+PASS P44E-INVALID-NO-SUCCESS-CUE-0
+PASS P44E-INVALID-REJECTED-1
+PASS P44E-INVALID-ATOMIC-1
+PASS P44E-INVALID-NO-SUCCESS-CUE-1
+PASS P44E-INVALID-REJECTED-2
+PASS P44E-INVALID-ATOMIC-2
+PASS P44E-INVALID-NO-SUCCESS-CUE-2
+PASS P44E-REENTRY-ACCEPTED
+FAIL P44E-REENTRY-SKIP-NO-RESUMED-MOTION
+PASS P44E-REENTRY-NO-LATE-DAMAGE
+PASS P44E-LOCALE-SETTINGS-EXIST
+FAIL P44E-LOCALE-REDUCED-CONSISTENT-en
+FAIL P44E-LOCALE-MUTE-CONSISTENT-en
+PASS P44E-LOCALE-DOMAIN-HASH-en
+FAIL P44E-LOCALE-REDUCED-CONSISTENT-zh_TW
+FAIL P44E-LOCALE-MUTE-CONSISTENT-zh_TW
+PASS P44E-LOCALE-DOMAIN-HASH-zh_TW
+PASS P44E-SCENE-REENTER-SINGLE-SUBSCRIBER
+PASS P44E-DEFENSE-WINDOW-false
+PASS P44E-REACTION-NO-AUTO-PASS-false
+PASS P44E-DEFENSE-EXACT-DOMAIN-TRACES-false
+PASS P44E-DEFENSE-CUES-false
+PASS P44E-DEFENSE-RECIPIENT-GUARD-false
+P44E_DEFENSE protect=false traces=[{"action_id":"p4:12:5:RESOLVE_ENEMY_ATTACK_M5","balance_authority":"BALANCE_PROVISIONAL","barrier_absorbed":0.0,"crit":false,"crit_rng_draw_index":-1,"crit_roll_bp":-1,"damage_unrounded":1.51935652173913,"declared_target_id":"A","element_id":"NEUTRAL","element_multiplier_bp":10000,"guard_applied":true,"hit":true,"hit_chance_bp":8500,"hit_index":0,"hit_mode":"RANDOM_PERCENT","hit_rng_draw_index":1,"hit_roll_bp":7409,"hp_after":99,"hp_before":100,"hp_damage":1,"kind":"DamageTrace","recipient_id":"A","source_actor_id":"Boss","variance_roll_bp":-293},{"action_id":"p4:12:5:RESOLVE_ENEMY_ATTACK_M5","balance_authority":"BALANCE_PROVISIONAL","barrier_absorbed":0.0,"crit":false,"crit_roll_bp":-1,"damage_unrounded":0.0,"declared_target_id":"A","element_id":"NEUTRAL","element_multiplier_bp":10000,"guard_applied":true,"hit":false,"hit_chance_bp":8500,"hit_index":1,"hit_mode":"RANDOM_PERCENT","hit_rng_draw_index":3,"hit_roll_bp":8993,"hp_after":99,"hp_before":99,"hp_damage":0,"kind":"DamageTrace","recipient_id":"A","source_actor_id":"Boss"}]
+PASS P44E-DEFENSE-REPLAY-false
+PASS P44E-DEFENSE-WINDOW-true
+PASS P44E-REACTION-NO-AUTO-PASS-true
+PASS P44E-DEFENSE-EXACT-DOMAIN-TRACES-true
+PASS P44E-DEFENSE-CUES-true
+PASS P44E-DEFENSE-RECIPIENT-GUARD-true
+P44E_DEFENSE protect=true traces=[{"action_id":"p4:16:6:RESOLVE_ENEMY_ATTACK_M5","balance_authority":"BALANCE_PROVISIONAL","barrier_absorbed":0.0,"crit":false,"crit_rng_draw_index":-1,"crit_roll_bp":-1,"damage_unrounded":2.42675,"declared_target_id":"A","element_id":"NEUTRAL","element_multiplier_bp":10000,"guard_applied":false,"hit":true,"hit_chance_bp":8500,"hit_index":0,"hit_mode":"RANDOM_PERCENT","hit_rng_draw_index":1,"hit_roll_bp":7409,"hp_after":98,"hp_before":100,"hp_damage":2,"kind":"DamageTrace","recipient_id":"B","source_actor_id":"Boss","variance_roll_bp":-293},{"action_id":"p4:16:6:RESOLVE_ENEMY_ATTACK_M5","balance_authority":"BALANCE_PROVISIONAL","barrier_absorbed":0.0,"crit":false,"crit_roll_bp":-1,"damage_unrounded":0.0,"declared_target_id":"A","element_id":"NEUTRAL","element_multiplier_bp":10000,"guard_applied":false,"hit":false,"hit_chance_bp":8500,"hit_index":1,"hit_mode":"RANDOM_PERCENT","hit_rng_draw_index":3,"hit_roll_bp":8993,"hp_after":98,"hp_before":98,"hp_damage":0,"kind":"DamageTrace","recipient_id":"B","source_actor_id":"Boss"}]
+PASS P44E-DEFENSE-REPLAY-true
+PASS P44E-PROFILE-GOLDEN-FIXTURE
+PASS P44E-PROFILE-TAPE-ACCEPTED-60fps-reduced-false
+PASS P44E-PROFILE-STATE-HASH-60fps-reduced-false
+PASS P44E-PROFILE-REPLAY-60fps-reduced-false
+PASS P44E-PROFILE-EVENT-HASH-60fps-reduced-false
+P44E_PROFILE 60fps-reduced-false seed=20261014 commands=49 elapsed_ms=9561 state_hash=c510227726170562d623b3737226439f3dffa0e4cea1ee9dfc4150117671acdd event_hash=588cb04d22911bd9d4b1a4d006eb5aa41fe2b7fa90a02a4fe879086e2928dfb1
+PASS P44E-PROFILE-TAPE-ACCEPTED-10fps-reduced-false
+PASS P44E-PROFILE-STATE-HASH-10fps-reduced-false
+PASS P44E-PROFILE-REPLAY-10fps-reduced-false
+PASS P44E-PROFILE-EVENT-HASH-10fps-reduced-false
+P44E_PROFILE 10fps-reduced-false seed=20261014 commands=49 elapsed_ms=7774 state_hash=c510227726170562d623b3737226439f3dffa0e4cea1ee9dfc4150117671acdd event_hash=588cb04d22911bd9d4b1a4d006eb5aa41fe2b7fa90a02a4fe879086e2928dfb1
+PASS P44E-PROFILE-TAPE-ACCEPTED-10fps-reduced-true
+PASS P44E-PROFILE-STATE-HASH-10fps-reduced-true
+PASS P44E-PROFILE-REPLAY-10fps-reduced-true
+PASS P44E-PROFILE-EVENT-HASH-10fps-reduced-true
+P44E_PROFILE 10fps-reduced-true seed=20261014 commands=49 elapsed_ms=7734 state_hash=c510227726170562d623b3737226439f3dffa0e4cea1ee9dfc4150117671acdd event_hash=588cb04d22911bd9d4b1a4d006eb5aa41fe2b7fa90a02a4fe879086e2928dfb1
+P44E_FAILED_CASES ["P44E-REENTRY-SKIP-NO-RESUMED-MOTION","P44E-LOCALE-REDUCED-CONSISTENT-en","P44E-LOCALE-MUTE-CONSISTENT-en","P44E-LOCALE-REDUCED-CONSISTENT-zh_TW","P44E-LOCALE-MUTE-CONSISTENT-zh_TW"]
+P4_4_EDGE_REPORT executed=64 passed=59 failed=5

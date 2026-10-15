@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: default profile contains three valid 8-card decks
+PASS: custom deck profile saves
+PASS: saved deck profile loads with edits
+PASS: deck profile exports as JSON
+PASS: export JSON exists at its selected path
+PASS: invalid deck size is rejected
+PASS: deck editor opens from the battle screen
+PASS: deck editor keeps the configured deck size
+PASS: deck editor replaces cards from the catalog
+PASS: edited profile passes validation
+PASS: customized Resource deck is used by the combat engine
+M5 TESTS PASS // profile persistence, export, and editor composition

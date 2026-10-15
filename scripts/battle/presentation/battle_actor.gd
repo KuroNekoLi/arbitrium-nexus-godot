@@ -7,8 +7,14 @@ extends Node2D
 @export var accent: Color = Color("79d9ff")
 var body: AnimatedSprite2D
 var motion: Tween
+var home: Vector2
+var cast_active: bool = false
+var barrier_active: bool = false
+var pulse: float = 0.0
+var base_tint: Color = Color.WHITE
 
 func _ready() -> void:
+	home = position
 	body = AnimatedSprite2D.new()
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
@@ -39,6 +45,11 @@ func _ready() -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	draw_set_transform(Vector2.ZERO)
+	if cast_active:
+		draw_arc(Vector2(0,-visual_height*0.45),visual_height*0.38,pulse,pulse+TAU*0.85,48,Color("77bfff"),3)
+	if barrier_active:
+		draw_arc(Vector2(0,-visual_height*0.45),visual_height*0.48,PI,TAU,48,Color("6de2cb"),3)
 	draw_set_transform(Vector2.ZERO, 0, Vector2(1, 0.23))
 	draw_circle(Vector2.ZERO, visual_height * 0.19, Color(0.01, 0.02, 0.06, 0.55))
 	draw_arc(Vector2.ZERO, visual_height * 0.24, 0, TAU, 48, Color(accent, 0.6), 2)
@@ -56,7 +67,25 @@ func play_attack(target_position: Vector2) -> void:
 
 func play_hit() -> void:
 	body.modulate = Color(2, 1.3, 1.5)
-	create_tween().tween_property(body, "modulate", Color.WHITE, 0.28)
+	create_tween().tween_property(body, "modulate", base_tint, 0.28)
+
+func project_conditions(status: String, casting: bool, barrier: bool) -> void:
+	cast_active = casting
+	barrier_active = barrier
+	base_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
+	body.modulate = base_tint
+	queue_redraw()
+
+func reset_motion() -> void:
+	if motion: motion.kill()
+	position = home
+	body.play("idle")
+	body.modulate = base_tint
+
+func _process(delta: float) -> void:
+	if cast_active:
+		pulse += delta*0.8
+		queue_redraw()
 
 func _exit_tree() -> void:
 	if motion: motion.kill()

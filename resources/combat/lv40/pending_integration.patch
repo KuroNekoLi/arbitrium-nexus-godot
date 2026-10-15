@@ -1,0 +1,95 @@
+*** Begin Patch
+*** Update File: scripts/domain/m5/integration/m5_domain_resolver.gd
+@@
+ const Tactical = preload("res://scripts/domain/m5/combo/tactical_sp_resolver.gd")
++const Lv40 = preload("res://scripts/domain/m5/lv40/lv40_domain_extension.gd")
+@@
+-	if config.get("m5_3_enabled",false) == true:
++	if config.get("m5_lv40_enabled",false) == true:
++		return Lv40.apply(state,command,config)
++	if config.get("m5_3_enabled",false) == true:
+*** Update File: scripts/domain/m3/phase/phase_engine.gd
+@@
+ const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
++const Lv40Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
+@@
+ 			defense["enemy_action_cancelled_fixture"] = not bool(window_state["action_active"])
+-		if kind == "RESOLVE_ENEMY_ATTACK_M5":
++			if config.get("m5_lv40_enabled",false) == true:
++				defense["lv40_counter_actor_id"] = str(window_state.get("lv40_counter_actor_id",""))
++		if kind == "RESOLVE_ENEMY_ATTACK_M5" and config.get("m5_lv40_enabled",false) == true:
++			var resolved_lv40: Dictionary = Lv40Boss.resolve(next["core"],current_action["public_intent"],defense,config,command_id)
++			if not resolved_lv40["ok"]:
++				return _reject(original,str(resolved_lv40["error"]))
++			next["core"] = resolved_lv40["core"]
++			for record: Dictionary in resolved_lv40["timeline"]:
++				if str(record["kind"]) == "core_event":
++					_core_events(next,emitted,[record["raw"]],command_id)
++				else:
++					_emit(next,emitted,str(record["kind"]),command_id,record,"m5_lv40")
++		elif kind == "RESOLVE_ENEMY_ATTACK_M5":
+*** Update File: scripts/domain/m4/casting/casting_timeline_resolver.gd
+@@
+ const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
++const Lv40Cast = preload("res://scripts/domain/m5/lv40/lv40_cast_effect.gd")
+@@
+ 	for cast: Dictionary in due:
++		if config.get("m5_lv40_enabled",false) == true:
++			var lv40_release: Dictionary = Lv40Cast.settle(source,cast,next_round,config,command_id)
++			if not lv40_release["ok"]:
++				return lv40_release
++			source = lv40_release["core"]
++			timeline.append_array(lv40_release["timeline"])
++			continue
+*** Update File: scripts/domain/m3/reaction/reaction_eligibility.gd
+@@
+ const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
++const Lv40Reaction = preload("res://scripts/domain/m5/lv40/lv40_reaction.gd")
+@@
+-	if not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
++	var lv40_effect: bool = ["LV40_PROTECT_COUNTER","LV40_BARRIER"].has(effect)
++	if lv40_effect:
++		var content_check: Dictionary = Lv40Reaction.check(core,action,window,entry,effect,action_active)
++		if not content_check["ok"]:
++			return content_check
++	if not lv40_effect and not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
+@@
+-	if dependent and not action["public_intent"].get("target_ids", []).has(target_id):
++	if dependent and not lv40_effect and not action["public_intent"].get("target_ids", []).has(target_id):
+*** Update File: scripts/domain/m3/reaction/reaction_queue_resolver.gd
+@@
+ const FocusWard = preload("res://scripts/domain/m4/casting/focus_ward_resolver.gd")
++const Lv40Reaction = preload("res://scripts/domain/m5/lv40/lv40_reaction.gd")
+@@
+ 				records.append({"kind": "CORE_EVENTS", "events": paid["events"]})
++				if config.get("m5_lv40_enabled",false) == true and ["LV40_PROTECT_COUNTER","LV40_BARRIER"].has(str(can["effect"])):
++					var lv40_effect: Dictionary = Lv40Reaction.execute(updated,action,reaction,str(can["effect"]))
++					if not lv40_effect["ok"]:
++						return _fail(state,str(lv40_effect["error"]))
++					updated = lv40_effect["state"]
++					w = updated["reaction_window"]
++					records.append_array(lv40_effect["records"])
+*** Update File: scripts/domain/m5/status/status_resolver.gd
+@@
+-			str(d.get("tick_trigger","")) != "NEXT_PLAYER_PHASE":
++			not ["NEXT_PLAYER_PHASE","ENEMY_PHASE_END"].has(str(d.get("tick_trigger",""))):
+@@
+-		if s.get("tick_trigger","") != "NEXT_PLAYER_PHASE":
++		if s.get("tick_trigger","") != definition.get("tick_trigger",""):
+@@
+-			"priority":int(d["priority"]),"tick_trigger":"NEXT_PLAYER_PHASE",
++			"priority":int(d["priority"]),"tick_trigger":str(d["tick_trigger"]),
+@@
+ static func tick(core: Dictionary, next_round: int, config: Dictionary,
+-		command_id: String) -> Dictionary:
++		command_id: String, trigger: String = "NEXT_PLAYER_PHASE") -> Dictionary:
+@@
+-		if int(status["applied_round"]) >= next_round:
++		if str(status["tick_trigger"]) != trigger or int(status["applied_round"]) >= next_round:
+*** Update File: scripts/domain/m5/damage/damage_pipeline_resolver.gd
+@@
+ 	var resistance: Variant = config.get("m5_element_resistance",{}).get(recipient,{})
++	if config.get("m5_lv40_enabled",false) == true and resistance is Dictionary and not resistance.has(element):
++		resistance = resistance.duplicate(true)
++		resistance[element] = 10000
+*** End Patch
