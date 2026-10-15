@@ -49,7 +49,7 @@ func _init() -> void:
 		tape.append(entry.duplicate(true))
 	var config: Dictionary = case["config"]
 	var original_initial_hash: String = Model.state_hash(initial)
-	var tape_hash: String = Model.state_hash(tape)
+	var tape_hash: String = Model.state_hash({"tape":tape})
 	var expected_hash: String = Model.state_hash(expected)
 	var run1: Dictionary = M4.replay(initial,tape,config)
 	var run2: Dictionary = M4.replay(initial,tape,config)
@@ -67,7 +67,7 @@ func _init() -> void:
 	check("M45-REP-07-CARD_INSTANCES_CONSERVED",Zones.validate_state(run1["state"]["core"]["cards"]))
 	check("M45-REP-08-M4_CORE_VALID",M4.validate_state(run1["state"]))
 	check("M45-REP-09-INPUT_INITIAL_UNCHANGED",Model.state_hash(initial) == original_initial_hash)
-	check("M45-REP-10-INPUT_TAPE_UNCHANGED",Model.state_hash(tape) == tape_hash)
+	check("M45-REP-10-INPUT_TAPE_UNCHANGED",Model.state_hash({"tape":tape}) == tape_hash)
 	check("M45-REP-11-TWO_CONCENTRATING_CASTS",_event_count(run1["events"],"CastingStarted") == 2)
 	check("M45-REP-12-ONE_LAST_COMMITTED",_event_count(run1["events"],"LastSpellCommitted") == 1)
 	check("M45-REP-13-LAST_NOT_RELEASED",_event_count(run1["events"],"LastSpellReleased") == 0)
