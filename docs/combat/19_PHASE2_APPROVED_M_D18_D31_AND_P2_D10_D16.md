@@ -1,5 +1,8 @@
 # 19 — Phase 2 後續核准決策與設計收斂（M-D18～M-D31；P2-D10～D16）
 
+> **Documentation status · 2026-10-15 — APPROVED_M_D18_D31_AND_P2_D10_D16_DIRECTION**：這是生效的唯一 19：M-D18～31 已核准，P2-D10～16 核准的是**方向**而非固定數值；上游舊檔名已歸檔，不是另一套 Canon。文內原 `LIBRARY ONLY` 為來源當時狀態。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+
+
 > **2026-10-14／LIBRARY ONLY CHECKPOINT**。本文件是既有 `16`、`18` 決策快照的後續增量，搭配 `00`／`01`／`02`～`05`／`11`／`13`／`17` 使用；保留既有 P1／P2／M-D01～M-D17 已核准契約。2026-10-14 使用者明確逐項確認 M-D18～M-D31，並**整體同意** P2-D10～D16 的建議設計方向。這是**設計規格已收斂**，**不是 Godot 已實作、CI 或平衡驗證 PASS**。具體未選定參數維持 CONFIGURABLE/TBD；M-D04 的跨多輪 Overload 債務仍為 PROVISIONAL 試行。
 
 ## 1. 魔法 AP 系統續決策（M-D18）

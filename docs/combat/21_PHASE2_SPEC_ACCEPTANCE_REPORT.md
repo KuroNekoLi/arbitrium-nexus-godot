@@ -1,5 +1,8 @@
 # 21 — Astraea Combat Rules｜Phase 2 文件規格驗收報告（2026-10-14）
 
+> **Documentation status · 2026-10-15 — HISTORICAL_SPEC_REVIEW + USER_APPROVED_CORE**：本文件的 `SPEC ACCEPTANCE CONDITIONAL PASS` 是當時文件規格審核；第1節 USER_APPROVED CORE-01～04 持續有效。當下 Godot 測試需另看 verification 與官方 Actions。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+
+
 > **範圍：** 以 ChatGPT Library `/docs/combat/00`～`20` 共 21 份 Markdown 戰鬥規格為規格來源，參考 GitHub `master` 既有的 `19_PHASE2_FINAL_APPROVED_M_D18_D31_P2_D10_D16.md` 與同名模組差異。**本文件是 SPEC REVIEW，不是 Godot 執行或程式測試報告。** 核驗內容為規則的決議來源、文件相容性、事件順序、可撰寫的 oracle／負例與仍需具名設定的事項。所有 Godot/CI/BALANCE 測試狀態均為 `NOT EXECUTED`，不得宣稱 PASS。
 
 ## 0. 驗收結論

@@ -1,5 +1,8 @@
 # 20 — Phase 1–2 實作前待決清查、授權預設與重大驗收點（2026-10-14）
 
+> **Documentation status · 2026-10-15 — DELEGATED_DEFAULT + FINAL_USER_APPROVED_CORE**：PRE3-R01～18 屬授權的工程預設，**第7節 USER_APPROVED CORE-01～04** 高於同檔早先的 CORE_CONFIRM/推薦草案。Godot M5.4 已驗證 CORE-01/02 的限定 fixture 範圍。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+
+
 > **範圍：** 以 ChatGPT Library `/docs/combat/00`～`19` 的 P1/P2 合約為清查依據，並比對 GitHub `master` 當前文件。這是經使用者要求「幫我決策」後，新增的**授權設計預設（DELEGATED_DEFAULT）**，不是過往逐項由使用者明示選 A/B/C 的 APPROVED 決議；不變更先前 P1-D、P2-D、P2-S、M-D 的已核准契約。工程預設可以作為 Phase 2 規格驗收案例與 Phase 3 headless engine 的第一版明文規則；**BALANCE_PROVISIONAL** 與 **CORE_CONFIRM** 不得宣告最終核准，更不等於 Godot 測試 PASS。
 
 > **閱讀順序：** `00` → `01` → 既有 P1/P2 相關領域文件 → `16`/`18`/`19` 已核准快照 → **本文件 20 的新增工程邊界與剩餘待確認清單** → `13` 驗收矩陣。Library 的第19檔名是 `19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`，GitHub 原有第19檔名是 `19_PHASE2_FINAL_APPROVED_M_D18_D31_P2_D10_D16.md`；兩者皆記錄同一批已核准方向。除非特別註明，歷史 OPEN 不得反過來覆寫已核准規則。

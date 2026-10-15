@@ -1,5 +1,8 @@
 # 15 — v0.7.1模擬報告審查、歷史規格遷移
 
+> **Documentation status · 2026-10-15 — HISTORICAL_EVIDENCE**：v0.7.1 報告、8-card/Prepared Deck/舊 RP 限制等僅顯示遷移歷史，不是現行 Canon、最新 Godot CI 或新平衡批准。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+
+
 ## 1. 原始測試證據（不是Canon）
 
 來源：Library `貼上的文字 (1)(3).txt`，Godot 4 deterministic simulation，seed `20261014`，Boss 600HP，上限8回合。

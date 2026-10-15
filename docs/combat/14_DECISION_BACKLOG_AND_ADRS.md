@@ -1,6 +1,7 @@
 # 14 — 待使用者決定事項與 ADR 決策模板
 
-> **2026-10-14 LIBRARY Phase 2 最新補充（現行 SoT）**：請優先閱讀 [`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`](19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md) 與 [`18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md`](18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md)。M-D18～M-D31 已核准；P2-D10～D16 的**設計方向**已整體核准，數值／部分結算邊界仍 TBD。較早段落的「P2-D08 未決」「換牌僅提案」「手牌上限 TBD」「完整詠唱較貴 MP」等屬歷史文字，與 19 衝突時以 19 為準。**僅 Library 更新，未同步 GitHub；尚無 Godot 執行／CI PASS 證據。**
+> **Documentation status · 2026-10-15 — HISTORICAL_BACKLOG**：舊版 OPEN、P2-D08、M-D18 與數值候選不可推翻 18/19/20/21 已批准方向；目前可執行的未決單表見 COMBAT_OPEN_ISSUES。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+
 
 
 > 這是一份「不能由 Agent 擅自補完」的決策清單。依依賴排序逐題確認，既不以一口氣問很多問題阻塞討論，也不假定沉默=同意。

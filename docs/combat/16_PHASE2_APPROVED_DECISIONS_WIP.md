@@ -1,5 +1,8 @@
 # 16 — Phase 2 核准決策快照（進行中，2026-10-14）
 
+> **Documentation status · 2026-10-15 — APPROVED_P2_D01_D07_SNAPSHOT + HISTORICAL_OPEN**：保留當時逐題核准內容，但原文停止於 P2-D07；P2-D08/09 在18、M-D18～31 與 P2-D10～16 在19、CORE-01～04 在20/21 已有後續裁決。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+
+
 > **注意：這是較早停在 P2-D07 的歷史快照**。P2-D08／D09 見 18，P2-D10～D16 已由使用者整體同意設計方向、M-D18～M-D31 已確認，見 19。以下舊「尚未決定 P2-D08」不能作為最新待決依據。
 
 
