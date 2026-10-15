@@ -1,5 +1,7 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+2026-10-16 V3.5續作：SP拖放／長按、符卡詳情純資訊、右上工具移除與Last cut-in的最新USER_APPROVED來源及實際收據，見 [V35 Current Review](ui/V35_FINAL_REVIEW_REPORT.md)。81f3d94完整Domain／100seeds CI成功；77bd22a導致Lv40三項相容失敗；1861663修復後新Last native25/25 CI成功，但原Lv4032未追加複驗、最新截圖待授權，整體NEEDS_REVISION。保留P4.4 14/16與全部失敗，不升級最終視覺驗收。
+
 ## V3.5 quota checkpoint 2026-10-15
 
 V3.5.0 pinned references 1d64ccd；AP部分已實作，new32/32、HUD36/Layout18/Integration31及修正後靜態9PNG30/30本地通過。V3.5.1角色卡與.2–.5未完成；CI_PENDING／NEEDS_REVISION，不宣告High-Fidelity VERIFIED。剩29%按使用者規則交接，詳docs/handoff/V35_QUOTA_HANDOFF.md；master/V2未修改。
