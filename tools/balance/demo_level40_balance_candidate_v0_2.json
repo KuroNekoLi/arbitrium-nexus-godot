@@ -1,0 +1,46 @@
+{
+  "content_version": "astraea-level40-demo-balance-v0.2-candidate",
+  "status": "BALANCE_PROVISIONAL / PYTHON_TESTED / NOT_GODOT_TESTED",
+  "source_documents": [
+    "/docs/combat/00_README_COMBAT_RULES_BASELINE_V0_8.md",
+    "/docs/combat/25_STARTER_PARTY_CARD_CONTENT_V0_2.md",
+    "/docs/combat/26_UNIVERSAL_BASIC_MAGIC_AND_STARTER_DECK_V0_3.md",
+    "/docs/combat/27_LEVEL40_DEMO_BOSS_ENCOUNTER_V0_1.md"
+  ],
+  "encounter_id": "demo_lvl40_arcane_sentry_v0_1",
+  "level": 40,
+  "party_variant_ids": [
+    "ren_swordsman_v1",
+    "akane_burst_mage_v1",
+    "tsumugi_healer_v1"
+  ],
+  "boss": {
+    "original_hp": 3000,
+    "candidate_hp": 2700,
+    "original_attack_factor": 1.0,
+    "candidate_attack_factor": 1.7,
+    "original_break_max": 30,
+    "candidate_break_max": 22,
+    "barrier": 180,
+    "p_atk_original": 245,
+    "m_atk_original": 255,
+    "attack_factor_is_simulator_only": true
+  },
+  "other_simulator_config": {
+    "player_attack_factor": 1.0,
+    "boss_defence_factor": 1.0
+  },
+  "target_k": 200,
+  "target_win_turns": {
+    "balanced_median_low": 8,
+    "balanced_median_high": 12
+  },
+  "known_nonconformances": [
+    "Missing full Reaction Queue and per-item skip events",
+    "FocusWard simplified; needs actual CastingInstance ward layer",
+    "LastSpell specialized destabilization/reduced outcome incomplete",
+    "Boss intent phase transitions modeled as approximation",
+    "Combo events and card-specific status interactions incomplete",
+    "Not Godot CombatDomain"
+  ]
+}

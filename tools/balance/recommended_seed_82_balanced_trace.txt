@@ -1,0 +1,173 @@
+1 | ren | FREE_SWAP | U03 | to | R08
+1 | akane | FREE_SWAP | U04 | to | U05
+1 | tsumugi | FREE_SWAP | T01 | to | U03
+1 | TURN | bossHP | 2700 | bossintent | B01
+1 | ren | R03 | 104 | boss | 2596
+1 | ren | R03 | phys
+1 | tsumugi | T09 | 67 | boss | 2529
+1 | tsumugi | T09 | magic
+1 | tsumugi | basic | 42 | boss | 2487
+1 | tsumugi | T04 | shield
+1 | tsumugi | U02 | shield
+1 | ENEMY | B01 | ren
+1 | BOSS | B01 | ren | hp_damage | 17 | remaining | 1483
+2 | ren | FREE_SWAP | R05 | to | U02
+2 | akane | FREE_SWAP | A05 | to | A07
+2 | tsumugi | FREE_SWAP | U03 | to | T05
+2 | TURN | bossHP | 2487 | bossintent | B05
+2 | akane | A07 | 88 | boss | 2399
+2 | akane | A07 | fire
+2 | akane | basic | 0 | boss | 2399
+2 | tsumugi | basic | 0 | boss | 2399
+2 | ren | R02 | 137 | boss | 2262
+2 | ren | R02 | phys2
+2 | ENEMY | B05 | None
+3 | ren | FREE_SWAP | U05 | to | R01
+3 | akane | FREE_SWAP | U05 | to | U01
+3 | tsumugi | FREE_SWAP | T03 | to | U04
+3 | TURN | bossHP | 2262 | bossintent | B06
+3 | ren | R01 | 89 | boss | 2173
+3 | ren | R01 | phys
+3 | akane | A06 | 265 | boss | 1908
+3 | akane | A06 | fire
+3 | ren | R07 | 66 | boss | 1842
+3 | ren | R07 | phys
+3 | ren | R08 | teamshield
+3 | ENEMY | B06 | akane
+3 | BOSS | B06 | akane | hp_damage | 588 | remaining | 362
+4 | ren | FREE_SWAP | U04 | to | R02
+4 | akane | FREE_SWAP | A03 | to | A02
+4 | tsumugi | FREE_SWAP | U04 | to | T10
+4 | TURN | bossHP | 1797 | bossintent | B07
+4 | tsumugi | T06 | healshield
+4 | akane | A04 | 211 | boss | 1586
+4 | akane | A04 | fire
+4 | akane | U01 | 90 | boss | 1496
+4 | akane | U01 | magic
+4 | ENEMY | B07 | None
+5 | akane | FREE_SWAP | U02 | to | U04
+5 | tsumugi | FREE_SWAP | U05 | to | U03
+5 | TURN | bossHP | 1496 | bossintent | B02
+5 | ren | basic | 66 | boss | 1496
+5 | tsumugi | T10 | 59 | boss | 1496
+5 | tsumugi | T10 | damageheal
+5 | tsumugi | basic | 28 | boss | 1478
+5 | akane | basic | 32 | boss | 1446
+5 | akane | A01 | 143 | boss | 1303
+5 | akane | A01 | fire
+5 | ENEMY | B02 | akane
+5 | BOSS | B02 | akane | hp_damage | 154
+5 | BOSS | B02 | akane | hp_damage | 147
+6 | akane | FREE_SWAP | U03 | to | A04
+6 | tsumugi | FREE_SWAP | U03 | to | U02
+6 | TURN | bossHP | 1303 | bossintent | B03
+6 | ren | U02 | shield
+6 | tsumugi | T04 | shield
+6 | tsumugi | basic | 28 | boss | 1275
+6 | tsumugi | U02 | shield
+6 | ren | basic | 68 | boss | 1207
+6 | ENEMY | B03 | akane
+6 | BOSS | B03 | akane | hp_damage | 109 | remaining | 392
+7 | akane | FREE_SWAP | A02 | to | U01
+7 | tsumugi | FREE_SWAP | U01 | to | T05
+7 | TURN | bossHP | 1207 | bossintent | B04
+7 | ren | basic | 103 | boss | 1104
+7 | akane | basic | 0 | boss | 1104
+7 | akane | U01 | 93 | boss | 1011
+7 | akane | U01 | magic
+7 | tsumugi | basic | 27 | boss | 984
+7 | tsumugi | T01 | heal
+7 | ENEMY | B04 | None
+7 | BOSS | B04 | ren | hp_damage | 178 | remaining | 1305
+7 | BOSS | B04 | akane | hp_damage | 308 | remaining | 344
+7 | BOSS | B04 | tsumugi | hp_damage | 279 | remaining | 921
+8 | akane | FREE_SWAP | A04 | to | U05
+8 | tsumugi | FREE_SWAP | T03 | to | T06
+8 | TURN | bossHP | 984 | bossintent | B02
+8 | akane | basic | 31 | boss | 953
+8 | akane | U05 | heal
+8 | tsumugi | basic | 29 | boss | 924
+8 | ren | R02 | 135 | boss | 789
+8 | ren | R02 | phys2
+8 | ENEMY | B02 | akane
+8 | BOSS | B02 | akane | hp_damage | 109
+8 | BOSS | B02 | akane | hp_damage | 245
+9 | ren | FREE_SWAP | R05 | to | U05
+9 | akane | FREE_SWAP | A05 | to | A07
+9 | tsumugi | FREE_SWAP | U02 | to | U01
+9 | TURN | bossHP | 789 | bossintent | B08
+9 | ren | U05 | heal
+9 | tsumugi | basic | 28 | boss | 761
+9 | ren | basic | 68 | boss | 693
+9 | akane | basic | 30 | boss | 663
+9 | akane | A07 | 87 | boss | 576
+9 | akane | A07 | fire
+9 | ENEMY | B08 | None
+10 | akane | FREE_SWAP | U01 | to | A05
+10 | tsumugi | FREE_SWAP | T06 | to | T01
+10 | TURN | bossHP | 576 | bossintent | B09
+10 | tsumugi | T01 | heal
+10 | ren | R07 | 73 | boss | 503
+10 | ren | R07 | phys
+10 | ren | R08 | teamshield
+10 | tsumugi | basic | 28 | boss | 475
+10 | akane | basic | 30 | boss | 445
+10 | ENEMY | B09 | None
+10 | BOSS | B09 | ren | hp_damage | 172 | remaining | 1133
+10 | BOSS | B09 | akane | hp_damage | 383 | remaining | 167
+10 | BOSS | B09 | tsumugi | hp_damage | 408 | remaining | 513
+11 | ren | FREE_SWAP | U03 | to | R01
+11 | akane | FREE_SWAP | A05 | to | A07
+11 | TURN | bossHP | 400 | bossintent | B01
+11 | ren | R01 | 92 | boss | 308
+11 | ren | R01 | phys
+11 | ren | R03 | 130 | boss | 178
+11 | ren | R03 | phys
+11 | ren | basic | 0 | boss | 178
+11 | tsumugi | basic | 29 | boss | 149
+11 | akane | basic | 31 | boss | 118
+11 | ENEMY | B01 | ren
+11 | BOSS | B01 | ren | hp_damage | 244 | remaining | 889
+12 | ren | FREE_SWAP | U04 | to | R03
+12 | akane | FREE_SWAP | A06 | to | A04
+12 | tsumugi | FREE_SWAP | U03 | to | T10
+12 | TURN | bossHP | 73 | bossintent | B04
+12 | ren | U05 | heal
+12 | akane | A07 | 88 | boss | 0
+12 | akane | A07 | fire
+
+RESULT
+{
+  "seed": 82,
+  "policy": "balanced",
+  "won": 1,
+  "turns": 12,
+  "boss_hp_remaining": 0,
+  "party_hp_remaining": 1719,
+  "active_party": 3,
+  "ren_damage": 1065,
+  "akane_damage": 1339,
+  "tsumugi_damage": 296,
+  "heal": 1410,
+  "guards": 5,
+  "protects": 0,
+  "breaks": 0,
+  "fallbacks": 0,
+  "exposed_created": 3,
+  "exposed_used": 2,
+  "boss_interrupts": 0,
+  "full_started": 0,
+  "full_resolved": 0,
+  "last_started": 0,
+  "combos": 1,
+  "last_resolved": 0,
+  "basic_attacks": 21,
+  "free_swaps": 30,
+  "reaction_r05": 0,
+  "reaction_t05": 3,
+  "boss_damage_to_party": 3341,
+  "party_kos": 0,
+  "boss_attacks": 11,
+  "boss_phase": 3,
+  "counter_done": 0
+}
