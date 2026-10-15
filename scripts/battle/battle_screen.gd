@@ -249,7 +249,13 @@ func _refresh_preview() -> void:
 	_update_action_summary()
 	hud.confirm_button.disabled = not result["accepted"]
 	hud.feedback.text = tr("BATTLE_CONFIRM_HINT") if result["accepted"] else _reason(str(result["error"]))
-	if pending_kind != "CARD":
+	if pending_kind == "ACTIVATE_LAST_SPELL_M4" and hud.last_preview.visible:
+		# Keep the public targeting/confirm facade for non-GUI clients, while the
+		# player sees only the dedicated cut-in's activation/cancel controls.
+		var index: int = hud.last_preview.target_ids.find(selected_target)
+		if index >= 0: hud.last_preview.target_selector.select(index)
+		hud.last_preview.error_label.text = "" if result["accepted"] else _reason(str(result["error"]))
+	elif pending_kind != "CARD":
 		var key: String = "BATTLE_BASIC" if pending_kind == "BASIC_ATTACK_RESOURCE_ONLY" else "BATTLE_LAST" if pending_kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_SWAP"
 		hud.show_command_confirmation(tr(key), hud.details.text)
 	if result["accepted"] and hud.confirm_button.is_visible_in_tree(): hud.confirm_button.grab_focus()
@@ -324,6 +330,8 @@ func _open_last_preview() -> void:
 	var character: String = str(Lv40Encounter.CHARACTERS.get(selected_actor, "")) if config.get("m5_lv40_enabled", false) else ""
 	var title: String = tr("last_spell." + character + ".name") if not character.is_empty() else tr("BATTLE_LAST")
 	hud.last_preview.present(title, inspected, texture, targets, _reason(str(inspected.get("error", ""))))
+	pending_kind = "ACTIVATE_LAST_SPELL_M4"
+	legal_targets = targets.map(func(target: Dictionary) -> String: return str(target["id"]))
 	for id: String in ["A", "B", "C"]:
 		var visual: Node2D = $Design/Arena.get_node(id)
 		_last_actor_visibility[id] = visual.visible

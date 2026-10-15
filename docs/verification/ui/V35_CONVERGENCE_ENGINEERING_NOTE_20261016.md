@@ -48,6 +48,10 @@ Signal 類似 callback／Flow intent。Presentation Adapter 是 read-only UI mod
 
 ## 面試追問與延伸
 
+最新追加預覽 Commit `77bd22a7bcece1fc7b9cef3360aebfa5fa2dc01c` 的 [CI 38778028502](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38778028502) **failure**：Lv40 32 項為29/32，失敗 `P45-SUPPORT-LAST-TARGET`、`P45-LAST-STARTED`、`P45-LAST-RELEASED`。根因是新 cut-in 未同步公開 `pending_kind`／`legal_targets` facade，非 Domain 內容變更。保留原始 log：managed worktree 父目錄 `v35-ci-116570644005-failure.log`。修復同步真實 target ids，舊程式客戶端的 select_target/confirm_action 仍走同一 Factory；GUI 仍僅顯示 cut-in 的啟動／取消。不修改任何原 assertions。
+
+Lv40 群組已達本輪三次，因此修復後原群組狀態仍 `IMPLEMENTED_NOT_REVERIFIED`，已另詢問一次追加授權。該 CI 在抵達新的 Last native gate 前失敗，故 Last suite 仍是 headless1/native2，尚可執行第3次。不得把 CI 未執行的 Last gate 說成已失敗或已通過。
+
 1. 為何 Command 有 expected_event_seq？防止 stale UI 對新版狀態重複付款。
 2. 為何拖放後先擷取 Full 再 reset？手勢狀態不是結算狀態，過早 reset 會把合法 Full 變成 Chantless。
 3. 為何隱藏而不是刪除 public facade？小步遷移，讓現有 Controller／測試仍指向同一真元件。
