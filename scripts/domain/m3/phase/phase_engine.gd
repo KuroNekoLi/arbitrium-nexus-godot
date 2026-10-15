@@ -9,6 +9,7 @@ const Scheduler = preload("res://scripts/domain/m3/enemy/enemy_action_scheduler.
 const Boundary = preload("res://scripts/domain/m3/phase/phase_boundary_resolver.gd")
 const ReactionWindow = preload("res://scripts/domain/m3/reaction/reaction_window_resolver.gd")
 const ReactionQueue = preload("res://scripts/domain/m3/reaction/reaction_queue_resolver.gd")
+const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const SCHEMA: String = "m3.1-phase-fixture-v1"
 const PLAYER_KINDS: Array[String] = [
 	"COMMIT_SP_CARD_FIXTURE", "FREE_SWAP", "EXTRA_DRAW_FIXTURE",
@@ -175,6 +176,23 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 			return _reject(original, str(acted["error"]))
 		next["core"] = acted["state"]
 		_core_events(next, emitted, acted["events"], command_id)
+		if kind == "BASIC_ATTACK_RESOURCE_ONLY" and config.get("m5_damage_enabled",false) == true:
+			var target: String = str(instruction.get("target_actor_id",""))
+			if not next["core"]["battle"]["enemies"].has(target):
+				return _reject(original,"M51_INVALID_BASIC_TARGET")
+			var profile: Variant = config.get("m5_basic_attack_profile",null)
+			if not profile is Dictionary:
+				return _reject(original,"M51_MISSING_BASIC_ATTACK_PROFILE")
+			var damage: Dictionary = Damage.resolve(next["core"],str(instruction["actor_id"]),
+				target,profile,{},config,command_id)
+			if not damage["ok"]:
+				return _reject(original,str(damage["error"]))
+			next["core"] = damage["core"]
+			for record: Dictionary in damage["timeline"]:
+				if str(record["kind"]) == "core_event":
+					_core_events(next,emitted,[record["raw"]],command_id)
+				else:
+					_emit(next,emitted,str(record["kind"]),command_id,record,"m5_damage")
 		_emit(next, emitted, "PlayerActionSettled", command_id,
 			{"actor_id": str(instruction.get("actor_id", "")), "action_type": kind,
 				"result": "COST_AND_CARD_ONLY_NO_DAMAGE"})
@@ -255,7 +273,7 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 			else:
 				_emit(next, emitted, str(record["kind"]), command_id,
 					record.get("details", {}), "reaction")
-	elif kind == "COMPLETE_ENEMY_ACTION_FIXTURE":
+	elif kind == "COMPLETE_ENEMY_ACTION_FIXTURE" or kind == "RESOLVE_ENEMY_ATTACK_M5":
 		if phase != "ENEMY_PHASE":
 			return _reject(original, "INVALID_PHASE")
 		var active: String = str(next["active_enemy_action_id"])
@@ -287,14 +305,49 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 			defense["original_target_actor_id"] = str(window_state["original_target_actor_id"])
 			defense["damage_recipient_actor_id"] = str(window_state["damage_recipient_actor_id"])
 			defense["enemy_action_cancelled_fixture"] = not bool(window_state["action_active"])
-		next["enemy_actions"][cursor]["status"] = "FIXTURE_RESOLVED"
+		if kind == "RESOLVE_ENEMY_ATTACK_M5":
+			if not config.get("m5_damage_enabled",false) == true:
+				return _reject(original,"M51_DAMAGE_NOT_ENABLED")
+			var intent: Dictionary = current_action["public_intent"]
+			if str(intent.get("target_scope","")) != "SINGLE" or \
+					not intent.get("target_ids",null) is Array or intent["target_ids"].size() != 1:
+				return _reject(original,"M51_UNSUPPORTED_ENEMY_SCOPE")
+			var skill: String = str(intent.get("skill_id",""))
+			var enemy_profiles: Variant = config.get("m5_enemy_profiles",null)
+			if not enemy_profiles is Dictionary or not enemy_profiles.has(skill) or \
+					not enemy_profiles[skill] is Dictionary:
+				return _reject(original,"M51_UNREGISTERED_ENEMY_ATTACK")
+			var effect: Dictionary = enemy_profiles[skill]
+			if int(intent.get("hit_count",0)) != int(effect.get("hit_count",-1)):
+				return _reject(original,"M51_DECLARED_HITS_MISMATCH")
+			if not bool(defense.get("enemy_action_cancelled_fixture",false)):
+				var hp: Dictionary = Damage.resolve(next["core"],str(current_action["enemy_id"]),
+					str(intent["target_ids"][0]),effect,{
+					"damage_recipient_actor_id":str(defense["damage_recipient_actor_id"]),
+					"protect_confirmed":not str(defense["protected_by_actor_id"]).is_empty(),
+					"guard_actor_ids":defense["guard_actor_ids"]},config,command_id)
+				if not hp["ok"]:
+					return _reject(original,str(hp["error"]))
+				next["core"] = hp["core"]
+				for record: Dictionary in hp["timeline"]:
+					if str(record["kind"]) == "core_event":
+						_core_events(next,emitted,[record["raw"]],command_id)
+					else:
+						_emit(next,emitted,str(record["kind"]),command_id,record,"m5_damage")
+		next["enemy_actions"][cursor]["status"] = "M5_RESOLVED" if kind == "RESOLVE_ENEMY_ATTACK_M5" else "FIXTURE_RESOLVED"
 		next["enemy_cursor"] = cursor + 1
 		next["active_enemy_action_id"] = ""
 		next["reaction_window"] = {}
-		_emit(next, emitted, "EnemyActionFixtureResolved", command_id,
-			{"enemy_action_id": active, "damage_status": "DEFERRED_TO_M5",
+		_emit(next, emitted, "EnemyActionResolved" if kind == "RESOLVE_ENEMY_ATTACK_M5"
+			else "EnemyActionFixtureResolved", command_id,
+			{"enemy_action_id": active, "damage_status": "RESOLVED_M5" if kind == "RESOLVE_ENEMY_ATTACK_M5"
+			else "DEFERRED_TO_M5",
 				"reaction_status": "M3_3_BASIC_DEFENSE_DOMAIN",
 				"defense_snapshot": defense}, "enemy")
+		if kind == "RESOLVE_ENEMY_ATTACK_M5":
+			var result_error: String = _outcome_check(next,emitted,command_id)
+			if not result_error.is_empty():
+				return _reject(original,result_error)
 	elif kind == "END_ENEMY_PHASE":
 		if phase != "ENEMY_PHASE":
 			return _reject(original, "INVALID_PHASE")

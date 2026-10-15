@@ -12,6 +12,7 @@ const Refund = preload("res://scripts/domain/m4/casting/casting_refund_policy.gd
 const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
 const LastInstability = preload("res://scripts/domain/m4/last_spell/last_spell_instability_resolver.gd")
 const Invalidation = preload("res://scripts/domain/m4/casting/casting_invalidation_resolver.gd")
+const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 
 static func validate_state(state: Dictionary) -> bool:
 	return Phase.validate_state(state) and Instance.valid(state["core"])
@@ -390,10 +391,25 @@ static func apply(original: Dictionary, command: Dictionary,
 			"planned_resolve_round": cast["planned_resolve_round"],
 			"concentrating": true, "base_stability_authority": "BALANCE_PROVISIONAL"})
 	else:
-		_event(next, output, "SpellEffectDeferredToM5", id,
-			{"spell_id": resolved["definition_id"], "mode": "CHANTLESS",
+		if config.get("m5_damage_enabled",false) == true:
+			var magic: Variant = config.get("m5_spell_profiles",{}).get(str(resolved["definition_id"]),null)
+			if not magic is Dictionary:
+				return _reject(original,"M51_MISSING_SPELL_EFFECT")
+			var hit: Dictionary = Damage.resolve(next["core"],str(resolved["actor_id"]),
+				str(resolved["target_actor_id"]),magic,{},config,id)
+			if not hit["ok"]:
+				return _reject(original,str(hit["error"]))
+			next["core"] = hit["core"]
+			for record: Dictionary in hit["timeline"]:
+				if str(record["kind"]) == "core_event":
+					_event(next,output,str(record["raw"]["event"]["kind"]),id,{"core_event":record["raw"]},"m2")
+				else:
+					_event(next,output,str(record["kind"]),id,record,"m5_damage")
+		else:
+			_event(next, output, "SpellEffectDeferredToM5", id,
+				{"spell_id": resolved["definition_id"], "mode": "CHANTLESS",
 			"target_snapshot": {"actor_id": resolved["target_actor_id"]},
-			"effect_execution": "NOT_IMPLEMENTED_M5", "hp_delta": 0})
+				"effect_execution": "NOT_IMPLEMENTED_M5", "hp_delta": 0})
 	_event(next, output, "PlayerActionSettled", id,
 		{"actor_id": resolved["actor_id"], "action_type": "CAST_SPELL_M4",
 			"mode": resolved["mode"], "charged_once": true,
