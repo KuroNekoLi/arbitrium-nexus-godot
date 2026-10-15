@@ -127,3 +127,4 @@ BATTLE_UNIMPLEMENTED_SUB,Not implemented,尚未實作
 BATTLE_SWAP_SUB,0 AP · 1 per phase,0 AP · 每階段 1 次
 BATTLE_LAST_SUB,Irreversible finale,不可逆的終式
 BATTLE_END_SUB,Pass to enemy phase,結束我方階段
+BATTLE_INTENT_TARGET,Targeted: %s,目標：%s

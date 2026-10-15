@@ -16,6 +16,41 @@ var hp_section: VBoxContainer
 var break_section: VBoxContainer
 var intent_panel: PanelContainer
 var _intent_accent: ColorRect
+const INTENT_ICON: Texture2D = preload("res://assets/ui/v35/intent_skill.svg")
+## Hero accents mirror PartyStatusPanel so a target chip reads as "that hero".
+const TARGET_ACCENTS: Dictionary = {"A": Color("efc675"), "B": Color("75d6ff"), "C": Color("df9cff")}
+var intent_icon: TextureRect
+var hit_chip: Label
+var target_badges: HBoxContainer
+
+func _make_chip(parent: Node, name: String, accent: Color) -> Label:
+	var chip := Label.new()
+	chip.name = name
+	chip.add_theme_font_size_override("font_size", 11)
+	chip.add_theme_color_override("font_color", accent.lightened(0.45))
+	var style := StyleBoxFlat.new()
+	style.bg_color = accent.darkened(0.7)
+	style.border_color = accent
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(8)
+	style.content_margin_left = 6
+	style.content_margin_right = 6
+	style.content_margin_top = 0
+	style.content_margin_bottom = 1
+	chip.add_theme_stylebox_override("normal", style)
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.autowrap_mode = TextServer.AUTOWRAP_OFF
+	chip.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	chip.clip_text = true
+	parent.add_child(chip)
+	return chip
+
+## Read-only accessor for tests/QA: published target ids currently shown.
+func target_badge_ids() -> Array:
+	var ids: Array = []
+	for child: Node in target_badges.get_children():
+		ids.append(str(child.name).trim_prefix("Target_"))
+	return ids
 
 func _make_label(parent: Node, name: String, text: String, size_hint: int) -> Label:
 	var item: Label = UI.label(parent, text, size_hint)
@@ -93,8 +128,30 @@ func _ready() -> void:
 	intent_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	intent_content.add_theme_constant_override("separation", 2)
 	intent_row.add_child(intent_content)
-	_intent_heading = _make_label(intent_content, "IntentHeading", "BATTLE_INTENT", 13)
+	# V3.5.3: icon + heading + public hit-count chip share one row (no extra height).
+	var heading_row := HBoxContainer.new()
+	heading_row.name = "IntentHeadingRow"
+	heading_row.add_theme_constant_override("separation", 5)
+	heading_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	intent_content.add_child(heading_row)
+	intent_icon = TextureRect.new()
+	intent_icon.name = "IntentIcon"
+	intent_icon.texture = INTENT_ICON
+	intent_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	intent_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	intent_icon.custom_minimum_size = Vector2(18, 18)
+	intent_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	heading_row.add_child(intent_icon)
+	_intent_heading = _make_label(heading_row, "IntentHeading", "BATTLE_INTENT", 13)
 	_intent_heading.add_theme_color_override("font_color", Tokens.INTENT)
+	_intent_heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hit_chip = _make_chip(heading_row, "IntentHitChip", Tokens.INTENT)
+	# Target badges: one chip per PUBLISHED target id; nothing is inferred.
+	target_badges = HBoxContainer.new()
+	target_badges.name = "IntentTargetBadges"
+	target_badges.add_theme_constant_override("separation", 4)
+	target_badges.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	intent_content.add_child(target_badges)
 	intent = UI.label(intent_content, "", 13)
 	intent.name = "IntentDetail"
 	intent.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -139,14 +196,30 @@ func render_enemy(projection: Dictionary) -> void:
 
 	# A published event is the ONLY source of threat information.
 	intent.text = ""
+	hit_chip.text = ""
+	hit_chip.visible = false
+	for old: Node in target_badges.get_children():
+		target_badges.remove_child(old)
+		old.queue_free()
 	var published: Array = projection.get("intent", [])
 	intent_panel.visible = not published.is_empty()
+	target_badges.visible = false
 	if not published.is_empty():
 		var announced: Dictionary = published[0]
 		var names: PackedStringArray = []
 		for target: String in announced.get("target_ids", []):
-			names.append(tr(str(projection.get("actor_name_keys", {}).get(
-				target, "BATTLE_HERO_" + target))))
+			var target_name: String = tr(str(projection.get("actor_name_keys", {}).get(
+				target, "BATTLE_HERO_" + target)))
+			names.append(target_name)
+			var chip: Label = _make_chip(target_badges, "Target_" + target,
+				TARGET_ACCENTS.get(target, Tokens.INTENT))
+			chip.clip_text = false
+			chip.text = target_name
+			chip.tooltip_text = tr("BATTLE_INTENT_TARGET") % target_name
+		target_badges.visible = target_badges.get_child_count() > 0
+		if announced.has("hit_count"):
+			hit_chip.text = "×%d" % int(announced["hit_count"])
+			hit_chip.visible = true
 		var skill_key: String = str(announced.get("name_key",
 			"BATTLE_" + str(announced.get("skill_id", "")).to_upper()))
 		intent.text = tr("BATTLE_INTENT_DETAIL") % [
