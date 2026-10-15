@@ -3,6 +3,7 @@ const Encounter = preload("res://scripts/domain/m5/lv40/lv40_encounter.gd")
 const M4 = preload("res://scripts/domain/m4/integration/m4_domain_resolver.gd")
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
+const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
 var passed: int = 0
 var failed: int = 0
 
@@ -22,6 +23,15 @@ func _initialize() -> void:
 		quit(1)
 		return
 	check(M4.validate_state(s),"DEMO-01-CONTENT-M4-SCHEMA")
+	check(bool(c.get("m5_lv40_enabled",false)) and str(s["core"]["battle"]["lv40"]["version"]) == str(c["m5_lv40_content_version"]), "DEMO-01-VERSIONED-OPT-IN")
+	check(str(c["m5_status_definitions"]["SCORCH_TEST"]["tick_trigger"]) == "ENEMY_PHASE_END", "DEMO-10-SCORCH-REGISTERED-BOUNDARY")
+	var granted: Dictionary = Status.grant(s["core"],"B","Boss","SCORCH_TEST","content-tick",c)
+	check(granted.get("ok",false) and Status.validate(granted["core"],c), "DEMO-10-REAL-STATUS-SCHEMA")
+	if granted.get("ok",false):
+		var early: Dictionary = Status.tick(granted["core"],2,c,"content-no-early","NEXT_PLAYER_PHASE")
+		check(early.get("ok",false) and early["timeline"].is_empty() and early["core"]["battle"]["statuses"] == granted["core"]["battle"]["statuses"], "DEMO-10-NO-PLAYER-PHASE-SCORCH-TICK")
+		var due: Dictionary = Status.tick(granted["core"],2,c,"content-enemy-tick","ENEMY_PHASE_END")
+		check(due.get("ok",false) and due["timeline"].size() > 0 and int(due["core"]["battle"]["statuses"][0]["remaining_ticks"]) == 1, "DEMO-10-SCORCH-ENEMY-END-ONLY")
 	check(s["core"]["battle"]["enemies"] == ["Boss"],"DEMO-01-SINGLE-BOSS")
 	check(int(s["core"]["battle"]["party_resources"]["current_ap"]) == 6,"DEMO-01-AP6")
 	for actor: String in Encounter.LOADOUTS:
