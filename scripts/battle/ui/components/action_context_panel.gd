@@ -50,9 +50,21 @@ func _ready() -> void:
 	content.add_child(combo)
 	combo.toggled.connect(func(_on: bool) -> void: command_requested.emit("REFRESH_PREVIEW", {}))
 
-	# Presentation preferences are still accessible via the details scroller.
-	var settings := HBoxContainer.new()
+	# V2.5: presentation-only preferences are a collapsed disclosure.
+	# Confirm/Cancel stay visible below DetailScroll even with the disclosure open.
+	var disclosure := Button.new()
+	disclosure.name = "PreferencesDisclosure"
+	disclosure.text = "⚙"
+	disclosure.tooltip_text = tr("BATTLE_REDUCED") + " · " + tr("BATTLE_MUTE")
+	disclosure.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	disclosure.custom_minimum_size.y = 28
+	content.add_child(disclosure)
+	var settings := VBoxContainer.new()
+	settings.name = "PreferencesContent"
+	settings.visible = false
 	content.add_child(settings)
+	disclosure.pressed.connect(func() -> void:
+		settings.visible = not settings.visible)
 	reduced_toggle = CheckButton.new()
 	reduced_toggle.text = tr("BATTLE_REDUCED")
 	reduced_toggle.add_theme_font_size_override("font_size", 12)
@@ -63,7 +75,7 @@ func _ready() -> void:
 	mute_toggle.text = tr("BATTLE_MUTE")
 	mute_toggle.add_theme_font_size_override("font_size", 12)
 	mute_toggle.toggled.connect(func(enabled: bool) -> void: command_requested.emit("MUTE_AUDIO", {"enabled":enabled}))
-	content.add_child(mute_toggle)
+	settings.add_child(mute_toggle)
 
 	# Deliberately OUTSIDE the ScrollContainer: confirmation never scrolls away.
 	action_row = HBoxContainer.new()
