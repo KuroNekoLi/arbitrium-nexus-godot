@@ -88,11 +88,11 @@ func run() -> void:
 	var eight_hash: String = Model.state_hash(screen.snapshot)
 	screen.set_locale("en")
 	hud = screen.hud
-	check(hud.card_views.size() == 4, "V32-EN-REBUILT")
+	check(hud.card_views.size() == 8, "V32-EN-PRESERVES-ACTIVE-HAND")
 	_assert_frame(hud.card_views[0], "V32-EN")
 	screen.set_locale("zh_TW")
 	hud = screen.hud
-	check(hud.card_views.size() == 4, "V32-ZHTW-REBUILT")
+	check(hud.card_views.size() == 8, "V32-ZHTW-PRESERVES-ACTIVE-HAND")
 	_assert_frame(hud.card_views[0], "V32-ZHTW")
 	check(Model.state_hash(screen.snapshot) != "", "V32-HASH-AVAILABLE")
 	check(eight_hash != "", "V32-EIGHT-HASH-AVAILABLE")
