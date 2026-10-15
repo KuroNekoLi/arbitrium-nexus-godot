@@ -3,3 +3,24 @@ work/
 *.import
 work/simple-cards-v-2/
 
+# Godot CSV importer artifacts. BattleTranslations parses the CSV sources
+# directly at runtime, so generated *.translation binaries are not sources.
+*.translation
+
+# IDE / agent workspace state.
+.idea/
+.vscode/
+*.iml
+
+# Local headless capture / QA runs. Evidence is recorded by path + SHA256 in
+# docs/handoff backfills; commit curated PNGs explicitly under outputs/ instead.
+outputs/p4_input_capture/
+outputs/**/logs/
+
+# OS noise.
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# NOTE: *.uid files are intentionally tracked (Godot 4.4+ recommendation and
+# existing repo convention); do not ignore them.
