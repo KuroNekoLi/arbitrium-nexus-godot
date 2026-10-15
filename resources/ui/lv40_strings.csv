@@ -1,6 +1,6 @@
 keys,en,zh_TW
 LV40_U01_NAME,Arcane bolt,奧術彈
-LV40_U01_DESC,"Single-target magic; immediate or full chant.",敵方單體魔法；可瞬發或完整詠唱。
+LV40_U01_DESC,"Single-target magic; chantless or full chant.",對敵方單體施法；可破棄詠唱或完整詠唱。
 LV40_U02_NAME,Mana barrier,魔力屏障
 LV40_U02_DESC,"Grant an ally an HP barrier, not casting protection.",給予隊友生命屏障，不保護詠唱穩定度。
 LV40_U03_NAME,Focus charm,專注護符
@@ -18,7 +18,7 @@ LV40_R03_DESC,"Physical attack that can exploit existing Exposed.",物理攻擊�
 LV40_R05_NAME,Protecting riposte,援護反擊
 LV40_R05_DESC,"Reaction: redirect, gain a barrier, then counter if legal.",反應卡：援護隊友、先取得屏障，再合法反擊。
 LV40_R06_NAME,Azure crescent,蒼月斬
-LV40_R06_DESC,"Physical finisher; combo only when its recipe is legal.",物理追擊；符合配方時可連攜。
+LV40_R06_DESC,"Physical attack with Break damage; no registered combo recipe yet.",造成物理傷害及失衡值；目前未登錄專屬連攜配方。
 LV40_R07_NAME,Opening lure,戰隙誘引
 LV40_R07_DESC,"Create Exposed only under the enemy's specified core condition.",只有指定敵方核心條件成立才可製造戰術破綻。
 LV40_R08_NAME,Guardian oath,守護誓約
@@ -26,7 +26,7 @@ LV40_R08_DESC,"Shield self and an ally; may set up a defense combo.",自己與�
 LV40_A01_NAME,Ember bolt,燐火彈
 LV40_A01_DESC,"Single-target fire magic; immediate or full chant.",單體火系魔法；可瞬發或完整詠唱。
 LV40_A02_NAME,Blazing tide,熾焰潮
-LV40_A02_DESC,"Fire magic against all foes; immediate or full chant.",全體敵方火系魔法；可瞬發或完整詠唱。
+LV40_A02_DESC,"Target one foe with fire magic; chantless or full chant. Multi-target resolution is not wired.",對單一敵人施放火系魔法；可破棄或完整詠唱。尚未接通多目標效果。
 LV40_A03_NAME,Gathering flame,凝火
 LV40_A03_DESC,"Enhance the next eligible magic HP effect, not Break or disruption.",強化下一張合格魔法的生命傷害，不增加失衡或干擾。
 LV40_A04_NAME,Searing ray,灼熱束
@@ -51,3 +51,21 @@ LV40_T09_NAME,Lightfeather bolt,光羽彈
 LV40_T09_DESC,"Single-target magic; immediate or full chant.",單體魔法；可瞬發或完整詠唱。
 LV40_T10_NAME,Radiant pulse,祈光脈衝
 LV40_T10_DESC,"After real HP damage, heal the lowest-ratio living ally once.",實際造成生命傷害後，治療生命比例最低的存活隊友一次。
+actor.ren.name,Ren Asagiri,朝霧蓮
+actor.akane.name,Akane Kujo,九條朱音
+actor.tsumugi.name,Tsumugi Shiraishi,白石紬
+actor.arcane_sentry.name,Arcane Sentry Zero,秘紋守衛・零式
+intent.b01.name,Core Strike,核心突擊
+intent.b02.name,Twin Assault,雙連擊
+intent.b03.name,Chant Interference,詠唱干擾
+intent.b04.name,Arcane Sweep,秘紋橫掃
+intent.b05.name,Charging the Core,核心蓄力
+intent.b06.name,Core Discharge,核心釋放
+intent.b07.name,Barrier Deployment,屏障展開
+intent.b08.name,Overload Charge,超載蓄力
+intent.b09.name,Overload Discharge,超載釋放
+intent.b10.name,Interrupted Recovery,中斷後整備
+intent.b11.name,Weakened Strike,弱化攻擊
+last_spell.ren.name,Ren's Last Spell,蓮的終極法術
+last_spell.akane.name,Akane's Last Spell,朱音的終極法術
+last_spell.tsumugi.name,Tsumugi's Last Spell,紬的終極法術
