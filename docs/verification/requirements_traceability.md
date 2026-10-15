@@ -1,5 +1,14 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+## V2 Review 2026-10-15
+
+| Requirement | Source | Implementation / evidence | Status |
+|---|---|---|---|
+| V2 layout/hand/context | V2 notes / user V2 review | 822b1ce reviewed with master adb7582；layout18/context23/hand39本地PASS | CI_PENDING |
+| V26 missing UX / modal safety | UI02 / UIUX / user V2 request | HUD input shield/tree order/WeakRef focus suspend+restore；新V26首輪44/47、次輪40/47，最後CI待執行 | IMPLEMENTED_NOT_VERIFIED |
+| No Domain drift | CombatImplementationContract §2 | scripts/domain無差異；1238/100seeds保留Full Gate；原P44及V25 NOT_RERUN | CI_PENDING |
+
+
 > 日期：2026-10-14；程式基準 `c9678782b818f825b85561313bd142130c330fdf`；本表依 GitHub **靜態程式檢視**。除 G0.1、M1 scaffold 與 M2.1 **資源子契約**的已驗證案例之外，完整 **Phase1/2 gameplay** 仍多數 `NOT_EXECUTED`，不把文件指定的 Test ID 等同已跑 PASS。Spec 詳情參見 `../combat/00`～`24`。此表優先盤點工程關鍵不變量；完整逐一展開規格檔 13 的全部 test IDs，列為 M1 RTM 擴充義務。
 
 | RTM | 正式需求 / Source | Legacy code / evidence | 稽核判定 | 新版驗收要求 | 工作包 |

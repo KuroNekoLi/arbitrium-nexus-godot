@@ -120,7 +120,13 @@ jobs:
             }
             python3 tools/ci/assert_godot_logs.py "$log"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=9 assertions=488 legacy=4 failed=0'
+          for spec in \
+            'test_p4_v2_layout:V2_LAYOUT_REPORT:18' \
+            'test_p4_v2_context_layout:V2_CONTEXT_REPORT:23' \
+            'test_p4_v24_hand:V24_HAND_REPORT:39'; do
+            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
+          done
+          echo 'CI_P4_CONTRACTS_REPORT suites=12 assertions=568 legacy=4 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
       - name: Upload P4 contract evidence
         if: always()

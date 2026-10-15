@@ -170,6 +170,7 @@ func select_card(instance: String) -> void:
 	var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
 	if not own["zones"]["hand"].has(instance): return
 	pending_card = instance
+	hud.set_selected_card(instance)
 	pending_kind = "CARD"
 	selected_target = ""
 	legal_targets = _targets_for_card(instance)
@@ -220,6 +221,7 @@ func cancel_action() -> void:
 	legal_targets = []
 	if not is_node_ready(): return
 	hud.set_targets([])
+	hud.set_selected_card("")
 	hud.details.text = tr("BATTLE_SELECT")
 	hud.mode.hide()
 	hud.combo.hide()
@@ -324,7 +326,7 @@ func _input(event: InputEvent) -> void:
 	if snapshot.is_empty(): return
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
-	if hud.reaction_panel.visible: return
+	if hud.reaction_panel.visible or hud.result_panel.visible: return
 	if event.is_action_pressed("end_turn"):
 		_command_requested("END_PLAYER_PHASE",{})
 		get_viewport().set_input_as_handled()

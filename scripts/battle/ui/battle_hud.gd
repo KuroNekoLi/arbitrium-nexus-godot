@@ -5,6 +5,7 @@ const PartyScene = preload("res://scenes/battle/ui/party_status_panel.tscn")
 const CommandsScene = preload("res://scenes/battle/ui/command_menu.tscn")
 const EnemyScene = preload("res://scenes/battle/ui/enemy_status_panel.tscn")
 const ContextScene = preload("res://scenes/battle/ui/action_context_panel.tscn")
+const LogScene = preload("res://scenes/battle/ui/battle_log_panel.tscn")
 const HandScene = preload("res://scenes/battle/ui/hand_view.tscn")
 const TargetsScene = preload("res://scenes/battle/ui/target_hit_regions.tscn")
 const ReactionScene = preload("res://scenes/battle/ui/reaction_queue.tscn")
@@ -44,13 +45,19 @@ var result_label: Label
 var reduced_toggle: CheckButton
 var mute_toggle: CheckButton
 var conditions: Label
+var _conditions_panel: PanelContainer
 
 var _top: Control
 var _party: Control
 var _commands: Control
 var _enemy: Control
 var _context: Control
+var _log: Control
 var _targets: Control
+var _modal_shield: Control
+var _modal_active: bool = false
+var _return_focus: WeakRef
+var _background_focus: Dictionary = {}
 
 func _ready() -> void:
 	theme = preload("res://resources/ui/battle_theme.tres")
@@ -72,39 +79,42 @@ func _build() -> void:
 	_top.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 
 	# V1 deliberately preserves the previous 1280×720 rectangles.
-	var conditions_panel := PanelContainer.new()
-	conditions_panel.name = "Conditions"
-	conditions_panel.position = Vector2(292, 88)
-	conditions_panel.size = Vector2(680, 42)
-	add_child(conditions_panel)
-	conditions = UI.label(UI.column(conditions_panel), "", 14)
+	_conditions_panel = PanelContainer.new()
+	_conditions_panel.name = "Conditions"
+	_conditions_panel.position = Vector2(312, 98)
+	_conditions_panel.size = Vector2(640, 36)
+	add_child(_conditions_panel)
+	conditions = UI.label(UI.column(_conditions_panel), "", 14)
+	conditions.autowrap_mode = TextServer.AUTOWRAP_OFF
+	conditions.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-	_party = _place(PartyScene, Rect2(16, 92, 260, 318))
+	_party = _place(PartyScene, Rect2(16, 98, 260, 318))
 	roster = _party.roster
 	_party.actor_requested.connect(func(actor: String) -> void: actor_requested.emit(actor))
 
-	_commands = _place(CommandsScene, Rect2(16, 425, 260, 269))
+	_commands = _place(CommandsScene, Rect2(16, 432, 248, 266))
 	end_button = _commands.end_button
 	_commands.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 
-	_enemy = _place(EnemyScene, Rect2(984, 92, 280, 235))
+	_enemy = _place(EnemyScene, Rect2(984, 98, 280, 238))
 	boss_stats = _enemy.boss_stats
 	intent = _enemy.intent
 
-	_context = _place(ContextScene, Rect2(984, 350, 280, 348))
+	_context = _place(ContextScene, Rect2(984, 348, 280, 220))
 	details = _context.details
 	mode = _context.mode
 	combo = _context.combo
 	confirm_button = _context.confirm_button
 	feedback = _context.feedback
-	log_label = _context.log_label
+	_log = _place(LogScene, Rect2(984, 580, 280, 118))
+	log_label = _log.log_label
 	reduced_toggle = _context.reduced_toggle
 	mute_toggle = _context.mute_toggle
 	_context.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 	_context.confirm_requested.connect(func() -> void: confirm_requested.emit())
 	_context.cancel_requested.connect(func() -> void: cancel_requested.emit())
 
-	hand = _place(HandScene, Rect2(292, 458, 680, 246))
+	hand = _place(HandScene, Rect2(290, 470, 686, 240))
 	card_views = hand.card_views
 	hand.card_requested.connect(func(instance: String) -> void: card_requested.emit(instance))
 	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void: card_released.emit(instance, pointer))
@@ -128,6 +138,16 @@ func _build() -> void:
 	result.hide()
 	reaction_column = reaction_panel.reaction_column
 	reaction_panel.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
+	_modal_shield = Control.new()
+	_modal_shield.name = "ModalInputShield"
+	_modal_shield.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_modal_shield.mouse_filter = Control.MOUSE_FILTER_STOP
+	_modal_shield.z_index = 95
+	_modal_shield.hide()
+	add_child(_modal_shield)
+	# GUI picking follows tree order, not draw z_index. Keep the shield before
+	# both modal panels so it blocks the background, never their own buttons.
+	move_child(_modal_shield,reaction_panel.get_index())
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection
@@ -136,11 +156,64 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 	result_label.text = tr("BATTLE_"+str(vm["outcome"]))
 	_top.render_phase(vm)
 	conditions.text = _party.render_party(vm, actor)
+	conditions.tooltip_text = conditions.text
+	_conditions_panel.visible = _selected_has_conditions(vm, actor)
 	_commands.render_commands(vm)
 	_enemy.render_enemy(vm)
 	hand.render_cards(cards)
 	card_views = hand.card_views
 	reaction_panel.render_window(vm["reaction"], reaction_choices,vm.get("actor_name_keys",{}))
+	_sync_modal_focus()
+
+func _focus_buttons(node: Node, output: Array[Control]) -> void:
+	for child: Node in node.get_children():
+		if child is BaseButton and child.is_visible_in_tree() and not child.disabled:
+			output.append(child)
+		_focus_buttons(child,output)
+
+func _suspend_focus(node: Node) -> void:
+	if node is Control and node.focus_mode != Control.FOCUS_NONE:
+		_background_focus[node.get_instance_id()] = {"node":weakref(node),"mode":node.focus_mode}
+		node.focus_mode = Control.FOCUS_NONE
+	for child: Node in node.get_children(): _suspend_focus(child)
+
+func _restore_background_focus() -> void:
+	for saved: Dictionary in _background_focus.values():
+		var node: Control = saved["node"].get_ref()
+		if is_instance_valid(node) and not node.is_queued_for_deletion():
+			node.focus_mode = saved["mode"]
+	_background_focus.clear()
+
+## GUI modal isolation is presentation-only; it never confirms or passes a window.
+func _sync_modal_focus() -> void:
+	var active: bool = result_panel.visible or reaction_panel.visible
+	_modal_shield.visible = active
+	if active:
+		if not _modal_active:
+			_return_focus = weakref(get_viewport().gui_get_focus_owner())
+		# SimpleCards also refreshes hover from geometry outside native GUI picking.
+		# NONE prevents its focus-on-hover from escaping into a covered hand.
+		for child: Node in get_children():
+			if child not in [reaction_panel,result_panel,_modal_shield]: _suspend_focus(child)
+		var panel: Control = result_panel if result_panel.visible else reaction_panel
+		var buttons: Array[Control] = []
+		_focus_buttons(panel,buttons)
+		for i: int in buttons.size():
+			buttons[i].focus_next = buttons[i].get_path_to(buttons[(i+1)%buttons.size()])
+			buttons[i].focus_previous = buttons[i].get_path_to(buttons[(i-1+buttons.size())%buttons.size()])
+		if not buttons.is_empty(): buttons[0].grab_focus()
+	elif _modal_active:
+		_restore_background_focus()
+		var previous: Control = _return_focus.get_ref() if _return_focus != null else null
+		if is_instance_valid(previous) and not previous.is_queued_for_deletion() and previous.is_visible_in_tree():
+			previous.grab_focus()
+		else:
+			end_button.grab_focus()
+	_modal_active = active
+
+func set_selected_card(instance: String) -> void:
+	# Display-only selection; legacy BattleScreen stays authoritative for actions.
+	hand.set_selected_instance(instance)
 
 func _arrange_hand() -> void:
 	# Legacy compatibility adapter; the HandView owns ArcShape.
@@ -152,3 +225,15 @@ func _render_reaction(choices: Array) -> void:
 
 func set_targets(ids: Array) -> void:
 	_targets.set_targets(ids)
+
+## Contextual status only: idle phase HUD should not obscure the battlefield.
+## The three roster items still expose all actor states and tooltips.
+func _selected_has_conditions(projection: Dictionary, actor: String) -> bool:
+	if int(projection.get("barriers", {}).get(actor, 0)) > 0:
+		return true
+	if projection.get("reaction", {}).get("guard_actor_ids", []).has(actor):
+		return true
+	for cast: Dictionary in projection.get("casts", {}).values():
+		if str(cast.get("caster_id", "")) == actor:
+			return true
+	return false

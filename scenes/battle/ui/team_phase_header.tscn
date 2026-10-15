@@ -2,5 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/battle/ui/components/team_phase_header.gd" id="1"]
 
-[node name="TopBar" type="PanelContainer"]
+[node name="TopBar" type="Control"]
+mouse_filter = 2
 script = ExtResource("1")

@@ -7,7 +7,7 @@ on:
   release:
     types: [published]
   push:
-    branches: [master]
+    branches: [master, 'integration/v2-reviewed-20261015']
     # Core mechanics / seed-driver changes need a full gate; ordinary HUD/art
     # changes do not block fast iteration on the 100 seeded encounters.
     paths:
