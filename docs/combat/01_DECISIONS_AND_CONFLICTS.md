@@ -132,3 +132,7 @@
 ## Phase 2 後續決策優先級（19）
 
 **M-D18～M-D31 = 使用者逐項核准**；**P2-D10～D16 = 使用者整體同意設計方向**，不能擴張成尚未具體提出的固定係數與特殊規則。實施時以 `19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md` 為最新 SoT，先前本章中同主題 OPEN 僅歷史記錄：**CurrentAP 沒有硬 cap、MP 預設不自然回復、手牌 cap8、每人每 Player Phase 免費棄1抽1、Full Chant 中斷部分 MP 立即返還且 AP/Overload 不退**。M-D04 仍 PROVISIONAL；所有未測平衡參數不提升為 APPROVED。
+
+## 2026-10-15 上游/目標規格 A 方案語義合併
+
+使用者核准 A：**保留本 Godot 倉庫既有 00–24 核准內容，對照 `astraea-combat-rules@cac49361` 新增的核准規則與測試項，避免直接覆蓋較新內容。** 本次沒有重新裁決 AP/MP/RP、抽牌、Full Chant、Reaction、Break、Exposed、Combo、Last Spell、同時終局或自由走位等核心規則。來源/目標的 Phase2 19 號文件屬同一批已批准決策快照，統一以本目標的 `19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md` 作為現行檔名。CORE-01～04 最終結果見20/21；M-D04及具體倍率維持候選。新增內容25/26的初期劍士後期Variant與全民可配基礎攻治防是 USER_APPROVED；Lv40 Boss HP2700、傷害×1.7、Break22 只是 Python 測試候選，不得視為正式核准或 Godot CI PASS。對照與決策追蹤請讀 `UPSTREAM_RECONCILIATION_A_2026-10-15.md`。

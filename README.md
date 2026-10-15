@@ -1,5 +1,7 @@
 # 仲裁核心
 
+> **2026-10-15 戰鬥規格同步提醒**：本 README 以下敘述（每角色配8張卡、每 Player Phase 普通出牌最多2張）是目前**可執行舊版原型**的操作方法，不是最新已核准 Combat Rules。新版玩法以 [docs/combat/00](docs/combat/00_README_COMBAT_RULES_BASELINE_V0_8.md)、[19](docs/combat/19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md)、20/21 以及25–31為準：每角色配置12張 SP、全隊共享 BaseAP6，基礎攻擊／治療／防護可跨職能配牌。**規格已語義合併，Godot 程式與UI尚未遷移**。來源/目標衝突稽核：[A方案報告](docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md)。
+
 Godot 4.x 單人 2D 橫向回合制卡牌 JRPG 原型，採 1280×720（16:9）畫面。
 
 ## 執行

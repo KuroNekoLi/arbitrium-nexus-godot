@@ -39,13 +39,11 @@ The source's root `AGENTS.md` is intentionally not copied verbatim: its “docs-
 
 **Material rules-versus-implementation gap:** target README says each actor equips 8 cards and has at most two ordinary plays per phase; approved imported Rules instead specify 12 per-actor SP card instances and shared BaseAP6 without a universal two-play limit. Target code and tests have not yet been changed to implement the incoming design.
 
-## Owner decision required before final overwrites
+## Owner decision and closure: A selected (2026-10-15)
 
-Choose one of:
-- **A — Recommended:** retain the existing target core documents as-is, run a section-by-section semantic reconciliation against the upstream source, and then integrate only genuinely newer approved provisions; do **not** replace runtime code until separately authorized. This avoids discarding decisions present only in target.
-- **B — Strict mirror:** replace the target's 21 conflicting `docs/combat/00`–`24` documents with the source versions; consciously accept that this may discard target-specific amendments and invalidate engine tests. Still retain the Godot-specific root README and AGENTS rather than copying contradictory docs-only instructions.
+使用者已明確選擇 **A — 保留目標核心，逐章語義比對合併**。此文件之前的「UNRESOLVED」代表 **Commit `4357be30` 完成安全搬運時的歷史狀態**；後續的逐份語義比對已完成，完整決定、保留／合併位置、19 異名對照與 Python vs Godot 區別，請見 [`UPSTREAM_RECONCILIATION_A_2026-10-15.md`](UPSTREAM_RECONCILIATION_A_2026-10-15.md)。
 
-Any choice must separately address whether to migrate the Godot runtime code from its 8-card/two-play prototype rules to the 12-card/shared-AP spec; file synchronization does **not** do that.
+**已完成文檔差異收斂，未完成 Godot runtime 的規則遷移。** 已核准 12-card/shared AP 規則優先於舊原型 8-card/two-play 實作；未經另行授權，不可偷偷改程式與測試，也不得假裝舊原型已符合新規格。
 
 ## Verification and scope boundaries
 

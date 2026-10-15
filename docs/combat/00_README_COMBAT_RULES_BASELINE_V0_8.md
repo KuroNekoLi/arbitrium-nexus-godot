@@ -1,5 +1,7 @@
 # Combat Rules v0.8 — 文件入口與閱讀契約（Phase 1 已批准修訂，2026-10-14）
 
+> **2026-10-15／A 方案語義合併已完成**：本 repo `docs/combat/00`～`24` 保留已有較新/詳盡的版本；來源 `astraea-combat-rules@cac49361` 的差異已逐章審核，詳見 [A 方案合併稽核](UPSTREAM_RECONCILIATION_A_2026-10-15.md)。目前 **19 的唯一現行檔名** 為 [`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`](19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md)；來源舊名僅為同組裁決的不同快照。核心 USER_APPROVED 另以 20/21 的四項最終決策為準。後續內容讀 25/26（角色、共用治療與各人12張）、27（40等Boss）、29/30/31（Python v0.2／Agent交接）。這些平衡數字仍為 PROVISIONAL，**不得把已核准設計或 Python 模擬視為 Godot 實作證明**。以下歷史「LIBRARY ONLY／Godot 未執行」字樣只描述其撰寫時狀態，不能否定目標 repo 後續的實際工程測試紀錄。
+
 > **2026-10-14 LIBRARY Phase 2 最新補充（現行 SoT）**：請優先閱讀 [`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`](19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md) 與 [`18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md`](18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md)。M-D18～M-D31 已核准；P2-D10～D16 的**設計方向**已整體核准，數值／部分結算邊界仍 TBD。較早段落的「P2-D08 未決」「換牌僅提案」「手牌上限 TBD」「完整詠唱較貴 MP」等屬歷史文字，與 19 衝突時以 19 為準。**僅 Library 更新，未同步 GitHub；尚無 Godot 執行／CI PASS 證據。**
 
 

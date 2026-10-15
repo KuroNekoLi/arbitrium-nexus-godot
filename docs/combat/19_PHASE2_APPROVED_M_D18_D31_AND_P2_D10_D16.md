@@ -59,3 +59,10 @@
 - 已核准 P1/P2/M 系列高階玩法契約優先；本檔補充 M-D18～M-D31 與 P2-D10～D16，不抹除 `16`／`18` 早期歷史決策。**M-D04 跨輪債務仍 PROVISIONAL，不是 APPROVED 最終值**。
 - **工程完成不等於設計核准**：目前僅完成文件核准與規格描述，尚無 Godot 真正執行 log、CI PASS 或平衡數據。
 - 此次作業**只同步 ChatGPT Library**；沒有要求或確認 GitHub master 發布相同最新版本。日後如需 GitHub 同步應另行驗證內容哈希與 commit。
+
+
+## 6. 2026-10-15 A 方案：異名來源 19 快照對照（非新規則）
+
+來源 `astraea-combat-rules@cac49361` 使用 `19_PHASE2_FINAL_APPROVED_M_D18_D31_P2_D10_D16.md`；目標本文件為**唯一現行第19號權威檔名**。兩份檔案對 **M-D18～31** 的 AP／MP、手牌、換牌、退款及 **P2-D10～16** 的傷害／狀態／重播**沒有發現互相否定的核准方向**；來源有更長的逐題追溯和解釋，已在 `UPSTREAM_RECONCILIATION_A_2026-10-15.md` 留下對照，完整歷史原文歸檔於 `archive/upstream_19_phase2_final_2026-10-14.md`（非現行 Canon）。
+
+**跨期最終裁決**：本表中 P2-D15 同時倒地 `TBD` 及 Last Spell 施術者 HP0 的舊描述已被較新的 20/21 USER_APPROVED CORE-01/02 取代：同一合法結算內雙方最後單位都 HP0 時玩家 `VICTORY`；Last Spell 發動前施術者 HP0 則立即強制失效，不會死後續放；Reaction 不因真實時間自動 Pass、2.5D 不帶來自由走位。這是已核准規則的**優先級標註**，不修改設計內容。Python balance HP2700、攻擊×1.7、Break22 均只是 `BALANCE_PROVISIONAL`，並非此決策文件的已核准數值。

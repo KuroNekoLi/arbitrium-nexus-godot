@@ -223,3 +223,22 @@ PR必附更改的 rules/ADR IDs、失敗修復前後的seed與事件log、涉及
 | `P2-REPLAY-01` | 決定性 | 固定 `seed + initial_state + ruleset_version + command_tape`，分別用 2D/2.5D、不同 FPS、同樣人工決策 | domain event trace、state hash、BattleOutcome 完全一致 |
 
 此表是**規格 oracle**，不聲稱 Godot unit/integration/replay 任何一項已執行或 PASS。詳細稽核與待測清單見 `21_PHASE2_SPEC_ACCEPTANCE_REPORT.md`。
+
+## 11. A 方案：來源 13 中獨有的 P2-D16 驗收 ID（SPECIFIED，不宣稱本組已執行）
+
+以下 10 個來源版本中特有的測試 ID 在目標原矩陣中未列出，本次增量併入，不覆寫或降低原有驗收案例。若既有 Godot CI 覆蓋了相同語義，Agent 應逐項建立 **ID → 真實測試 → 執行記錄 → Commit** 的映射，不能將規格測試直接報成新通過。
+
+| ID | 條件 | 預期 |
+|---|---|---|
+| `P2-AP-01` | AP 增益使 `CurrentAP>6` | 合法共享池可超過 6；沒有全域硬上限 |
+| `P2-MP-01` | 角色回復量超過當前 MaxMP | 截斷到各角色各自 MaxMP |
+| `P2-CAST-01` | 同一雙模式 SP | Chantless／Full Chant 預設相同 MP |
+| `P2-CAST-02` | Full Chant 因有效干擾中斷 | 立即部分退 MP，不退 AP 或 Overload 債務 |
+| `P2-DECK-01` | Player Phase 開始／手牌容量 | 每人最多 8，只有低於 4 時才補至 4 |
+| `P2-MULL-01` | 免費換牌有合法替代 SP | 棄牌觸發先結算，抽牌觸發後結算；原 instance 本次不可抽回 |
+| `P2-MULL-02` | 免費換牌無合法替代 SP | 拒絕，手牌／事件／換牌額度均不變 |
+| `P2-DMG-01` | 同 seed/state/command tape | 事件與狀態 hash 一致，傷害步驟具完整 trace |
+| `P2-STATUS-01` | Buff/Debuff/DoT 疊層／刷新／到期／驅散 | 依逐狀態明文設定，不使用隱含通則 |
+| `P2-END-01` | HP0 與同時終局 | HP0 進 Incapacitated；結算後判勝負；同時最後敵人／我方倒地依 CORE-01 判玩家 VICTORY |
+
+**來源**：`KuroNekoLi/astraea-combat-rules@cac49361` 的 `13_TEST_MATRIX_ACCEPTANCE.md` §「P2-D16 seeded replay 與最新接受矩陣」。本段是測試契約增量，不代表 Godot 新增 10 個 PASS。
