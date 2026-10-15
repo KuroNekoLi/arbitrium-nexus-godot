@@ -71,3 +71,13 @@ $lv40Exit = $LASTEXITCODE
 每場輸出到 `outputs/lv40_balance_attempt1/<STRATEGY>_<seed>.json`，同目錄有 games.csv、attempt.json、summary.json。目錄必須未存在；最多使用 attempt1/2/3，跨 outputs/outputs/p4_logs 累計。每次失敗保留原 logs/JSON，不覆寫或換名重置執行次數；不可將研究成功與正式平衡核准混稱。每個新增 scene/player controller 不得引用本工具。
 
 限制：所有 runtime cases 仍 TEST_WRITTEN；overheal 待 Domain 提供 requested_amount；四策略未經實際研究校正；沒有真人驗收；沒有改數值、補造未實作術式、fixture秒殺或提交。最終審查、Domain Gate、CI 和唯一 commit/push 由 Main 負責。
+
+## 2026-10-15 — Parallel Balance metrics package delta（本包工作分支）
+
+**IMPLEMENTED_NOT_VERIFIED / NOT_EXECUTED**：本次在 `handoff/p4-balance-research-chat-20261015` 基於共同 WIP 基底，僅新增 `tools/balance/lv40_research/metrics.gd`、`tests/test_p4_balance_metrics.gd`，並在既有 `lv40_godot_policy.gd` 把全部100個seed×4策略的 `outcome` 交給統計 helper。原Domain依賴仍未審核合併，**沒有執行400場**。此前本研究 note 的 parse-only 兩次嘗試屬歷史基準，不能當作這輪的證據，也未清除記錄。
+
+新 pure API：`Metrics.distribution(samples)` 拒絕 NaN/INF、非數值和負樣本情形要由上層定義；可處理空/單筆、mean/median/p95/peak（線性插值）。`Metrics.wilson95(wins,trials)` 對非法總數回 null，不把無試驗資料報零勝率。`Metrics.paired(by_seed,strategies,expected_seeds=100)` 檢查每組 same-seed 的 outcome 配對；win/defeat/timeout/error 都納入，輸出同勝、單方勝、全不勝、timeout/error及paired delta。缺seed／缺策略 → `complete=false`；driver正式矩陣若不完整 → `ERROR_INCOMPLETE_PAIRED_MATRIX`。各策略新增 `round_distribution` 與 `winning_round_distribution`，空集合保留null。原始逐場JSON／CSV及 Replay／State hash 不變；不改Boss/卡牌候選值、不誤接真人Controller。
+
+新增可獨立跑的 `tests/test_p4_balance_metrics.gd`：統計sample邊界、百分位數、Wilson CI、timeout/error包含在paired分母、缺配對與非法outcome拒絕。實際Godot版本、test output、exit code、CI/run URL、400場replay hash：**NOT_EXECUTED**。待Godot 4.7.2 checkout：`godot --headless --path . --script res://tests/test_p4_balance_metrics.gd`；接Domain審核整合commit再執行 `test_lv40_balance.gd -- --lv40-api-ready`（既有群組attempt不得重置）。
+
+Android/Kotlin對照：對同一Seed做paired experiment類似性能比較中的同一輸入AB測試；失敗與timeout不能被不透明filter掉。面試追問：為何不用成功場次做分母？（selection bias）；為何Wilson而非Wald？（小樣本與0/100邊界）；為何指標與Domain分離？（可重用、純函式、Replay穩定）。替代：Bootstrap paired CI需實測資料與更高研究成本，現階段保留提案不假稱實作。
