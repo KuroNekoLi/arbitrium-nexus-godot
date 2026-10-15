@@ -382,7 +382,7 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 
 ## M5.5 — True three-person Boss battle, Replay and 100 seeds — VERIFIED in branch CI 2026-10-15
 
-**Source of evidence:** [Godot 4.7.2 Actions #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295), tested code SHA `7d6f961d7bcff7e0ae0f1435a02ac013a92f0569`; 32/32 golden integration, 15/15 deterministic Replay, **110/110 for exactly 100 fixed seeded complete battles**, all M1–M5.4 1,081/1,081 regressions PASS, four legacy headless smoke runners PASS. Cumulative **1,238/1,238 named Domain** (fixture-only, not UI). Branch acceptance completed; `master` post-merge must be verified separately before final promotion.
+**Source of evidence:** [Godot 4.7.2 Actions #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295), tested code SHA `7d6f961d7bcff7e0ae0f1435a02ac013a92f0569`; 32/32 golden integration, 15/15 deterministic Replay, **110/110 for exactly 100 fixed seeded complete battles**, all M1–M5.4 1,081/1,081 regressions PASS, four legacy headless smoke runners PASS. Cumulative **1,238/1,238 named Domain** (fixture-only, not UI). **Final master post-merge CI [#38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741) at code SHA `9c8b14b873047ca181a229cfaab5d2351541ceab` completed/success**: 157/157 new + 1,081/1,081 predecessors = **1,238/1,238**, 100 terminal/100 Replay, four legacy smoke success. Verdict **`M5 DOMAIN VERIFIED — HEADLESS BATTLE / FIXTURE_ONLY`**, not UI/Content/Balance.
 
 | Requirement / authorized source | Actual test IDs | Verified behavior and limitations |
 |---|---|---|
