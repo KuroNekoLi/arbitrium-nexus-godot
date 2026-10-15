@@ -174,12 +174,12 @@ func _init() -> void:
 		"enemy_action_id":str(declared["state"]["active_enemy_action_id"])},true)
 	if not window["accepted"]:
 		printerr("M53_WINDOW_FAILED ",window["error"]);quit(1);return
-	var pass: Dictionary = command(window["state"],"PASS_REACTION",{
+	var passed_reaction: Dictionary = command(window["state"],"PASS_REACTION",{
 		"window_id":str(window["state"]["reaction_window"]["window_id"])},true)
-	if not pass["accepted"]:
-		printerr("M53_PASS_FAILED ",pass["error"]);quit(1);return
-	var resolve: Dictionary = command(pass["state"],"RESOLVE_ENEMY_ATTACK_M5",{
-		"enemy_action_id":str(pass["state"]["active_enemy_action_id"])},true)
+	if not passed_reaction["accepted"]:
+		printerr("M53_PASS_FAILED ",passed_reaction["error"]);quit(1);return
+	var resolve: Dictionary = command(passed_reaction["state"],"RESOLVE_ENEMY_ATTACK_M5",{
+		"enemy_action_id":str(passed_reaction["state"]["active_enemy_action_id"])},true)
 	if not resolve["accepted"]:
 		printerr("M53_FALLBACK_FAILED ",resolve["error"]);quit(1);return
 	check("M53-26-FALLBACK_START_AND_SETTLE",count(resolve["events"],"EnemyActionResolved") == 1
