@@ -1,0 +1,13 @@
+[gd_resource type="Resource" load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/battle/presentation/card_appearance.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/card_art_atlas.png" id="2"]
+[sub_resource type="AtlasTexture" id="Art"]
+atlas = ExtResource("2")
+region = Rect2(0, 512, 512, 512)
+[resource]
+script = ExtResource("1")
+definition_id = "T06"
+artwork = SubResource("Art")
+accent = Color(0.5686274509803921, 0.9019607843137255, 0.7333333333333333, 1)
+name_key = "LV40_T06_NAME"
+description_key = "LV40_T06_DESC"

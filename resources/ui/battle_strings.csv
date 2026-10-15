@@ -92,3 +92,32 @@ BATTLE_EVENT_GENERIC,Combat state updated,戰鬥狀態已更新
 BATTLE_MISS,MISS,未命中
 BATTLE_SAVED,Replay saved to user data / p4_battle.tape,重播已保存於使用者資料夾／p4_battle.tape
 BATTLE_SAVE_FAILED,Could not save replay,無法保存重播
+BATTLE_REDUCED,Reduced motion,減少動態
+BATTLE_SKIP,Skip VFX,跳過演出
+BATTLE_MUTE,Mute audio,靜音
+BATTLE_RESTART,Start a new battle,重新開始戰鬥
+BATTLE_SPECIAL_REACTION,Card reaction,卡牌反應
+BATTLE_CUE_CAST_START,Full chant started,開始完整詠唱
+BATTLE_CUE_CAST_RELEASE,Spell released,詠唱法術釋放
+BATTLE_CUE_INTERRUPT,Interrupt,中斷
+BATTLE_CUE_CAST_INVALID,Chant invalidated,詠唱失效
+BATTLE_CUE_LAST_START,Last Spell · irreversible chant,終極法術 · 不可逆詠唱
+BATTLE_CUE_LAST_RELEASE,Last Spell released,終極法術釋放
+BATTLE_CUE_LAST_INVALID,Last Spell invalidated · no release,終極法術失效 · 不會釋放
+BATTLE_CUE_LAST_DELAY,Last Spell delayed,終極法術延後
+BATTLE_CUE_LAST_WEAKEN,Last Spell weakened,終極法術削弱
+BATTLE_CUE_EXHAUSTED,Exhausted · cannot act this battle,力竭 · 本場無法再行動
+BATTLE_CUE_INCAPACITATED,Incapacitated · HP zero,失能 · 生命歸零
+BATTLE_CUE_GUARD,Guard coverage active,防禦已生效
+BATTLE_CUE_PROTECT,Protect · damage redirected,援護 · 傷害目標已轉移
+BATTLE_CUE_FOCUS_WARD,Focus Ward · protects casting stability,專注護盾 · 保護詠唱穩定度
+BATTLE_CUE_BREAK,Break · next eligible action downgraded,失衡 · 下一合格行動降級
+BATTLE_CUE_EXPOSED,Exposed · available for another SP,戰術破綻 · 可由另一張技能利用
+BATTLE_CUE_COMBO,Combo finisher,連攜追擊
+BATTLE_CUE_REACTION_SKIPPED,Reaction skipped · no payment,反應失效略過 · 未扣費
+BATTLE_CUE_REACTION,Reaction executed,反應已執行
+BATTLE_CUE_ENEMY_CANCELLED,Enemy action cancelled,敵方行動已取消
+BATTLE_CUE_VICTORY,Victory,戰鬥勝利
+BATTLE_CUE_DEFEAT,Defeat,戰鬥失敗
+BATTLE_REACTION_FOCUS_WARD,Focus Ward,專注護盾
+BATTLE_REACTION_COST,RP %d · MP %d,反應 RP %d · 魔力 MP %d
