@@ -13,6 +13,9 @@ static func config() -> Dictionary:
 	c["m5_3_sp_effects"]["setup"]["recoil_hp"] = 10
 	c["m5_3_sp_effects"]["setup"]["recoil_barrier_mode"] = "BYPASS"
 	c["m5_4_last_release_recoil"] = {"nova":{"amount":10,"barrier_mode":"BYPASS"}}
+	c["m5_actor_stats"]["Boss"]["patk"] = 0
+	c["m5_actor_stats"]["Boss"]["matk"] = 0
+	c["m5_enemy_on_hit_status"] = {}
 	# In Last Spell and next-phase status fixtures Boss may still attack,
 	# but its declared damage does not kill a caster before the intended
 	# release/tick boundary. All balancing values are TEST-ONLY.
