@@ -5,6 +5,8 @@ on:
     paths:
       - '.github/workflows/godot-v3-2-card-gui.yml'
       - 'tests/test_p4_v25_gui_input.gd'
+      - 'tests/test_p4_v34_gui_input.gd'
+      - 'scripts/ui/hero_roster_item.gd'
       - 'scripts/battle/ui/**'
       - 'scripts/battle/battle_screen.gd'
   workflow_dispatch:
@@ -64,6 +66,34 @@ jobs:
           m=re.search(r'^V25_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',text,re.M)
           assert m and int(m[1]) >= 30 and m[1]==m[2] and m[3]=='0', 'V25 GUI summary missing or failure'
           PY
+      - name: V3.4 real Hero clicks and Command event routing
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/test_p4_v34_gui_input.gd \
+            > "$RUNNER_TEMP/v25/v34_gui.log" 2>&1 || {
+              cat "$RUNNER_TEMP/v25/v34_gui.log"; exit 1;
+            }
+          grep 'V34_GUI_REPORT' "$RUNNER_TEMP/v25/v34_gui.log"
+          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v25/v34_gui.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v25/v34_gui.log"
+          python3 - "$RUNNER_TEMP/v25/v34_gui.log" <<'PY'
+          import re,sys
+          text=open(sys.argv[1]).read()
+          m=re.search(r'^V34_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v25-isolated-gui-logs
+          path: ${{ runner.temp }}/v25/
+          retention-days: 14
+
+, text,re.M)
+          assert m and int(m[1])>=30 and m[1]==m[2] and m[3]=='0', 'V34 GUI failure'
+          PY
       - name: Upload raw input evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -71,4 +101,5 @@ jobs:
           name: v25-isolated-gui-logs
           path: ${{ runner.temp }}/v25/
           retention-days: 14
+
 
