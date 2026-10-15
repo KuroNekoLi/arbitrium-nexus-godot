@@ -3,6 +3,7 @@ extends RefCounted
 ## All transitions (including legal dry-runs) go through the unique M5.apply.
 const M5 = preload("res://scripts/domain/m5/integration/m5_domain_resolver.gd")
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
+const ResearchMetrics = preload("res://tools/balance/lv40_research/metrics.gd")
 const M4 = preload("res://scripts/domain/m4/integration/m4_domain_resolver.gd")
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
@@ -458,10 +459,15 @@ static func run_matrix(prefix: String) -> Dictionary:
 	if csv == null: return {"status":"ERROR","error":"CSV_OPEN","games":0}
 	csv.store_csv_line(PackedStringArray(["strategy","seed","outcome","rounds","hp_A","hp_B","hp_C","hp_Boss","ap_spent","mp_spent","heal","overheal","barrier_absorb","casting_completion","casting_interrupt","lastspell_completion","deadhand_frequency","event_hash","state_hash","tape_hash","replay_ok","error"]))
 	var summary: Dictionary = {"status":"RESEARCH_ONLY","balance":"BALANCE_PROVISIONAL","games":0,"errors":0,"replay_failures":0,"written":true,"strategies":{},"metadata":meta}
+	var paired_by_seed: Dictionary = {}
 	for strategy: String in STRATEGIES:
 		var stats: Dictionary = {"win":0,"defeat":0,"timeout":0,"error":0,"rounds":[],"win_rounds":[],"capabilities":{},"metric_status":{},"metric_totals":{},"hp_totals":{"A":0,"B":0,"C":0,"Boss":0},"config_hashes":{},"ap_by_actor":{"A":0,"B":0,"C":0},"card_uses":{},"card_samples":{},"card_dead":{}}
 		for seed: int in fixed_seeds():
 			var report: Dictionary = run(seed,strategy,api["script"])
+			var seed_key: String = str(seed)
+			if not paired_by_seed.has(seed_key): paired_by_seed[seed_key] = {}
+			paired_by_seed[seed_key][strategy] = {"outcome":str(report.get("outcome","error")),
+				"rounds":report.get("rounds",null),"error":str(report.get("error",""))}
 			summary["games"] += 1
 			stats[report["outcome"]] += 1
 			if report["outcome"] == "error": summary["errors"] += 1
@@ -501,7 +507,9 @@ static func run_matrix(prefix: String) -> Dictionary:
 		stats["rounds"].sort()
 		stats["win_rounds"].sort()
 		stats["win_rate"] = float(stats["win"])/100.0
-		stats["win_rate_wilson95"] = wilson95(int(stats["win"]),100)
+		stats["win_rate_wilson95"] = ResearchMetrics.wilson95(int(stats["win"]),100)
+		stats["round_distribution"] = ResearchMetrics.distribution(stats["rounds"])
+		stats["winning_round_distribution"] = ResearchMetrics.distribution(stats["win_rounds"])
 		stats["win_rounds_p50"] = percentile(stats["win_rounds"],0.5)
 		stats["rounds_p10"] = percentile(stats["rounds"],0.1)
 		stats["rounds_p90"] = percentile(stats["rounds"],0.9)
@@ -510,6 +518,10 @@ static func run_matrix(prefix: String) -> Dictionary:
 		stats["casting_interrupt_rate"] = float(stats["metric_totals"].get("casting_interrupt",0))/float(stats["metric_totals"]["casting_started"]) if float(stats["metric_totals"].get("casting_started",0)) > 0 else null
 		summary["strategies"][strategy] = stats
 	csv.close()
+	summary["paired"] = ResearchMetrics.paired(paired_by_seed,STRATEGIES,100)
+	if not summary["paired"]["ok"] or not summary["paired"]["complete"]:
+		summary["status"] = "ERROR_INCOMPLETE_PAIRED_MATRIX"
+		summary["errors"] += 1
 	var current_hashes: Dictionary = source_hashes("res://scripts/domain")
 	current_hashes.merge(source_hashes("res://resources/combat"),true)
 	for path: String in meta["source_files"]:
