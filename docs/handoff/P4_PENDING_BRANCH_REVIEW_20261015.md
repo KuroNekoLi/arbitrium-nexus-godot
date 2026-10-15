@@ -7,7 +7,9 @@
 | Source scope | Staged SHA / verification | Master promotion scope |
 |---|---|---|
 | Lv40 domain, authorized approved content + M3/M4/M5 bridges, tests; pure balance/profile metrics | `c2796e312317baaf4bdcebbb6295927b00ff364a`; [stage Actions #38717257405](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38717257405) SUCCESS | Fast-forwarded to master as **HEADLESS-ONLY**, not P4.5 playable or P4.6 actual profiling; pre-existing Lv40 domain83/83 + edges37/37 had exhausted three-test budget and were not rerun |
-| Card i18n / 26 appearances / deterministic ReadModel + pure CommandFactory | `d4d5b9986fc4d8d51227566dccc7573ddbae87df`; [stage Actions #38718051812](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38718051812) SUCCESS | Await explicit fast-forward + master CI; tested 198/198 Localization, 29/29 ReadModel, old Scene8/HUD36/P4.3 31; does **not** activate Lv40 BattleScreen |
+| Card i18n / 26 appearances / deterministic ReadModel + pure CommandFactory | `d4d5b9986fc4d8d51227566dccc7573ddbae87df`; [stage Actions #38718051812](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38718051812) SUCCESS | Fast-forward completed to master after 198/198 Localization, 29/29 ReadModel, old Scene8/HUD36/P4.3 31; does **not** activate Lv40 BattleScreen |
+
+| HUD Scene Components + P4.4 headless VFX cues | `f40686cda795aa61035f7473b08c8730409655b6`; [stage #38718716573](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38718716573) SUCCESS, [master HUD #38718980511](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38718980511) SUCCESS | Headless24/24+45/45+80/80; **P4.4 GUI 14/16 remains NOT VERIFIED**; Level40 Staging disabled |
 
 All source changes were narrowed via path/blob-selection, **not** merging the 200+ files of the reviewed integration branch. [Original review checkpoint](P4_ROUND2_REVIEW_CHECKPOINT_20261015.md) remains authoritative on prior allowed test attempts and blocked GUI.
 

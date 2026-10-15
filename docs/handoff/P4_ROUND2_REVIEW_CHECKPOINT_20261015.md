@@ -1,4 +1,6 @@
 # Phase 4 Round 2 — Reviewed Integration Checkpoint
+> **2026-10-15 reviewed continuation**：已依使用者新授權，將**獨立通過 Headless Gate** 的 Lv40 Domain/metrics、雙語 ReadModel、HUD Components/VFX 以三個獨立 Commit 選擇性推回 master（`c2796e31`、`d4d5b998`、`f40686cd`）。**禁止整個本分支 Merge 的原限制仍有效**；P4.4 GUI 14/16、P4.5 playable、P4.6 actual strategy/GPU/human 均仍 `NOT_VERIFIED`。新的唯一合併與未決目錄：[Master Review](https://github.com/KuroNekoLi/arbitrium-nexus-godot/blob/master/docs/handoff/P4_APPROVED_MERGES_AND_PENDING_REVIEW_20261015.md)。
+
 日期：2026-10-15。狀態：NOT VERIFIED；禁止直接合併 master。
 
 ## 版本、權限與工作區
