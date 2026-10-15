@@ -1,0 +1,515 @@
+name: Godot Phase3 M5.4 Outcome CORE-01/02
+on:
+  push:
+    branches: [master, 'phase3/m5-4-outcome-core01']
+    paths:
+      - '.github/workflows/godot-m5-4-outcome.yml'
+      - 'scripts/domain/m5/**'
+      - 'scripts/domain/m3/phase/phase_engine.gd'
+      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
+      - 'tests/fixtures/m5_4_fixture.gd'
+      - 'tests/fixtures/m5_3_fixture.gd'
+      - 'tests/fixtures/m5_2_fixture.gd'
+      - 'tests/test_m5_outcome.gd'
+      - 'tests/test_m5_boss_combo.gd'
+      - 'tests/test_m5_status.gd'
+      - 'docs/verification/PH3_M5_2_ENGINEERING_NOTE.md'
+  pull_request:
+    paths:
+      - '.github/workflows/godot-m5-4-outcome.yml'
+      - 'scripts/domain/m5/**'
+      - 'scripts/domain/m3/**'
+      - 'tests/test_m5_outcome.gd'
+      - 'tests/test_m5_boss_combo.gd'
+      - 'tests/test_m5_status.gd'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  m5-4-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SHA512 verified official Godot 4.7.2
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/godot" "$RUNNER_TEMP/m5-4-logs"
+          release="https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable"
+          zip="Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -fLsS --retry 3 "$release/$zip" -o "$RUNNER_TEMP/godot/$zip"
+          curl -fLsS --retry 3 "$release/SHA512-SUMS.txt" -o "$RUNNER_TEMP/godot/SHA512-SUMS.txt"
+          cd "$RUNNER_TEMP/godot"
+          grep -F "$zip" SHA512-SUMS.txt > selected.sha512
+          test "$(wc -l < selected.sha512)" -eq 1
+          sha512sum -c selected.sha512
+          unzip -q "$zip" -d extracted
+          bin="$(find "$RUNNER_TEMP/godot/extracted" -type f -name 'Godot_v4.7.2-stable_linux.x86_64' -print -quit)"
+          test -n "$bin"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - name: Verify version and import project
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          "$GODOT_BIN" --version | tee "$RUNNER_TEMP/m5-4-logs/version.log"
+          grep -q '^4\.7\.2\.' "$RUNNER_TEMP/m5-4-logs/version.log"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/m5-4-logs/import.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/import.log"; exit 1;
+          }
+      - name: M5.4 CORE-01 completed Action, Last/Status tick and Replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_outcome.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log"
+          grep -q '^M5_4_TEST_REPORT executed=48 passed=48 failed=0
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_boss_combo.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          grep -q '^M5_3_TEST_REPORT executed=44 passed=44 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          for oracle in M53-08-MULTI_HIT_BEFORE_BREAK M53-15-TWO_DIFFERENT_ACTORS_PAID M53-17-EXPOSED_CONSUMED_BY_NEXT_SP M53-23-BREAK_FALLBACK_PUBLIC M53-27-BREAK_GAUGE_RESTORED M53-32-EVENT_HASH_REPLAY M53-39-SELF_CREATED_EXPOSED_NOT_CONSUMED M53-41-EXPOSED_EXPIRES_AFTER_NEXT_PLAYER_PHASE; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          done
+          grep -q '^M5_3_BOSS_BREAK_EXPOSED_COMBO_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          grep -q '^M5_3_REPLAY seed=20261014 commands=' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+      - name: M5.2 registered Status and HP lifecycle + deterministic replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_status.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_status.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          grep -q "^M5_2_TEST_REPORT executed=48 passed=48 failed=0$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          for oracle in M52-04-SP_COST_ONCE M52-08-AUTHORITATIVE_BARRIER_CAPACITY M52-12-ACTUAL_ENEMY_HIT_SHIELD M52-17-TICKS_BEFORE_PLAYER_AP_REFRESH M52-20-DETERMINISTIC_EVENT_REPLAY M52-25-STACK_CAP_THREE M52-32-BARRIER_LIFETIME_EXPIRED M52-37-CORE02_STRICT_ORDER M52-41-ACTUAL_PAID_REVIVE M52-44-ON_HIT_PROTECT_REAL_RECIPIENT; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          done
+          grep -q "^M5_2_STATUS_DOMAIN_VERIFIED$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+      - name: M5.1 authentic damage and seed replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_damage.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+          grep -q "M5_1_TEST_REPORT executed=44 passed=44 failed=0" "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+          grep -q "M5_1_DAMAGE_DOMAIN_VERIFIED" "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+      - name: M4.5 cross-slice integration acceptance
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_integration.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          grep -Eq '^M4_5_INTEGRATION_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          for oracle in M45-INT-11-CONCENTRATING_CAST_COMPATIBLE_PAID M45-INT-15-ON_HIT_SUPPRESSED_AFTER_PROTECT M45-INT-16-DIRECT_BYPASSES_PROTECT M45-INT-20-RELEASE_BEFORE_AP_AND_DRAW M45-INT-23-R2_PROTECT_FRESH_WINDOW M45-INT-29-CORE02_STRICT_CHAIN M45-INT-32-T4_NO_RESURRECTED_LAST_EFFECT M45-INT-34-REVIVE_NOT_RESTORE_LAST; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          done
+          grep -q '^M4_5_INTEGRATION_DOMAIN_ACCEPTED$' "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+      - name: M4.5 canonical replay and negative gates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_replay.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          grep -Eq '^M4_5_REPLAY_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          for oracle in M45-REP-02-FINAL_STATE_EQUAL M45-REP-04-REPEATED_SAME_SEED_EVENTS M45-REP-06-OUTER_EVENT_SEQUENCE_MONOTONIC M45-REP-25-SMART_NO_DOMAIN_MUTATION M45-REP-27-ALL_UI_MODES_EQUAL_EVENTS M45-REP-29-STALE_TAPE_FAILS_CLOSED M45-REP-31-DUPLICATE_COMMAND_REJECTED M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          done
+          grep -q '^M4_5_REPLAY_DOMAIN_ACCEPTED$' "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+      - name: M4.4 CORE-02 predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 75s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_incapacitation.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"; exit 1;
+          }
+          grep -q '^M4_4_TEST_REPORT executed=59 passed=59 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"
+          grep -q '^M4_4_INVALIDATION_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"
+      - name: M4.3 Last Spell predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 65s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_last_spell.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"; exit 1;
+          }
+          grep -q '^M4_3_TEST_REPORT executed=55 passed=55 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"
+          grep -q '^M4_3_LAST_SPELL_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"
+      - name: M4.2 preceding Disruption regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 75s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_disruption.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"; exit 1;
+          }
+          grep -q '^M4_2_TEST_REPORT executed=59 passed=59 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"
+          grep -q '^M4_2_DISRUPTION_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"
+      - name: M4.1 predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_dual_cast.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log"; exit 1;
+          }
+          grep -q '^M4_1_TEST_REPORT executed=47 passed=47 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log"
+      - name: M3.5 integration and replay regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_m3_integration test_m3_replay; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/$script.log"; exit 1;
+            }
+          done
+          grep -q '^M3_5_INTEGRATION_REPORT executed=61 passed=61 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_integration.log"
+          grep -q '^M3_5_REPLAY_REPORT executed=40 passed=40 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_replay.log"
+      - name: Full M3.4 through M1-M2 regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_m3_ui_modes test_m3_guard_protect test_m3_reaction_window test_m3_phase test_combat_m1 test_m2_resources test_m2_costs test_m2_cards test_m2_free_swap test_m2_invariants test_m2_replay test_m2_integration; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/$script.log"; exit 1;
+            }
+          done
+          grep -q '^M3_4_TEST_REPORT executed=83 passed=83 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_ui_modes.log"
+          grep -q '^M3_4_PRESENTATION_POLICY_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m3_ui_modes.log"
+          grep -q '^M3_3_TEST_REPORT executed=54 passed=54 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_guard_protect.log"
+          grep -q '^M3_2_TEST_REPORT executed=50 passed=50 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_reaction_window.log"
+          grep -q '^M3_1_TEST_REPORT executed=61 passed=61 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_phase.log"
+          grep -q '^M1_TEST_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/m5-4-logs/test_combat_m1.log"
+          grep -q '^M2_1_TEST_REPORT executed=38 passed=38 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_resources.log"
+          grep -q '^M2_2_TEST_REPORT executed=43 passed=43 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_costs.log"
+          grep -q '^M2_3_TEST_REPORT executed=46 passed=46 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_cards.log"
+          grep -q '^M2_4_TEST_REPORT executed=32 passed=32 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_free_swap.log"
+          grep -q '^M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=14 passed=14 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_invariants.log"
+          grep -q '^M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=6 passed=6 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_replay.log"
+          grep -q '^M2_5_INTEGRATION_REPORT executed=40 passed=40 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_integration.log"
+      - name: Legacy prototype regression smoke
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/legacy-$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/legacy-$script.log"; exit 1;
+            }
+          done
+      - name: Upload full logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-phase3-m5-4-acceptance-logs
+          path: ${{ runner.temp }}/m5-4-logs/
+          retention-days: 14
+ "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log"
+          for oracle in M54-06-CORE01_SIMULTANEOUS_KO_VICTORY M54-09-OUTCOME_AFTER_RECOIL M54-23-TAPE_STOPS_AT_TERMINAL M54-27-BOSS_SURVIVES_TEAM_INCAP_DEFEAT M54-31-DOT_SAME_BOUNDARY_VICTORY M54-38-RELEASED_LAST_KILLS_BOSS_AND_CASTER M54-43-CORE02_STRICT_CANCEL_CHAIN M54-47-EXHAUSTED_EDGE_EXPLICIT_PENDING; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log"
+          done
+          grep -q '^M5_4_OUTCOME_DOMAIN_VERIFIED
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_boss_combo.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          grep -q '^M5_3_TEST_REPORT executed=44 passed=44 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          for oracle in M53-08-MULTI_HIT_BEFORE_BREAK M53-15-TWO_DIFFERENT_ACTORS_PAID M53-17-EXPOSED_CONSUMED_BY_NEXT_SP M53-23-BREAK_FALLBACK_PUBLIC M53-27-BREAK_GAUGE_RESTORED M53-32-EVENT_HASH_REPLAY M53-39-SELF_CREATED_EXPOSED_NOT_CONSUMED M53-41-EXPOSED_EXPIRES_AFTER_NEXT_PLAYER_PHASE; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          done
+          grep -q '^M5_3_BOSS_BREAK_EXPOSED_COMBO_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          grep -q '^M5_3_REPLAY seed=20261014 commands=' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+      - name: M5.2 registered Status and HP lifecycle + deterministic replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_status.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_status.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          grep -q "^M5_2_TEST_REPORT executed=48 passed=48 failed=0$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          for oracle in M52-04-SP_COST_ONCE M52-08-AUTHORITATIVE_BARRIER_CAPACITY M52-12-ACTUAL_ENEMY_HIT_SHIELD M52-17-TICKS_BEFORE_PLAYER_AP_REFRESH M52-20-DETERMINISTIC_EVENT_REPLAY M52-25-STACK_CAP_THREE M52-32-BARRIER_LIFETIME_EXPIRED M52-37-CORE02_STRICT_ORDER M52-41-ACTUAL_PAID_REVIVE M52-44-ON_HIT_PROTECT_REAL_RECIPIENT; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          done
+          grep -q "^M5_2_STATUS_DOMAIN_VERIFIED$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+      - name: M5.1 authentic damage and seed replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_damage.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+          grep -q "M5_1_TEST_REPORT executed=44 passed=44 failed=0" "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+          grep -q "M5_1_DAMAGE_DOMAIN_VERIFIED" "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+      - name: M4.5 cross-slice integration acceptance
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_integration.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          grep -Eq '^M4_5_INTEGRATION_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          for oracle in M45-INT-11-CONCENTRATING_CAST_COMPATIBLE_PAID M45-INT-15-ON_HIT_SUPPRESSED_AFTER_PROTECT M45-INT-16-DIRECT_BYPASSES_PROTECT M45-INT-20-RELEASE_BEFORE_AP_AND_DRAW M45-INT-23-R2_PROTECT_FRESH_WINDOW M45-INT-29-CORE02_STRICT_CHAIN M45-INT-32-T4_NO_RESURRECTED_LAST_EFFECT M45-INT-34-REVIVE_NOT_RESTORE_LAST; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          done
+          grep -q '^M4_5_INTEGRATION_DOMAIN_ACCEPTED$' "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+      - name: M4.5 canonical replay and negative gates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_replay.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          grep -Eq '^M4_5_REPLAY_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          for oracle in M45-REP-02-FINAL_STATE_EQUAL M45-REP-04-REPEATED_SAME_SEED_EVENTS M45-REP-06-OUTER_EVENT_SEQUENCE_MONOTONIC M45-REP-25-SMART_NO_DOMAIN_MUTATION M45-REP-27-ALL_UI_MODES_EQUAL_EVENTS M45-REP-29-STALE_TAPE_FAILS_CLOSED M45-REP-31-DUPLICATE_COMMAND_REJECTED M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          done
+          grep -q '^M4_5_REPLAY_DOMAIN_ACCEPTED$' "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+      - name: M4.4 CORE-02 predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 75s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_incapacitation.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"; exit 1;
+          }
+          grep -q '^M4_4_TEST_REPORT executed=59 passed=59 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"
+          grep -q '^M4_4_INVALIDATION_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"
+      - name: M4.3 Last Spell predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 65s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_last_spell.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"; exit 1;
+          }
+          grep -q '^M4_3_TEST_REPORT executed=55 passed=55 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"
+          grep -q '^M4_3_LAST_SPELL_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"
+      - name: M4.2 preceding Disruption regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 75s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_disruption.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"; exit 1;
+          }
+          grep -q '^M4_2_TEST_REPORT executed=59 passed=59 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"
+          grep -q '^M4_2_DISRUPTION_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"
+      - name: M4.1 predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_dual_cast.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log"; exit 1;
+          }
+          grep -q '^M4_1_TEST_REPORT executed=47 passed=47 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log"
+      - name: M3.5 integration and replay regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_m3_integration test_m3_replay; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/$script.log"; exit 1;
+            }
+          done
+          grep -q '^M3_5_INTEGRATION_REPORT executed=61 passed=61 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_integration.log"
+          grep -q '^M3_5_REPLAY_REPORT executed=40 passed=40 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_replay.log"
+      - name: Full M3.4 through M1-M2 regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_m3_ui_modes test_m3_guard_protect test_m3_reaction_window test_m3_phase test_combat_m1 test_m2_resources test_m2_costs test_m2_cards test_m2_free_swap test_m2_invariants test_m2_replay test_m2_integration; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/$script.log"; exit 1;
+            }
+          done
+          grep -q '^M3_4_TEST_REPORT executed=83 passed=83 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_ui_modes.log"
+          grep -q '^M3_4_PRESENTATION_POLICY_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m3_ui_modes.log"
+          grep -q '^M3_3_TEST_REPORT executed=54 passed=54 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_guard_protect.log"
+          grep -q '^M3_2_TEST_REPORT executed=50 passed=50 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_reaction_window.log"
+          grep -q '^M3_1_TEST_REPORT executed=61 passed=61 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_phase.log"
+          grep -q '^M1_TEST_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/m5-4-logs/test_combat_m1.log"
+          grep -q '^M2_1_TEST_REPORT executed=38 passed=38 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_resources.log"
+          grep -q '^M2_2_TEST_REPORT executed=43 passed=43 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_costs.log"
+          grep -q '^M2_3_TEST_REPORT executed=46 passed=46 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_cards.log"
+          grep -q '^M2_4_TEST_REPORT executed=32 passed=32 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_free_swap.log"
+          grep -q '^M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=14 passed=14 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_invariants.log"
+          grep -q '^M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=6 passed=6 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_replay.log"
+          grep -q '^M2_5_INTEGRATION_REPORT executed=40 passed=40 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_integration.log"
+      - name: Legacy prototype regression smoke
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/legacy-$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/legacy-$script.log"; exit 1;
+            }
+          done
+      - name: Upload full logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-phase3-m5-4-acceptance-logs
+          path: ${{ runner.temp }}/m5-4-logs/
+          retention-days: 14
+ "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log"
+          grep -q '^M5_4_REPLAY seed=20261014 commands=' "$RUNNER_TEMP/m5-4-logs/test_m5_outcome.log"
+      - name: M5.3 Boss FSM Break Exposed Combo real payment and replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_boss_combo.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          grep -q '^M5_3_TEST_REPORT executed=44 passed=44 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          for oracle in M53-08-MULTI_HIT_BEFORE_BREAK M53-15-TWO_DIFFERENT_ACTORS_PAID M53-17-EXPOSED_CONSUMED_BY_NEXT_SP M53-23-BREAK_FALLBACK_PUBLIC M53-27-BREAK_GAUGE_RESTORED M53-32-EVENT_HASH_REPLAY M53-39-SELF_CREATED_EXPOSED_NOT_CONSUMED M53-41-EXPOSED_EXPIRES_AFTER_NEXT_PLAYER_PHASE; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          done
+          grep -q '^M5_3_BOSS_BREAK_EXPOSED_COMBO_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+          grep -q '^M5_3_REPLAY seed=20261014 commands=' "$RUNNER_TEMP/m5-4-logs/test_m5_boss_combo.log"
+      - name: M5.2 registered Status and HP lifecycle + deterministic replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_status.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_status.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          grep -q "^M5_2_TEST_REPORT executed=48 passed=48 failed=0$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          for oracle in M52-04-SP_COST_ONCE M52-08-AUTHORITATIVE_BARRIER_CAPACITY M52-12-ACTUAL_ENEMY_HIT_SHIELD M52-17-TICKS_BEFORE_PLAYER_AP_REFRESH M52-20-DETERMINISTIC_EVENT_REPLAY M52-25-STACK_CAP_THREE M52-32-BARRIER_LIFETIME_EXPIRED M52-37-CORE02_STRICT_ORDER M52-41-ACTUAL_PAID_REVIVE M52-44-ON_HIT_PROTECT_REAL_RECIPIENT; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+          done
+          grep -q "^M5_2_STATUS_DOMAIN_VERIFIED$" "$RUNNER_TEMP/m5-4-logs/test_m5_status.log"
+      - name: M5.1 authentic damage and seed replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_damage.gd > "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+          grep -q "M5_1_TEST_REPORT executed=44 passed=44 failed=0" "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+          grep -q "M5_1_DAMAGE_DOMAIN_VERIFIED" "$RUNNER_TEMP/m5-4-logs/test_m5_damage.log"
+      - name: M4.5 cross-slice integration acceptance
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_integration.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          grep -Eq '^M4_5_INTEGRATION_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          for oracle in M45-INT-11-CONCENTRATING_CAST_COMPATIBLE_PAID M45-INT-15-ON_HIT_SUPPRESSED_AFTER_PROTECT M45-INT-16-DIRECT_BYPASSES_PROTECT M45-INT-20-RELEASE_BEFORE_AP_AND_DRAW M45-INT-23-R2_PROTECT_FRESH_WINDOW M45-INT-29-CORE02_STRICT_CHAIN M45-INT-32-T4_NO_RESURRECTED_LAST_EFFECT M45-INT-34-REVIVE_NOT_RESTORE_LAST; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+          done
+          grep -q '^M4_5_INTEGRATION_DOMAIN_ACCEPTED$' "$RUNNER_TEMP/m5-4-logs/test_m4_integration.log"
+      - name: M4.5 canonical replay and negative gates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_replay.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"; exit 1;
+          }
+          cat "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          grep -Eq '^M4_5_REPLAY_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          for oracle in M45-REP-02-FINAL_STATE_EQUAL M45-REP-04-REPEATED_SAME_SEED_EVENTS M45-REP-06-OUTER_EVENT_SEQUENCE_MONOTONIC M45-REP-25-SMART_NO_DOMAIN_MUTATION M45-REP-27-ALL_UI_MODES_EQUAL_EVENTS M45-REP-29-STALE_TAPE_FAILS_CLOSED M45-REP-31-DUPLICATE_COMMAND_REJECTED M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED; do
+            grep -q "^PASS $oracle$" "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+          done
+          grep -q '^M4_5_REPLAY_DOMAIN_ACCEPTED$' "$RUNNER_TEMP/m5-4-logs/test_m4_replay.log"
+      - name: M4.4 CORE-02 predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 75s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_incapacitation.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"; exit 1;
+          }
+          grep -q '^M4_4_TEST_REPORT executed=59 passed=59 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"
+          grep -q '^M4_4_INVALIDATION_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_incapacitation.log"
+      - name: M4.3 Last Spell predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 65s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_last_spell.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"; exit 1;
+          }
+          grep -q '^M4_3_TEST_REPORT executed=55 passed=55 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"
+          grep -q '^M4_3_LAST_SPELL_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_last_spell.log"
+      - name: M4.2 preceding Disruption regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 75s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_disruption.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"; exit 1;
+          }
+          grep -q '^M4_2_TEST_REPORT executed=59 passed=59 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"
+          grep -q '^M4_2_DISRUPTION_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m4_disruption.log"
+      - name: M4.1 predecessor regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 90s "$GODOT_BIN" --headless --path . --script res://tests/test_m4_dual_cast.gd > "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log" 2>&1 || {
+            cat "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log"; exit 1;
+          }
+          grep -q '^M4_1_TEST_REPORT executed=47 passed=47 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m4_dual_cast.log"
+      - name: M3.5 integration and replay regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_m3_integration test_m3_replay; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/$script.log"; exit 1;
+            }
+          done
+          grep -q '^M3_5_INTEGRATION_REPORT executed=61 passed=61 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_integration.log"
+          grep -q '^M3_5_REPLAY_REPORT executed=40 passed=40 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_replay.log"
+      - name: Full M3.4 through M1-M2 regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_m3_ui_modes test_m3_guard_protect test_m3_reaction_window test_m3_phase test_combat_m1 test_m2_resources test_m2_costs test_m2_cards test_m2_free_swap test_m2_invariants test_m2_replay test_m2_integration; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/$script.log"; exit 1;
+            }
+          done
+          grep -q '^M3_4_TEST_REPORT executed=83 passed=83 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_ui_modes.log"
+          grep -q '^M3_4_PRESENTATION_POLICY_DOMAIN_VERIFIED$' "$RUNNER_TEMP/m5-4-logs/test_m3_ui_modes.log"
+          grep -q '^M3_3_TEST_REPORT executed=54 passed=54 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_guard_protect.log"
+          grep -q '^M3_2_TEST_REPORT executed=50 passed=50 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_reaction_window.log"
+          grep -q '^M3_1_TEST_REPORT executed=61 passed=61 failed=0$' "$RUNNER_TEMP/m5-4-logs/test_m3_phase.log"
+          grep -q '^M1_TEST_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/m5-4-logs/test_combat_m1.log"
+          grep -q '^M2_1_TEST_REPORT executed=38 passed=38 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_resources.log"
+          grep -q '^M2_2_TEST_REPORT executed=43 passed=43 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_costs.log"
+          grep -q '^M2_3_TEST_REPORT executed=46 passed=46 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_cards.log"
+          grep -q '^M2_4_TEST_REPORT executed=32 passed=32 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_free_swap.log"
+          grep -q '^M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=14 passed=14 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_invariants.log"
+          grep -q '^M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=6 passed=6 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_replay.log"
+          grep -q '^M2_5_INTEGRATION_REPORT executed=40 passed=40 failed=0' "$RUNNER_TEMP/m5-4-logs/test_m2_integration.log"
+      - name: Legacy prototype regression smoke
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-4-logs/legacy-$script.log" 2>&1 || {
+              cat "$RUNNER_TEMP/m5-4-logs/legacy-$script.log"; exit 1;
+            }
+          done
+      - name: Upload full logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-phase3-m5-4-acceptance-logs
+          path: ${{ runner.temp }}/m5-4-logs/
+          retention-days: 14
