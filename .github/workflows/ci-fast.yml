@@ -1,0 +1,75 @@
+name: CI Fast - Godot 4.7.2
+on:
+  push:
+    branches: [master, 'ci/**', 'integration/**', 'handoff/**', 'ui/**']
+    paths:
+      - '.github/workflows/ci-fast.yml'
+      - 'tools/ci/**'
+      - 'project.godot'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'resources/**'
+      - 'addons/**'
+      - 'assets/**'
+      - 'tests/**'
+  pull_request:
+    paths:
+      - '.github/workflows/ci-fast.yml'
+      - 'tools/ci/**'
+      - 'project.godot'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'resources/**'
+      - 'addons/**'
+      - 'assets/**'
+      - 'tests/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-fast-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  fast:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache checksum-verified Godot binary
+        uses: actions/cache@v4
+        with:
+          path: .ci-cache/godot-4.7.2
+          key: godot-4.7.2-linux-x86_64-verified-v1
+      - name: Install Godot 4.7.2 (verify SHA-512)
+        run: bash tools/ci/install_godot.sh
+      - name: Headless import, log-gate unit tests and representative battle/UI smoke
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/fast-logs"
+          python3 -m unittest discover -s tests/ci -p 'test_*.py' -v > "$RUNNER_TEMP/fast-logs/ci-tests.log" 2>&1 || {
+            cat "$RUNNER_TEMP/fast-logs/ci-tests.log"; exit 1;
+          }
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/fast-logs/import.log" 2>&1 || {
+            cat "$RUNNER_TEMP/fast-logs/import.log"; exit 1;
+          }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/fast-logs/import.log"
+          for spec in \
+            'test_m5_integration:M5_5_INTEGRATION_REPORT:32' \
+            'test_m5_replay:M5_5_REPLAY_REPORT:15' \
+            'test_m5_fast_seeds:M5_5_FAST_SEEDS_REPORT:5' \
+            'test_p4_scene:P4_1_REPORT:8' \
+            'test_p4_hud:P4_2_REPORT:36' \
+            'test_p4_integration:P4_3_REPORT:31' \
+            'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32' \
+            'test_screenshot_writer:SCREENSHOT_WRITER_REPORT:46'; do
+            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/fast-logs"
+          done
+          echo 'CI_FAST_VERIFIED (Headless only)'
+      - name: Upload fast CI logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-fast-logs
+          path: ${{ runner.temp }}/fast-logs/
+          retention-days: 7

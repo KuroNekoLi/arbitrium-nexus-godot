@@ -1,0 +1,33 @@
+name: CI Full - 100 Battles and 1238 Assertions
+on:
+  schedule:
+    # 02:00 Asia/Taipei (18:00 UTC) daily
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    branches: [master]
+    # Core mechanics / seed-driver changes need a full gate; ordinary HUD/art
+    # changes do not block fast iteration on the 100 seeded encounters.
+    paths:
+      - '.github/workflows/ci-full.yml'
+      - '.github/workflows/godot-m5-5-acceptance.yml'
+      - 'project.godot'
+      - 'scripts/domain/m1/**'
+      - 'scripts/domain/m2/cards/**'
+      - 'scripts/domain/m4/casting/**'
+      - 'scripts/domain/m5/integration/**'
+      - 'tests/fixtures/m5_full_battle_driver.gd'
+      - 'tests/fixtures/m5_full_battle_fixture.gd'
+      - 'tests/test_m5_100_seeds.gd'
+permissions:
+  contents: read
+concurrency:
+  group: ci-full-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  full-m5-5:
+    # Reuse the canonical 1238/1238 + 100-seed + replay + 4 smoke suite.
+    # No second 100-seed runner and no new/relaxed acceptance oracles.
+    uses: ./.github/workflows/godot-m5-5-acceptance.yml

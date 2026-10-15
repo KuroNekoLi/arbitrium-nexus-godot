@@ -1,0 +1,87 @@
+name: CI Integration - Domain Regression
+on:
+  push:
+    branches: [master, 'ci/**', 'integration/**']
+    paths:
+      - '.github/workflows/ci-integration.yml'
+      - 'tools/ci/**'
+      - 'project.godot'
+      - 'scripts/domain/**'
+      - 'scripts/battle/battle_controller.gd'
+      - 'scripts/battle/battle_command_factory.gd'
+      - 'resources/combat/**'
+      - 'tests/test_m*.gd'
+      - 'tests/test_combat_m1.gd'
+      - 'tests/test_lv40_content.gd'
+      - 'tests/test_p4_lv40_playable.gd'
+      - 'tests/fixtures/**'
+  pull_request:
+    paths:
+      - '.github/workflows/ci-integration.yml'
+      - 'tools/ci/**'
+      - 'project.godot'
+      - 'scripts/domain/**'
+      - 'scripts/battle/battle_controller.gd'
+      - 'scripts/battle/battle_command_factory.gd'
+      - 'resources/combat/**'
+      - 'tests/test_m*.gd'
+      - 'tests/test_combat_m1.gd'
+      - 'tests/test_lv40_content.gd'
+      - 'tests/test_p4_lv40_playable.gd'
+      - 'tests/fixtures/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-integration-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+jobs:
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache checksum-verified Godot binary
+        uses: actions/cache@v4
+        with:
+          path: .ci-cache/godot-4.7.2
+          key: godot-4.7.2-linux-x86_64-verified-v1
+      - name: Install Godot 4.7.2
+        run: bash tools/ci/install_godot.sh
+      - name: Strict import and 1128 named M1-M5.5 assertions (no 100-seed stress)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/integration-logs"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/integration-logs/import.log" 2>&1 || {
+            cat "$RUNNER_TEMP/integration-logs/import.log"; exit 1;
+          }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/integration-logs/import.log"
+          actual=0
+          while IFS= read -r spec; do
+            [[ -z "$spec" || "$spec" == \#* ]] && continue
+            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/integration-logs"
+            IFS=: read -r _ _ expected <<< "$spec"
+            actual=$((actual+expected))
+          done < tools/ci/integration_suites.txt
+          [[ "$actual" -eq 1128 ]] || { echo "Coverage drift: $actual != 1128"; exit 1; }
+          echo "CI_INTEGRATION_REPORT suites=26 assertions=$actual failed=0"
+      - name: Four legacy smoke suites
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
+            log="$RUNNER_TEMP/integration-logs/$suite.log"
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1 || {
+              tail -n 100 "$log"; exit 1;
+            }
+            python3 tools/ci/assert_godot_logs.py "$log"
+          done
+          echo 'CI_INTEGRATION_LEGACY_SMOKE_PASS suites=4'
+      - name: Upload integration logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-integration-logs
+          path: ${{ runner.temp }}/integration-logs/
+          retention-days: 14
