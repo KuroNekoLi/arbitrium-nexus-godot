@@ -29,3 +29,33 @@ AI生成資產記provider、model/version（可取得時）、生成日期、pro
 Manifest對得上實際檔案／hash與正式用途；license已確認，credits已覆蓋；fresh import、重新匯入、場景載入、export包含與目標裝置視覺／音訊檢查均按scope執行。只有靜態檢查時不宣稱正式可發行。
 
 官方依據：[License compliance](https://docs.godotengine.org/en/4.7/about/complying_with_licenses.html)、[Project organization](https://docs.godotengine.org/en/4.7/tutorials/best_practices/project_organization.html)。
+
+## Task-driven Asset Vault and Role Handoff（2026-10-15 補充）
+
+用戶提出「製作 X 場景／生產 X 圖片／Boss 動畫」時，由 `godot-resource-library-manager` 自動取得或選出候選素材、在專案外 Vault 建索引；本 Asset Pipeline 只接入有 license proof 的 `SELECTED_FOR_TASK` 素材並依重大性門檻判斷是否需正式核准。外部素材倉庫**不是**新的 Godot `res://` 全量鏡像，只有被選中的合規素材移入正式工程。動態搜尋、下載、分類、hash 比較、配額與安全解壓規範見新 Skill `references/RESOURCE_LIBRARY_MANAGER.md`。
+
+### 完整成果的自動化閉環
+
+`Brief → existing assets → indexed vault → license-safe discovery/acquisition → ranked choice → isolated source processing/generation → Appearance Resource → scene binding → real Godot screenshot/QA → asset manifest and credits`。
+
+- **圖像任務**：生成 card-art-only／background-only／actor-only／boss-only 等獨立檔，絕不把複合概念圖視為可換文字、換角色的背景。UI Frames、圖示、卡名／費用／描述由獨立 Texture／Control／Theme 和繁中／英文 i18n 渲染。
+- **場景任務**：場景拆為背景、道具、Actor Slots、HUD、VFX、Audio，逐一來源查核；真的把 UI／場景組裝、運行、拍照才算完成，單有素材包或概念圖不算。
+- **動畫任務**：檢查現有角色 Sprite Sheet 和動畫，合適時重用；缺材質再建 SpriteFrames、Skeleton Cutout 或 Tween 方案；Animation Cue 只呈現 Domain Events，絕不依動畫 callback 扣傷害。
+- **未清權 / 工具不足**：輸出候選報告、待核准方案和 `BLOCKED`，不要拿來源不明圖當成成品或宣稱已完成。
+
+### 採用決策與權限
+
+| 採用類別 | 執行模式 |
+| --- | --- |
+| 已審並已存在素材、免費低風險 icon/VFX/UI 音效/一般佔位，符合風格和配額 | AUTO 可自行取用、整合與交付；最終摘要記用途與授權 |
+| 重要角色／Boss 正式外觀、核心場景定調、主 UI Style Bible、重要音樂、renderer/第三方可執行插件替換、會改變大量現有設計的採用 | **先出 Major Asset Decision Report，再等核准正式採用**；報告附推薦、2–4 個真實備選、授權／效能／風格與回退 |
+| 授權未知、付費/帳號權限要求、不明來源、受明顯限制的不可商用檔 | BLOCK 或 REVIEW；不得逾越權限，不能啟用付費工具 |
+
+**Record requirements**：新來源要完整資產 ID／vendor／release／licensing evidence／來源 sha256／轉檔 sha256／import settings／viewport 和 runtime QA。Vault 路徑可由 `ASSET_VAULT_ROOT` 配置，不能假設 ephemeral worker 上下載的檔案已持久化。安裝 Godot 插件等同引進可執行程式碼，須與單純圖片 zip 區別處理。
+
+### 參考
+
+- `docs/ui/03_FREE_OPEN_SOURCE_RESOURCE_SCOUT.md`
+- `.codex/skills/godot-resource-library-manager/SKILL.md`
+- `tools/godot-card-rpg-development-skills/references/RESOURCE_LIBRARY_MANAGER.md`
+- Godot 官方匯入流程：https://docs.godotengine.org/en/stable/tutorials/assets_pipeline/import_process.html
