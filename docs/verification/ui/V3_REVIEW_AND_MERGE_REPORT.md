@@ -1,12 +1,12 @@
 # V3.1–V3.3 Review and Master Integration
 
-日期：2026-10-15。狀態：IMPLEMENTED_NOT_VERIFIED — 等待整合與Master CI；不是V3最終美術核准。
+日期：2026-10-15。狀態：VERIFIED — V3.1–V3.3技術／headless／靜態畫面整合並已merge master；GUI_NOT_VERIFIED，不是V3最終美術核准。
 
 ## Source / Permission
 
 - 使用者授權Review V3，通過後merge；途中明確加入V3.3審查。
 - master基準：a355d0b97374295fe731cd48f148eb4f2c8e3014。
-- 初始V3來源：97816644e（完整SHA見merge parent）；V3.3來源：ui/v3-visual-foundation-20261015@85d5c64b396145beca43153d66c644ab2497a269。
+- 初始V3來源：97816644e29b1e01d2155991a896e39a491f801e；V3.3來源：ui/v3-visual-foundation-20261015@85d5c64b396145beca43153d66c644ab2497a269。
 - 隔離分支integration/v3-reviewed-20261015；先正常merge V3.1/2保留V2修復，再merge V3.3；不force push、不刪來源分支、不清使用者修改。
 - 不變量：保留V2 modal隔離、SimpleCards及既有API；Domain/ContentConfig/project.godot/1238 assertions/100-seed driver無修改。
 
@@ -62,4 +62,13 @@ Rollback可在專用分支revert此次merge保留V2；Domain不需遷移，不�
 
 ## Final Receipts
 
-待整合與Master CI成功後追加完整merge/tested SHA、Run URL及結果；此前不聲稱已merge或VERIFIED。
+上列「待CI」保留施工時帳本；最終狀態以下列本輪收據為準。
+
+- V3.1/2正常merge：1933be4027eaa802b51aaf9f9dc5cecbcb7ea15e。
+- V3.3正常merge／最終受測程式：2ce71a2f2d88b425ccfc9e99d5e65a15363b35b8，已fast-forward推master；parent包括85d5c64來源。無force push、無PR、未刪分支。
+- staged全部success：[Fast38749377233](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38749377233)、[Integration38749377548](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38749377548)、[Full38749377297](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38749377297)、[Render38749377507](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38749377507)。
+- 正式master全部success：[Fast38750028130](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750028130)、[Full38750028321](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750028321)、[Render38750027917](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750027917)。
+- raw master jobs116473693270/116473693335/116473691543已讀：P4 17組817+4Legacy、V31 31/31、V32 73/73、V33 47/47、merge90/90、V27 8/8；canonical Full保持1238基線及100Seed完整對局Replay（100場/5244Commands/0Rejected）；V23 30/30+V31Render20/20，12張PNG。
+- 主控下載[staged原圖artifact11980970693](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38749377507/artifacts/11980970693)，原圖目視1280繁中idle與Locked+Exposed：費用AP1/MP1可見，三行狀態完整，Intent未遮Context。專案外../v3-staged-render/保留12圖與logs。master亦同一程式SHA再渲染成功。
+- V33本機亦執行first47/47，../v33-headless-attempt1.log；stagedsecond與Masterthird均47/47。原GUI步驟未執行，不採來源分支重跑GUI的收據當新驗收。
+- 最終文件收據commit不改受測程式，不聲稱docs SHA有新的GUI／Domain執行。V3.4使用獨立批次與報告，不混淆本批SHA。

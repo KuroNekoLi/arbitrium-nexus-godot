@@ -59,6 +59,26 @@ jobs:
           m=re.search(r'^V25_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',text,re.M)
           assert m and int(m[1]) >= 30 and m[1]==m[2] and m[3]=='0', 'V25 GUI summary missing or failure'
           PY
+      - name: V3.4 real Hero clicks and Command event routing
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/test_p4_v34_gui_input.gd \
+            > "$RUNNER_TEMP/v25/v34_gui.log" 2>&1 || {
+              cat "$RUNNER_TEMP/v25/v34_gui.log"; exit 1;
+            }
+          grep 'V34_GUI_REPORT' "$RUNNER_TEMP/v25/v34_gui.log"
+          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v25/v34_gui.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v25/v34_gui.log"
+          python3 - "$RUNNER_TEMP/v25/v34_gui.log" <<'PY'
+          import re,sys
+          source=open(sys.argv[1]).read()
+          report=re.search(r'^V34_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',source,re.M)
+          assert report and int(report[1])>=28 and report[1]==report[2] and report[3]=='0', 'V34 GUI failure'
+          PY
       - name: Upload raw input evidence
         if: always()
         uses: actions/upload-artifact@v4

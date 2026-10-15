@@ -5,8 +5,8 @@
 ## Source / Scope
 
 使用者在V3.1–3.3審查中明示V3.4已好，納入獨立批次。
-基準：已推master的2ce71a2f2d88b425ccfc9e99d5e65a15363b35b8；來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f。
-分支integration/v34-reviewed-20261015；只merge此明確V3.4 source，不自動跟進後續未知功能。
+基準：已推master的2ce71a2f2d88b425ccfc9e99d5e65a15363b35b8；Production來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f，途中補審tests/CI/docs-only來源f73e31cdf2ca5f235594ab4936191df36115958c。
+分支integration/v34-reviewed-20261015；只merge以上明確V3.4 source，不自動跟進後續未知功能。
 內容：保留三個HeroRosterItem／真肖像／Kenney邊框，HP與MP獨立named bars、可見焦點；CommandMenu六項指令保留signal及fields，只加skin與input-transparent accent rail。Analyze/Item仍UNIMPLEMENTED，不假稱可玩。
 
 ## Review Finding / Fix
@@ -15,6 +15,11 @@
 來源V3.4把legacy update_status改用BATTLE_HP/MP翻譯key，但舊main從未安裝BattleScreen catalogues。全新程序載入舊場景可重現String formatting error；test_combat_ui雖印UI TEST PASS，stderr仍有12個ERROR。嚴格helper正確判FAILED_PROCESS_GATE，不能以exit0忽略。
 修正：HeroRosterItem._ready呼叫既有BattleTranslations.install()。該入口先驗證所有catalogues再原子註冊，且冪等、不改locale；所有元件共用同一份已擁有的Translation，不自行創另一套翻譯。沒有更動舊玩法或任何Domain。
 新增test_p4_v34_legacy_roster：全新程序、不建立BattleScreen，兩語update_status、真bar數值、零最大值僅render clamp、無手牌計數、離場重入與兩份Translation不重複，共18條。
+
+**V34-R02 / QA：來源補交GUI與workflow限制衝突。**
+f73e31c新增V34 GUI28與收據，但同job再次包含已耗盡的V25。正常三方merge在push觸發設定衝突；保留master的manual-only+job if:false，完整保留新增測試與歷史收據，不自動再跑。
+靜態檢查新GUI helper還把window physical座標傳給Viewport.warp_mouse；改用原logical point，push_input仍維持window座標。這只是測試helper修正，不改Production；source第三輪28/28不冒充修正後或本輪SHA驗證，GUI_NOT_VERIFIED且需要新授權才可再驗證。
+原GUI28 assertions保留不弱化；source無效YAML、錯誤minimum30而實際28等歷史報告原樣留存。
 
 ## Requirements / Evidence
 
