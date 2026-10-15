@@ -1,5 +1,9 @@
 # Phase 3 — M5 Engine Handoff (M1–M5.5)
 
+## Final Gate — VERIFIED HEADLESS DOMAIN ONLY
+
+Official Godot 4.7.2 [post-merge master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741), code SHA `9c8b14b873047ca181a229cfaab5d2351541ceab`: **M5.5 new 157/157**, predecessor **1,081/1,081**, cumulative **1,238/1,238**, four legacy smoke success. 100 seeded full games and all tapes replayed, all 100 terminal VICTORY with provisional difficulty. **Verdict: M5 DOMAIN VERIFIED — HEADLESS BATTLE / FIXTURE_ONLY**; Phase 4 and actual playable/bilingual/balance remain NOT VERIFIED. This final evidence supersedes earlier PENDING wording below as historical gate instructions.
+
 ## What is authoritative
 
 Read `AGENTS.md`, `docs/combat/00`–`23` and `UPSTREAM_RECONCILIATION_A_2026-10-15.md` before touching the engine. Do not use the legacy Flutter GDD or an archived second combat baseline to override approved CORE/P2 decisions. Current executable target: `KuroNekoLi/arbitrium-nexus-godot`; documentation-only `KuroNekoLi/astraea-combat-rules` is upstream source, not the runnable project.
