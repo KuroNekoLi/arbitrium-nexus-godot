@@ -4,6 +4,7 @@ const CardView = preload("res://scripts/battle/ui/battle_card_view.gd")
 const HandArc = preload("res://addons/simple_cards/shape/premade_shapes/arc_shape.gd")
 signal card_requested(instance: String)
 signal card_released(instance: String, pointer: Vector2)
+signal chant_held(instance: String, full: bool)
 
 var card_views: Array[Control] = []
 var selected_instance: String = ""
@@ -38,10 +39,12 @@ func render_cards(cards: Array) -> void:
 		card.appearance = data["appearance"]
 		card.cost_text = str(data["cost"])
 		card.legal = bool(data["legal"])
+		card.can_full_chant = bool(data.get("can_full_chant", false))
 		card.unavailable_reason = str(data["reason"])
 		add_child(card)
 		card.selection_requested.connect(func(id: String) -> void: card_requested.emit(id))
 		card.release_requested.connect(func(id: String, point: Vector2) -> void: card_released.emit(id, point))
+		card.chant_held.connect(func(id: String, full: bool) -> void: chant_held.emit(id, full))
 		card_views.append(card)
 	_arrange_hand()
 	# Keep the real selection ID, even though legacy HUD still rebuilds its cards.

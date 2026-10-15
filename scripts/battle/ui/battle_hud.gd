@@ -58,6 +58,12 @@ var _modal_shield: Control
 var _modal_active: bool = false
 var _return_focus: WeakRef
 var _background_focus: Dictionary = {}
+var command_prompt: PanelContainer
+var command_prompt_title: Label
+var command_prompt_description: Label
+var command_prompt_column: VBoxContainer
+var preferences_panel: PanelContainer
+var last_preview: Control
 
 func _ready() -> void:
 	theme = preload("res://resources/ui/battle_theme.tres")
@@ -96,7 +102,7 @@ func _build() -> void:
 	end_button = _commands.end_button
 	_commands.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 
-	_enemy = _place(EnemyScene, Rect2(984, 98, 280, 238))
+	_enemy = _place(EnemyScene, Rect2(984, 12, 280, 238))
 	boss_stats = _enemy.boss_stats
 	intent = _enemy.intent
 
@@ -108,8 +114,46 @@ func _build() -> void:
 	feedback = _context.feedback
 	_log = _place(LogScene, Rect2(984, 580, 280, 118))
 	log_label = _log.log_label
+	# Shared metallic corners stay separate from live labels, bars and input.
+	for panel: Control in [_commands, _enemy, _context, _log]:
+		preload("res://scripts/battle/ui/components/battle_hud_chrome.gd").install(panel)
 	reduced_toggle = _context.reduced_toggle
 	mute_toggle = _context.mute_toggle
+	_context.hide()
+	_context.action_row.hide()
+	# Feedback and preferences are not card details; they must remain available
+	# when no card is selected. Keep the public field references unchanged.
+	feedback.reparent(self)
+	feedback.position = Vector2(320, 420)
+	feedback.size = Vector2(620, 42)
+	feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	preferences_panel = PanelContainer.new()
+	preferences_panel.name = "PresentationPreferences"
+	preferences_panel.position = Vector2(984, 82)
+	preferences_panel.size = Vector2(280, 170)
+	preferences_panel.z_index = 80
+	add_child(preferences_panel)
+	var preferences: Control = _context.detail_scroll.get_child(0).get_node("PreferencesContent")
+	preferences.reparent(preferences_panel)
+	preferences.show()
+	preferences_panel.hide()
+	var disclosure: Button = _context.get_child(0).get_node("PreferencesDisclosure")
+	# Replace the old local disclosure, not its presentation preference signals.
+	for connection: Dictionary in disclosure.pressed.get_connections():
+		disclosure.pressed.disconnect(connection["callable"])
+	disclosure.reparent(_top.get_node("UtilityPanel").get_child(0))
+	disclosure.pressed.connect(func() -> void: preferences_panel.visible = not preferences_panel.visible)
+	command_prompt = PanelContainer.new()
+	command_prompt.name = "CommandConfirmation"
+	command_prompt.position = Vector2(430, 190)
+	command_prompt.size = Vector2(420, 230)
+	command_prompt.z_index = 110
+	add_child(command_prompt)
+	command_prompt_column = UI.column(command_prompt)
+	command_prompt_title = UI.label(command_prompt_column, "BATTLE_CONFIRM", 22)
+	command_prompt_description = UI.label(command_prompt_column, "", 16)
+	command_prompt_description.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	command_prompt.hide()
 	_context.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 	_context.confirm_requested.connect(func() -> void: confirm_requested.emit())
 	_context.cancel_requested.connect(func() -> void: cancel_requested.emit())
@@ -118,6 +162,8 @@ func _build() -> void:
 	card_views = hand.card_views
 	hand.card_requested.connect(func(instance: String) -> void: card_requested.emit(instance))
 	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void: card_released.emit(instance, pointer))
+	hand.chant_held.connect(func(instance: String, full: bool) -> void:
+		command_requested.emit("HOLD_CHANT", {"instance_id": instance, "full": full}))
 
 	_targets = _place(TargetsScene, Rect2(0, 0, 1280, 720))
 	target_buttons = _targets.target_buttons
@@ -148,6 +194,14 @@ func _build() -> void:
 	# GUI picking follows tree order, not draw z_index. Keep the shield before
 	# both modal panels so it blocks the background, never their own buttons.
 	move_child(_modal_shield,reaction_panel.get_index())
+	move_child(command_prompt, result_panel.get_index())
+	last_preview = preload("res://scripts/battle/ui/components/last_spell_preview.gd").new()
+	last_preview.size = Vector2(1280, 720)
+	last_preview.z_index = 115
+	add_child(last_preview)
+	last_preview.activation_requested.connect(func(target: String) -> void:
+		command_requested.emit("ACTIVATE_LAST_PREVIEW", {"target_id": target}))
+	last_preview.cancel_requested.connect(func() -> void: cancel_requested.emit())
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection
@@ -186,7 +240,7 @@ func _restore_background_focus() -> void:
 
 ## GUI modal isolation is presentation-only; it never confirms or passes a window.
 func _sync_modal_focus() -> void:
-	var active: bool = result_panel.visible or reaction_panel.visible
+	var active: bool = result_panel.visible or reaction_panel.visible or command_prompt.visible or last_preview.visible
 	_modal_shield.visible = active
 	if active:
 		if not _modal_active:
@@ -194,8 +248,8 @@ func _sync_modal_focus() -> void:
 		# SimpleCards also refreshes hover from geometry outside native GUI picking.
 		# NONE prevents its focus-on-hover from escaping into a covered hand.
 		for child: Node in get_children():
-			if child not in [reaction_panel,result_panel,_modal_shield]: _suspend_focus(child)
-		var panel: Control = result_panel if result_panel.visible else reaction_panel
+			if child not in [reaction_panel,result_panel,command_prompt,last_preview,_modal_shield]: _suspend_focus(child)
+		var panel: Control = result_panel if result_panel.visible else reaction_panel if reaction_panel.visible else last_preview if last_preview.visible else command_prompt
 		var buttons: Array[Control] = []
 		_focus_buttons(panel,buttons)
 		for i: int in buttons.size():
@@ -210,6 +264,23 @@ func _sync_modal_focus() -> void:
 		else:
 			end_button.grab_focus()
 	_modal_active = active
+
+func show_command_confirmation(title: String, description: String) -> void:
+	_context.hide()
+	preferences_panel.hide()
+	command_prompt_title.text = title
+	command_prompt_description.text = description
+	_context.action_row.reparent(command_prompt_column)
+	_context.action_row.show()
+	command_prompt.show()
+	_sync_modal_focus()
+
+func clear_command_confirmation() -> void:
+	command_prompt.hide()
+	if _context.action_row.get_parent() == command_prompt_column:
+		_context.action_row.reparent(_context.get_child(0))
+	_context.action_row.hide()
+	_sync_modal_focus()
 
 func set_selected_card(instance: String) -> void:
 	# Display-only selection; legacy BattleScreen stays authoritative for actions.

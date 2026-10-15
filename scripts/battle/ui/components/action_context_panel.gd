@@ -15,6 +15,11 @@ var reduced_toggle: CheckButton
 var mute_toggle: CheckButton
 var detail_scroll: ScrollContainer
 var action_row: HBoxContainer
+var summary: HBoxContainer
+var artwork: TextureRect
+var action_title: Label
+var cost_badge: Label
+var target_label: Label
 
 func _ready() -> void:
 	var root := VBoxContainer.new()
@@ -44,6 +49,28 @@ func _ready() -> void:
 	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	rule.add_theme_stylebox_override("panel", Tokens.heading_rule())
 	content.add_child(rule)
+	summary = HBoxContainer.new()
+	summary.name = "ActionSummary"
+	summary.add_theme_constant_override("separation", 7)
+	content.add_child(summary)
+	artwork = TextureRect.new()
+	artwork.name = "ActionArtwork"
+	artwork.custom_minimum_size = Vector2(48, 48)
+	artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	summary.add_child(artwork)
+	var identity := VBoxContainer.new()
+	identity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	identity.add_theme_constant_override("separation", 0)
+	summary.add_child(identity)
+	action_title = UI.label(identity, "BATTLE_SELECT", 15)
+	action_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	action_title.add_theme_color_override("font_color", Color("#EFE1BE"))
+	cost_badge = UI.label(identity, "", 12)
+	cost_badge.add_theme_color_override("font_color", Tokens.HERO_MP)
+	target_label = UI.label(identity, "BATTLE_TARGET", 11)
+	target_label.add_theme_color_override("font_color", Color("#ADBFD0"))
 	var inset := PanelContainer.new()
 	inset.name = "DetailsInset"
 	var inset_style: StyleBoxFlat = Tokens.inset_frame(Tokens.METAL.darkened(0.35))
@@ -54,8 +81,9 @@ func _ready() -> void:
 	inset.add_theme_stylebox_override("panel", inset_style)
 	inset.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(inset)
-	details = UI.label(inset, "BATTLE_SELECT", 16)
-	details.custom_minimum_size.y = 76
+	details = UI.label(inset, "BATTLE_SELECT", 13)
+	details.custom_minimum_size.y = 32
+	clear_summary()
 
 	mode = OptionButton.new()
 	mode.add_item(tr("BATTLE_CHANTLESS"))
@@ -77,7 +105,13 @@ func _ready() -> void:
 	disclosure.text = "⚙"
 	disclosure.tooltip_text = tr("BATTLE_REDUCED") + " · " + tr("BATTLE_MUTE")
 	disclosure.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	disclosure.custom_minimum_size.y = 28
+	disclosure.custom_minimum_size.y = 18
+	disclosure.add_theme_font_size_override("font_size", 11)
+	var preferences_style := StyleBoxEmpty.new()
+	preferences_style.content_margin_left = 4
+	preferences_style.content_margin_top = 0
+	preferences_style.content_margin_bottom = 0
+	disclosure.add_theme_stylebox_override("normal", preferences_style)
 	root.add_child(disclosure)
 	var settings := VBoxContainer.new()
 	settings.name = "PreferencesContent"
@@ -122,3 +156,17 @@ func _ready() -> void:
 	feedback.max_lines_visible = 2
 	feedback.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	feedback.custom_minimum_size.y = 20
+
+## A passive projection: the caller supplies quoted costs and committed names.
+## No resource payment or target prediction is performed in this component.
+func render_summary(title: String, texture: Texture2D, cost: String, target: String) -> void:
+	details.get_parent().show()
+	action_title.text = title
+	artwork.texture = texture
+	cost_badge.text = cost
+	cost_badge.visible = not cost.is_empty()
+	target_label.text = target
+
+func clear_summary() -> void:
+	render_summary(tr("BATTLE_SELECT"), preload("res://assets/ui/v35/cmd_analyze.svg"), "", tr("BATTLE_CONTEXT_EMPTY"))
+	details.get_parent().hide()

@@ -47,6 +47,9 @@ jobs:
       - name: Install Godot 4.7.2 (verify SHA-512)
         run: bash tools/ci/install_godot.sh
       - name: Headless import, log-gate unit tests and representative battle/UI smoke
+        # This branch's Fast batch reached its third execution at 77bd22a.
+        # Preserve the failed Lv40 gate; additional reruns need owner approval.
+        if: github.ref != 'refs/heads/ui/v35-convergence-final-20261016' || github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4' || github.sha == '77bd22a7bcece1fc7b9cef3360aebfa5fa2dc01c'
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -70,6 +73,27 @@ jobs:
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/fast-logs"
           done
           echo 'CI_FAST_VERIFIED (Headless only)'
+      - name: New Last Spell cut-in GUI gate
+        if: github.ref == 'refs/heads/ui/v35-convergence-final-20261016'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          mkdir -p "$RUNNER_TEMP/fast-logs"
+          if [ ! -f .godot/global_script_class_cache.cfg ]; then
+            timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/fast-logs/last-import.log" 2>&1
+            python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/fast-logs/last-import.log"
+          fi
+          log="$RUNNER_TEMP/fast-logs/last-preview-gui.log"
+          timeout 150s xvfb-run -a -s '-screen 0 1920x1080x24' \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/test_last_spell_preview.gd > "$log" 2>&1 || {
+              cat "$log"; exit 1;
+            }
+          python3 tools/ci/assert_godot_logs.py "$log"
+          grep -Fx 'LAST_PREVIEW_REPORT executed=25 passed=25 failed=0' "$log"
       - name: Upload fast CI logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -78,6 +102,10 @@ jobs:
           path: ${{ runner.temp }}/fast-logs/
           retention-days: 7
   p4-contracts:
+    # This branch's authorized three-run V3.5 batch was consumed at 81f3d94.
+    # New Last Spell UI has its own new requirement/test, not a renamed rerun.
+    # Other branches retain the complete canonical contracts unchanged.
+    if: github.ref != 'refs/heads/ui/v35-convergence-final-20261016' || github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'
     # Runs alongside the Golden/5-seed job, not serially afterwards.
     # Replaces the formerly auto-triggered P4 component/localization/metrics
     # workflows without reviving redundant 100-seed tests.
@@ -135,11 +163,31 @@ jobs:
             'test_p4_v35_party:V35_PARTY_REPORT:57' \
             'test_p4_v35_command:V35_COMMAND_REPORT:30' \
             'test_p4_v35_intent:V35_INTENT_REPORT:35' \
-            'test_p4_v35_log:V35_LOG_REPORT:33'; do
+            'test_p4_v35_log:V35_LOG_REPORT:33' \
+            'test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=24 assertions=1124 legacy=4 failed=0'
+          echo 'CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
+      - name: Authorized V3.5 scoped input gate (not historical P4.4)
+        if: github.ref == 'refs/heads/ui/v35-convergence-final-20261016' && github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          for suite in test_p4_v34_gui_input test_p4_sp_drag_gesture; do
+            log="$RUNNER_TEMP/p4-logs/$suite.log"
+            timeout 150s xvfb-run -a -s '-screen 0 1920x1080x24' \
+              env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+              "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+              --script "res://tests/$suite.gd" > "$log" 2>&1 || {
+                cat "$log"; exit 1;
+              }
+            python3 tools/ci/assert_godot_logs.py "$log"
+          done
+          grep -Fx 'V34_GUI_REPORT executed=28 passed=28 failed=0' "$RUNNER_TEMP/p4-logs/test_p4_v34_gui_input.log"
+          grep -Fx 'SP_GESTURE_REPORT executed=17 passed=17 failed=0' "$RUNNER_TEMP/p4-logs/test_p4_sp_drag_gesture.log"
       - name: Upload P4 contract evidence
         if: always()
         uses: actions/upload-artifact@v4

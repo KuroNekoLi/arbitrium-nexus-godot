@@ -10,6 +10,7 @@ var log_label: Label
 var log_scroll: ScrollContainer
 var entry_list: VBoxContainer
 var history: Array = []
+var earlier_entries: VBoxContainer
 
 func _ready() -> void:
 	var body: VBoxContainer = UI.column(self)
@@ -28,6 +29,10 @@ func _ready() -> void:
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 2)
 	log_scroll.add_child(content)
+	earlier_entries = VBoxContainer.new()
+	earlier_entries.name = "EarlierEntries"
+	earlier_entries.add_theme_constant_override("separation", 2)
+	content.add_child(earlier_entries)
 	entry_list = VBoxContainer.new()
 	entry_list.name = "LogEntries"
 	entry_list.add_theme_constant_override("separation", 2)
@@ -37,12 +42,12 @@ func _ready() -> void:
 	log_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	log_label.max_lines_visible = 3
+	log_label.text = tr("BATTLE_LOG_EMPTY")
+	log_label.add_theme_color_override("font_color", Color("#8095A8"))
 
 ## Appends formatter rows (already derived from real events) and redraws.
 func append_rows(rows: Array) -> void:
 	history.append_array(rows)
-	if history.size() > HISTORY_LIMIT:
-		history = history.slice(history.size() - HISTORY_LIMIT)
 	_redraw()
 
 func clear_rows() -> void:
@@ -53,6 +58,11 @@ func visible_rows() -> Array:
 	return history.slice(maxi(0, history.size() - VISIBLE_ROWS))
 
 func _redraw() -> void:
+	for old: Node in earlier_entries.get_children():
+		earlier_entries.remove_child(old)
+		old.queue_free()
+	for row: Dictionary in history.slice(0, maxi(0, history.size() - VISIBLE_ROWS)):
+		earlier_entries.add_child(_make_row(row, false))
 	for old: Node in entry_list.get_children():
 		entry_list.remove_child(old)
 		old.queue_free()
@@ -65,6 +75,15 @@ func _redraw() -> void:
 	log_label.text = "\n".join(plain.slice(maxi(0, plain.size() - 3)))
 	# Rows supersede the plain mirror visually; the facade text is kept in sync.
 	log_label.visible = shown.is_empty()
+	if shown.is_empty():
+		log_label.text = tr("BATTLE_LOG_EMPTY")
+	_scroll_latest.call_deferred()
+
+func _scroll_latest() -> void:
+	# Wait for Container measurement; preserve the entire event history above.
+	await get_tree().process_frame
+	if is_instance_valid(log_scroll):
+		log_scroll.scroll_vertical = int(log_scroll.get_v_scroll_bar().max_value)
 
 func _make_row(row: Dictionary, newest: bool) -> HBoxContainer:
 	var accent: Color = Formatter.CATEGORY_COLORS.get(str(row["category"]), Formatter.CATEGORY_COLORS["GENERIC"])
@@ -79,6 +98,17 @@ func _make_row(row: Dictionary, newest: bool) -> HBoxContainer:
 	rail.custom_minimum_size = Vector2(3, 14)
 	rail.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	line.add_child(rail)
+	var icon := TextureRect.new()
+	icon.name = "EventIcon"
+	var category: String = str(row["category"])
+	var icon_file: String = "cmd_basic" if category in ["DAMAGE", "ACTION"] else "status_guard" if category == "DEFENSE" else "cmd_last" if category == "CAST" else "intent_skill" if category == "INTENT" else "ap_crystal"
+	icon.texture = load("res://assets/ui/v35/" + icon_file + ".svg")
+	icon.modulate = accent
+	icon.custom_minimum_size = Vector2(17, 17)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	line.add_child(icon)
 	var seq := Label.new()
 	seq.name = "Seq"
 	seq.text = Formatter.seq_label(row)

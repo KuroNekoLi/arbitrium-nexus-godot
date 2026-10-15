@@ -97,6 +97,7 @@ func _ready() -> void:
 	values.add_child(crystal_row)
 
 	var phase_row: HBoxContainer = _add_island("PhasePanel", Rect2(400, 0, 402, 64))
+	preload("res://scripts/battle/ui/components/battle_hud_chrome.gd").install(phase_row.get_parent())
 	header = UI.label(phase_row, "BATTLE_TITLE", 23)
 	header.autowrap_mode = TextServer.AUTOWRAP_OFF
 	header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -104,9 +105,13 @@ func _ready() -> void:
 	header.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 	var utility_row: HBoxContainer = _add_island("UtilityPanel", Rect2(930, 0, 318, 64))
+	preload("res://scripts/battle/ui/components/battle_hud_chrome.gd").install(utility_row.get_parent())
 	UI.button(utility_row, "EN", func() -> void: locale_requested.emit("en"))
 	UI.button(utility_row, "繁中", func() -> void: locale_requested.emit("zh_TW"))
 	UI.button(utility_row, "BATTLE_SAVE", func() -> void: command_requested.emit("SAVE_REPLAY", {}))
+	# USER_APPROVED: utility controls are not part of the battle HUD.
+	# Retain the node/API for callers; localization and tape services still work.
+	utility_row.get_parent().hide()
 
 func render_phase(projection: Dictionary) -> void:
 	header.text = tr("BATTLE_PHASE_" + projection["phase"]) + "   ·   " + tr("BATTLE_ROUND") % projection["round"]
@@ -121,7 +126,7 @@ func render_phase(projection: Dictionary) -> void:
 	for index: int in slots:
 		var gem := TextureRect.new()
 		gem.texture = CRYSTAL
-		gem.custom_minimum_size = Vector2(10, 16)
+		gem.custom_minimum_size = Vector2(minf(18.0, 132.0 / maxf(1.0, slots)), 20)
 		gem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		gem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		gem.modulate = Color.WHITE if index < value else Color(0.22, 0.30, 0.38, 0.55)

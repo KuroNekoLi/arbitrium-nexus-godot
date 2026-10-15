@@ -22,6 +22,8 @@ const TARGET_ACCENTS: Dictionary = {"A": Color("efc675"), "B": Color("75d6ff"), 
 var intent_icon: TextureRect
 var hit_chip: Label
 var target_badges: HBoxContainer
+var target_portrait: TextureRect
+const PORTRAITS: Texture2D = preload("res://assets/portraits/party_portraits.png")
 
 func _make_chip(parent: Node, name: String, accent: Color) -> Label:
 	var chip := Label.new()
@@ -160,6 +162,13 @@ func _ready() -> void:
 	intent.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	intent.max_lines_visible = 2
 	intent.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	target_portrait = TextureRect.new()
+	target_portrait.name = "PublishedTargetPortrait"
+	target_portrait.custom_minimum_size = Vector2(44, 44)
+	target_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	target_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	target_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	intent_row.add_child(target_portrait)
 
 func render_enemy(projection: Dictionary) -> void:
 	boss_title.text = tr(str(projection.get("actor_name_keys", {}).get("Boss", "BATTLE_TITLE")))
@@ -206,8 +215,17 @@ func render_enemy(projection: Dictionary) -> void:
 	var published: Array = projection.get("intent", [])
 	intent_panel.visible = not published.is_empty()
 	target_badges.visible = false
+	target_portrait.hide()
 	if not published.is_empty():
 		var announced: Dictionary = published[0]
+		var targets: Array = announced.get("target_ids", [])
+		# The portrait identifies a published target, not a predicted next victim.
+		if targets.size() == 1 and targets[0] in ["A", "B", "C"]:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = PORTRAITS
+			atlas.region = Rect2(["A", "B", "C"].find(targets[0]) * 724, 0, 724, 724)
+			target_portrait.texture = atlas
+			target_portrait.show()
 		var names: PackedStringArray = []
 		for target: String in announced.get("target_ids", []):
 			var target_name: String = tr(str(projection.get("actor_name_keys", {}).get(

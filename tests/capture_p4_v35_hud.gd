@@ -136,6 +136,8 @@ func run() -> void:
 			break
 	check(screen.controller.submit(Factory.card(state, "C", spell, "Boss", "FULL")), "V35V-VIS09-REAL-CAST")
 	await process_frame
+	await capture(screen, "vis11_real_casting_1280_zh", "REAL_DOMAIN",
+		{"actor_statuses": screen.view_model["actors"], "casts": screen.view_model["casts"]})
 	screen._command_requested("END_PLAYER_PHASE", {})
 	await process_frame
 	var log_rows: int = screen.hud.get_node("BattleLogPanel").visible_rows().size()
@@ -149,6 +151,30 @@ func run() -> void:
 	await capture(screen, "vis10_real_events_1920_en", "REAL_DOMAIN",
 		{"log_rows": screen.hud.get_node("BattleLogPanel").visible_rows().size(),
 		"intent_targets": screen.hud.get_node("EnemyStatus").target_badge_ids()})
+	# Additional real Lv40 view: no mocked gauge or fixture-only retail claims.
+	var live: Control = preload("res://scenes/battle/lv40_playable_battle.tscn").instantiate()
+	screen.queue_free()
+	await process_frame
+	root.add_child(live)
+	root.size = Vector2i(1280, 720)
+	await create_timer(0.4).timeout
+	await capture(live, "vis12_lv40_idle_1280_zh", "REAL_DOMAIN_LV40_BALANCE_PROVISIONAL",
+		{"content_version": live.config.get("content_version", ""), "tactical": live.view_model["tactical"]})
+	# USER_APPROVED Last Spell preview: passive quotes for all three real slots.
+	for actor: String in ["A", "B", "C"]:
+		live.select_actor(actor)
+		live._command_requested("ACTIVATE_LAST_SPELL_M4", {})
+		await capture(live, "vis13_last_preview_" + actor + "_1280_zh", "REAL_DOMAIN_LV40_BALANCE_PROVISIONAL",
+			{"actor_id": actor, "inspection": live.hud.last_preview.inspection,
+			"art_source": "existing Arena idle frame; provisional cut-in, not newly painted CG"})
+		live.cancel_action()
+	live.select_actor("A")
+	live._command_requested("ACTIVATE_LAST_SPELL_M4", {})
+	live._command_requested("ACTIVATE_LAST_PREVIEW", {"target_id": "Boss"})
+	live._command_requested("ACTIVATE_LAST_SPELL_M4", {})
+	await capture(live, "vis14_last_unavailable_1280_zh", "REAL_DOMAIN_LV40_BALANCE_PROVISIONAL",
+		{"disabled": live.hud.last_preview.activate_button.disabled})
+	live.cancel_action()
 
 	var directory: String = ProjectSettings.globalize_path(Writer.OUTPUT_SCOPE).path_join(prefix)
 	var f: FileAccess = FileAccess.open(directory.path_join("v35_capture_manifest.json"), FileAccess.WRITE)
@@ -158,7 +184,7 @@ func run() -> void:
 			"godot": str(Engine.get_version_info().get("string", "")),
 			"renderer": RenderingServer.get_video_adapter_name(), "cases": cases}, "\t"))
 		f.close()
-	screen.queue_free()
+	live.queue_free()
 	await process_frame
 	print("V35_CAPTURE_REPORT executed=%d passed=%d failed=%d" % [executed, executed - failed, failed])
 	quit(0 if failed == 0 else 1)
