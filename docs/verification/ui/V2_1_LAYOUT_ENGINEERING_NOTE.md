@@ -46,3 +46,14 @@ First confirm SHA, then run strict 4.7.2 import/headless parser and the above te
 ## Learning — Compose analogy
 
 The V1 wrapper is analogous to a Compose screen composed from stateless subcomponents. V2 adjusts the **layout modifiers** without touching ViewModel state or navigation actions: breaking a full-width header into independently positioned islands corresponds to replacing a single oversized Row background with separated `Box` groups, while the controller and business-logic callbacks stay unchanged.
+
+## Post-implementation CI receipt (headless only)
+
+- Verified CI source commit: `d00c423e318005079ca65852b30eff8789d49715`.
+- Workflow: [Godot P4 HUD reviewed headless contracts #38728864873](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38728864873).
+- Actual GitHub Actions result: **completed/success**, first workflow attempt. Godot 4.7.2 official binary with SHA512 verification; strict import passed.
+- Exact new test summary from job raw log: `V2_LAYOUT_REPORT executed=18 passed=18 failed=0`.
+- Existing regression summaries on same source SHA: Scene 8/8, HUD 36/36, P4 integration 31/31, V1 components 24/24, feedback 45/45, feedback edges 80/80, Lv40 positive 32/32, screenshot writer 46/46, localization 198/198, readmodel 29/29. Staging 10/10 is **fail-closed**, not positive playability evidence.
+- The strict log analyzer reported zero errors on the import and the V2 runner.
+- **Result:** `V2.1 HEADLESS_VERIFIED / GUI_AND_VISUAL_NOT_VERIFIED`. This addendum supersedes the initial pre-run wording only for **headless CI**. No new screenshot similarity assessment or real click/drag GUI suite was performed. Original P4.4 GUI 14/16 remains unresolved.
+- Future docs-only changes to this branch do not imply a fresh code test; attribute the evidence to the verified commit above.
