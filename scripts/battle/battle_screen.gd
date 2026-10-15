@@ -1,7 +1,8 @@
 extends Control
 ## Reversible scene-specific profile; Lv40 stays fail-closed until merged contracts.
-@export_enum("fixture", "lv40") var encounter_profile: String = "fixture"
+@export_enum("fixture", "lv40", "lv40_playable") var encounter_profile: String = "fixture"
 const Encounter = preload("res://tests/fixtures/m5_full_battle_fixture.gd")
+const Lv40Encounter = preload("res://scripts/domain/m5/lv40/lv40_encounter.gd")
 const Adapter = preload("res://scripts/battle/presentation/battle_presentation_adapter.gd")
 const Factory = preload("res://scripts/battle/battle_command_factory.gd")
 const Cost = preload("res://scripts/domain/m2/economy/cost_resolver.gd")
@@ -43,7 +44,7 @@ func _ready() -> void:
 		hud.end_button.disabled = true
 		push_warning("BLOCKED_CONTRACT: Lv40 playable BattleScreen/Controller wiring remains staging-only")
 		return
-	config = Encounter.config()
+	config = Lv40Encounter.config() if encounter_profile == "lv40_playable" else Encounter.config()
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)
@@ -52,12 +53,12 @@ func _ready() -> void:
 	hud.confirm_requested.connect(confirm_action)
 	hud.cancel_requested.connect(cancel_action)
 	hud.locale_requested.connect(set_locale)
-	present(Encounter.initial())
+	present(_initial_state())
 	resized.connect(_fit_design)
 	_fit_design()
 	controller = Controller.new()
 	add_child(controller)
-	controller.begin(Encounter.initial(),config)
+	controller.begin(_initial_state(),config)
 	controller.resolved.connect(_on_resolved)
 	controller.rejected.connect(func(error: String) -> void: hud.feedback.text = _reason(error))
 	director = Director.new()
@@ -70,6 +71,9 @@ func _ready() -> void:
 	add_child(director)
 	director.cue_presented.connect(_on_cue)
 	action_requested.connect(_submit)
+
+func _initial_state() -> Dictionary:
+	return Lv40Encounter.initial() if encounter_profile == "lv40_playable" else Encounter.initial()
 
 func _on_cue(cue: Dictionary) -> void:
 	if cue["kind"] != "DAMAGE": hud.feedback.text = tr("BATTLE_CUE_"+str(cue["kind"]))
@@ -101,7 +105,7 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 
 func present(state: Dictionary) -> void:
 	snapshot = state.duplicate(true)
-	view_model = Adapter.project(snapshot)
+	view_model = Adapter.project(snapshot,config)
 	for actor: Node2D in $Design/Arena.get_children():
 		var casting: bool = false
 		for cast: Dictionary in view_model["casts"].values():
@@ -124,10 +128,10 @@ func present(state: Dictionary) -> void:
 	hud.set_targets([])
 	if view_model["outcome"] != "ONGOING": hud.feedback.text = tr("BATTLE_"+str(view_model["outcome"]))
 
-func _targets_for_card(instance: String) -> Array:
+func _targets_for_card(instance: String, casting_mode: String = "CHANTLESS") -> Array:
 	var choices: Array = []
 	for target: String in snapshot["core"]["battle"]["actors"]:
-		var command: Dictionary = Factory.card(snapshot,selected_actor,instance,target)
+		var command: Dictionary = Factory.card(snapshot,selected_actor,instance,target,casting_mode,false,config)
 		if Factory.preview(snapshot,command,config)["accepted"]: choices.append(target)
 	return choices
 
@@ -172,9 +176,9 @@ func select_card(instance: String) -> void:
 	var definition: String = str(own["instances"][instance]["definition_id"])
 	var appearance: Resource = load("res://resources/ui/appearances/"+definition+".tres")
 	hud.details.text = tr(appearance.name_key)+"\n"+tr(appearance.description_key)
-	hud.mode.visible = definition == "regular"
+	hud.mode.visible = definition == "regular" or config.get("lv40_cards",{}).get(definition,{}).get("mode","") == "DUAL"
 	hud.mode.select(0)
-	hud.combo.visible = definition == "finish" and not view_model["tactical"].get("combo",{}).is_empty()
+	hud.combo.visible = (definition in ["finish","A06","T04"]) and not view_model["tactical"].get("combo",{}).is_empty()
 	hud.combo.set_pressed_no_signal(false)
 	hud.feedback.text = tr("BATTLE_TARGET") if not legal_targets.is_empty() else _reason("ACTOR_UNAVAILABLE" if view_model["actors"][selected_actor]["status"] != "ACTIVE" else "INSUFFICIENT_RESOURCES")
 	hud.set_targets(legal_targets)
@@ -190,7 +194,7 @@ func select_target(target: String) -> void:
 func _refresh_preview() -> void:
 	if pending_kind == "CARD":
 		pending_command = Factory.card(snapshot,selected_actor,pending_card,selected_target,
-			"FULL" if hud.mode.selected == 1 else "CHANTLESS",hud.combo.button_pressed)
+			"FULL" if hud.mode.selected == 1 else "CHANTLESS",hud.combo.button_pressed,config)
 	else:
 		var fields: Dictionary = {"actor_id":selected_actor,"target_actor_id":selected_target}
 		if pending_kind == "FREE_SWAP": fields["card_instance_id"] = pending_card
@@ -244,7 +248,7 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 		return
 	if kind == "RESTART_BATTLE":
 		director.reset_session()
-		controller.begin(Encounter.initial(),config)
+		controller.begin(_initial_state(),config)
 		cancel_action()
 		present(controller.snapshot())
 		return
@@ -252,6 +256,9 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 		hud.feedback.text = tr("BATTLE_NOT_IMPLEMENTED")
 		return
 	if kind == "REFRESH_PREVIEW":
+		if pending_kind == "CARD":
+			legal_targets = _targets_for_card(pending_card,"FULL" if hud.mode.selected == 1 else "CHANTLESS")
+			hud.set_targets(legal_targets)
 		if selected_target != "": _refresh_preview()
 		return
 	if kind == "FREE_SWAP":
@@ -265,7 +272,12 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 	if kind in ["BASIC_ATTACK_RESOURCE_ONLY","ACTIVATE_LAST_SPELL_M4"]:
 		cancel_action()
 		pending_kind = kind
-		legal_targets = ["Boss"]
+		legal_targets = []
+		for target: String in snapshot["core"]["battle"]["actors"]:
+			var intent_fields: Dictionary = {"actor_id":selected_actor,"target_actor_id":target}
+			if kind == "ACTIVATE_LAST_SPELL_M4": intent_fields.merge({"confirmed":true,"casting_mode":"FULL"})
+			if Factory.preview(snapshot,Factory.build(snapshot,kind,intent_fields),config)["accepted"]:
+				legal_targets.append(target)
 		hud.set_targets(legal_targets)
 		hud.details.text = tr("BATTLE_LAST_WARNING" if kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_BASIC")
 		hud.feedback.text = tr("BATTLE_TARGET")

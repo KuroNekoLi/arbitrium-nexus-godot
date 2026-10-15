@@ -1,7 +1,10 @@
 extends SceneTree
 const Scene = preload("res://scenes/battle/battle_screen.tscn")
+const ScreenshotWriter = preload("res://scripts/qa/screenshot_writer.gd")
 var failed: int = 0
 var executed: int = 0
+var screenshot_writer = ScreenshotWriter.new()
+var capture_options: Dictionary = ScreenshotWriter.prefix_from_args(OS.get_cmdline_user_args())
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, id: String) -> void:
 	executed += 1
@@ -9,7 +12,11 @@ func check(ok: bool, id: String) -> void:
 	print(("PASS " if ok else "FAIL ")+id)
 func shot(path: String) -> void:
 	await RenderingServer.frame_post_draw
-	check(root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://outputs/"+path+".png")) == OK,"P43-CAPTURE-"+path)
+	var result: Dictionary = {"ok": false, "stage": "arguments", "detail": capture_options["detail"]}
+	if capture_options["ok"]:
+		result = screenshot_writer.write_png(root.get_texture().get_image(), path, capture_options["prefix"])
+	print("P43_CAPTURE_WRITE ", JSON.stringify(result))
+	check(result["ok"],"P43-CAPTURE-"+path)
 func mouse(point: Vector2, down: bool) -> void:
 	root.warp_mouse(point)
 	var event := InputEventMouseButton.new()

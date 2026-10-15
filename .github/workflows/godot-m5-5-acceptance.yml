@@ -1,7 +1,7 @@
 name: Godot Phase3 M5.5 Full Battle Seed Replay
 on:
   push:
-    branches: [master, 'phase3/m5-5-full-battle-replay', 'engineering/ci-evidence-gate-20261015']
+    branches: [master, 'phase3/m5-5-full-battle-replay', 'engineering/ci-evidence-gate-20261015', 'integration/p4-final-playable-20261015']
     paths:
       - '.github/workflows/godot-m5-5-acceptance.yml'
       - 'tools/ci/**'

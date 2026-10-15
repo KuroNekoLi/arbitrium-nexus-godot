@@ -430,3 +430,12 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | Real GUI input / balance / human QA | source branch checkpoint | GUI capture 14/16 on third; no authorized fourth | **NOT VERIFIED** |
 
 See [review and outstanding branches](../handoff/P4_APPROVED_MERGES_AND_PENDING_REVIEW_20261015.md) for exact remaining gaps and test-budget boundaries. This is a supplemental status entry; earlier historical Phase4 milestones are retained for traceability.
+
+## All branches integration continuation — 2026-10-15
+
+| Requirement | Source | Implementation/evidence | Status |
+|---|---|---|---|
+| G0 semantic branch classification | All Branches Review §5 | docs/handoff/BRANCH_SEMANTIC_AUDIT_20261015.md；17 refs、merge-base/cherry/blob/有效替代diff | STATIC_AUDIT_COMPLETE，非runtime保證 |
+| G4 new positive Lv40 integration | All Branches Review §6 / UI02 | lv40_playable_battle.tscn / config-aware BattleScreen / Controller / test_p4_lv40_playable32/32首輪 | HEADLESS_PARTIALLY_VERIFIED，等待CI；原staging10保持 |
+| SW scoped screenshot writer | All Branches Review §6 | scripts/qa/screenshot_writer.gd / test_screenshot_writer；首輪45/46 FAIL，已修普通檔阻擋，待CI | IMPLEMENTED_NOT_VERIFIED；原GUI14/16未重跑 |
+| P45 static scene evidence | 獨立場景檢查、非原GUI runner | capture_lv40_playable_scene.gd；GTX1650、1280繁中/1920英文PNG、主控目視 | STATIC_RENDER_OBSERVED，非真人/完整GUI/效能驗收 |

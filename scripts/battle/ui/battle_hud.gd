@@ -140,7 +140,7 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 	_enemy.render_enemy(vm)
 	hand.render_cards(cards)
 	card_views = hand.card_views
-	reaction_panel.render_window(vm["reaction"], reaction_choices)
+	reaction_panel.render_window(vm["reaction"], reaction_choices,vm.get("actor_name_keys",{}))
 
 func _arrange_hand() -> void:
 	# Legacy compatibility adapter; the HandView owns ArcShape.
@@ -148,7 +148,7 @@ func _arrange_hand() -> void:
 
 func _render_reaction(choices: Array) -> void:
 	# Legacy compatibility adapter; the ReactionQueue owns draft rows.
-	reaction_panel.render_window(vm["reaction"], choices)
+	reaction_panel.render_window(vm["reaction"], choices,vm.get("actor_name_keys",{}))
 
 func set_targets(ids: Array) -> void:
 	_targets.set_targets(ids)

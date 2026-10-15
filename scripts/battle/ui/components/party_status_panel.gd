@@ -23,7 +23,8 @@ func render_party(projection: Dictionary, selected_actor: String) -> String:
 	var selected_info: String = ""
 	for id: String in roster:
 		var status_key: String = "BATTLE_" + str(projection["actors"][id]["status"])
-		roster[id].configure(id, tr("BATTLE_HERO_" + id), roster[id].portrait.texture, roster[id].accent)
+		var name_key: String = str(projection.get("actor_name_keys",{}).get(id,"BATTLE_HERO_"+id))
+		roster[id].configure(id, tr(name_key), roster[id].portrait.texture, roster[id].accent)
 		roster[id].update_projection(projection["actors"][id], tr(status_key))
 		roster[id].set_selected(id == selected_actor)
 		var info: PackedStringArray = [tr("BATTLE_BARRIER") % str(projection["barriers"].get(id, 0))]
@@ -34,5 +35,5 @@ func render_party(projection: Dictionary, selected_actor: String) -> String:
 				info.append(tr("BATTLE_STABILITY") % [cast["current_stability"], cast["focus_ward"]])
 		roster[id].tooltip_text = "\n".join(info)
 		if id == selected_actor:
-			selected_info = tr("BATTLE_HERO_" + id) + " · " + " · ".join(info)
+			selected_info = tr(name_key) + " · " + " · ".join(info)
 	return selected_info

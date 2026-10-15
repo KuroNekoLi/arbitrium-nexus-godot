@@ -8,7 +8,7 @@ func _ready() -> void:
 	add_child(reaction_column)
 	hide()
 
-func render_window(window: Dictionary, choices: Array) -> void:
+func render_window(window: Dictionary, choices: Array, names: Dictionary = {}) -> void:
 	for child: Node in reaction_column.get_children():
 		reaction_column.remove_child(child)
 		child.queue_free()
@@ -25,8 +25,11 @@ func render_window(window: Dictionary, choices: Array) -> void:
 	scroller.add_child(options)
 	for choice: Dictionary in choices:
 		var item: Button = UI.button(options,choice["label"],func() -> void: command_requested.emit("QUEUE_REACTION",{"entry":choice["entry"]}))
-		item.text = tr("BATTLE_HERO_"+str(choice["entry"]["actor_id"]))+" · "+tr(choice["label"])
-		if choice["entry"]["kind"] == "REACTION_SP_FIXTURE": item.text += " → "+tr("BATTLE_HERO_"+str(choice["entry"]["target_actor_id"]))
+		var actor_id: String = str(choice["entry"]["actor_id"])
+		item.text = tr(str(names.get(actor_id,"BATTLE_HERO_"+actor_id)))+" · "+tr(choice["label"])
+		if choice["entry"]["kind"] == "REACTION_SP_FIXTURE":
+			var target_id: String = str(choice["entry"]["target_actor_id"])
+			item.text += " → "+tr(str(names.get(target_id,"BATTLE_HERO_"+target_id)))
 		item.add_theme_font_size_override("font_size",13)
 		item.tooltip_text = choice.get("tooltip",item.text)
 	var draft: Array = window.get("draft",[])
@@ -38,7 +41,8 @@ func render_window(window: Dictionary, choices: Array) -> void:
 		var kind_key: String = "BATTLE_GUARD" if entry["kind"] == "BASIC_GUARD" else "BATTLE_PROTECT" if entry["kind"] == "BASIC_PROTECT" else "BATTLE_SPECIAL_REACTION"
 		var summary: Label = UI.label(row,"",14)
 		summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		summary.text = tr("BATTLE_REACTION_ORDER") % [i+1,tr("BATTLE_HERO_"+str(entry["actor_id"])),tr(kind_key)]
+		var actor_id: String = str(entry["actor_id"])
+		summary.text = tr("BATTLE_REACTION_ORDER") % [i+1,tr(str(names.get(actor_id,"BATTLE_HERO_"+actor_id))),tr(kind_key)]
 		UI.button(row,"BATTLE_REMOVE",func() -> void: command_requested.emit("REMOVE_REACTION",{"actor_id":entry["actor_id"]}))
 		if i > 0:
 			var order: Array = draft.map(func(d: Dictionary) -> String: return str(d["actor_id"]))

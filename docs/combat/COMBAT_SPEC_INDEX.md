@@ -1,5 +1,7 @@
 # Combat Specification Index — 戰鬥規格唯一閱讀入口
 
+2026-10-15 all-branches續作：新增獨立Lv40正向場景接線，不修改Domain規則；驗收狀態見 requirements_traceability 與 P4_LV40_POSITIVE_INTEGRATION_NOTE。原GUI/已用盡測試預算不重設。
+
 2026-10-15 CI補記：新增CI-EVIDENCE-01/02失敗傳遞／日誌閘門與legacy UI測試清理，未改玩法。詳見[工程Note](../verification/CI_EVIDENCE_GATE_ENGINEERING_NOTE.md)；P4.4 GUI仍未驗收，依使用者決定不額外重跑。
 
 > 狀態：**CANONICAL NAVIGATION / DOCUMENT GOVERNANCE**｜審核：2026-10-15｜作用域：`KuroNekoLi/arbitrium-nexus-godot` 的 `docs/combat/`。本文件只規範閱讀、依據、版本及驗證邊界，不創造新戰鬥玩法。

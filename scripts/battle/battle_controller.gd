@@ -51,7 +51,11 @@ func _advance_system() -> void:
 			return
 		elif _state["active_enemy_action_id"] != "":
 			args["enemy_action_id"] = _state["active_enemy_action_id"]
-			kind = "OPEN_REACTION_WINDOW" if _state["reaction_window"].is_empty() else "RESOLVE_ENEMY_ATTACK_M5"
+			var needs_window: bool = true
+			for action: Dictionary in _state["enemy_actions"]:
+				if action["enemy_action_id"] == _state["active_enemy_action_id"]:
+					needs_window = bool(action["public_intent"].get("requires_reaction_window",true))
+			kind = "OPEN_REACTION_WINDOW" if needs_window and _state["reaction_window"].is_empty() else "RESOLVE_ENEMY_ATTACK_M5"
 		elif int(_state["enemy_cursor"]) < _state["enemy_actions"].size():
 			kind = "DECLARE_NEXT_ENEMY_ACTION"
 		else:
