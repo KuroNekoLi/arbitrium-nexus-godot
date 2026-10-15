@@ -44,6 +44,7 @@ var result_label: Label
 var reduced_toggle: CheckButton
 var mute_toggle: CheckButton
 var conditions: Label
+var _conditions_panel: PanelContainer
 
 var _top: Control
 var _party: Control
@@ -72,26 +73,28 @@ func _build() -> void:
 	_top.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 
 	# V1 deliberately preserves the previous 1280×720 rectangles.
-	var conditions_panel := PanelContainer.new()
-	conditions_panel.name = "Conditions"
-	conditions_panel.position = Vector2(292, 88)
-	conditions_panel.size = Vector2(680, 42)
-	add_child(conditions_panel)
-	conditions = UI.label(UI.column(conditions_panel), "", 14)
+	_conditions_panel = PanelContainer.new()
+	_conditions_panel.name = "Conditions"
+	_conditions_panel.position = Vector2(312, 98)
+	_conditions_panel.size = Vector2(640, 36)
+	add_child(_conditions_panel)
+	conditions = UI.label(UI.column(_conditions_panel), "", 14)
+	conditions.autowrap_mode = TextServer.AUTOWRAP_OFF
+	conditions.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
-	_party = _place(PartyScene, Rect2(16, 92, 260, 318))
+	_party = _place(PartyScene, Rect2(16, 98, 260, 318))
 	roster = _party.roster
 	_party.actor_requested.connect(func(actor: String) -> void: actor_requested.emit(actor))
 
-	_commands = _place(CommandsScene, Rect2(16, 425, 260, 269))
+	_commands = _place(CommandsScene, Rect2(16, 426, 260, 274))
 	end_button = _commands.end_button
 	_commands.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 
-	_enemy = _place(EnemyScene, Rect2(984, 92, 280, 235))
+	_enemy = _place(EnemyScene, Rect2(984, 98, 280, 238))
 	boss_stats = _enemy.boss_stats
 	intent = _enemy.intent
 
-	_context = _place(ContextScene, Rect2(984, 350, 280, 348))
+	_context = _place(ContextScene, Rect2(984, 348, 280, 356))
 	details = _context.details
 	mode = _context.mode
 	combo = _context.combo
@@ -104,7 +107,7 @@ func _build() -> void:
 	_context.confirm_requested.connect(func() -> void: confirm_requested.emit())
 	_context.cancel_requested.connect(func() -> void: cancel_requested.emit())
 
-	hand = _place(HandScene, Rect2(292, 458, 680, 246))
+	hand = _place(HandScene, Rect2(290, 470, 686, 240))
 	card_views = hand.card_views
 	hand.card_requested.connect(func(instance: String) -> void: card_requested.emit(instance))
 	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void: card_released.emit(instance, pointer))
@@ -136,6 +139,8 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 	result_label.text = tr("BATTLE_"+str(vm["outcome"]))
 	_top.render_phase(vm)
 	conditions.text = _party.render_party(vm, actor)
+	conditions.tooltip_text = conditions.text
+	_conditions_panel.visible = _selected_has_conditions(vm, actor)
 	_commands.render_commands(vm)
 	_enemy.render_enemy(vm)
 	hand.render_cards(cards)
@@ -152,3 +157,15 @@ func _render_reaction(choices: Array) -> void:
 
 func set_targets(ids: Array) -> void:
 	_targets.set_targets(ids)
+
+## Contextual status only: idle phase HUD should not obscure the battlefield.
+## The three roster items still expose all actor states and tooltips.
+func _selected_has_conditions(projection: Dictionary, actor: String) -> bool:
+	if int(projection.get("barriers", {}).get(actor, 0)) > 0:
+		return true
+	if projection.get("reaction", {}).get("guard_actor_ids", []).has(actor):
+		return true
+	for cast: Dictionary in projection.get("casts", {}).values():
+		if str(cast.get("caster_id", "")) == actor:
+			return true
+	return false
