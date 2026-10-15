@@ -5,6 +5,7 @@ const PartyScene = preload("res://scenes/battle/ui/party_status_panel.tscn")
 const CommandsScene = preload("res://scenes/battle/ui/command_menu.tscn")
 const EnemyScene = preload("res://scenes/battle/ui/enemy_status_panel.tscn")
 const ContextScene = preload("res://scenes/battle/ui/action_context_panel.tscn")
+const LogScene = preload("res://scenes/battle/ui/battle_log_panel.tscn")
 const HandScene = preload("res://scenes/battle/ui/hand_view.tscn")
 const TargetsScene = preload("res://scenes/battle/ui/target_hit_regions.tscn")
 const ReactionScene = preload("res://scenes/battle/ui/reaction_queue.tscn")
@@ -51,6 +52,7 @@ var _party: Control
 var _commands: Control
 var _enemy: Control
 var _context: Control
+var _log: Control
 var _targets: Control
 
 func _ready() -> void:
@@ -86,7 +88,7 @@ func _build() -> void:
 	roster = _party.roster
 	_party.actor_requested.connect(func(actor: String) -> void: actor_requested.emit(actor))
 
-	_commands = _place(CommandsScene, Rect2(16, 426, 260, 274))
+	_commands = _place(CommandsScene, Rect2(16, 432, 248, 266))
 	end_button = _commands.end_button
 	_commands.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 
@@ -94,13 +96,14 @@ func _build() -> void:
 	boss_stats = _enemy.boss_stats
 	intent = _enemy.intent
 
-	_context = _place(ContextScene, Rect2(984, 348, 280, 356))
+	_context = _place(ContextScene, Rect2(984, 348, 280, 220))
 	details = _context.details
 	mode = _context.mode
 	combo = _context.combo
 	confirm_button = _context.confirm_button
 	feedback = _context.feedback
-	log_label = _context.log_label
+	_log = _place(LogScene, Rect2(984, 580, 280, 118))
+	log_label = _log.log_label
 	reduced_toggle = _context.reduced_toggle
 	mute_toggle = _context.mute_toggle
 	_context.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
