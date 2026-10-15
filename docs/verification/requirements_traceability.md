@@ -362,3 +362,20 @@ Only M5.2 Domain is verified; M5.3–5.5 and full real Boss battle not verified.
 | M5.5 100-seed complete Boss battle | none | **NOT VERIFIED** |
 
 Full source, hashes and limits: [PH3_M5_3_ENGINEERING_NOTE.md](PH3_M5_3_ENGINEERING_NOTE.md). Do not promote whole M5 to VERIFIED based on this M5.3 subgate.
+
+## M5.4 — Action/Status/Casting Outcome CORE-01/02 — VERIFIED 2026-10-15
+
+**Supersedes M5.4-only historical NOT_VERIFIED summaries above, not M5.5.** Official [Godot 4.7.2 CI #38676335088](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38676335088) on SHA `117a41772fcccc193ef9b40dceac595710ccab1f`: **48/48 new M5.4**, preceding **1,033/1,033**, cumulative **1,081/1,081** named Domain assertions; all four legacy runners PASS. Scope **HEADLESS_FIXTURE_ONLY**.
+
+| Requirement | Executed exact Godot oracle ID(s) | Evidence / limit |
+|---|---|---|
+| USER_APPROVED CORE-01 / P2-D15 / P2-OUT-01: full Action effects then enemy-clear-first VICTORY | M54-04～M54-10, M54-25, M54-31～M54-33, M54-38～M54-39 | PASS: real paid SP + registered recoil, two real DoT ticks, released Last Spell plus recoil; no DRAW |
+| P2-OUT-02: Boss lives with all three incapacitated = DEFEAT | M54-26～M54-29 | PASS: declared M3 EnemyAction with M5.1 HP damage |
+| PRE3-R09 / P2-D13: Casting→StatusTick→Outcome→AP renewal/draw | M54-30～M54-34, M54-36～M54-40 | PASS: no resources opened on terminal StatusTick; actual Casting release before Outcome |
+| USER_APPROVED CORE-02 / PRE3-R13/R15: instant HP0 invalidation of unreleased Last; after actual release cannot retro-cancel | M54-35～M54-45 | PASS: pre-release LastSpellInvalidated + ScheduledEffectCancelled, no refund; post-release LastSpellReleased remains valid |
+| Outcome terminality and atomic denial incl RNG/Replay | M54-01～M54-03, M54-11～M54-24, M54-48 | PASS: no forged HP/outcome, one original M2 charge, card conservation, 1-command canonical replay and rejected extra command |
+| All-EXHAUSTED HP>0 ambiguity | M54-46, M54-47 | `CORE_RULE_EDGE_PENDING`: explicit event, no arbitrary DEFEAT |
+| Full Battle M5.5 100 seeds | none | **NOT_VERIFIED** |
+| Analyze/Enemy Intel & Spell Counter | none | **DEFERRED_CONTENT / BLOCKED_CONTENT / NOT_VERIFIED** |
+
+Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGINEERING_NOTE.md) and [PH3_PHASE12_TEST_INVENTORY.md](PH3_PHASE12_TEST_INVENTORY.md). Numeric registered recoil and fixture starting HP are explicitly `BALANCE_PROVISIONAL`, not new approved card canon. All existing M2–M5.3 engine integrations are retained.
