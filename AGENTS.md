@@ -19,6 +19,17 @@
 5. Godot Domain owns HP, AP, MP, RP, deck zones, turn order, reaction ordering and RNG; renderer is never authoritative. No unapproved free movement, auto-pass reaction timeout or Counter-Function.
 6. For implementation changes, require repeatable headless tests, case IDs, failure logs, CI evidence and code commits. Do not claim pass without evidence.
 
+
+## Asset-first one-command requests（2026-10-15）
+
+When asked to **"製作 XX 場景" / "生產 XX 圖片" / "新增角色或卡牌插畫" / "製作 Boss 攻擊動畫"**, do not ask the user to manually choose every asset website. Treat the instruction as a deliverable request and route through:
+
+`godot-card-rpg-orchestrator` → `.codex/skills/godot-resource-library-manager/SKILL.md` (search existing assets/Vault, check license, safely obtain/index permitted free packs, compare candidates) → `.codex/skills/godot-game-asset-pipeline/SKILL.md` (separate/generate/convert/import assets) → UI/rendering/architecture implementation → true Godot screenshot + QA.
+
+**Low-risk reversible assets:** choose automatically and record license/manifest. **Major choices:** protagonist/Boss final look, main scene art direction, UI style system replacement, new executable plugins, ambiguous licensing, paid or large acquisition require a `Major Asset Decision Report` (recommended selection plus real alternatives, previews, rights, fit, costs, rollback) and user approval before final adoption. A planning-only request authorizes documentation, **not** downloading or implementing. These skills do not confer network, persistence or image-generation permissions; disclose missing tools and never fabricate downloaded artifacts or runtime evidence.
+
+Read [UI Resource Scout / Asset Vault SOP](docs/ui/03_FREE_OPEN_SOURCE_RESOURCE_SCOUT.md) and [UI entrypoint](docs/ui/README.md). Preserve existing approved Combat Domain and every existing asset unless explicitly authorized to replace it.
+
 ## Entry points
 - [Approved A reconciliation audit](docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md)
 - [Original transfer provenance](docs/combat/UPSTREAM_TRANSFER_STATUS.md)
