@@ -1,6 +1,6 @@
 # 26 — Universal Basic Magic & Starter Deck v0.3
 
-> **Documentation status · 2026-10-15 — APPROVED_UNIVERSAL_MAGIC_DIRECTION + CONTENT_PROVISIONAL_V0_3**：所有三名角色可合法配備通用基本攻擊、治療、防護魔法為 USER_APPROVED_DIRECTION；技能名稱、費率、起始牌組仍是最新 **v0.3 候選**，不得誤認內容/平衡已獲批准。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+> **Documentation status · 2026-10-15 — APPROVED_UNIVERSAL_MAGIC_DIRECTION + CONTENT_PROVISIONAL_V0_3**：所有三名角色可合法配備通用基本攻擊、治療、防護魔法為 USER_APPROVED_DIRECTION；技能名稱、費率、起始牌組仍是最新 **v0.3 候選**，不得誤認內容/平衡已獲批准。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5 已完成 Headless Battle / Fixture 驗收（**1,238/1,238**；100 seeds + 100 Replay；[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。**正式 Lv40 內容 Parity、完整可玩 Scene/玩家測試及平衡仍未驗證**。以下保留來源快照，不能解讀為此刻最新驗收。
 
 
 > 日期：2026-10-15  

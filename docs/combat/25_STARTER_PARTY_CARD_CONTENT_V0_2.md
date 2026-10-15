@@ -1,6 +1,6 @@
 # 25 — Astraea Starter Party & Card Content Design v0.2
 
-> **Documentation status · 2026-10-15 — APPROVED_VARIANT_DIRECTION + CONTENT_PROVISIONAL_V0_2**：主角初期固定劍士、未來 Variant 解鎖是 USER_APPROVED；角色名、技能、係數與基本卡組均為內容候選。**26 v0.3 取代 25 的 UNIVERSAL 基礎魔法與三副 Starter Deck 候選**，不可再拿 25 的 U01～U04 當完整最新通用卡池。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+> **Documentation status · 2026-10-15 — APPROVED_VARIANT_DIRECTION + CONTENT_PROVISIONAL_V0_2**：主角初期固定劍士、未來 Variant 解鎖是 USER_APPROVED；角色名、技能、係數與基本卡組均為內容候選。**26 v0.3 取代 25 的 UNIVERSAL 基礎魔法與三副 Starter Deck 候選**，不可再拿 25 的 U01～U04 當完整最新通用卡池。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5 已完成 Headless Battle / Fixture 驗收（**1,238/1,238**；100 seeds + 100 Replay；[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。**正式 Lv40 內容 Parity、完整可玩 Scene/玩家測試及平衡仍未驗證**。以下保留來源快照，不能解讀為此刻最新驗收。
 
 
 > 日期：2026-10-15｜狀態：**MIXED — USER_APPROVED 主角 Variant 方向 + CONTENT_PROVISIONAL 角色／卡牌／數值**  

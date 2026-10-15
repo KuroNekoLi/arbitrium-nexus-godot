@@ -1,6 +1,6 @@
 # 24 — Astraea Phase 3 G0 + M1 Headless Combat Engine 交付與驗證狀態
 
-> **Documentation status · 2026-10-15 — HISTORICAL_M1_ENGINEERING_EVIDENCE**：原 G0/M1 14/14 與 `Astraea-Academy` 路徑是當時工程快照，不代表目前 master 僅完成 M1。現行執行倉庫 `arbitrium-nexus-godot` 已驗證 M1～M5.4，共1,081項 Domain case。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+> **Documentation status · 2026-10-15 — HISTORICAL_M1_ENGINEERING_EVIDENCE**：原 G0/M1 14/14 與 `Astraea-Academy` 路徑是當時工程快照，不代表目前 master 僅完成 M1。現行執行倉庫 `arbitrium-nexus-godot` 已驗證 M1～M5.4，共1,081項 Domain case。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5 已完成 Headless Battle / Fixture 驗收（**1,238/1,238**；100 seeds + 100 Replay；[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。**正式 Lv40 內容 Parity、完整可玩 Scene/玩家測試及平衡仍未驗證**。以下保留來源快照，不能解讀為此刻最新驗收。
 
 
 > 日期：2026-10-14。本檔是 Phase 3 的**實際工程進度交接**，不替換 Phase 1–2 的正式玩法規格。**最終狀態：`M1 SCAFFOLD VERIFIED`（Godot 4.7.2 CI 14/14 PASS）；M2～M5 尚未開始。本次驗收僅涵蓋 M1 骨架。**

@@ -1,6 +1,6 @@
 # Combat Rules upstream transfer — collision audit and pending decisions
 
-> **Documentation status · 2026-10-15 — HISTORICAL_IMPORT_STATUS**：此檔初始 `UNRESOLVED` 說的是檔案匯入早期截面；使用者已選擇 A 並完成語義合併，現行對照詳見 `UPSTREAM_RECONCILIATION_A_2026-10-15.md`。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+> **Documentation status · 2026-10-15 — HISTORICAL_IMPORT_STATUS**：此檔初始 `UNRESOLVED` 說的是檔案匯入早期截面；使用者已選擇 A 並完成語義合併，現行對照詳見 `UPSTREAM_RECONCILIATION_A_2026-10-15.md`。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5 已完成 Headless Battle / Fixture 驗收（**1,238/1,238**；100 seeds + 100 Replay；[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。**正式 Lv40 內容 Parity、完整可玩 Scene/玩家測試及平衡仍未驗證**。以下保留來源快照，不能解讀為此刻最新驗收。
 
 
 Date: 2026-10-15  

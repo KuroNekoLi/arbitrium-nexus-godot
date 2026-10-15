@@ -1,6 +1,6 @@
 # 31 — Lv40 Demo Boss: Godot Agent START HERE / Python v0.2 Handoff
 
-> **Documentation status · 2026-10-15 — HISTORICAL_AGENT_HANDOFF_OTHER_REPOS**：文件引用 `astraea-combat-rules` 與 `Astraea-Academy` 為來源/早期工作目標；**現行 Godot 目標是本倉 `KuroNekoLi/arbitrium-nexus-godot`**。保留舊路徑追溯，不得讓 Codex 改錯 repo。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+> **Documentation status · 2026-10-15 — HISTORICAL_AGENT_HANDOFF_OTHER_REPOS**：文件引用 `astraea-combat-rules` 與 `Astraea-Academy` 為來源/早期工作目標；**現行 Godot 目標是本倉 `KuroNekoLi/arbitrium-nexus-godot`**。保留舊路徑追溯，不得讓 Codex 改錯 repo。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5 已完成 Headless Battle / Fixture 驗收（**1,238/1,238**；100 seeds + 100 Replay；[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。**正式 Lv40 內容 Parity、完整可玩 Scene/玩家測試及平衡仍未驗證**。以下保留來源快照，不能解讀為此刻最新驗收。
 
 
 > Created: 2026-10-15. **SPEC HANDOFF ONLY**. The Python v0.2 simulation and 11 local Python tests have executed. **Godot runtime parity, playable demo, CI and the balance acceptance gates have NOT passed.**
