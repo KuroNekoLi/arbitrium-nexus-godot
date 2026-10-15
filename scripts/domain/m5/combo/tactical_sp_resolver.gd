@@ -6,6 +6,7 @@ const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const Boss = preload("res://scripts/domain/m5/boss/boss_ai_policy.gd")
+const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
 
 static func _error(code: String) -> Dictionary:
 	return {"ok":false,"error":code,"core":{},"timeline":[]}
@@ -50,6 +51,12 @@ static func resolve(original: Dictionary, command: Dictionary,
 		return _error("M53_INVALID_TACTICAL_CONTENT")
 	if int(effect["break_damage"]) < 0:
 		return _error("M53_INVALID_BREAK_DAMAGE")
+	# Recoil is trusted versioned ContentConfig, never a user-supplied
+	# HP modification. Reject bad fixture data BEFORE M2 reserves cost.
+	if config.get("m5_4_outcome_enabled",false) == true and effect.has("recoil_hp"):
+		if not effect["recoil_hp"] is int or int(effect["recoil_hp"]) <= 0 or \
+				not ["ABSORB","BYPASS"].has(str(effect.get("recoil_barrier_mode",""))):
+			return _error("M54_INVALID_RECOIL_PROFILE")
 	var prepared: Dictionary = Boss.ensure(core,config)
 	if not prepared["ok"]:
 		return _error(str(prepared["error"]))
@@ -118,6 +125,15 @@ static func resolve(original: Dictionary, command: Dictionary,
 	elif mode == "COMBO":
 		timeline.append({"kind":"ComboFinisherMissed","target_id":target,
 			"opportunity_preserved":true})
+	# P2-D15 / CORE-01: a single legal card may resolve enemy damage
+	# and a registered self-cost. Do NOT evaluate outcome between them.
+	if config.get("m5_4_outcome_enabled",false) == true and success and effect.has("recoil_hp"):
+		var recoil: Dictionary = HP.registered_recoil(next,actor,int(effect["recoil_hp"]),
+			str(effect["recoil_barrier_mode"]),config,id+":recoil")
+		if not recoil["ok"]:
+			return _error(str(recoil["error"]))
+		next = recoil["core"]
+		timeline.append_array(recoil["timeline"])
 	if using_exposed and success:
 		tactical = next["battle"]["m53"]
 		tactical["exposed"] = {}

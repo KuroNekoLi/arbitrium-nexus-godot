@@ -110,7 +110,7 @@ static func _status_sp(original: Dictionary, command: Dictionary,
 	_event(next,output,"PlayerActionSettled",id,{
 		"actor_id":actor,"target_actor_id":target,"card_definition_id":definition,
 		"action_type":"USE_EFFECT_SP_M5","charged_once":true})
-	var outcome: Dictionary = Boundary.check_action_outcome(next["core"])
+	var outcome: Dictionary = Boundary.check_action_outcome(next["core"],config)
 	if not outcome["ok"]:
 		return _deny(original,str(outcome["error"]))
 	next["core"] = outcome["core"]
@@ -151,7 +151,7 @@ static func _tactical_sp(original: Dictionary, command: Dictionary,
 		"target_actor_id":str(command.get("target_actor_id","")),
 		"card_definition_id":str(settled["card_definition_id"]),
 		"action_type":"PLAY_TACTICAL_SP_M53","charged_once":true},"m5_tactical")
-	var outcome: Dictionary = Boundary.check_action_outcome(next["core"])
+	var outcome: Dictionary = Boundary.check_action_outcome(next["core"],config)
 	if not outcome["ok"]:
 		return _deny(original,str(outcome["error"]))
 	next["core"] = outcome["core"]
@@ -230,13 +230,22 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
 		return _deny(state,"M51_DAMAGE_NOT_ENABLED")
 	if str(config.get("m5_balance_authority","")) != "BALANCE_PROVISIONAL":
 		return _deny(state,"M51_BALANCE_NOT_VERSIONED")
+	# Terminal state is immutable: no further phase, card, Reaction, spell
+	# or RNG-using instruction may run after a completed M5.4 boundary.
+	if config.get("m5_4_outcome_enabled",false) == true and \
+			state.get("core",null) is Dictionary and \
+			state["core"].get("battle",null) is Dictionary and \
+			str(state["core"]["battle"].get("outcome","ONGOING")) != "ONGOING":
+		return _deny(state,"BATTLE_ENDED")
 	# A trusted M5 hit is computed from the intent's versioned skill, not
 	# a front-end command or the M4.2/M4.4 test-only HP bridges.
 	for forbidden: String in ["damage","hp_after","final_damage","verified_hit_fixture",
 			"damage_recipient_actor_id","crit_result","hit_result",
 			"status_id","stacks","tick_amount","duration_ticks","restored_hp","revive_tag","heal_amount",
 			"break_damage","break_gauge","create_exposed","exposed","combo_bonus_damage",
-			"skill_id","public_intent","boss_policy","bonus_profile","target_ids"]:
+			"skill_id","public_intent","boss_policy","bonus_profile","target_ids",
+			"recoil_hp","recoil_barrier_mode","last_release_recoil","m5_4_last_release_recoil",
+			"outcome","win","defeat","apply_damage"]:
 		if command.has(forbidden):
 			return _deny(state,"M51_UNTRUSTED_DAMAGE_PAYLOAD")
 	if config.get("m5_3_enabled",false) == true:

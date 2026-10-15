@@ -140,8 +140,9 @@ static func _core_events(next: Dictionary, emitted: Array, core_events: Array,
 		_emit(next, emitted, str(item["event"]["kind"]), command_id,
 			{"core_event": item.duplicate(true)}, "m2")
 
-static func _outcome_check(next: Dictionary, emitted: Array, command_id: String) -> String:
-	var verified: Dictionary = Boundary.check_action_outcome(next["core"])
+static func _outcome_check(next: Dictionary, emitted: Array, command_id: String,
+		config: Dictionary = {}) -> String:
+	var verified: Dictionary = Boundary.check_action_outcome(next["core"],config)
 	if not verified["ok"]:
 		return str(verified["error"])
 	next["core"] = verified["core"]
@@ -197,7 +198,7 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 		_emit(next, emitted, "PlayerActionSettled", command_id,
 			{"actor_id": str(instruction.get("actor_id", "")), "action_type": kind,
 				"result": "COST_AND_CARD_ONLY_NO_DAMAGE"})
-		var outcome_error: String = _outcome_check(next, emitted, command_id)
+		var outcome_error: String = _outcome_check(next, emitted, command_id, config)
 		if not outcome_error.is_empty():
 			return _reject(original, outcome_error)
 	elif kind == "END_PLAYER_PHASE":
@@ -207,7 +208,7 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 			next["core"]["battle"]["enemies"], int(next["core"]["battle"]["round"]))
 		if not plan["ok"]:
 			return _reject(original, str(plan["error"]))
-		var boundary_error: String = _outcome_check(next, emitted, command_id)
+		var boundary_error: String = _outcome_check(next, emitted, command_id, config)
 		if not boundary_error.is_empty():
 			return _reject(original, boundary_error)
 		if str(next["core"]["battle"]["outcome"]) == "ONGOING":
@@ -378,7 +379,7 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 				"reaction_status": "M3_3_BASIC_DEFENSE_DOMAIN",
 				"defense_snapshot": defense}, "enemy")
 		if kind == "RESOLVE_ENEMY_ATTACK_M5":
-			var result_error: String = _outcome_check(next,emitted,command_id)
+			var result_error: String = _outcome_check(next,emitted,command_id,config)
 			if not result_error.is_empty():
 				return _reject(original,result_error)
 	elif kind == "END_ENEMY_PHASE":
