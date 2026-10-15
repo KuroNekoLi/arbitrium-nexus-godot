@@ -17,7 +17,8 @@ func _ready() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.follow_focus = true
 	add_child(scroll)
-	var context: VBoxContainer = UI.column(scroll)
+	var context := VBoxContainer.new()
+	scroll.add_child(context)
 	context.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	UI.label(context, "BATTLE_DETAILS", 14)
 	details = UI.label(context, "BATTLE_SELECT", 16)

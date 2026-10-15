@@ -142,6 +142,12 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 	var fsm: Dictionary = next["battle"]["lv40"]
 	if bool(defense.get("enemy_action_cancelled_fixture",false)):
 		return {"ok":true,"core":next,"timeline":[{"kind":"BossActionCancelled","skill_id":skill}]}
+	# Consume the published cycle item, not an assumed pointer. Cooldown and
+	# Break fallback replace that item; neither may repeat a released charge.
+	var consumed_skill: String = str(public.get("replaced_skill_id",skill))
+	if skill == "B10":
+		consumed_skill = str(fsm["pending_cast"].get("release_skill",consumed_skill))
+	var cycle_position: int = CYCLES[int(fsm["boss_phase"])].find(consumed_skill)
 	# This is an announced conditional branch, not a new selected action.
 	if ["B06","B09"].has(skill) and bool(fsm["pending_cast"].get("interrupted",false)):
 		skill = "B10"
@@ -216,5 +222,5 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 		records.append({"kind":"ReactionCounterExecuted","actor_id":counter,"card_definition_id":"R05"})
 		records.append_array(retaliation["timeline"])
 	if skill != "B07":
-		next["battle"]["lv40"]["cycle_index"] = int(next["battle"]["lv40"]["cycle_index"])+1
+		next["battle"]["lv40"]["cycle_index"] = cycle_position+1 if cycle_position >= 0 else int(next["battle"]["lv40"]["cycle_index"])+1
 	return {"ok":true,"core":next,"timeline":records}

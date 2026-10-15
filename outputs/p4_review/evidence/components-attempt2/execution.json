@@ -1,0 +1,88 @@
+{
+  "status": "EXECUTED_REQUIRES_ORACLE_REVIEW",
+  "timestamp_utc": "2026-10-15T09:25:57.142864+00:00",
+  "project": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+  "expected_version": "4.7.2.stable",
+  "steps": [
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "version",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\components-attempt2\\version.log",
+      "log_sha256": "741702697b8e0a989814cfee3073682fd45abfe5070b422f7b3df4f601965324"
+    },
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "import",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\components-attempt2\\import.log",
+      "log_sha256": "a1f71bca1d325fa2319b3fb725b40c313a55c7517e466f7e228e38a97a7ac6b4"
+    },
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+        "--script",
+        "res://tests/test_p4_component_contract.gd"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "runner_1",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\components-attempt2\\runner_1.log",
+      "log_sha256": "46146b224300e6c407b65ae579f31721cbb17c917ec8e6b23c468d956be950e9"
+    },
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+        "--script",
+        "res://tests/test_p4_localization.gd"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "runner_2",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\components-attempt2\\runner_2.log",
+      "log_sha256": "7bf5be1c6240a61e9e4b665c7a43e63b904cec6c59b714278c0d6d2b05d5b158"
+    },
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+        "--script",
+        "res://tests/test_p4_lv40_readmodel.gd"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "runner_3",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\components-attempt2\\runner_3.log",
+      "log_sha256": "3bfbd2c2cde0bfafbb579d20685c7e75843c42ff7080e6ef575fe722f15f29e6"
+    }
+  ],
+  "oracle_review": "NOT_PERFORMED",
+  "limitations": "程序成功仍須審查 assertion 摘要、requirement 覆蓋與 fixture scope。",
+  "actual_version": "4.7.2.stable.official.ed1daf0bf"
+}

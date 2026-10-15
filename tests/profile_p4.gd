@@ -5,7 +5,7 @@ const Metrics = preload("res://tools/qa/p4_profile_metrics.gd")
 const DEFAULT_SCENE: String = "res://scenes/battle/battle_screen.tscn"
 const SIZES: Array[Vector2i] = [Vector2i(1280,720),Vector2i(1920,1080)]
 const UNITS: Dictionary = {"frame_interval_ms":"ms (includes VSync)",
-	"script_process_ms":"ms (Performance.TIME_PROCESS)",
+	"process_frame_ms":"ms (Performance.TIME_PROCESS; whole frame, not script CPU)",
 	"render_cpu_ms":"ms (viewport render CPU only)",
 	"render_gpu_ms":"ms (viewport GPU; null if unavailable)",
 	"canvas_draw_calls":"draw calls (2D canvas)",
@@ -34,9 +34,17 @@ func _arguments() -> bool:
 		elif arg.begins_with("--run-id="):
 			_run_id = arg.trim_prefix("--run-id=")
 		elif arg.begins_with("--warmup="):
-			_warmup = int(arg.trim_prefix("--warmup="))
+			var parsed: Dictionary = Metrics.parse_frame_count(arg.trim_prefix("--warmup="),3,600)
+			if not parsed["ok"]:
+				_fail("INVALID_WARMUP:"+str(parsed["error"]))
+			else:
+				_warmup = int(parsed["value"])
 		elif arg.begins_with("--samples="):
-			_samples = int(arg.trim_prefix("--samples="))
+			var parsed: Dictionary = Metrics.parse_frame_count(arg.trim_prefix("--samples="),5,1000)
+			if not parsed["ok"]:
+				_fail("INVALID_SAMPLES:"+str(parsed["error"]))
+			else:
+				_samples = int(parsed["value"])
 		else:
 			_fail("UNKNOWN_ARGUMENT:"+arg)
 	if _run_id.is_empty():
@@ -60,7 +68,7 @@ func _series() -> Dictionary:
 func _sample(viewport: RID, series: Dictionary, interval_ms: float) -> void:
 	series["frame_interval_ms"].append(interval_ms)
 	var process: float = Performance.get_monitor(Performance.TIME_PROCESS)*1000.0
-	series["script_process_ms"].append(process)
+	series["process_frame_ms"].append(process)
 	var cpu: float = RenderingServer.viewport_get_measured_render_time_cpu(viewport)
 	var gpu: float = RenderingServer.viewport_get_measured_render_time_gpu(viewport)
 	series["render_cpu_ms"].append(cpu if cpu > 0.0 else null)
@@ -73,6 +81,11 @@ func _sample(viewport: RID, series: Dictionary, interval_ms: float) -> void:
 	var textures: float = Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED)
 	series["video_memory_bytes"].append(video if video > 0.0 else null)
 	series["texture_memory_bytes"].append(textures if textures > 0.0 else null)
+
+func _cleanup_scene(scene: Node, viewport: RID) -> void:
+	RenderingServer.viewport_set_measure_render_time(viewport,false)
+	scene.queue_free()
+	await process_frame
 
 func _run() -> void:
 	if DisplayServer.get_name() == "headless":
@@ -109,6 +122,12 @@ func _run() -> void:
 		"notes":["VSync affects frame interval; CPU render time excludes script processing.",
 			"Null means unavailable, not free GPU work.",
 			"Visual stress and authentic combat tape NOT measured."]}
+	# One deadline covers both resolutions, including warmup. External process
+	# timeout is still required if the main thread stops producing frames entirely.
+	var max_seconds: int = SIZES.size()*maxi(30,int(ceil(float(_warmup+_samples)/10.0)))
+	var limit_ms: int = Time.get_ticks_msec()+max_seconds*1000
+	metadata["wall_time_cap_seconds"] = max_seconds
+	metadata["notes"].append("TIME_PROCESS is whole-frame process time; do not add it to viewport render CPU.")
 	var reports: Array = []
 	for dimensions: Vector2i in SIZES:
 		root.size = dimensions
@@ -118,18 +137,28 @@ func _run() -> void:
 		RenderingServer.viewport_set_measure_render_time(rid,true)
 		for i: int in _warmup:
 			await process_frame
+			if Time.get_ticks_msec() >= limit_ms:
+				_fail("WARMUP_WALL_TIME_CAP:"+str(dimensions))
+				break
+		if _failed:
+			await _cleanup_scene(scene,rid)
+			break
 		var samples: Dictionary = _series()
 		var before: int = Time.get_ticks_usec()
-		var max_seconds: int = maxi(30,int(ceil(float(_samples)/10.0)))
-		var limit_ms: int = Time.get_ticks_msec()+max_seconds*1000
 		for i: int in _samples:
 			await process_frame
+			if Time.get_ticks_msec() >= limit_ms:
+				_fail("SAMPLE_WALL_TIME_CAP:"+str(dimensions))
+				break
 			var now: int = Time.get_ticks_usec()
 			_sample(rid,samples,float(now-before)/1000.0)
 			before = now
-			if Time.get_ticks_msec() > limit_ms:
-				_fail("SAMPLE_WALL_TIME_CAP:"+str(dimensions))
-				break
+		if _failed:
+			reports.append({"resolution":str(dimensions.x)+"x"+str(dimensions.y),
+				"summary":Metrics.aggregate(samples,UNITS),
+				"actual_sample_count":samples["frame_interval_ms"].size(),"status":"TIMED_OUT"})
+			await _cleanup_scene(scene,rid)
+			break
 		var measured: Dictionary = Metrics.aggregate(samples,UNITS)
 		var label: String = str(dimensions.x)+"x"+str(dimensions.y)
 		var file_name: String = folder+"/"+label+".png"
@@ -158,9 +187,7 @@ func _run() -> void:
 			_fail("METRICS_INVALID:"+str(measured["error"]))
 		reports.append({"resolution":label,"capture":capture,"summary":measured,
 			"actual_sample_count":samples["frame_interval_ms"].size()})
-		RenderingServer.viewport_set_measure_render_time(rid,false)
-		scene.queue_free()
-		await process_frame
+		await _cleanup_scene(scene,rid)
 	var output: Dictionary = {"metadata":metadata,"reports":reports,
 		"status":"FAILED" if _failed else "MEASURED_PENDING_HUMAN_REVIEW"}
 	var saved: Dictionary = Metrics.write_new(folder+"/summary.json",JSON.stringify(output,"  "))

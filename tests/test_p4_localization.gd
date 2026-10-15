@@ -1,6 +1,7 @@
 extends SceneTree
 ## Source → pure parser → atomic install → Godot locale lookup.
 const Catalog = preload("res://scripts/battle/presentation/battle_translations.gd")
+const Encounter = preload("res://scripts/domain/m5/lv40/lv40_encounter.gd")
 const IDS: Array[String] = ["U01","U02","U03","U04","U05",
 	"R01","R02","R03","R05","R06","R07","R08",
 	"A01","A02","A03","A04","A05","A06","A07",
@@ -33,9 +34,12 @@ func _initialize() -> void:
 	check(baseline.get("warnings",[]).size() == 2,"P4-L10N-02-DECLARED-LEGACY-DUPLICATES")
 	var english: Dictionary = baseline.get("catalogues",{}).get("en",{})
 	var chinese: Dictionary = baseline.get("catalogues",{}).get("zh_TW",{})
+	var content: Dictionary = Encounter.config()
 	for key: String in ["BATTLE_TITLE","BATTLE_CONFIRM","BATTLE_REACTION","BATTLE_VICTORY"]:
 		check(english.has(key) and chinese.has(key),"P4-L10N-03-LEGACY-"+key)
 	for id: String in IDS:
+		check(content["lv40_cards"][id]["name_key"] == "LV40_"+id+"_NAME" and content["lv40_cards"][id]["description_key"] == "LV40_"+id+"_DESC",
+			"P4-L10N-21-DOMAIN-KEY-"+id)
 		var appearance: Variant = load("res://resources/ui/appearances/"+id+".tres")
 		check(appearance != null and str(appearance.get("definition_id")) == id,
 			"P4-L10N-04-APPEARANCE-"+id)

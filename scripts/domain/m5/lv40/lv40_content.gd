@@ -56,8 +56,8 @@ static func config(version: String) -> Dictionary:
 		"T01":[1,2],"T03":[2,4],"T04":[1,2],"T05":[0,2],"T06":[2,4],"T09":[1,2],"T10":[1,3]}
 	for card: String in prices:
 		c["definitions"][card] = {"card_id":card,"ap_cost":prices[card][0],"mp_cost":prices[card][1]}
-		c["lv40_cards"][card] = {"name_key":"card."+card.to_lower()+".name",
-			"description_key":"card."+card.to_lower()+".description",
+		c["lv40_cards"][card] = {"name_key":"LV40_"+card+"_NAME",
+			"description_key":"LV40_"+card+"_DESC",
 			"owner":"*" if card.begins_with("U") else {"R":"A","A":"B","T":"C"}[card.left(1)],
 			"kind":"SUPPORT","mode":"INSTANT"}
 	var magic: Dictionary = {"U01":[8500,14500,"ARCANE"],"A01":[10000,16500,"FIRE"],

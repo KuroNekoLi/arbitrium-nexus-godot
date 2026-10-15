@@ -448,7 +448,7 @@ static func run_matrix(prefix: String) -> Dictionary:
 		"git_head":str(git_output[0]).strip_edges() if git_exit == 0 and not git_output.is_empty() else "UNAVAILABLE",
 		"authority":"BALANCE_PROVISIONAL","seeds":fixed_seeds(),"strategies":STRATEGIES,
 		"limits":{"rounds":MAX_ROUNDS,"commands":MAX_COMMANDS,"events":MAX_EVENTS,"probes":MAX_PROBES},
-		"source_files":{}}
+		"source_files":research_tool_hashes()}
 	for path: String in [ENCOUNTER,"res://scripts/domain/m5/integration/m5_domain_resolver.gd","res://tools/balance/lv40_godot_policy.gd"]:
 		meta["source_files"][path] = FileAccess.get_sha256(path)
 	# Hash all Domain code and versioned data dependencies, including dirty files.
@@ -524,6 +524,7 @@ static func run_matrix(prefix: String) -> Dictionary:
 		summary["errors"] += 1
 	var current_hashes: Dictionary = source_hashes("res://scripts/domain")
 	current_hashes.merge(source_hashes("res://resources/combat"),true)
+	current_hashes.merge(research_tool_hashes(),true)
 	for path: String in meta["source_files"]:
 		if FileAccess.get_sha256(path) != meta["source_files"][path]:
 			summary["status"] = "ERROR_SOURCE_CHANGED_DURING_RUN"
@@ -534,6 +535,13 @@ static func run_matrix(prefix: String) -> Dictionary:
 			summary["errors"] += 1
 	summary["written"] = write_json(prefix+"/summary.json",summary) and summary["written"]
 	return summary
+
+static func research_tool_hashes() -> Dictionary:
+	var result: Dictionary = {}
+	for path: String in ["res://tools/balance/lv40_godot_policy.gd",
+			"res://tools/balance/lv40_research/metrics.gd"]:
+		result[path] = FileAccess.get_sha256(path)
+	return result
 
 static func source_hashes(root: String) -> Dictionary:
 	var result: Dictionary = {}
@@ -554,5 +562,10 @@ static func wilson95(wins: int, count: int) -> Array:
 	return [maxf(0,center-half),minf(1,center+half)]
 
 static func percentile(sorted: Array, fraction: float) -> Variant:
-	if sorted.is_empty(): return null
-	return sorted[mini(sorted.size()-1,int(floor((sorted.size()-1)*fraction)))]
+	var values: Array[float] = []
+	for value: Variant in sorted:
+		if not (value is int or value is float): return null
+		var number: float = float(value)
+		if is_nan(number) or is_inf(number): return null
+		values.append(number)
+	return ResearchMetrics.quantile(values,fraction)

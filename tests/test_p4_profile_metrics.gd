@@ -1,5 +1,6 @@
 extends SceneTree
 const Metrics = preload("res://tools/qa/p4_profile_metrics.gd")
+const Profile = preload("res://tests/profile_p4.gd")
 var passed: int = 0
 var failed: int = 0
 func check(name: String, ok: bool) -> void:
@@ -33,5 +34,15 @@ func _initialize() -> void:
 	check("P4-PROF-15-SLASH-ID",not Metrics.scoped_run_id("x/y"))
 	check("P4-PROF-16-SCOPE-REJECT",not Metrics.write_new("res://tests/p4_capture.png","x")["ok"])
 	check("P4-PROF-17-TRAVERSAL-PATH",not Metrics.write_new("res://outputs/p4_performance/../escape.json","x")["ok"])
+	for invalid: String in ["5junk","","5.5","5e1"," 5","5 ","-5","4","1001",
+			"18446744073709551621"]:
+		check("P4-PROF-18-INVALID-FRAME-COUNT-"+invalid,not Metrics.parse_frame_count(invalid,5,1000)["ok"])
+	check("P4-PROF-19-SAMPLE-BOUNDARIES",Metrics.parse_frame_count("5",5,1000)["value"] == 5 and
+		Metrics.parse_frame_count("1000",5,1000)["value"] == 1000)
+	check("P4-PROF-20-WARMUP-BOUNDARIES",Metrics.parse_frame_count("3",3,600)["value"] == 3 and
+		Metrics.parse_frame_count("600",3,600)["value"] == 600 and
+		not Metrics.parse_frame_count("601",3,600)["ok"])
+	check("P4-PROF-21-PROCESS-LABEL",Profile.UNITS.has("process_frame_ms") and
+		not Profile.UNITS.has("script_process_ms"))
 	print("P4_PROFILE_METRICS_REPORT executed=",passed+failed," passed=",passed," failed=",failed)
 	quit(1 if failed else 0)

@@ -35,6 +35,8 @@ func _ready() -> void:
 	# The inherited Lv40 scene must never silently start a legacy fixture.
 	# Formal activation requires a reviewed Domain+ReadModel+Localization merge.
 	if encounter_profile == "lv40":
+		set_process_input(false)
+		set_process_unhandled_input(false)
 		resized.connect(_fit_design)
 		_fit_design()
 		hud.feedback.text = tr("BATTLE_NOT_IMPLEMENTED")
@@ -307,6 +309,7 @@ func _reason(code: String) -> String:
 	return tr("BATTLE_ERROR_GENERIC")
 
 func _input(event: InputEvent) -> void:
+	if snapshot.is_empty(): return
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
 	if hud.reaction_panel.visible: return

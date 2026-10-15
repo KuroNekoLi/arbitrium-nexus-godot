@@ -25,6 +25,12 @@ func _run() -> void:
 	check("P4-LV40-UI-03-NO-FIXTURE-CONTROLLER",lv.controller == null)
 	check("P4-LV40-UI-04-BLOCKED-FEEDBACK",lv.hud.feedback.text == lv.tr("BATTLE_NOT_IMPLEMENTED"))
 	check("P4-LV40-UI-05-DISABLED-END",lv.hud.end_button.disabled)
+	check("P4-LV40-UI-09-BLOCKED-INPUT",not lv.is_processing_input() and not lv.is_processing_unhandled_input())
+	var blocked_key := InputEventKey.new()
+	blocked_key.keycode = KEY_1
+	blocked_key.pressed = true
+	lv._input(blocked_key)
+	check("P4-LV40-UI-10-KEY-NO-STATE",lv.snapshot.is_empty() and lv.controller == null)
 	lv.queue_free()
 	await process_frame
 	var main: Control = Main.instantiate()

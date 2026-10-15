@@ -24,7 +24,7 @@ static func distribution(samples: Array) -> Dictionary:
 
 ## Inclusive linear interpolation of sorted indices. Never treat empty as zero.
 static func quantile(sorted: Array[float], probability: float) -> Variant:
-	if sorted.is_empty() or probability < 0.0 or probability > 1.0:
+	if sorted.is_empty() or is_nan(probability) or is_inf(probability) or probability < 0.0 or probability > 1.0:
 		return null
 	var position: float = probability*float(sorted.size()-1)
 	var low: int = int(floor(position))
@@ -49,7 +49,11 @@ static func paired(by_seed: Dictionary, strategies: Array[String], expected_seed
 		return {"ok":false,"error":"INVALID_EXPECTED_SEEDS"}
 	if strategies.size() < 2:
 		return {"ok":false,"error":"NOT_ENOUGH_STRATEGIES"}
-	var samples: Array = []
+	var unique: Dictionary = {}
+	for strategy: String in strategies:
+		if strategy.is_empty() or unique.has(strategy):
+			return {"ok":false,"error":"INVALID_OR_DUPLICATE_STRATEGY"}
+		unique[strategy] = true
 	var pair_stats: Dictionary = {}
 	for first: int in strategies.size():
 		for second: int in range(first+1,strategies.size()):
@@ -62,6 +66,13 @@ static func paired(by_seed: Dictionary, strategies: Array[String], expected_seed
 		var reports: Variant = by_seed[seed]
 		if not reports is Dictionary:
 			return {"ok":false,"error":"INVALID_SEED_REPORT"}
+		# Validate even an unpaired observation; missing peers must not hide bad data.
+		for strategy: String in strategies:
+			if not reports.has(strategy): continue
+			if not reports[strategy] is Dictionary:
+				return {"ok":false,"error":"INVALID_STRATEGY_REPORT"}
+			if not ["win","defeat","timeout","error"].has(reports[strategy].get("outcome",null)):
+				return {"ok":false,"error":"INVALID_OUTCOME"}
 		for first: int in strategies.size():
 			for second: int in range(first+1,strategies.size()):
 				var p: String = strategies[first]+"_vs_"+strategies[second]

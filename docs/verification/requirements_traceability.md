@@ -420,3 +420,5 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | CI-EVIDENCE official master | 同上，基建驗收 | 90f2ded3aa673050ba76062a96d0829cfe35d986 | Actions38693953249 / 38693953070 success；37logs errors0/warnings0 | VERIFIED，P4.4 GUI未重跑 |
 | P4.4 event feedback | Handoff P4.4 / UI04 | cue_mapper / director / effects / actor / HUD | feedback45/45；edges80/80；p44_regression1238/100seeds/4Legacy | 本機部分驗證；GUI第三輪14/16，未標全Gate |
 | P4.5–6 scope | 使用者續作及「授權擴充既有M5」 | P4_TASK_CONTRACT.md | Lv40領域／多策略研究Agent施工中 | IMPLEMENTATION_IN_PROGRESS；Provisional |
+| P4 Round2 integration review | 使用者Review active branches / Round2 / quota<30%交接 | integration/p4-reviewed-20261015；詳docs/handoff/P4_ROUND2_REVIEW_CHECKPOINT_20261015.md | Domain第三次83/83、component24/24、l10n198/198、readmodel29/29；edges第二次32/37 FAIL；原始logs outputs/p4_review | NOT VERIFIED；不得合併master；沒有新GUI/完整regression/CI證據 |
+| P4 Round2 tooling fixes | QA Skill / UI02 / Contract | balance/profile helpers與負向測試；staging keyboard guard | 新增metrics28 assertions及staging2 assertions，NOT_EXECUTED | IMPLEMENTED_NOT_VERIFIED；quota28%停止施工 |

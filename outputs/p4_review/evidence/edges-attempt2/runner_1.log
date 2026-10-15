@@ -1,0 +1,86 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS DEMO-05-T05-OPEN
+PASS DEMO-05-T05-CONFIRM
+PASS DEMO-05-T05-EXACT-COST
+PASS DEMO-05-T05-NO-REDIRECT
+PASS DEMO-05-JIT-OPEN
+PASS DEMO-05-JIT-R05-DRAFT
+PASS DEMO-05-JIT-T05-DRAFT
+PASS DEMO-05-JIT-SKIPPED
+PASS DEMO-05-JIT-NO-SPEND
+PASS DEMO-05-B02-GUARD
+PASS DEMO-05-B02-TWO-HITS-ONE-GUARD
+PASS DEMO-10-T10-PAID
+PASS DEMO-10-T10-STABLE-PARTY-TIE
+PASS DEMO-10-T10-HEAL-AFTER-DAMAGE
+PASS DEMO-10-T10-BARRIER-NO-HEAL
+PASS DEMO-10-A07-STATUS
+PASS DEMO-10-A07-REAL-STATUS-INSTANCE
+PASS DEMO-10-NO-EARLY-PLAYER-TICK
+PASS DEMO-10-REJECT-UNKNOWN-TICK-BOUNDARY
+PASS DEMO-10-A07-ENEMY-END-TICK
+PASS DEMO-10-A07-NO-DOUBLE-PLAYER-TICK
+PASS DEMO-10-A07-TWO-TICKS-EXPIRE
+PASS DEMO-12-INSTABILITY-SETUP
+PASS DEMO-02-LOCKED-DEAD-TARGET-FIZZLE
+PASS DEMO-12-MUTUAL-STATUS-A
+PASS DEMO-12-MUTUAL-STATUS-B
+PASS DEMO-12-MUTUAL-STATUS-C
+PASS DEMO-12-MUTUAL-STATUS-Boss
+PASS DEMO-12-MUTUAL-KO-VICTORY
+PASS DEMO-12-TERMINAL-IMMUTABLE
+PASS DEMO-07-UNKNOWN-NEUTRAL
+PASS DEMO-07-NON-LV40-UNKNOWN-REJECT
+LV40_EDGES_REPORT executed=37 passed=32 failed=5
+
+--- stderr ---
+ERROR: Rejected QUEUE_REACTION: CONCENTRATING_UNSUPPORTED_M4
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] step (res://tests/test_lv40_domain.gd:52)
+       [1] enemy (res://tests/test_lv40_domain.gd:92)
+       [2] _initialize (res://tests/test_lv40_edges.gd:67)
+ERROR: FAIL DEMO-12-FIRST-THRESHOLD-DELAY
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/test_lv40_domain.gd:21)
+       [1] _initialize (res://tests/test_lv40_edges.gd:67)
+ERROR: Rejected END_PLAYER_PHASE: LV40_INVALID_PHASE
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] step (res://tests/test_lv40_domain.gd:52)
+       [1] enemy (res://tests/test_lv40_domain.gd:84)
+       [2] _initialize (res://tests/test_lv40_edges.gd:69)
+ERROR: FAIL DEMO-12-SECOND-HIT
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/test_lv40_domain.gd:21)
+       [1] _initialize (res://tests/test_lv40_edges.gd:69)
+ERROR: Rejected END_PLAYER_PHASE: LV40_INVALID_PHASE
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] step (res://tests/test_lv40_domain.gd:52)
+       [1] enemy (res://tests/test_lv40_domain.gd:84)
+       [2] _initialize (res://tests/test_lv40_edges.gd:71)
+ERROR: FAIL DEMO-12-SECOND-THRESHOLD-WEAKEN
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/test_lv40_domain.gd:21)
+       [1] _initialize (res://tests/test_lv40_edges.gd:71)
+ERROR: FAIL DEMO-12-NO-INFINITE-DELAY
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/test_lv40_domain.gd:21)
+       [1] _initialize (res://tests/test_lv40_edges.gd:72)
+ERROR: Rejected END_ENEMY_PHASE: ACTIVE_ENEMY_ACTION
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] step (res://tests/test_lv40_domain.gd:52)
+       [1] next_round (res://tests/test_lv40_domain.gd:100)
+       [2] _initialize (res://tests/test_lv40_edges.gd:73)
+ERROR: FAIL DEMO-12-WEAKENED-RELEASE
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] check (res://tests/test_lv40_domain.gd:21)
+       [1] _initialize (res://tests/test_lv40_edges.gd:73)

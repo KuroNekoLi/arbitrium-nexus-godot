@@ -1,0 +1,56 @@
+{
+  "status": "FAILED_PROCESS_GATE",
+  "timestamp_utc": "2026-10-15T09:18:50.414164+00:00",
+  "project": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+  "expected_version": "4.7.2.stable",
+  "steps": [
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "version",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\data-attempt1\\version.log",
+      "log_sha256": "741702697b8e0a989814cfee3073682fd45abfe5070b422f7b3df4f601965324"
+    },
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "label": "import",
+      "passed_process_gate": true,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\data-attempt1\\import.log",
+      "log_sha256": "a1f71bca1d325fa2319b3fb725b40c313a55c7517e466f7e228e38a97a7ac6b4"
+    },
+    {
+      "command": [
+        "C:\\Users\\user05\\AppData\\Local\\Microsoft\\WinGet\\Packages\\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\\Godot_v4.7.2-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\referenced-chatgpt-conversation-this-is-an",
+        "--script",
+        "res://tests/test_lv40_edges.gd"
+      ],
+      "exit_code": null,
+      "timed_out": true,
+      "label": "runner_1",
+      "passed_process_gate": false,
+      "log": "C:\\Users\\user05\\.codex\\worktrees\\p4-reviewed-integration\\review-evidence\\data-attempt1\\runner_1.log",
+      "log_sha256": "2128ae279cda89a342d35b0cd49fdc7619bf068a12071eb65663973f3f7a2c20"
+    }
+  ],
+  "oracle_review": "NOT_PERFORMED",
+  "limitations": "程序成功仍須審查 assertion 摘要、requirement 覆蓋與 fixture scope。",
+  "actual_version": "4.7.2.stable.official.ed1daf0bf"
+}

@@ -1,5 +1,19 @@
 extends RefCounted
 ## Pure benchmark aggregation. Never classify missing measurements as zero.
+static func parse_frame_count(value: String, minimum: int, maximum: int) -> Dictionary:
+	if not value.is_valid_int():
+		return {"ok":false,"error":"INVALID_INTEGER"}
+	var count: int = int(value)
+	# Reject overflow/truncation as well as values outside the permitted frame budget.
+	if count < minimum or count > maximum:
+		return {"ok":false,"error":"FRAME_COUNT_OUT_OF_RANGE"}
+	# Frame counts use decimal digits only; leading zeroes are harmless.
+	var digits: String = value.trim_prefix("+").lstrip("0")
+	if digits.is_empty(): digits = "0"
+	if digits != str(count):
+		return {"ok":false,"error":"INTEGER_OVERFLOW"}
+	return {"ok":true,"value":count}
+
 static func summarize(values: Array, units: String) -> Dictionary:
 	if values.is_empty():
 		return {"ok":true,"unit":units,"samples":0,"mean":null,"p50":null,
