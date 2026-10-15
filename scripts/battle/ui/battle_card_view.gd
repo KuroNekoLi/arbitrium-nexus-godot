@@ -8,6 +8,8 @@ var legal: bool = true
 var unavailable_reason: String = ""
 var face: PanelContainer
 var home: Vector2
+var home_rotation: float = 0.0
+var home_scale: Vector2 = Vector2.ONE
 var hover_tween: Tween
 
 func _card_ready() -> void:
@@ -70,13 +72,20 @@ func _card_ready() -> void:
 	drag_started.connect(func(_card: Card) -> void: z_index = 50)
 	drag_ended.connect(func(_card: Card) -> void:
 		release_requested.emit(instance_id,get_global_mouse_position())
-		position = home
-		rotation = 0
+		_restore_home.call_deferred()
 		z_index = 0)
 	card_hovered.connect(_hover.bind(true))
 	card_unhovered.connect(_hover.bind(false))
 	card_focused.connect(_hover.bind(true))
 	card_unfocused.connect(_hover.bind(false))
+
+func _restore_home() -> void:
+	if not is_inside_tree(): return
+	# The addon restores an unowned card to zero rotation after drag_ended.
+	# Apply our presentation-only arc pose after its release handler completes.
+	tween_position(home,0.18)
+	tween_rotation(rad_to_deg(home_rotation),0.18)
+	tween_scale(home_scale,0.18)
 
 func _hover(active: bool) -> void:
 	if holding or not is_instance_valid(face): return

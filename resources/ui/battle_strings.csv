@@ -90,3 +90,5 @@ BATTLE_EVENT_DAMAGE,HP damage applied,已結算生命傷害
 BATTLE_EVENT_ACTION,Action settled,行動結算完成
 BATTLE_EVENT_GENERIC,Combat state updated,戰鬥狀態已更新
 BATTLE_MISS,MISS,未命中
+BATTLE_SAVED,Replay saved to user data / p4_battle.tape,重播已保存於使用者資料夾／p4_battle.tape
+BATTLE_SAVE_FAILED,Could not save replay,無法保存重播

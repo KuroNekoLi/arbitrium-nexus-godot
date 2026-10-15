@@ -42,3 +42,5 @@ Attribution is not required by CC0, but is included here as a courtesy. Check ea
 Noto Sans TC: Copyright 2014-2021 Adobe. SIL Open Font License 1.1; see assets/fonts/OFL.txt. Official source: https://github.com/google/fonts/tree/main/ofl/notosanstc .
 
 CGF https://github.com/db0/godot-card-game-framework (AGPL-3.0 with upstream addendum) was researched as an interaction reference only. No CGF source or assets are bundled. Existing SimpleCards remains the interaction dependency.
+
+SimpleCards 2.13 by twdoor, MIT: https://github.com/twdoor/simple-cards-v-2 . Full upstream notice restored at addons/simple_cards/LICENSE; inherited local fixes are retained.

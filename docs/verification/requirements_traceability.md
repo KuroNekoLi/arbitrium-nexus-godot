@@ -410,3 +410,7 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | Single authority / no UI mutation | COMBAT_IMPLEMENTATION_CONTRACT §2 | battle_presentation_adapter.gd | 真M5 fixture snapshot；回歸outputs/p4_logs/p41_regression | 本機驗證中；不變更Domain |
 | P4.1 remote gate | P4.1 | 66a8b3faf776ca2d4f8371718e89ea3c89aef4fe | Actions 38681239677 success | VERIFIED |
 | P4.2 / UI01-02-05 | Handoff P4.2 | BattleHUD / BattleCardView / BattleCommandFactory / i18n | test_p4_hud 36/36；outputs/p4_2_*；ui/P4_2_ENGINEERING_NOTE.md | 本機驗收通過；遠端待核對 |
+| P4.2 remote gate | P4.2 | 961c05061665be1c518d041ce05508c225fdb8ae | Actions 38682762145 success；38682762150 success | VERIFIED |
+| P4.3 real transaction / replay | Handoff P4.3 / Contract §2 | battle_controller / battle_screen / animation_director（工作樹） | 三次27/27、27/27、30/31；付款順序oracle修正未重跑；ui/P4_3_ENGINEERING_NOTE.md | NOT VERIFIED / QA_EXECUTION_LIMIT；未push |
+| P4.3 actual input / fan reuse | UI02/04/05 | SimpleCards ArcShape / Tween / BattleCardView | test_p4_input_capture 16/16；outputs/p4_3_*；兩尺寸8張旋轉四角 | 本機GUI自動輸入PASS；非真人playtest |
+| P4.3 resumed gate | 使用者續作／Handoff P4.3 | 同名runner，修正SPCostReservedOnly oracle | p43_resume_attempt1 31/31；Scene8/8、HUD36/36、GUI16/16 | 本機通過；正式CI待核對 |

@@ -9,4 +9,6 @@ static func project(state: Dictionary) -> Dictionary:
 		"outcome":str(battle["outcome"]), "event_seq":int(state["event_seq"]),
 		"intent":state["published_intents"].duplicate(true),
 		"reaction":state["reaction_window"].duplicate(true),
+		"barriers":battle.get("hp_barriers",{}).duplicate(true),
+		"casts":battle["casting_instances"].duplicate(true),
 		"tactical":battle.get("m53", {}).duplicate(true)}

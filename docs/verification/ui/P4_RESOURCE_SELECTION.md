@@ -12,11 +12,11 @@
 
 推薦：繼續用已匯入 SimpleCards 2.13 做輸入／拖曳基底，參考 CGF 行為但不匯入。備案一：隔離環境驗證 CGF Godot4 port；備案二：自行移植 CGF 後保留 notice 並完成授權評估。本輪不做後兩者，也不要求使用者立刻決策。
 
-來源／授權：CGF README 標 AGPL3；ADDENDUM1 僅處理 Steamworks 互動並明示其他部分仍有原始碼供應義務，不能當作 MIT。這是上游文字核對，非法律意見。正式併入前需評估本專案散布方式。SimpleCards 上游 https://github.com/twdoor/simple-cards 為 MIT，保留原著作權及授權條款。
+來源／授權：CGF README 標 AGPL3；ADDENDUM1 僅處理 Steamworks 互動並明示其他部分仍有原始碼供應義務，不能當作 MIT。這是上游文字核對，非法律意見。正式併入前需評估本專案散布方式。SimpleCards 2.x 正確上游 https://github.com/twdoor/simple-cards-v-2 為 MIT，補回 addons/simple_cards/LICENSE 原著作權及完整條款。原報告錯寫不存在的 simple-cards URL，已更正，未以404當作授權證明。
 
 視覺一致：CGF demo 不是本專案美術定稿；只採用熟悉的卡牌互動，不替換 UI theme。效能：未執行 CGF，不能給 benchmark。成本：整體導入會增加 Godot3→4、autoload／scene耦合、輸入與 Domain 牌區雙重權威風險。回退：沒有匯入任何 CGF 原始碼，不影響現有相依。
 
-具體套用方向：懸停卡片置頂、拖曳還原、目標合法性高亮；牌區及費用仍由 M5 決定。P4.3 依接受事件播放離手／命中演出，不能讓框架 move_to 決定真正棄牌。後續重排動畫屬 P4.4 精修，未完成不冒稱。
+具體套用：懸停卡片置頂、拖曳還原、目標合法性高亮；牌區及費用仍由 M5 決定。P4.3 依接受事件播放離手／命中演出，不能讓框架 move_to 決定真正棄牌。依使用者補充盤點，重用已有 ArcShape.compute_layout/get_layout_bounds、tween_position/tween_rotation/tween_scale；真正旋轉四角納入安全邊界。舊main.gd 也有2度／張的扇形，未刪除。沒有移植 CGF 原始碼或引入其規則DSL。
 
 ## 已取得字型 — ACQUIRED / LICENSE_VERIFIED
 

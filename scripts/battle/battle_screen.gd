@@ -4,6 +4,10 @@ const Adapter = preload("res://scripts/battle/presentation/battle_presentation_a
 const Factory = preload("res://scripts/battle/battle_command_factory.gd")
 const Cost = preload("res://scripts/domain/m2/economy/cost_resolver.gd")
 const Translations = preload("res://scripts/battle/presentation/battle_translations.gd")
+const Controller = preload("res://scripts/battle/battle_controller.gd")
+const Director = preload("res://scripts/battle/presentation/battle_animation_director.gd")
+var controller: Node
+var director: Node
 signal action_requested(command: Dictionary)
 var snapshot: Dictionary = {}
 var config: Dictionary = {}
@@ -35,6 +39,45 @@ func _ready() -> void:
 	present(Encounter.initial())
 	resized.connect(_fit_design)
 	_fit_design()
+	controller = Controller.new()
+	add_child(controller)
+	controller.begin(Encounter.initial(),config)
+	controller.resolved.connect(_on_resolved)
+	controller.rejected.connect(func(error: String) -> void: hud.feedback.text = _reason(error))
+	director = Director.new()
+	director.arena = $Design/Arena
+	var effects := Control.new()
+	effects.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	effects.theme = hud.theme
+	design.add_child(effects)
+	director.overlay = effects
+	add_child(director)
+	action_requested.connect(_submit)
+
+func _submit(command: Dictionary) -> void:
+	if command["type"] == "SAVE_REPLAY":
+		var error: Error = controller.save_tape("user://p4_battle.tape")
+		hud.feedback.text = tr("BATTLE_SAVED" if error == OK else "BATTLE_SAVE_FAILED")
+		return
+	controller.submit(command)
+
+func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void:
+	for card: Control in hud.card_views:
+		if card.instance_id == command.get("card_instance_id",""):
+			var origin: Vector2 = design.get_global_transform().affine_inverse()*card.global_position
+			var target: Node2D = $Design/Arena.get_node(str(command.get("target_actor_id","Boss")))
+			director.play_card(card.appearance.artwork,origin,target.position+Vector2(0,-100))
+			break
+	cancel_action()
+	present(state)
+	var records: PackedStringArray = []
+	for event: Dictionary in events:
+		var key: String = "BATTLE_EVENT_GENERIC"
+		if event["kind"] == "HPDamageApplied": key = "BATTLE_EVENT_DAMAGE"
+		elif event["kind"] == "PlayerActionSettled": key = "BATTLE_EVENT_ACTION"
+		records.append(tr("BATTLE_LOG_EVENT") % [event["event_seq"],tr(key)])
+	hud.log_label.text = "\n".join(records.slice(maxi(0,records.size()-3)))
+	director.enqueue(events,command)
 
 func present(state: Dictionary) -> void:
 	snapshot = state.duplicate(true)
@@ -210,6 +253,8 @@ func _reason(code: String) -> String:
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
+	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
+	if hud.reaction_panel.visible: return
 	var key: int = event.physical_keycode if event.physical_keycode else event.keycode
 	if key >= KEY_1 and key <= KEY_3:
 		select_actor(["A","B","C"][key-KEY_1])

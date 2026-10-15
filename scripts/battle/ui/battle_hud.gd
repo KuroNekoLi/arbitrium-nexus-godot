@@ -10,6 +10,7 @@ signal locale_requested(locale: String)
 const Roster = preload("res://scenes/ui/hero_roster_item.tscn")
 const CardView = preload("res://scripts/battle/ui/battle_card_view.gd")
 const Portraits: Texture2D = preload("res://assets/portraits/party_portraits.png")
+const HandArc = preload("res://addons/simple_cards/shape/premade_shapes/arc_shape.gd")
 var card_views: Array[Control] = []
 var roster: Dictionary = {}
 var hand: Control
@@ -29,6 +30,7 @@ var log_label: Label
 var target_buttons: Dictionary = {}
 var vm: Dictionary = {}
 var selected: String = "A"
+var conditions: Label
 
 func _ready() -> void:
 	theme = preload("res://resources/ui/battle_theme.tres")
@@ -73,6 +75,7 @@ func _build() -> void:
 	button(row,"EN",func() -> void: locale_requested.emit("en"))
 	button(row,"繁中",func() -> void: locale_requested.emit("zh_TW"))
 	button(row,"BATTLE_SAVE",func() -> void: command_requested.emit("SAVE_REPLAY",{}))
+	conditions = label(box(self,Rect2(292,88,680,42),"Conditions"),"",14)
 	var party := VBoxContainer.new()
 	party.position = Vector2(16,92)
 	party.size = Vector2(260,318)
@@ -131,8 +134,8 @@ func _build() -> void:
 	log_label.max_lines_visible = 3
 	hand = Control.new()
 	hand.name = "HandView"
-	hand.position = Vector2(292,480)
-	hand.size = Vector2(680,224)
+	hand.position = Vector2(292,458)
+	hand.size = Vector2(680,246)
 	hand.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hand)
 	for entry: Array in [["Boss",Rect2(722,125,250,335)],["A",Rect2(380,285,105,175)],["B",Rect2(485,249,55,173)],["C",Rect2(540,225,75,164)]]:
@@ -167,6 +170,13 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 		roster[id].configure(id,tr("BATTLE_HERO_"+id),roster[id].portrait.texture,roster[id].accent)
 		roster[id].update_projection(vm["actors"][id],tr(status_key))
 		roster[id].set_selected(id == actor)
+		var info: PackedStringArray = [tr("BATTLE_BARRIER") % str(vm["barriers"].get(id,0))]
+		if vm["reaction"].get("guard_actor_ids",[]).has(id): info.append(tr("BATTLE_GUARD"))
+		for cast: Dictionary in vm["casts"].values():
+			if cast["caster_id"] == id:
+				info.append(tr("BATTLE_STABILITY") % [cast["current_stability"],cast["focus_ward"]])
+		roster[id].tooltip_text = "\n".join(info)
+		if id == actor: conditions.text = tr("BATTLE_HERO_"+id)+" · "+" · ".join(info)
 	var boss: Dictionary = vm["actors"]["Boss"]
 	boss_stats.text = tr("BATTLE_HP") % [boss["hp"],boss["max_hp"]]
 	if not vm["tactical"].is_empty():
@@ -179,6 +189,9 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 		intent.text = tr("BATTLE_INTENT_DETAIL") % [tr("BATTLE_"+str(announced["skill_id"]).to_upper()),tr("BATTLE_HERO_"+target),announced["hit_count"]]
 	end_button.text = tr("BATTLE_END")
 	end_button.disabled = vm["phase"] != "PLAYER_PHASE" or vm["outcome"] != "ONGOING"
+	var prior_positions: Dictionary = {}
+	for old: Control in card_views:
+		prior_positions[old.instance_id] = old.position
 	for old: Node in hand.get_children():
 		hand.remove_child(old)
 		old.queue_free()
@@ -199,8 +212,31 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 		card.selection_requested.connect(func(id: String) -> void: card_requested.emit(id))
 		card.release_requested.connect(func(id: String, point: Vector2) -> void: card_released.emit(id,point))
 		card_views.append(card)
+	_arrange_hand()
+	for card: Control in card_views:
+		if prior_positions.has(card.instance_id):
+			card.position = prior_positions[card.instance_id]
+			card.tween_position(card.home,0.18)
 	if cards.is_empty(): label(hand,"BATTLE_EMPTY",18)
 	_render_reaction(reaction_choices)
+
+func _arrange_hand() -> void:
+	if card_views.is_empty(): return
+	var visual_cards: Array[Card] = []
+	for card: Control in card_views: visual_cards.append(card)
+	var shape: ContainerShape = HandArc.new(4000.0,8.0,270.0,minf(174.0,500.0/maxf(1,card_views.size()-1)))
+	var layout: ContainerShape.LayoutResult = shape.compute_layout(visual_cards)
+	var bounds: Rect2 = shape.get_layout_bounds(visual_cards,layout)
+	var fit: float = minf(1.0,minf((hand.size.x-8)/bounds.size.x,(hand.size.y-8)/bounds.size.y))
+	var offset: Vector2 = (hand.size-bounds.size*fit)*0.5-bounds.position*fit
+	for i: int in card_views.size():
+		var card: Control = card_views[i]
+		card.position = offset+layout.positions[i]*fit-card.pivot_offset
+		card.home = card.position
+		card.rotation = layout.rotations[i]
+		card.home_rotation = card.rotation
+		card.scale = Vector2.ONE*fit
+		card.home_scale = card.scale
 
 func _render_reaction(choices: Array) -> void:
 	for child: Node in reaction_column.get_children():

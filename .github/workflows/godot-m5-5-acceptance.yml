@@ -7,6 +7,9 @@ on:
       - 'scenes/battle/**'
       - 'scripts/battle/**'
       - 'resources/ui/**'
+      - 'assets/fonts/**'
+      - 'addons/simple_cards/**'
+      - 'scripts/ui/hero_roster_item.gd'
       - 'tests/test_p4*'
       - 'tests/capture_p4.gd'
       - 'project.godot'
@@ -274,6 +277,14 @@ jobs:
           cat "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log"
           grep -q '^P4_2_REPORT executed=36 passed=36 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log"
           if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log"; then exit 1; fi
+      - name: Phase 4 M5 vertical slice and replay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_p4_integration.gd > "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log" 2>&1
+          cat "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"
+          grep -q '^P4_3_REPORT executed=31 passed=31 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"
+          if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"; then exit 1; fi
       - name: Upload full logs
         if: always()
         uses: actions/upload-artifact@v4
