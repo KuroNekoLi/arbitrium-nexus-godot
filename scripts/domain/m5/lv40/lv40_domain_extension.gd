@@ -120,7 +120,7 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
 			for record: Dictionary in publication["timeline"]:
 				emit(next,output,record,id)
 			emit(next,output,{"kind":"BossIntentCommitted","public_intent":publication["intent"]},id)
-	if not M4.validate_state(next):
+	if not M4.validate_state(next) or not Status.validate(next["core"],config):
 		return deny(state,"LV40_INVARIANT_FAILED")
 	return receipt(next,output)
 
@@ -129,7 +129,7 @@ static func end_enemy(core: Dictionary, config: Dictionary, id: String) -> Dicti
 	var records: Array = []
 	# Existing M5 Status engine owns instance stacking, refresh, tick and dispel.
 	# The optional boundary selector is added by the pending integration patch.
-	var tick: Dictionary = Status.call("tick",next,int(next["battle"]["round"])+1,config,id,"ENEMY_PHASE_END")
+	var tick: Dictionary = Status.tick(next,int(next["battle"]["round"])+1,config,id,"ENEMY_PHASE_END")
 	if not tick["ok"]:
 		return tick
 	next = tick["core"]
