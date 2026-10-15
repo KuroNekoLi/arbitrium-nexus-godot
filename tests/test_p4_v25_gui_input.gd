@@ -108,7 +108,7 @@ func run() -> void:
 
 	# Disclosure must never scroll the confirmation footer away.
 	var context: Control = screen.hud.get_node("Context")
-	var disclosure: Button = context.get_node("PreferencesDisclosure")
+	var disclosure: Button = context.get_child(0).get_node("PreferencesDisclosure")
 	var settings: Control = context.detail_scroll.get_child(0).get_node("PreferencesContent")
 	var confirm: Button = screen.hud.confirm_button
 	var baseline: Rect2 = confirm.get_global_rect()
