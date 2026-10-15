@@ -6,6 +6,12 @@ signal locale_requested(locale: String)
 signal command_requested(kind: String, fields: Dictionary)
 var header: Label
 var resources: Label
+var ap_value: Label
+var rp_value: Label
+var crystal_row: HBoxContainer
+const CORE = preload("res://assets/ui/v35/ap_core.svg")
+const CRYSTAL = preload("res://assets/ui/v35/ap_crystal.svg")
+const FRAME = preload("res://addons/kenney_fantasy_ui_borders/panel-border-000.png")
 
 func _add_island(node_name: String, area: Rect2) -> HBoxContainer:
 	var panel := PanelContainer.new()
@@ -25,6 +31,55 @@ func _ready() -> void:
 	resources.autowrap_mode = TextServer.AUTOWRAP_OFF
 	resources.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	resources.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	resources.hide() # Compatibility facade; all visible values read the same projection.
+	var panel: PanelContainer = resource_row.get_parent()
+	var inset: StyleBoxFlat = panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
+	inset.content_margin_top = 5
+	inset.content_margin_bottom = 5
+	panel.add_theme_stylebox_override("panel", inset)
+	var ornament := NinePatchRect.new()
+	ornament.name = "ResourceFrame"
+	ornament.texture = FRAME
+	ornament.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ornament.patch_margin_left = 12
+	ornament.patch_margin_right = 12
+	ornament.patch_margin_top = 12
+	ornament.patch_margin_bottom = 12
+	ornament.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# PanelContainer measures direct children. An unmeasured overlay prevents
+	# NinePatch's source texture minimum size from enlarging this HUD island.
+	var overlay := Control.new()
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(overlay)
+	overlay.add_child(ornament)
+	var core := TextureRect.new()
+	core.name = "APCoreIcon"
+	core.texture = CORE
+	core.custom_minimum_size = Vector2(44, 44)
+	core.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	core.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	core.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	resource_row.add_child(core)
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation", 0)
+	resource_row.add_child(column)
+	var caption := HBoxContainer.new()
+	column.add_child(caption)
+	var caption_label: Label = UI.label(caption, "BATTLE_TEAM_AP", 11)
+	caption_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	caption_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	rp_value = UI.label(caption, "", 11)
+	rp_value.autowrap_mode = TextServer.AUTOWRAP_OFF
+	var values := HBoxContainer.new()
+	column.add_child(values)
+	ap_value = UI.label(values, "", 24)
+	ap_value.name = "APValue"
+	ap_value.autowrap_mode = TextServer.AUTOWRAP_OFF
+	crystal_row = HBoxContainer.new()
+	crystal_row.name = "APCrystalRow"
+	crystal_row.add_theme_constant_override("separation", 2)
+	values.add_child(crystal_row)
 
 	var phase_row: HBoxContainer = _add_island("PhasePanel", Rect2(400, 0, 402, 64))
 	header = UI.label(phase_row, "BATTLE_TITLE", 23)
@@ -41,3 +96,20 @@ func _ready() -> void:
 func render_phase(projection: Dictionary) -> void:
 	header.text = tr("BATTLE_PHASE_" + projection["phase"]) + "   ·   " + tr("BATTLE_ROUND") % projection["round"]
 	resources.text = tr("BATTLE_RESOURCES") % [projection["resources"]["current_ap"], projection["resources"]["rp"]]
+	var value: int = int(projection["resources"]["current_ap"])
+	ap_value.text = "%d AP" % value
+	rp_value.text = "RP %d" % int(projection["resources"]["rp"])
+	for old: Node in crystal_row.get_children():
+		crystal_row.remove_child(old)
+		old.queue_free()
+	var slots: int = mini(12, maxi(value, int(projection["resources"].get("base_ap", value))))
+	for index: int in slots:
+		var gem := TextureRect.new()
+		gem.texture = CRYSTAL
+		gem.custom_minimum_size = Vector2(10, 16)
+		gem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		gem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		gem.modulate = Color.WHITE if index < value else Color(0.22, 0.30, 0.38, 0.55)
+		gem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		crystal_row.add_child(gem)
+	crystal_row.tooltip_text = resources.text # Numeric value stays exact beyond 12 visible gems.

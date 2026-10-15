@@ -1,5 +1,9 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+## V3.5 quota checkpoint 2026-10-15
+
+V3.5.0 pinned references 1d64ccd；AP部分已實作，new32/32、HUD36/Layout18/Integration31及修正後靜態9PNG30/30本地通過。V3.5.1角色卡與.2–.5未完成；CI_PENDING／NEEDS_REVISION，不宣告High-Fidelity VERIFIED。剩29%按使用者規則交接，詳docs/handoff/V35_QUOTA_HANDOFF.md；master/V2未修改。
+
 ## V3.4 Review 2026-10-15
 
 來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f；基準master2ce71a2。Hero HP/MP、六Command皮膚保留API；修正legacy沒有catalogue造成格式錯誤，新增獨立元件18條。

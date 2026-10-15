@@ -1,4 +1,6 @@
 asset_id,category,output_path,source,license,status,dimensions,source_sha256,notes
+v35.ap_core,ui_icon,assets/ui/v35/ap_core.svg,original repository-native SVG authored for V3.5,PROJECT_ORIGINAL,INTEGRATED_PARTIAL,96x96,8b88e6892f2ae8970d3c9e49d93698aa5bbb62a7a60a2858c1c58bcc8e323c6d,No reference pixels copied; no embedded text; replaceable Texture2D
+v35.ap_crystal,ui_icon,assets/ui/v35/ap_crystal.svg,original repository-native SVG authored for V3.5,PROJECT_ORIGINAL,INTEGRATED_PARTIAL,32x40,9f3c720ebb7bc49d08a2b3d8d7abda7f1b231dec1bf10fef746b9a3104436d2d,No external asset license inferred; AP numeric stays exact beyond visual gem count
 p4.background,background,assets/battlefield_bg.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1672x941,c8b7516143dd62a849a067f55e7006ceb806f2d4b0fec2deb8b0a501ae3b9d42,No HUD baked into image; no new Canon adoption
 p4.actor.a,sprite,assets/nova_atlas.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1254x1254,aa1ff4168610ac24e33f9abffeb22638124b784b7bc82015435b7cff749f63c2,A visual alias Kleya; 3x3 idle run strike
 p4.actor.b,sprite,assets/kleya_atlas.png,existing repository 7163aef,PROVENANCE_PENDING,REUSED_PLACEHOLDER,1254x1254,ae88c0421d4c50b6ea54256a621f9e3a26d3b48563704f0d465ea211ca43d981,B visual alias Nova; no role changes

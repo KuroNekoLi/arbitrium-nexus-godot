@@ -1,5 +1,9 @@
 # Third-party asset credits
 
+## V3.5 incremental HUD assets
+
+`assets/ui/v35/ap_core.svg` and `ap_crystal.svg` are original editable repository-native vector code authored for this task, not extracted from the user's reference images or an external pack. They contain no baked UI text. The resource frame reuses the existing Kenney Fantasy UI Borders CC0 asset and bundled notice below. No new external downloads, fonts or plugins were adopted. Reference A/B JPEGs under docs/ui/references/v35 are user-supplied comparison material only; commercial redistribution rights are not inferred.
+
 ## Phase 4 reused prototype artwork
 
 The existing `assets/*.png` and `assets/portraits/party_portraits.png` are reused as reversible prototype placeholders, not adopted as new final character/Boss designs. Original provider/model/license evidence is not bundled in this checkout; commercial provenance remains pending. See `assets/asset_manifest.csv`. No new external artwork was downloaded for P4.1.
