@@ -6,6 +6,7 @@ const Model = preload("res://scripts/domain/m1/combat_model.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const CastingTimeline = preload("res://scripts/domain/m4/casting/casting_timeline_resolver.gd")
 const CastingInstance = preload("res://scripts/domain/m4/casting/casting_instance_resolver.gd")
+const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
 
 static func outcome(battle: Dictionary) -> String:
 	var any_enemy_alive: bool = false
@@ -76,7 +77,10 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 		return _failure(core, "INVALID_BOUNDARY_HOOKS")
 	# Fail closed instead of silently dropping unscheduled actual M4/M5 work.
 	if not core["battle"]["statuses"].is_empty():
-		return _failure(core, "UNIMPLEMENTED_REAL_TICKS")
+		if config.get("m5_2_status_enabled",false) != true:
+			return _failure(core, "UNIMPLEMENTED_REAL_TICKS")
+		if not Status.validate(core,config):
+			return _failure(core, "M52_INVALID_STATUS_STATE")
 	if not core["battle"]["casting_instances"].is_empty() and config.get("m4_dual_cast_enabled", false) != true:
 		return _failure(core, "UNIMPLEMENTED_REAL_TICKS")
 	var next_round: int = int(core["battle"]["round"]) + 1
@@ -122,6 +126,14 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 		timeline.append({"kind": "BoundaryHookFixtureResolved",
 			"hook_id": str(hook["hook_id"]), "fixture_kind": str(hook["kind"]),
 			"effect_resolution": "DEFERRED_TO_M4_M5"})
+	# Status tick after due Full/Last Chant but before outcome/AP renewal.
+	# Newly granted status in this same boundary cannot tick prematurely.
+	if config.get("m5_2_status_enabled",false) == true:
+		var status_tick: Dictionary = Status.tick(state,next_round,config,command_id)
+		if not status_tick["ok"]:
+			return _failure(core,str(status_tick["error"]))
+		state = status_tick["core"]
+		timeline.append_array(status_tick["timeline"])
 	# Remaining cards in Casting are legal ONLY if paired with an active
 	# later-due CastingInstance. M3 fixtures still fail closed.
 	if not CastingInstance.valid(state):

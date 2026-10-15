@@ -20,6 +20,29 @@ static func _stats(config: Dictionary, id: String) -> Dictionary:
 			return {}
 	return s
 
+## Buff/Debuff definitions contribute real deterministic effective combat stats.
+## No status-specific RNG, and no change to M5.1 when no statuses active.
+static func _effective_stats(base: Dictionary, battle: Dictionary,
+		id: String, config: Dictionary) -> Dictionary:
+	var result: Dictionary = base.duplicate(true)
+	var definitions: Variant = config.get("m5_status_definitions",{})
+	if not definitions is Dictionary:
+		return result
+	for entry: Variant in battle.get("statuses",[]):
+		if not entry is Dictionary or str(entry.get("target_actor_id","")) != id:
+			continue
+		var definition: Variant = definitions.get(str(entry.get("status_id","")),null)
+		if not definition is Dictionary or not ["BUFF","DEBUFF"].has(
+				str(definition.get("kind",""))):
+			continue
+		var stat: String = str(definition.get("stat_id",""))
+		if not result.has(stat):
+			continue
+		var amount: int = int(definition.get("stat_delta",0)) * \
+			int(entry.get("stacks",1))
+		result[stat] = maxi(0,int(result[stat])+amount)
+	return result
+
 static func _validate(profile: Dictionary, config: Dictionary) -> String:
 	if not config.get("m5_damage_enabled",false) == true:
 		return "M51_DAMAGE_NOT_ENABLED"
@@ -56,7 +79,8 @@ static func resolve(core: Dictionary, source_id: String, declared_target: String
 	var issue: String = _validate(profile,config)
 	if not issue.is_empty():
 		return _error(issue)
-	var source: Dictionary = _stats(config,source_id)
+	var source: Dictionary = _effective_stats(_stats(config,source_id),
+		core["battle"],source_id,config)
 	if source.is_empty() or not core["battle"]["actors"].has(source_id) or \
 			int(core["battle"]["actors"][source_id]["hp"]) <= 0:
 		return _error("M51_INVALID_DAMAGE_SOURCE")
@@ -73,7 +97,8 @@ static func resolve(core: Dictionary, source_id: String, declared_target: String
 			return _error("M51_UNAUTHORIZED_TARGET_REDIRECT")
 		if declared_target == source_id:
 			return _error("M51_REDIRECT_INVALID")
-	var target_stats: Dictionary = _stats(config,recipient)
+	var target_stats: Dictionary = _effective_stats(_stats(config,recipient),
+		core["battle"],recipient,config)
 	if target_stats.is_empty():
 		return _error("M51_MISSING_RECIPIENT_STATS")
 	var element: String = str(profile.get("element_id","NEUTRAL"))

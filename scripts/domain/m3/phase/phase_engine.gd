@@ -10,6 +10,7 @@ const Boundary = preload("res://scripts/domain/m3/phase/phase_boundary_resolver.
 const ReactionWindow = preload("res://scripts/domain/m3/reaction/reaction_window_resolver.gd")
 const ReactionQueue = preload("res://scripts/domain/m3/reaction/reaction_queue_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
+const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
 const SCHEMA: String = "m3.1-phase-fixture-v1"
 const PLAYER_KINDS: Array[String] = [
 	"COMMIT_SP_CARD_FIXTURE", "FREE_SWAP", "EXTRA_DRAW_FIXTURE",
@@ -329,6 +330,38 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 				if not hp["ok"]:
 					return _reject(original,str(hp["error"]))
 				next["core"] = hp["core"]
+				# Status attaches only to an actual verified Hit trace from the
+				# already publicly committed EnemyAction, never a fake hit flag.
+				# Protect redirect governs on-hit targeting if explicitly tagged.
+				if config.get("m5_2_status_enabled",false) == true:
+					var onhits: Variant = config.get("m5_enemy_on_hit_status",{})
+					var status_effect: Variant = onhits.get(skill,null) if onhits is Dictionary else null
+					if status_effect != null:
+						if not status_effect is Dictionary or not status_effect.get(
+								"follows_damage_recipient",null) is bool:
+							return _reject(original,"M52_INVALID_ON_HIT_POLICY")
+						var follow: bool = bool(status_effect["follows_damage_recipient"])
+						var seen_hit: bool = false
+						for trace: Dictionary in hp["timeline"]:
+							if str(trace.get("kind","")) == "DamageTrace" and \
+									bool(trace.get("hit",false)):
+								seen_hit = true
+								break
+						var actual: String = str(hp["recipient_id"])
+						var original_target: String = str(intent["target_ids"][0])
+						if seen_hit and actual != original_target and not follow:
+							_emit(next,emitted,"StatusOnHitSuppressedByProtect",command_id,
+								{"skill_id":skill,"original_target_actor_id":original_target,
+									"actual_damage_recipient_actor_id":actual},"m5_status")
+						elif seen_hit and int(next["core"]["battle"]["actors"][actual]["hp"]) > 0:
+							var granted: Dictionary = Status.grant(next["core"],
+								str(current_action["enemy_id"]),actual,
+								str(status_effect.get("status_id","")),command_id+":onhit",config)
+							if not granted["ok"]:
+								return _reject(original,str(granted["error"]))
+							next["core"] = granted["core"]
+							for ev: Dictionary in granted["timeline"]:
+								_emit(next,emitted,str(ev["kind"]),command_id,ev,"m5_status")
 				for record: Dictionary in hp["timeline"]:
 					if str(record["kind"]) == "core_event":
 						_core_events(next,emitted,[record["raw"]],command_id)
