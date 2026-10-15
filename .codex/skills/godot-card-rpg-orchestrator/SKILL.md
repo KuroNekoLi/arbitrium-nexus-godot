@@ -21,10 +21,10 @@ description: "協調既有 Godot 2.5D 卡牌 JRPG 的跨系統開發、除錯、
 | 卡牌／回合／資源／Reaction／AI／狀態 | godot-card-combat-engineer | CARD_COMBAT_STANDARDS |
 | 景深／鏡頭／光影／shader／演出 | godot-2-5d-rendering-engineer | RENDERING_2_5D |
 | HUD／手牌／互動／兩語／無障礙 | godot-card-rpg-uiux-engineer | UIUX_STANDARDS |
-| 美術／音訊／匯入／授權 | godot-game-asset-pipeline | ASSET_PIPELINE |
+| 免費／開源素材搜尋、Vault 批次下載／索引／比較、重大採用報告 | godot-resource-library-manager | RESOURCE_LIBRARY_MANAGER |\n| 美術加工／音訊／正式匯入／授權／Godot Asset QA | godot-game-asset-pipeline | ASSET_PIPELINE |
 | 測試／回歸／CI／效能／export | godot-qa-ci-engineer | QA_CI_STANDARDS |
 
-## 工作契約與整合
+## 成果型指令自動路由\n\n接到「製作 XX 場景」「生產 XX 圖片」「為 XX Boss 製作攻擊動畫」等直接成果要求，不需要使用者逐一指出素材網站。先查現有 assets／可共享的 Asset Vault，由 `godot-resource-library-manager` 自動安全選材、按授權／大小限制取得與索引，再由 `godot-game-asset-pipeline` 完成資產加工和 Godot 匯入，最後由 architecture／UIUX／rendering Agent 完成真場景、由 QA Agent 驗證。用戶明說「只做規劃」則僅寫文件，不能趁機下載素材或實作。\n\n普通低風險素材可自動採用；重大角色／Boss／Style Bible、主要場景、難以復原的替換、可執行插件、授權或付費爭議，先產生帶**推薦方案+其他候選**的 `Major Asset Decision Report`，獲用戶核准後再正式採用。沒有下載／圖像工具或不能持久化 Vault，要明確回報而非宣稱完成。\n\n## 工作契約與整合
 
 若多Skills／多agent同時工作，先用 `assets/task_contract.md` 定每位owner可寫檔案、只讀依存、command/event/schema／reason codes、互斥檔案、test ownership及整合順序。共用 `project.godot`、integration resolver、Theme／translation table、RTM各只指定一位寫入者；修改他人範圍先交接，不能整檔覆蓋。
 
