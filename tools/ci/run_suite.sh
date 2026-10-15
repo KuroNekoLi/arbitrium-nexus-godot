@@ -11,7 +11,7 @@ if ! timeout 180s "$GODOT_BIN" --headless --path . \
   tail -n 140 "$log"
   exit 1
 fi
-if ! grep -Fxq "$marker executed=$expected passed=$expected failed=0" "$log"; then
+if ! grep -Eq "^${marker} executed=${expected} passed=${expected} failed=0([[:space:]]|$)" "$log"; then
   echo "Missing or mismatched acceptance report for $suite" >&2
   tail -n 140 "$log"
   exit 1
