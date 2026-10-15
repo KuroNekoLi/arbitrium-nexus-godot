@@ -124,10 +124,13 @@ jobs:
             'test_p4_v2_layout:V2_LAYOUT_REPORT:18' \
             'test_p4_v2_context_layout:V2_CONTEXT_REPORT:23' \
             'test_p4_v24_hand:V24_HAND_REPORT:39' \
-            'test_p4_v27_face_bounds:V27_FACE_REPORT:8'; do
+            'test_p4_v27_face_bounds:V27_FACE_REPORT:8' \
+            'test_p4_v31_visual:V31_VISUAL_REPORT:31' \
+            'test_p4_v32_card:V32_CARD_REPORT:73' \
+            'test_p4_v3_integration:V3_MERGE_REPORT:80'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=13 assertions=576 legacy=4 failed=0'
+          echo 'CI_P4_CONTRACTS_REPORT suites=16 assertions=760 legacy=4 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
       - name: Upload P4 contract evidence
         if: always()

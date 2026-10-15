@@ -1,0 +1,69 @@
+name: Godot V3.2 Card Frame Mouse and Keyboard GUI Regression
+on:
+  # Historical evidence only: exhausted GUI suite requires fresh authorization.
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v25-actual-input:
+    if: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install verified official Godot 4.7.2
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/godot" "$RUNNER_TEMP/v25"
+          root="https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable"
+          zip="Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -fLsS --retry 3 "$root/$zip" -o "$RUNNER_TEMP/godot/$zip"
+          curl -fLsS --retry 3 "$root/SHA512-SUMS.txt" -o "$RUNNER_TEMP/godot/SHA512-SUMS.txt"
+          cd "$RUNNER_TEMP/godot"
+          grep -F "$zip" SHA512-SUMS.txt > selected.sha512
+          test "$(wc -l < selected.sha512)" -eq 1
+          sha512sum -c selected.sha512
+          unzip -q "$zip" -d extracted
+          bin="$(find "$RUNNER_TEMP/godot/extracted" -type f -name 'Godot_v4.7.2-stable_linux.x86_64' -print -quit)"
+          test -n "$bin"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - name: Strict import + prepare virtual display
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if ! command -v xvfb-run >/dev/null || ! command -v Xvfb >/dev/null || ! command -v xauth >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          fi
+          "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/v25/import.log" 2>&1
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v25/import.log"
+      - name: Real V2.5 GUI regression with newly composed V3.2 card faces
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 220s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/test_p4_v25_gui_input.gd \
+            > "$RUNNER_TEMP/v25/gui.log" 2>&1 || {
+              cat "$RUNNER_TEMP/v25/gui.log"; exit 1;
+            }
+          grep 'V25_GUI_REPORT' "$RUNNER_TEMP/v25/gui.log"
+          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v25/gui.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v25/gui.log"
+          python3 - "$RUNNER_TEMP/v25/gui.log" <<'PY'
+          import re,sys
+          text=open(sys.argv[1]).read()
+          m=re.search(r'^V25_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',text,re.M)
+          assert m and int(m[1]) >= 30 and m[1]==m[2] and m[3]=='0', 'V25 GUI summary missing or failure'
+          PY
+      - name: Upload raw input evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v25-isolated-gui-logs
+          path: ${{ runner.temp }}/v25/
+          retention-days: 14
+

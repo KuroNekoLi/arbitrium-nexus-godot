@@ -1,10 +1,12 @@
 name: Godot V2.3 Real HUD Render Captures
 on:
   push:
-    branches: [master, 'ui/v2-layout-fidelity-20261015', 'integration/v2-reviewed-20261015']
+    branches: [master, 'ui/v2-layout-fidelity-20261015', 'integration/v2-reviewed-20261015', 'integration/v3-reviewed-20261015']
     paths:
       - '.github/workflows/godot-v2-3-visual-capture.yml'
       - 'tests/capture_p4_v23_layout.gd'
+      - 'tests/capture_p4_v31_boss.gd'
+      - 'resources/ui/**'
       - 'tests/test_p4_v26_pending_ux.gd'
       - 'scripts/battle/ui/**'
       - 'scenes/battle/ui/**'
@@ -68,6 +70,21 @@ jobs:
           test -s "$base/v23_idle_1920_en.png"
           test -s "$base/v23_selected_1280_zh.png"
           echo "V23_EVIDENCE_DIR=$base" >> "$GITHUB_ENV"
+      - name: Render V3 Boss projection fixtures (no player input)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          printf -v prefix 'v31_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/capture_p4_v31_boss.gd -- \
+            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/boss.log" 2>&1 || {
+              cat "$RUNNER_TEMP/v23/boss.log"; exit 1;
+            }
+          grep -qx 'V31_BOSS_RENDER_REPORT executed=20 passed=20 failed=0' "$RUNNER_TEMP/v23/boss.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/boss.log"
+          grep '^V31_BOSS_RENDER_REPORT' "$RUNNER_TEMP/v23/boss.log"
       - name: Final authorized V26 pending UX attempt (not V25 or P43)
         # Local attempts 1 and 2 are preserved. Run attempt 3 only on first
         # publication of this integration branch; master never reruns this GUI.
@@ -110,5 +127,6 @@ jobs:
           path: |
             outputs/p4_input_capture/v23_*/
             outputs/p4_input_capture/v26_*/
+            outputs/p4_input_capture/v31_*/
           retention-days: 14
 

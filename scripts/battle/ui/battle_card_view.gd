@@ -1,4 +1,5 @@
 extends "res://addons/simple_cards/card/card.gd"
+const Frame = preload("res://scripts/battle/ui/components/battle_card_frame.gd")
 signal selection_requested(instance: String)
 signal release_requested(instance: String, pointer: Vector2)
 var instance_id: String = ""
@@ -14,6 +15,7 @@ var hover_tween: Tween
 var selected_visual: bool = false
 var _hover_visual: bool = false
 var _style: StyleBoxFlat
+var _idle_style: StyleBoxFlat
 
 func _card_ready() -> void:
 	if _layout:
@@ -29,55 +31,15 @@ func _card_ready() -> void:
 	face.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	face.mouse_behavior_recursive = Control.MOUSE_BEHAVIOR_DISABLED
 	face.focus_behavior_recursive = Control.FOCUS_BEHAVIOR_DISABLED
-	var style := StyleBoxFlat.new()
+	var style: StyleBoxFlat = Frame.outer_frame(appearance.accent, legal)
 	_style = style
-	style.bg_color = Color("0b192b")
-	style.border_color = appearance.accent if legal else Color("647180")
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(8)
-	style.content_margin_left = 9
-	style.content_margin_right = 9
-	style.content_margin_top = 7
-	style.content_margin_bottom = 7
-	face.add_theme_stylebox_override("panel",style)
+	_idle_style = style.duplicate() as StyleBoxFlat
+	face.add_theme_stylebox_override("panel", style)
 	face.pivot_offset = size * 0.5
 	add_child(face)
-	var column := VBoxContainer.new()
-	column.add_theme_constant_override("separation",4)
-	face.add_child(column)
-	var cost := Label.new()
-	cost.text = cost_text
-	cost.add_theme_font_size_override("font_size",16)
-	cost.add_theme_color_override("font_color",appearance.accent)
-	column.add_child(cost)
-	var art := TextureRect.new()
-	art.texture = appearance.artwork
-	art.custom_minimum_size = Vector2(0,70)
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	column.add_child(art)
-	var title := Label.new()
-	title.text = tr(appearance.name_key)
-	title.add_theme_font_size_override("font_size",17)
-	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	column.add_child(title)
-	var desc := Label.new()
-	desc.text = tr(appearance.description_key)
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	# Give wrapping a stable width before the first Container layout. Without
-	# it, a one-pixel initial width can inflate the panel's minimum height.
-	desc.custom_minimum_size.x = 144
-	desc.max_lines_visible = 3 if legal else 2
-	desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	desc.add_theme_font_size_override("font_size",13)
-	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	column.add_child(desc)
-	if not legal:
-		var reason := Label.new()
-		reason.text = tr("BATTLE_UNAVAILABLE")
-		reason.add_theme_font_size_override("font_size",13)
-		column.add_child(reason)
-	tooltip_text = tr(appearance.description_key) + ("\n"+unavailable_reason if not legal else "")
+	# Independent native Controls. Source data is never baked into card artwork.
+	Frame.build(face, appearance, cost_text, legal, unavailable_reason)
+	tooltip_text = tr(appearance.description_key) + ("\n" + unavailable_reason if not legal else "")
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
 	drag_started.connect(func(_card: Card) -> void: z_index = 90)
 	drag_ended.connect(func(_card: Card) -> void:
@@ -122,9 +84,9 @@ func _apply_visual_state() -> void:
 	var lift: float = -38.0 if selected_visual else -31.0 if prominent else 0.0
 	var magnify: Vector2 = Vector2.ONE * (1.055 if selected_visual else 1.035 if prominent else 1.0)
 	_style.set_border_width_all(3 if prominent else 2)
-	_style.border_color = Color("ffe8a3") if selected_visual else Color("9beafc") if prominent else appearance.accent if legal else Color("647180")
-	_style.shadow_color = Color(0.56, 0.83, 1.0, 0.56) if selected_visual else Color(0.33, 0.70, 0.92, 0.42) if prominent else Color.TRANSPARENT
-	_style.shadow_size = 9 if prominent else 0
+	_style.border_color = Color("ffe8a3") if selected_visual else Color("9beafc") if prominent else _idle_style.border_color
+	_style.shadow_color = Color(0.56, 0.83, 1.0, 0.56) if selected_visual else Color(0.33, 0.70, 0.92, 0.42) if prominent else _idle_style.shadow_color
+	_style.shadow_size = 9 if prominent else _idle_style.shadow_size
 	hover_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
 	hover_tween.tween_property(face, "position:y", lift, 0.14)
 	hover_tween.tween_property(face, "scale", magnify, 0.14)
