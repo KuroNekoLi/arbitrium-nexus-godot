@@ -65,7 +65,7 @@ func _initialize() -> void:
 	# The old fixture killed Akane before the third hit (HP=0 invalidates Last Spell).
 	# A setup-only HP Barrier absorbs damage without blocking on-hit Casting disruption.
 	# Do not let Akane Guard while CONCENTRATING; that would violate M4.
-	r["state"]["core"]["battle"]["hp_barriers"]["B"] = 4000.0
+	r["state"]["core"]["battle"]["hp_barriers"] = {"B":4000.0}
 	announce(r,"B03")
 	check(enemy(r) and has_event(r["last"],"LastSpellDestabilizedDelayed") and
 		int(r["state"]["core"]["battle"]["actors"]["B"]["hp"]) > 0 and
