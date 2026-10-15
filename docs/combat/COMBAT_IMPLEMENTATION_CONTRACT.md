@@ -25,7 +25,7 @@ Godot Battle Scene / Input
 
 UI **不能**自行扣 HP/AP/MP/RP、洗牌、刷新 hand、判斷敗勝、跳過合法 Reaction、以動畫延遲改事件順序。動畫完成回調只能確認顯示結束，不能重新提交已結算傷害。Boss/卡牌數值只從**版本化 ContentConfig/Definition**取用；UI 輸入不能攜入 `damage`、`break_damage` 等可偽造效果值。失敗交易不改 State、Event、RNG、卡區或費用。
 
-**整合前程式核對**：目前 M5 只有已驗證的 fixture 範圍，請在當前 HEAD 實讀 [M5 integration](../../scripts/domain/m5/integration/m5_domain_resolver.gd) 與 [M5.4 工程證據](../verification/PH3_M5_4_ENGINEERING_NOTE.md)；**不得只照本文件的示意命令格式當作存在的 runtime API**。不同 M2/M3/M4/M5 命令可能有實際字段限制，從現有 tests／replay fixtures 取 schema，再由 Controller 轉接，不要複製 reducer。
+**整合前程式核對**：目前 M5 只有已驗證的 fixture 範圍，請在當前 HEAD 實讀 [M5 integration](../../scripts/domain/m5/integration/m5_domain_resolver.gd) 、[M5.5 完整對局 Fixture/Command Tape](../../tests/fixtures/m5_full_battle_driver.gd)、[M5.5 Acceptance Report](../verification/PH3_M5_5_ACCEPTANCE_REPORT.md) 與 [M5 Handoff](../verification/PH3_M5_HANDOFF.md)；**不得只照本文件的示意命令格式當作存在的 runtime API**。不同 M2/M3/M4/M5 命令可能有實際字段限制，從現有 tests／replay fixtures 取 schema，再由 Controller 轉接，不要複製 reducer。
 
 ## 3. 成果與測試 Gate
 
@@ -36,7 +36,7 @@ UI **不能**自行扣 HP/AP/MP/RP、洗牌、刷新 hand、判斷敗勝、跳�
 | Playable Verified | 真人可以完成開場→數回合→勝/敗；Reaction、Casting、Boss、Last Spell 依規 | 不等於平衡已完成 |
 | Balance Accepted | 多策略、100+ seeds、真人 playtest 及公布配置版本 | Python 單獨跑過不能代替 Godot parity |
 
-**現況（M5.5 已驗證）**：M1～M5.4 **1,081/1,081** + M5.5 **157/157** = **1,238/1,238 命名 Domain assertions**，Godot 4.7.2 [功能分支 CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295) 與 [PR CI #38678188918](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678188918) Success；100 個固定 Seed 的完整三人 Boss 對局與每場 Replay 全部通過，4 Legacy 回歸成功；[master 合併程式碼 9c8b14b8](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/9c8b14b873047ca181a229cfaab5d2351541ceab)。Scope 限定 **M5 DOMAIN VERIFIED — HEADLESS BATTLE / FIXTURE_ONLY**；原生 Godot Lv40 Demo Content Parity、法術 Counter/Analyze、Scene+Controller、操作 UI、真人可玩性、平衡仍 **NOT VERIFIED**。最新 Master 同 Commit CI 結論見 [#38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。
+**現況（M5.5 已驗證）**：M1～M5.4 **1,081/1,081** + M5.5 **157/157** = **1,238/1,238 命名 Domain assertions**，Godot 4.7.2 [功能分支 CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295) 與 [PR CI #38678188918](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678188918) Success；100 個固定 Seed 的完整三人 Boss 對局與每場 Replay 全部通過，4 Legacy 回歸成功；[master 合併程式碼 9c8b14b8](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/9c8b14b873047ca181a229cfaab5d2351541ceab)。Scope 限定 **M5 DOMAIN VERIFIED — HEADLESS BATTLE / FIXTURE_ONLY**；原生 Godot Lv40 Demo Content Parity、法術 Counter/Analyze、Scene+Controller、操作 UI、真人可玩性、平衡仍 **NOT VERIFIED**。正式合併後的 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741) 已完成且 **success**（執行 Commit `9c8b14b8`，49 Command / 5 rounds 的 Seed 20261014 Golden Battle 與 100 個完整 Replay 均通過）。
 
 ## 4. 開發與回報
 
