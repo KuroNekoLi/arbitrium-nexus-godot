@@ -1,0 +1,53 @@
+keys,en,zh_TW
+LV40_U01_NAME,Arcane bolt,奧術彈
+LV40_U01_DESC,"Single-target magic; immediate or full chant.",敵方單體魔法；可瞬發或完整詠唱。
+LV40_U02_NAME,Mana barrier,魔力屏障
+LV40_U02_DESC,"Grant an ally an HP barrier, not casting protection.",給予隊友生命屏障，不保護詠唱穩定度。
+LV40_U03_NAME,Focus charm,專注護符
+LV40_U03_DESC,"Protect an active chant with Focus Ward, not HP shielding.",為合法詠唱提供專注護盾，不吸收生命傷害。
+LV40_U04_NAME,Mana attunement,魔力調律
+LV40_U04_DESC,"Restore an ally's MP up to their maximum.",回復隊友魔力，不超過個人上限。
+LV40_U05_NAME,Lesser heal,初階治癒術
+LV40_U05_DESC,"Heal a living wounded ally; cannot revive.",治療尚存活的受傷隊友；不能復活。
+LV40_R01_NAME,Fracture slash,破勢斬
+LV40_R01_DESC,"On hit reduce Break; can expose an open core.",命中後削減失衡值；核心裸露時可製造戰術破綻。
+LV40_R02_NAME,Chain strikes,連環擊
+LV40_R02_DESC,"Two independently checked physical hits on one foe.",同一目標兩次獨立物理命中判定。
+LV40_R03_NAME,Rift thrust,刺隙一閃
+LV40_R03_DESC,"Physical attack that can exploit existing Exposed.",物理攻擊，可利用既有戰術破綻。
+LV40_R05_NAME,Protecting riposte,援護反擊
+LV40_R05_DESC,"Reaction: redirect, gain a barrier, then counter if legal.",反應卡：援護隊友、先取得屏障，再合法反擊。
+LV40_R06_NAME,Azure crescent,蒼月斬
+LV40_R06_DESC,"Physical finisher; combo only when its recipe is legal.",物理追擊；符合配方時可連攜。
+LV40_R07_NAME,Opening lure,戰隙誘引
+LV40_R07_DESC,"Create Exposed only under the enemy's specified core condition.",只有指定敵方核心條件成立才可製造戰術破綻。
+LV40_R08_NAME,Guardian oath,守護誓約
+LV40_R08_DESC,"Shield self and an ally; may set up a defense combo.",自己與一名隊友獲得生命屏障，可建立防護連攜。
+LV40_A01_NAME,Ember bolt,燐火彈
+LV40_A01_DESC,"Single-target fire magic; immediate or full chant.",單體火系魔法；可瞬發或完整詠唱。
+LV40_A02_NAME,Blazing tide,熾焰潮
+LV40_A02_DESC,"Fire magic against all foes; immediate or full chant.",全體敵方火系魔法；可瞬發或完整詠唱。
+LV40_A03_NAME,Gathering flame,凝火
+LV40_A03_DESC,"Enhance the next eligible magic HP effect, not Break or disruption.",強化下一張合格魔法的生命傷害，不增加失衡或干擾。
+LV40_A04_NAME,Searing ray,灼熱束
+LV40_A04_DESC,"Costly single-target fire magic with two casting modes.",高耗費單體火系魔法；兩種詠唱模式。
+LV40_A05_NAME,Searing disruption,熾脈干擾
+LV40_A05_DESC,"Disrupt an existing enemy chant; not spell counter or Break.",干擾敵方現存詠唱；不是魔法反制，也不是本體失衡。
+LV40_A06_NAME,Starfall lance,星墜槍
+LV40_A06_DESC,"Single-target fire magic; immediate mode can finish a legal combo.",單體火系魔法；瞬發模式可合法利用劍焰連攜。
+LV40_A07_NAME,Crimson embers,紅蓮餘燼
+LV40_A07_DESC,"Apply the provisional scorch effect after a magic hit.",魔法命中後施加候選持續灼燒。
+LV40_T01_NAME,Healing prayer,治癒術
+LV40_T01_DESC,"Heal a living ally, without removing incapacity or exhaustion.",治療一名存活隊友，不解除失能或力竭。
+LV40_T03_NAME,Blessed field,祝福領域
+LV40_T03_DESC,"Heal all living allies; cannot revive.",治療所有仍存活的隊友，不會復活。
+LV40_T04_NAME,Protecting light,守護之光
+LV40_T04_DESC,"Grant an HP barrier; can finish a legal defense combo.",給予隊友生命屏障，可承接防護連攜。
+LV40_T05_NAME,Radiant response,祈光應答
+LV40_T05_DESC,"Reaction: shield the damage recipient, without redirecting.",反應卡：為實際承受者提供屏障，不轉移目標。
+LV40_T06_NAME,Life weaving,生命織補
+LV40_T06_DESC,"Heal a living ally and grant an HP barrier.",治療存活隊友並給予生命屏障。
+LV40_T09_NAME,Lightfeather bolt,光羽彈
+LV40_T09_DESC,"Single-target magic; immediate or full chant.",單體魔法；可瞬發或完整詠唱。
+LV40_T10_NAME,Radiant pulse,祈光脈衝
+LV40_T10_DESC,"After real HP damage, heal the lowest-ratio living ally once.",實際造成生命傷害後，治療生命比例最低的存活隊友一次。

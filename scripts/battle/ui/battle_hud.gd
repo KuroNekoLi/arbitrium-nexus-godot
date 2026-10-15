@@ -31,6 +31,10 @@ var target_buttons: Dictionary = {}
 var vm: Dictionary = {}
 var selected: String = "A"
 var conditions: Label
+var result_panel: PanelContainer
+var result_label: Label
+var reduced_toggle: CheckButton
+var mute_toggle: CheckButton
 
 func _ready() -> void:
 	theme = preload("res://resources/ui/battle_theme.tres")
@@ -110,6 +114,14 @@ func _build() -> void:
 	intent = label(enemy,"",16)
 	label(enemy,"BATTLE_PROTECTABLE",13)
 	var context: VBoxContainer = box(self,Rect2(984,350,280,348),"Context")
+	var context_panel: Node = context.get_parent()
+	context_panel.remove_child(context)
+	var context_scroll := ScrollContainer.new()
+	context_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	context_scroll.follow_focus = true
+	context_panel.add_child(context_scroll)
+	context_scroll.add_child(context)
+	context.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	label(context,"BATTLE_DETAILS",14)
 	details = label(context,"BATTLE_SELECT",16)
 	details.custom_minimum_size.y = 84
@@ -132,6 +144,21 @@ func _build() -> void:
 	feedback.add_theme_color_override("font_color",Color("ffd18d"))
 	log_label = label(context,"BATTLE_LOG",12)
 	log_label.max_lines_visible = 3
+	var settings := HBoxContainer.new()
+	context.add_child(settings)
+	var reduced := CheckButton.new()
+	reduced_toggle = reduced
+	reduced.text = tr("BATTLE_REDUCED")
+	reduced.add_theme_font_size_override("font_size",12)
+	reduced.toggled.connect(func(enabled: bool) -> void: command_requested.emit("REDUCED_MOTION",{"enabled":enabled}))
+	settings.add_child(reduced)
+	button(settings,"BATTLE_SKIP",func() -> void: command_requested.emit("SKIP_ANIMATION",{})).add_theme_font_size_override("font_size",12)
+	var mute := CheckButton.new()
+	mute_toggle = mute
+	mute.text = tr("BATTLE_MUTE")
+	mute.add_theme_font_size_override("font_size",12)
+	mute.toggled.connect(func(enabled: bool) -> void: command_requested.emit("MUTE_AUDIO",{"enabled":enabled}))
+	context.add_child(mute)
 	hand = Control.new()
 	hand.name = "HandView"
 	hand.position = Vector2(292,458)
@@ -159,10 +186,18 @@ func _build() -> void:
 	reaction_column = VBoxContainer.new()
 	reaction_panel.add_child(reaction_column)
 	reaction_panel.hide()
+	var result: VBoxContainer = box(self,Rect2(390,210,500,180),"Result")
+	result_panel = result.get_parent()
+	result_panel.z_index = 120
+	result_label = label(result,"",30)
+	button(result,"BATTLE_RESTART",func() -> void: command_requested.emit("RESTART_BATTLE",{}))
+	result_panel.hide()
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection
 	selected = actor
+	result_panel.visible = vm["outcome"] in ["VICTORY","DEFEAT"]
+	result_label.text = tr("BATTLE_"+str(vm["outcome"]))
 	header.text = tr("BATTLE_PHASE_"+vm["phase"]) + "   ·   " + tr("BATTLE_ROUND") % vm["round"]
 	resources.text = tr("BATTLE_RESOURCES") % [vm["resources"]["current_ap"],vm["resources"]["rp"]]
 	for id: String in roster:
@@ -246,19 +281,30 @@ func _render_reaction(choices: Array) -> void:
 	reaction_panel.visible = window.get("status","") == "DRAFTING"
 	if not reaction_panel.visible: return
 	label(reaction_column,"BATTLE_REACTION",18)
-	var options := HBoxContainer.new()
-	reaction_column.add_child(options)
+	var scroller := ScrollContainer.new()
+	scroller.custom_minimum_size.y = 110
+	scroller.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	reaction_column.add_child(scroller)
+	var options := GridContainer.new()
+	options.columns = 2
+	options.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroller.add_child(options)
 	for choice: Dictionary in choices:
 		var item: Button = button(options,choice["label"],func() -> void: command_requested.emit("QUEUE_REACTION",{"entry":choice["entry"]}))
 		item.text = tr("BATTLE_HERO_"+str(choice["entry"]["actor_id"]))+" · "+tr(choice["label"])
+		if choice["entry"]["kind"] == "REACTION_SP_FIXTURE": item.text += " → "+tr("BATTLE_HERO_"+str(choice["entry"]["target_actor_id"]))
 		item.add_theme_font_size_override("font_size",13)
+		item.tooltip_text = choice.get("tooltip",item.text)
 	var draft: Array = window.get("draft",[])
 	if draft.is_empty(): label(reaction_column,"BATTLE_QUEUE_EMPTY")
 	for i: int in draft.size():
 		var entry: Dictionary = draft[i]
 		var row := HBoxContainer.new()
 		reaction_column.add_child(row)
-		label(row,"",14).text = tr("BATTLE_REACTION_ORDER") % [i+1,tr("BATTLE_HERO_"+str(entry["actor_id"])),tr("BATTLE_GUARD" if entry["kind"] == "BASIC_GUARD" else "BATTLE_PROTECT")]
+		var kind_key: String = "BATTLE_GUARD" if entry["kind"] == "BASIC_GUARD" else "BATTLE_PROTECT" if entry["kind"] == "BASIC_PROTECT" else "BATTLE_SPECIAL_REACTION"
+		var summary: Label = label(row,"",14)
+		summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		summary.text = tr("BATTLE_REACTION_ORDER") % [i+1,tr("BATTLE_HERO_"+str(entry["actor_id"])),tr(kind_key)]
 		button(row,"BATTLE_REMOVE",func() -> void: command_requested.emit("REMOVE_REACTION",{"actor_id":entry["actor_id"]}))
 		if i > 0:
 			var order: Array = draft.map(func(d: Dictionary) -> String: return str(d["actor_id"]))

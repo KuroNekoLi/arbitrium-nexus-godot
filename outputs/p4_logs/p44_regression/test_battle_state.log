@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: opening hand is 4 for kleya
+PASS: remaining deck is 4 for kleya
+PASS: opening hand is 4 for nova
+PASS: remaining deck is 4 for nova
+PASS: opening hand is 4 for yora
+PASS: remaining deck is 4 for yora
+PASS: first ordinary card plays
+PASS: second ordinary card plays
+PASS: third ordinary card is blocked
+PASS: blocked play does not mutate hand
+PASS: reaction card is in independent deck
+PASS: enemy phase opens
+PASS: reaction interrupts intent
+PASS: player phase resumes
+PASS: fixed seed initial intent
+PASS: fixed seed intent order
+PASS: focus exists in character deck
+PASS: focus is playable
+PASS: support card does not deal unintended boss damage
+PASS: focus grants its declared Analysis
+PASS: focus grants its declared Mana
+PASS: pierce card exists
+PASS: pierce is playable
+PASS: pierce applies its Stability damage
+PASS: rupture card exists
+PASS: rupture is playable
+PASS: rupture applies its Stability damage
+M1 TESTS PASS // 6 suites

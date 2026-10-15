@@ -2,6 +2,7 @@ extends SceneTree
 const Scene = preload("res://scenes/battle/battle_screen.tscn")
 var failed: int = 0
 var executed: int = 0
+var capture_prefix: String = "p4_3"
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, id: String) -> void:
 	executed += 1
@@ -9,7 +10,8 @@ func check(ok: bool, id: String) -> void:
 	print(("PASS " if ok else "FAIL ")+id)
 func shot(path: String) -> void:
 	await RenderingServer.frame_post_draw
-	check(root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://outputs/"+path+".png")) == OK,"P43-CAPTURE-"+path)
+	var name: String = path.replace("p4_3",capture_prefix)
+	check(root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://outputs/"+name+".png")) == OK,"P43-CAPTURE-"+name)
 func mouse(point: Vector2, down: bool) -> void:
 	root.warp_mouse(point)
 	var event := InputEventMouseButton.new()
@@ -21,12 +23,16 @@ func mouse(point: Vector2, down: bool) -> void:
 func key(code: Key) -> void:
 	var event := InputEventKey.new()
 	event.physical_keycode = code
+	event.keycode = code
 	event.pressed = true
 	root.push_input(event)
 	event = InputEventKey.new()
 	event.physical_keycode = code
+	event.keycode = code
 	root.push_input(event)
 func run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--capture-prefix="): capture_prefix = argument.get_slice("=",1).validate_filename()
 	root.size = Vector2i(1280,720)
 	var screen: Control = Scene.instantiate()
 	root.add_child(screen)
@@ -55,6 +61,10 @@ func run() -> void:
 	key(KEY_SPACE)
 	await process_frame
 	check(screen.hud.reaction_panel.visible,"P43-KEYBOARD-END-REACTION")
+	if not screen.hud.reaction_panel.visible:
+		print("P4_INPUT_REPORT executed=%d passed=%d failed=%d" % [executed,executed-failed,failed])
+		quit(1)
+		return
 	await shot("p4_3_reaction_1280")
 	# Click the actual modal Pass button, not a direct command/test damage hook.
 	var pass_button: Button = screen.hud.reaction_column.get_child(-1).get_child(-1)

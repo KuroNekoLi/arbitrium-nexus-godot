@@ -11,7 +11,7 @@ on:
       - 'addons/simple_cards/**'
       - 'scripts/ui/hero_roster_item.gd'
       - 'tests/test_p4*'
-      - 'tests/capture_p4.gd'
+      - 'tests/capture_p4*'
       - 'project.godot'
       - 'scripts/domain/m5/**'
       - 'scripts/domain/m3/phase/phase_engine.gd'
@@ -31,6 +31,15 @@ on:
   pull_request:
     paths:
       - '.github/workflows/godot-m5-5-acceptance.yml'
+      - 'scripts/battle/**'
+      - 'scenes/battle/**'
+      - 'resources/ui/**'
+      - 'assets/fonts/**'
+      - 'addons/simple_cards/**'
+      - 'scripts/ui/hero_roster_item.gd'
+      - 'tests/test_p4*'
+      - 'tests/capture_p4*'
+      - 'project.godot'
       - 'scripts/domain/m5/**'
       - 'scripts/domain/m3/**'
       - 'tests/test_m5_integration.gd'
@@ -285,6 +294,17 @@ jobs:
           cat "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"
           grep -q '^P4_3_REPORT executed=31 passed=31 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"
           if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"; then exit 1; fi
+      - name: Phase 4 feedback and edge verification
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for script in test_p4_feedback test_p4_feedback_edges; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-5-logs/$script.log" 2>&1
+            cat "$RUNNER_TEMP/m5-5-logs/$script.log"
+            if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/$script.log"; then exit 1; fi
+          done
+          grep -q '^P4_4_REPORT executed=45 passed=45 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_feedback.log"
+          grep -q '^P4_4_EDGE_REPORT executed=80 passed=80 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_feedback_edges.log"
       - name: Upload full logs
         if: always()
         uses: actions/upload-artifact@v4

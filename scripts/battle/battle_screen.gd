@@ -6,6 +6,8 @@ const Cost = preload("res://scripts/domain/m2/economy/cost_resolver.gd")
 const Translations = preload("res://scripts/battle/presentation/battle_translations.gd")
 const Controller = preload("res://scripts/battle/battle_controller.gd")
 const Director = preload("res://scripts/battle/presentation/battle_animation_director.gd")
+const Effects = preload("res://scripts/battle/presentation/battle_effects.gd")
+const Bindings = preload("res://scripts/battle/ui/battle_input_bindings.gd")
 var controller: Node
 var director: Node
 signal action_requested(command: Dictionary)
@@ -23,6 +25,7 @@ var view_model: Dictionary = {}
 @onready var hud: Control = $Design/HUD
 
 func _enter_tree() -> void:
+	Bindings.install()
 	Translations.install()
 	TranslationServer.set_locale("zh_TW")
 
@@ -46,13 +49,17 @@ func _ready() -> void:
 	controller.rejected.connect(func(error: String) -> void: hud.feedback.text = _reason(error))
 	director = Director.new()
 	director.arena = $Design/Arena
-	var effects := Control.new()
+	var effects: Control = Effects.new()
 	effects.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	effects.theme = hud.theme
 	design.add_child(effects)
 	director.overlay = effects
 	add_child(director)
+	director.cue_presented.connect(_on_cue)
 	action_requested.connect(_submit)
+
+func _on_cue(cue: Dictionary) -> void:
+	if cue["kind"] != "DAMAGE": hud.feedback.text = tr("BATTLE_CUE_"+str(cue["kind"]))
 
 func _submit(command: Dictionary) -> void:
 	if command["type"] == "SAVE_REPLAY":
@@ -82,6 +89,11 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 func present(state: Dictionary) -> void:
 	snapshot = state.duplicate(true)
 	view_model = Adapter.project(snapshot)
+	for actor: Node2D in $Design/Arena.get_children():
+		var casting: bool = false
+		for cast: Dictionary in view_model["casts"].values():
+			if cast["caster_id"] == actor.actor_id: casting = true
+		actor.project_conditions(str(view_model["actors"][actor.actor_id]["status"]),casting,float(view_model["barriers"].get(actor.actor_id,0)) > 0)
 	var cards: Array = []
 	var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
 	for instance: String in own["zones"]["hand"]:
@@ -112,11 +124,23 @@ func _reaction_choices() -> Array:
 	if window.get("status","") != "DRAFTING": return options
 	for actor: String in ["A","B","C"]:
 		for kind: String in ["BASIC_GUARD","BASIC_PROTECT"]:
-			var target: String = actor if kind == "BASIC_GUARD" else str(window["original_target_actor_id"])
+			var target: String = actor if kind == "BASIC_GUARD" else str(snapshot["published_intents"][0]["target_ids"][0])
 			var entry: Dictionary = {"kind":kind,"actor_id":actor,"target_actor_id":target}
 			var command: Dictionary = Factory.build(snapshot,"QUEUE_REACTION",{"window_id":window["window_id"],"entry":entry})
 			if Factory.preview(snapshot,command,config)["accepted"]:
 				options.append({"entry":entry,"label":"BATTLE_GUARD" if kind == "BASIC_GUARD" else "BATTLE_PROTECT"})
+		var own: Dictionary = snapshot["core"]["cards"]["actors"][actor]
+		for instance: String in own["zones"]["hand"]:
+			var definition: String = str(own["instances"][instance]["definition_id"])
+			if not config["reaction_definitions"].has(definition): continue
+			for target: String in snapshot["core"]["battle"]["allies"]:
+				var entry: Dictionary = {"kind":"REACTION_SP_FIXTURE","actor_id":actor,"target_actor_id":target,"card_instance_id":instance}
+				var command: Dictionary = Factory.build(snapshot,"QUEUE_REACTION",{"window_id":window["window_id"],"entry":entry})
+				if Factory.preview(snapshot,command,config)["accepted"]:
+					var effect: String = str(config["reaction_definitions"][definition]["fixture_effect"])
+					var definition_data: Dictionary = config["reaction_definitions"][definition]
+					options.append({"entry":entry,"label":"BATTLE_CUE_INTERRUPT" if effect == "CANCEL_ACTION_FIXTURE" else "BATTLE_REACTION_FOCUS_WARD" if effect == "FOCUS_WARD_FIXTURE" else "BATTLE_SPECIAL_REACTION",
+						"tooltip":tr("BATTLE_REACTION_COST") % [definition_data["rp_cost"],definition_data["mp_cost"]]})
 	return options
 
 func select_actor(actor: String) -> void:
@@ -164,6 +188,7 @@ func _refresh_preview() -> void:
 	var result: Dictionary = Factory.preview(snapshot,pending_command,config)
 	hud.confirm_button.disabled = not result["accepted"]
 	hud.feedback.text = tr("BATTLE_CONFIRM_HINT") if result["accepted"] else _reason(str(result["error"]))
+	if result["accepted"]: hud.confirm_button.grab_focus()
 
 func confirm_action() -> void:
 	if pending_command.is_empty() or hud.confirm_button.disabled: return
@@ -193,6 +218,23 @@ func _drop_card(instance: String, pointer: Vector2) -> void:
 	hud.feedback.text = tr("BATTLE_INVALID_DROP")
 
 func _command_requested(kind: String, fields: Dictionary) -> void:
+	if kind == "SKIP_ANIMATION":
+		director.skip_all()
+		return
+	if kind == "REDUCED_MOTION":
+		director.reduced_motion = bool(fields["enabled"])
+		director.overlay.reduced_motion = director.reduced_motion
+		if director.reduced_motion: director.skip_all()
+		return
+	if kind == "MUTE_AUDIO":
+		director.overlay.audio_enabled = not bool(fields["enabled"])
+		return
+	if kind == "RESTART_BATTLE":
+		director.reset_session()
+		controller.begin(Encounter.initial(),config)
+		cancel_action()
+		present(controller.snapshot())
+		return
 	if kind == "UNIMPLEMENTED":
 		hud.feedback.text = tr("BATTLE_NOT_IMPLEMENTED")
 		return
@@ -233,6 +275,8 @@ func set_locale(locale: String) -> void:
 	parent.add_child(hud)
 	_connect_hud()
 	present(snapshot)
+	hud.reduced_toggle.set_pressed_no_signal(director.reduced_motion)
+	hud.mute_toggle.set_pressed_no_signal(not director.overlay.audio_enabled)
 
 func _connect_hud() -> void:
 	hud.actor_requested.connect(select_actor)
@@ -255,20 +299,28 @@ func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
 	if hud.reaction_panel.visible: return
-	var key: int = event.physical_keycode if event.physical_keycode else event.keycode
-	if key >= KEY_1 and key <= KEY_3:
-		select_actor(["A","B","C"][key-KEY_1])
-	elif key in [KEY_LEFT,KEY_RIGHT]:
+	if event.is_action_pressed("end_turn"):
+		_command_requested("END_PLAYER_PHASE",{})
+		get_viewport().set_input_as_handled()
+		return
+	var party_index: int = -1
+	for i: int in 3:
+		if event.is_action_pressed("battle_party_"+str(i+1)): party_index = i
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if focused is Button and not focused is Card and event.is_action_pressed("ui_accept"): return
+	if party_index >= 0:
+		select_actor(["A","B","C"][party_index])
+	elif event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right"):
 		if hud.card_views.is_empty(): return
-		keyboard_index = wrapi(keyboard_index + (1 if key == KEY_RIGHT else -1),0,hud.card_views.size())
+		keyboard_index = wrapi(keyboard_index + (1 if event.is_action_pressed("ui_right") else -1),0,hud.card_views.size())
 		select_card(hud.card_views[keyboard_index].instance_id)
 		hud.card_views[keyboard_index].grab_focus()
-	elif key == KEY_ENTER:
+	elif event.is_action_pressed("end_turn"): _command_requested("END_PLAYER_PHASE",{})
+	elif event.is_action_pressed("ui_accept"):
 		if pending_kind.is_empty() and not hud.card_views.is_empty(): select_card(hud.card_views[0].instance_id)
 		elif selected_target.is_empty() and not legal_targets.is_empty(): select_target(legal_targets[0])
 		else: confirm_action()
-	elif key == KEY_ESCAPE: cancel_action()
-	elif key == KEY_SPACE: _command_requested("END_PLAYER_PHASE",{})
+	elif event.is_action_pressed("ui_cancel"): cancel_action()
 	else: return
 	get_viewport().set_input_as_handled()
 

@@ -30,6 +30,12 @@ When asked to **"製作 XX 場景" / "生產 XX 圖片" / "新增角色或卡牌
 
 Read [UI Resource Scout / Asset Vault SOP](docs/ui/03_FREE_OPEN_SOURCE_RESOURCE_SCOUT.md) and [UI entrypoint](docs/ui/README.md). Preserve existing approved Combat Domain and every existing asset unless explicitly authorized to replace it.
 
+## Owner quota handoff policy (2026-10-15)
+
+Check Codex usage before milestones, expensive test batches, or additional agent dispatch during active work. If either available five-hour or weekly remaining percentage is strictly below 30%, prioritize a recoverable checkpoint and handoff instead of expanding implementation. Unknown usage is not zero; an individual agent limit is not proof of account-wide exhaustion. This is an active-work check, not a background monitor.
+
+Record HEAD, scoped changes, sources, exact tests/failures/retry counts and next file-level tasks in `docs/handoff/P4_CHAT_HANDOFF.md`. Preserve user changes. Review and push scoped WIP to a checkpoint branch if not fully verified; never call a checkpoint VERIFIED or destabilize master. No force push, automatic credit reset, or unrelated generated files. Use `docs/handoff/CODEX_RETURN_TEMPLATE.md` for the receiving conversation's `CODEX_RETURN.md`; distinguish proposed patches from actually executed tests. Codex reviews the return and runs real integration gates. Do not assume GPT conversation has local filesystem, Git or Godot access. Do not create/message a separate task without explicit user authorization.
+
 ## Entry points
 - [Approved A reconciliation audit](docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md)
 - [Original transfer provenance](docs/combat/UPSTREAM_TRANSFER_STATUS.md)
