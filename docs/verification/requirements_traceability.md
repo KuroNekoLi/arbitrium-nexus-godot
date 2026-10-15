@@ -311,3 +311,20 @@ Source tested SHA **8030ce5fe8fed346a4612013f5d77cef2913e3d2**, official [Godot4
 | Negative authorization and atomicity | M45-REP-29-STALE_TAPE_FAILS_CLOSED, M45-REP-31-DUPLICATE_COMMAND_REJECTED, M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED, M45-INT-41-NO_PUBLIC_KILL_COMMAND | PASS |
 
 Only M4 Domain is verified. Full M5 hit/HP/damage/Status/Boss Break and presentation require independent implementation. See PH3_M4_5_ACCEPTANCE_REPORT.md and PH3_M4_HANDOFF.md.
+
+
+## M5.1 actual Hit/Crit/Damage traceability — VERIFIED 2026-10-15
+
+Official [Godot 4.7.2 CI #38668678354](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38668678354), source 407ca2c9e3f7ffc67de45e2150300465420192d1, new 44/44 + predecessor 897/897 = **941/941 named Domain PASS** and four legacy smoke PASS.
+
+| Requirement | Godot exact oracle examples (all passed) | Domain-only outcome |
+|---|---|---|
+| P2-D01–D04 Hit/miss/5–95 clamp/RNG | M51-04-GUARANTEED_NO_RNG, M51-05-CHANCE_PERCENT_RNG_ONCE, M51-06-HIT_CLAMP_95, M51-07-HIT_CLAMP_05, M51-08-CONDITIONAL_MISS_NO_RNG | PASS |
+| P2-D07/08 Crit only on eligible hits | M51-10-INELIGIBLE_CRIT_NO_RNG, M51-11-ELIGIBLE_CRIT_100_PERCENT, M51-15-MISS_HAS_ZERO_DAMAGE_AND_NO_CRIT_ROLL | PASS |
+| P2-D05/09–11 target element/actual HP/floor0 | M51-12-REAL_HP_DEDUCTED, M51-13-ONE_TRACE_ONE_HP_EVENT, M51-16-ELEMENT_BY_ENEMY, M51-21-ZERO_DAMAGE_NOT_CHIP_ONE | PASS |
+| PRE3-R01/R06/R07 Protect/Guard/HPBarrier | M51-17-PROTECT_USES_RECIPIENT_DEFENSE, M51-18-UNAUTHORIZED_REDIRECT_REJECTED, M51-19-GUARD_THEN_BARRIER, M51-20-FOCUS_WARD_NOT_HP_BARRIER | PASS |
+| P2-D14/CORE-02 HP0 | M51-24-REAL_HP0_CALLS_M4_INVALIDATOR | PASS |
+| P2-D10 M2 real costs and M3/M4 release before resources | M51-25-CHANTLESS_REAL_DAMAGE_BEFORE_OUTCOME, M51-26-CHANTLESS_AP_MP_ONCE, M51-29-BASIC_ATTACK_REAL_DAMAGE, M51-32-ENEMY_ACTION_REAL_TWO_HITS, M51-36-FULL_RELEASE_BEFORE_AP_DRAW, M51-38-FULL_NO_SECOND_PAYMENT | PASS |
+| P2-D16 Replay/atomicity | M51-01-AUTHORITY_ENFORCED, M51-39-INITIAL_IMMUTABLE, M51-40-SAME_TAPE_EVENT_HASH, M51-41-SAME_TAPE_FINAL_HASH, M51-42-STALE_REPLAY_REFUSED | PASS |
+
+This is M5.1 **headless fixture scope only**, not M5.2–M5.5 complete battle or Last Spell-specific live damage gate. Seed/hashes/failed CI history in PH3_M5_1_ENGINEERING_NOTE.md.

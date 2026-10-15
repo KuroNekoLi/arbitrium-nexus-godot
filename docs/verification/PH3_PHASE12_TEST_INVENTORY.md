@@ -1118,3 +1118,57 @@ Official successful [Godot 4.7.2 CI #38665591370](https://github.com/KuroNekoLi/
 | 79 | M45-REP-36-BOTH_HP0_ACTORS_ACCOUNTED | test_m4_replay.gd | PASS |
 
 Seed20261014; 34 accepted commands; Initial SHA256 38f22585ad007413001f460772cbe2400c0b10e6601d6e03a4f3820490e49bdd; Event SHA256 82dfac4a2ea16cf30382a095d0881d74c5d90995eb01fad6f45fc61297d71a25; Final SHA256 c99b758c59c044c6c9fea8dae5306eac877c1a6b9381e8529578468d3f9ce7f6. Repairs and exclusions: PH3_M4_5_ACCEPTANCE_REPORT.md.
+
+
+### M5.1 real HP Damage — 44 observed official Godot cases (2026-10-15)
+
+Official completed-success [Godot 4.7.2 CI #38668678354](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38668678354), tested source 407ca2c9e3f7ffc67de45e2150300465420192d1. **44/44 new + 897/897 predecessors = 941/941 named PASS**, 4 legacy pass; all numbers in M5.1 Balance remain PROVISIONAL.
+
+| # | Exact observed stdout PASS ID | Runner | Result |
+|---:|---|---|---|
+| 1 | M51-01-AUTHORITY_ENFORCED | test_m5_damage.gd | PASS |
+| 2 | M51-02-FIXTURE_HP0_NOT_PLAYER_COMMAND | test_m5_damage.gd | PASS |
+| 3 | M51-03-M5_DISABLED_FAIL_CLOSED | test_m5_damage.gd | PASS |
+| 4 | M51-04-GUARANTEED_NO_RNG | test_m5_damage.gd | PASS |
+| 5 | M51-05-CHANCE_PERCENT_RNG_ONCE | test_m5_damage.gd | PASS |
+| 6 | M51-06-HIT_CLAMP_95 | test_m5_damage.gd | PASS |
+| 7 | M51-07-HIT_CLAMP_05 | test_m5_damage.gd | PASS |
+| 8 | M51-08-CONDITIONAL_MISS_NO_RNG | test_m5_damage.gd | PASS |
+| 9 | M51-09-CONDITIONAL_MUST_BE_DEFINED | test_m5_damage.gd | PASS |
+| 10 | M51-10-INELIGIBLE_CRIT_NO_RNG | test_m5_damage.gd | PASS |
+| 11 | M51-11-ELIGIBLE_CRIT_100_PERCENT | test_m5_damage.gd | PASS |
+| 12 | M51-12-REAL_HP_DEDUCTED | test_m5_damage.gd | PASS |
+| 13 | M51-13-ONE_TRACE_ONE_HP_EVENT | test_m5_damage.gd | PASS |
+| 14 | M51-14-DAMAGE_SOURCE_IMMUTABLE | test_m5_damage.gd | PASS |
+| 15 | M51-15-MISS_HAS_ZERO_DAMAGE_AND_NO_CRIT_ROLL | test_m5_damage.gd | PASS |
+| 16 | M51-16-ELEMENT_BY_ENEMY | test_m5_damage.gd | PASS |
+| 17 | M51-17-PROTECT_USES_RECIPIENT_DEFENSE | test_m5_damage.gd | PASS |
+| 18 | M51-18-UNAUTHORIZED_REDIRECT_REJECTED | test_m5_damage.gd | PASS |
+| 19 | M51-19-GUARD_THEN_BARRIER | test_m5_damage.gd | PASS |
+| 20 | M51-20-FOCUS_WARD_NOT_HP_BARRIER | test_m5_damage.gd | PASS |
+| 21 | M51-21-ZERO_DAMAGE_NOT_CHIP_ONE | test_m5_damage.gd | PASS |
+| 22 | M51-22-MULTIHIT_TWO_REAL_DAMAGE_EVENTS | test_m5_damage.gd | PASS |
+| 23 | M51-23-UNKNOWN_ELEMENT_FAILS_CLOSED | test_m5_damage.gd | PASS |
+| 24 | M51-24-REAL_HP0_CALLS_M4_INVALIDATOR | test_m5_damage.gd | PASS |
+| 25 | M51-25-CHANTLESS_REAL_DAMAGE_BEFORE_OUTCOME | test_m5_damage.gd | PASS |
+| 26 | M51-26-CHANTLESS_AP_MP_ONCE | test_m5_damage.gd | PASS |
+| 27 | M51-27-CHANTLESS_NOT_DEFERRED | test_m5_damage.gd | PASS |
+| 28 | M51-28-FULL_NO_EARLY_DAMAGE | test_m5_damage.gd | PASS |
+| 29 | M51-29-BASIC_ATTACK_REAL_DAMAGE | test_m5_damage.gd | PASS |
+| 30 | M51-30-BASIC_STILL_ONLY_ONE_M2_RESOURCE_TRANSACTION | test_m5_damage.gd | PASS |
+| 31 | M51-31-REACTION_EXPLICIT_PASS_REQUIRED | test_m5_damage.gd | PASS |
+| 32 | M51-32-ENEMY_ACTION_REAL_TWO_HITS | test_m5_damage.gd | PASS |
+| 33 | M51-33-ENEMY_DAMAGE_BEFORE_OUTCOME | test_m5_damage.gd | PASS |
+| 34 | M51-34-ENEMY_INTENT_NOT_REPLACED | test_m5_damage.gd | PASS |
+| 35 | M51-35-FULL_RELEASE_DOES_REAL_HP | test_m5_damage.gd | PASS |
+| 36 | M51-36-FULL_RELEASE_BEFORE_AP_DRAW | test_m5_damage.gd | PASS |
+| 37 | M51-37-FULL_CARD_UNIQUE_DISCARD | test_m5_damage.gd | PASS |
+| 38 | M51-38-FULL_NO_SECOND_PAYMENT | test_m5_damage.gd | PASS |
+| 39 | M51-39-INITIAL_IMMUTABLE | test_m5_damage.gd | PASS |
+| 40 | M51-40-SAME_TAPE_EVENT_HASH | test_m5_damage.gd | PASS |
+| 41 | M51-41-SAME_TAPE_FINAL_HASH | test_m5_damage.gd | PASS |
+| 42 | M51-42-STALE_REPLAY_REFUSED | test_m5_damage.gd | PASS |
+| 43 | M51-43-CONTENT_CHANGE_ALTERS_HASH | test_m5_damage.gd | PASS |
+| 44 | M51-44-REAL_DAMAGE_NOT_FREE_FIXTURE | test_m5_damage.gd | PASS |
+
+Replay Seed 20261014, 10 accepted commands; Initial SHA256 ed2a46bfe3d0483d1da78c21ea249bf467219ab775d54415dd5e40dd8e44f609; Event SHA256 62f244f463941b9b9d2d79344bdc53b308554d70571554015f71fafe72810db8; Final SHA256 9988c6cd48b65ab98a5acb269906e52cf9e960d3f79aac23c50dd4b3634608b2. M5.2–5.5 and full playable Boss battle are not verified.
