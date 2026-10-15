@@ -422,3 +422,15 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | P4.5–6 scope | 使用者續作及「授權擴充既有M5」 | P4_TASK_CONTRACT.md | Lv40領域／多策略研究Agent施工中 | IMPLEMENTATION_IN_PROGRESS；Provisional |
 | P4 Round2 integration review | 使用者Review active branches / Round2 / quota<30%交接 | integration/p4-reviewed-20261015；詳docs/handoff/P4_ROUND2_REVIEW_CHECKPOINT_20261015.md | Domain第三次83/83、component24/24、l10n198/198、readmodel29/29；edges第二次32/37 FAIL；原始logs outputs/p4_review | NOT VERIFIED；不得合併master；沒有新GUI/完整regression/CI證據 |
 | P4 Round2 tooling fixes | QA Skill / UI02 / Contract | balance/profile helpers與負向測試；staging keyboard guard | 新增metrics28 assertions及staging2 assertions，NOT_EXECUTED | IMPLEMENTED_NOT_VERIFIED；quota28%停止施工 |
+
+## P4 Round 2 Reviewed Integration — supplementary headless evidence 2026-10-15
+
+| Scope | Source / CI | Result | Verification level |
+|---|---|---|---|
+| Lv40 edges Last Spell HP Barrier on-hit disruption | `tests/test_lv40_edges.gd` @ `8650740a`; [Actions #38714794598](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38714794598) | **37/37 PASS** on **third and final permitted attempt**; 2 earlier failed/timeout logs retained | Scoped Headless VERIFIED |
+| Lv40 Content / Components / l10n / ReadModel / Metrics / Staging | `26c29daa`, [Actions #38715501522](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38715501522) | 37/37,24/24,198/198,29/29,35/35,30/30,10/10 | Scoped Headless VERIFIED; **Staging is blocked by design** |
+| M5 Core, 100 seeds, 4 Legacy, P4.1–4 headless | same CI `26c29daa` | M1–M5.5 **1238/1238**; 100 seeds 110/110; 4 Legacy; 8/8,36/36,31/31,45/45,80/80 | Scoped Headless VERIFIED, **not actual GUI or P4.5** |
+| Prior Lv40 Domain acceptance | `outputs/p4_review/domain_attempt3.log` | Third attempt **83/83 PASS**; never rerun fourth time in CI | Previous local evidence only |
+| P4.4 full GUI / P4.5 Lv40 playable / P4.6 | [Checkpoint](../handoff/P4_ROUND2_REVIEW_CHECKPOINT_20261015.md) | 14/16 GUI third attempt; owner rejected rerun; Lv40 playable staging, 4×100 parity and real player playtest not run | **NOT VERIFIED / DO NOT MERGE MASTER** |
+
+A known hidden Godot `ERROR` caused by `int()` overflow was fixed by prechecking decimal length before conversion; first failed [Actions #38714505252](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38714505252) and later two successful runs remain distinct. Edges fourth rerun requires new explicit owner permission; Workflow Push/PR skips it by design. Numeric values remain `BALANCE_PROVISIONAL`.

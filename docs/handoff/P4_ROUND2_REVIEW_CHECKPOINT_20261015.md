@@ -115,3 +115,52 @@ Godot官方文件入口已列於 architecture/UIUX/QA Skill references；先讀�
 Rendering/asset skills已檢查產線需求，本checkpoint未新增美術；既有素材/授權保持原樣，不宣稱已完成新Asset QA。
 Singer僅擁有6個balance/profile工具與測試檔修正；James只讀UIreview。主控擁有Domain/UI/合併/報告，統一執行Godot。
 
+
+
+## Review continuation — 2026-10-15（GitHub 分支實際執行；不是 master / GUI 驗收）
+
+> **Checkpoint remains NOT VERIFIED / DO NOT MERGE MASTER.** 最新受測 **程式碼** `26c29daa315340ba46db34cfb21a56a1a828fd45`；與本次交接相關之第二輪 [Actions #38715501522](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38715501522) 已 **completed/success**。最後只增加 docs 時不自動重跑 CI；須以受測 SHA 回報。分支仍是 `integration/p4-reviewed-20261015`，沒有 PR 或 master merge。
+
+### 本次修復與可重現根因
+
+1. **Lv40 Last Spell / Casting Stability edge** — `tests/test_lv40_edges.gd` 原情境在第三次 B03 命中前可能先使朱音 HP0，Last Spell 按 CORE-02 正確取消，導致測試無法走到預期的 destabilized-weaken 分支。測試 setup 現以 `hp_barriers={"B":4000.0}` 吸收 HP 傷害，但 B03 **命中仍會呼叫 on-hit Casting Disruption**。仍維持真實 B03 hit、5 Stability 干擾、兩次閾值與 `planned_resolve_round=4` 既有 oracle；**沒有允許 CONCENTRATING 的角色 Guard**、沒有放寬任何核准規則。
+2. **Profile CLI overflow / log false green** — 失敗 [Actions #38714505252](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38714505252) 的 `test_p4_profile_metrics` 顯示 30/30 PASS，但呼叫 `int("18446744073709551621")` 產生 Godot `ERROR`；`assert_godot_logs.py` 正確阻擋。已在 `tools/qa/p4_profile_metrics.gd` 以 ASCII 十進位、去除前導零、長度/範圍預檢**先擋溢位再轉 int**；沒有隱藏錯誤或降低測試斷言。
+3. **CI triggers / expiry** — Workflow 已允許此 integration 分支 Push 檢驗，也追蹤 `tools/qa/**`、`tools/balance/**`；新增 Content、Components、Localization、ReadModel、Balance Metrics、Profile Metrics、UI Staging 的 exact-count gates。Lv40 Edge 測試第三次已用盡：未來 **Push / PR 自動跳過**，僅在新獲使用者明確授權並由 maintainer 手動 `workflow_dispatch` 指定 `allow_lv40_edge_rerun=true` 時才會跑，不得藉重命名或其他分支自動繞過。
+4. **UI reusability / staging** — 九個 `scripts/battle/ui/components/*.gd` 的 EOF 多餘空行已移除，原 facade、signals、控件、互動不變；`battle_screen.gd` Staging 的過時「Domain/ReadModel/Localization 未合併」警告改成真實「尚未接入 Lv40 playable Controller」訊息，仍 fail-closed，沒有解除 blocked gate。
+
+### 真正執行過的證據（分別對應受測 Source SHA）
+
+| Group | 數值與證據 | 定義與限制 |
+|---|---|---|
+| Lv40 Edge 最後第 3 次 | [Actions #38714794598](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38714794598) — **37/37 PASS、no Godot ERROR**；code SHA `8650740a076280930926b92048f98c9749d9c169` | 先前 data-attempt1 timeout；edges-attempt2 32/37 FAIL；本次是剩餘且最後一次；後續 **NOT_RERUN** |
+| Lv40 Content | 37/37 PASS | 內容版本 fixture；非全面人工 parity |
+| Component contract | 24/24 PASS | headless 元件契約，非完整操作 GUI |
+| Localization | 198/198 PASS | 翻譯 key/字串內容測試，不是兩語畫面目視 QA |
+| ReadModel | 29/29 PASS | Domain snapshot 投影契約，不是可玩完成 |
+| Balance metrics pure test | 35/35 PASS | 統計 helper 正確；**4 strategies ×100 seeds 研究 NOT EXECUTED** |
+| Profile metrics pure test | 30/30 PASS，logs ERROR=0 | CLI/unit test；**GPU/CPU 實測 NOT EXECUTED** |
+| Lv40 UI staging | 10/10 PASS | 驗證拒絕輸入/阻擋仍成立；**Lv40 真 UI NOT IMPLEMENTED** |
+| Lv40 Domain 83-case | 83/83 PASS（本 checkpoint 原始 `domain_attempt3.log`） | **先前第3次紀錄；本次雲端 CI 沒再跑第4次**。本輪沒有改動 `scripts/domain/m5/lv40/` |
+| Full M1–M5.5 baseline | 1,238/1,238 (含100 seeds) | 由原 [Actions #38715501522](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38715501522) 全部前置 Domain steps Success，M5.5 100 seeds 110/110 PASS |
+| Legacy smoke | 4 scripts PASS | 同一個成功的 GitHub Actions job |
+| P4.1/P4.2/P4.3 | 8/8、36/36、31/31 PASS | 同一成功 job，仍屬 Headless |
+| P4.4 Headless | feedback 45/45、edge 80/80 PASS | **不等於使用者已拒絕第四次的 P44 GUI Input 14/16 成功** |
+| Final code ref CI | [Actions #38715501522](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38715501522) — **completed/success**, SHA `26c29daa315340ba46db34cfb21a56a1a828fd45` | Edge 第3次已在上一個成功 Run 驗證，故此 CI 明確 **skipped** Edges，不能把 skipped 當新 PASS |
+
+兩份成功 Workflow 都可在 GitHub Actions 的 Job Log 查到原始摘要；`assert_godot_logs.py` 對非故意失敗 probe 的錯誤採嚴格拒絕。首個失敗 workflow 的 Godot 64-bit 溢位日誌保留為修復證據。
+
+### Lv40 內容 Source-of-Truth 對照範圍（部分已核對，非全面）
+
+- `lv40_encounter.gd` 三張各 12 SP 牌組與 `docs/combat/26` 的 `REN/AKANE/TSUMUGI_STARTER_V0_3` 完整清單一致。
+- `lv40_content.gd` 的 `Boss HP=2700`、`Break max=22`、`PAtk=417`、`MAtk=434` 是 `docs/combat/29` 的 **候選 A**，而不是 `docs/combat/27` 歷史 Boss HP3000 / Break30。仍屬 BALANCE_PROVISIONAL。
+- `U01–U05` 的 starter 權限及部分成本／魔法傷害係數與 `26` 一致；`B03` on-hit Casting Disruption 由新的 Edges 真正測試。
+- **未完成**全部 `scripts/domain/m5/lv40/*` 每一技能/狀態/例外分支與 `25/26/27/29` 的逐規則審核；不能升級成 `CONTENT_PARITY_VERIFIED`。歷史 Phase3 分支仍未逐 patch 審查；禁止直接合併覆寫。
+
+### 必須保留的阻擋與下一階段 Owner Gate
+
+- **P4.4 GUI**：第三次 14/16，使用者明確拒絕第四次；本次完全**沒有**實際重跑 GUI Input suite。要跑第四次必須先得到使用者新且明確的授權。
+- **P4.5 Lv40 UI**：Staging 10/10 只證明 `BattleScreen` 阻擋啟動、鍵盤不會破壞空 Snapshot；尚未建立真正 Lv40 ContentConfig → Factory/Adapter → Controller → 選目標/模式/Last Spell/Reaction → 完整 playable Boss Battle 的人工／自動化 Gate。保留原有 fixture 與負例，不得直接把 staging gate 換成 true。
+- **P4.6**：四策略 × 100 Seed 正式 Lv40 Godot 研究、GPU/CPU GUI profiling、真人 playtest／平衡決策 **NOT EXECUTED**。
+- **Git**：本輪只在 `integration/p4-reviewed-20261015` 推進並保存；未合併 master。使用者原工作樹、兩個 SimpleCards cache 與未提交資產不應被破壞；GitHub API 操作不會讀寫使用者本地工作目錄。
+
+**狀態總結：Branch Headless Review QA PASS（明列 scope），P4.4 GUI NOT VERIFIED、P4.5 Playable NOT VERIFIED、P4.6 NOT VERIFIED、Full Round2 Review / MASTER MERGE BLOCKED。**

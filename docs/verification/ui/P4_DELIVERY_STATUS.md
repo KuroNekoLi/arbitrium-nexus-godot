@@ -49,3 +49,11 @@ Kenney frame CC0、既有SimpleCards2.13 MIT，完整notice已補回；NotoSansT
 使用者已明確批准「授權擴充既有 M5」，範圍為已文件化的 Lv40 內容，不授權建立第二引擎或升格 Provisional 平衡。Lv40 新模組內容測試32/32通過；正式 M5/M3/M4 入口仍未接線，因此不是可玩 Boss 驗收。Domain 子 Agent 因使用額度限制中止，現有檔案已保留，由主 Agent 接手審查。平衡工具僅解析檢查，尚未執行400場研究或真人遊玩。
 
 下一個必要 Gate 是 P4.4 額外 GUI 重跑授權／驗收，再獨立 commit、push、CI，才進入 P4.5 正式整合。沒有商售美術、完整Boss遊玩、正式balance或export完成主張。
+
+## P4 Round 2 Reviewed Integration (supplementary evidence, NOT Phase 4 playable gate)
+
+- Checked branch `integration/p4-reviewed-20261015`, source SHA `26c29daa315340ba46db34cfb21a56a1a828fd45` [Actions #38715501522](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38715501522): **completed/success**, M1–M5.5 1238 tests, 100 seeds, 4 Legacy, P4.1=8, P4.2=36, P4.3=31, P4.4 headless=45+80 and new Lv40/content, component, l10n, readmodel, metrics, staging suites all passed.
+- One prior CI [#38714505252](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38714505252) caught a Profile `int()` overflow Godot ERROR even though 30/30 asserted PASS. Corrected; the exact unmodified 30-case suite then passed with clean error log.
+- Lv40 Edges third and final allowed test: **37/37** in [Actions #38714794598](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38714794598); newer CI **skips** it to respect exhausted test budget. Lv40 Domain 83/83 from old local attempt3 is **not** rerun.
+- **NOT VERIFIED:** P4.4 original real-GUI input 14/16 (owner refused fourth attempt), real playable Lv40 UI (staging 10/10 asserts it is blocked), P4.6 4×100 strategy gameplay research, real GPU profiling, real player playtesting and human balance approval.
+- Details and remaining Owner Gates in [Round2 Review Checkpoint](../../handoff/P4_ROUND2_REVIEW_CHECKPOINT_20261015.md). **No master merge or playable claim.**
