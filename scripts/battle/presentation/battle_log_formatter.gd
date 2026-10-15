@@ -6,7 +6,7 @@ const Mapper = preload("res://scripts/battle/presentation/battle_cue_mapper.gd")
 const CATEGORY_COLORS: Dictionary = {
 	"DAMAGE": Color("#FF7A6B"), "ACTION": Color("#F2C46D"), "CAST": Color("#C59BFF"),
 	"DEFENSE": Color("#6FD6FF"), "STATUS": Color("#FFA65C"), "OUTCOME": Color("#FFE08A"),
-	"GENERIC": Color("#7F93A3"),
+	"RESOURCE": Color("#7FE0C8"), "INTENT": Color("#FF8FB8"), "GENERIC": Color("#7F93A3"),
 }
 const CUE_CATEGORY: Dictionary = {
 	"CAST_START": "CAST", "CAST_RELEASE": "CAST", "CAST_INVALID": "CAST", "INTERRUPT": "CAST",
@@ -18,8 +18,25 @@ const CUE_CATEGORY: Dictionary = {
 	"EXPOSED": "STATUS", "COMBO": "ACTION", "VICTORY": "OUTCOME", "DEFEAT": "OUTCOME",
 }
 
-## translate: Callable(key) -> String; name_of: Callable(actor_id) -> String.
-static func rows_for(events: Array, translate: Callable, name_of: Callable) -> Array:
+## Resource-ledger events wrap their payload in core_event.event.details.
+static func _core_details(detail: Dictionary) -> Dictionary:
+	var core: Variant = detail.get("core_event", {})
+	if core is Dictionary and core.get("event", {}) is Dictionary:
+		var inner: Variant = core.get("event", {}).get("details", {})
+		if inner is Dictionary:
+			return inner
+	return {}
+
+static func _targets(intent: Dictionary, name_of: Callable) -> String:
+	var names: PackedStringArray = []
+	for id: Variant in intent.get("target_ids", []):
+		names.append(name_of.call(str(id)))
+	return ", ".join(names)
+
+## translate: Callable(key) -> String; name_of: Callable(actor_id) -> String;
+## skill_of: optional Callable(skill_id) -> String (falls back to BATTLE_<SKILL_ID>).
+static func rows_for(events: Array, translate: Callable, name_of: Callable,
+		skill_of: Callable = Callable()) -> Array:
 	var rows: Array = []
 	for event: Dictionary in events:
 		var seq: int = int(event.get("event_seq", -1))
@@ -28,7 +45,30 @@ static func rows_for(events: Array, translate: Callable, name_of: Callable) -> A
 		var command_id: String = str(event.get("command_id", ""))
 		var row: Dictionary = {"seq": seq, "seq_end": seq, "kind": kind, "category": "GENERIC",
 			"text": "", "command_id": command_id}
-		if kind == "HPDamageApplied" and detail.has("amount") and detail.has("recipient_id"):
+		var core: Dictionary = _core_details(detail)
+		var intent: Dictionary = detail.get("public_intent", {}) if detail.get("public_intent", {}) is Dictionary else {}
+		if kind == "SPCostReservedOnly" and core.has("actor_id") and core.has("ap_paid") and core.has("mp_cost"):
+			row["category"] = "RESOURCE"
+			row["text"] = translate.call("BATTLE_LOG_COST") % [
+				name_of.call(str(core["actor_id"])), int(core["ap_paid"]), int(core["mp_cost"])]
+		elif kind == "PlayerResourcesClosed" and core.has("ap_remaining") and core.has("rp_created"):
+			row["category"] = "RESOURCE"
+			row["text"] = translate.call("BATTLE_LOG_PHASE_CLOSED") % [
+				int(core["ap_remaining"]), int(core["rp_created"])]
+		elif kind == "EnemyActionDeclared" and intent.has("skill_id") and intent.has("enemy_id"):
+			var skill_id: String = str(intent["skill_id"])
+			var skill_name: String = skill_of.call(skill_id) if skill_of.is_valid() \
+				else translate.call("BATTLE_" + skill_id.to_upper())
+			row["category"] = "INTENT"
+			row["text"] = translate.call("BATTLE_LOG_ENEMY_DECLARED") % [
+				name_of.call(str(intent["enemy_id"])), skill_name, _targets(intent, name_of)]
+		elif kind == "BossIntentCommitted" and intent.has("enemy_id"):
+			row["category"] = "INTENT"
+			row["text"] = translate.call("BATTLE_LOG_INTENT_COMMITTED") % name_of.call(str(intent["enemy_id"]))
+		elif kind == "ReactionWindowOpened":
+			row["category"] = "DEFENSE"
+			row["text"] = translate.call("BATTLE_LOG_REACTION_OPEN")
+		elif kind == "HPDamageApplied" and detail.has("amount") and detail.has("recipient_id"):
 			row["category"] = "DAMAGE"
 			row["text"] = translate.call("BATTLE_LOG_DAMAGE") % [
 				name_of.call(str(detail["recipient_id"])), int(detail["amount"])]

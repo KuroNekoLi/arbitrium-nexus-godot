@@ -40,8 +40,10 @@ func _make_chip(parent: Node, name: String, accent: Color) -> Label:
 	chip.add_theme_stylebox_override("normal", style)
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.autowrap_mode = TextServer.AUTOWRAP_OFF
-	chip.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	chip.clip_text = true
+	# Short chips must report their text width as minimum size; ellipsis
+	# trimming lets a shrink-sized Label collapse to an empty pill (V3.5.5 VIS09).
+	chip.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	chip.clip_text = false
 	parent.add_child(chip)
 	return chip
 

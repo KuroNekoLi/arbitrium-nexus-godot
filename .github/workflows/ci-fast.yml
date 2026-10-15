@@ -132,13 +132,13 @@ jobs:
             'test_p4_v34_roster_command:V34_ROSTER_COMMAND_REPORT:102' \
             'test_p4_v34_legacy_roster:V34_LEGACY_ROSTER_REPORT:18' \
             'test_p4_v35_resources:V35_RESOURCES_REPORT:32' \
-            'test_p4_v35_party:V35_PARTY_REPORT:53' \
-            'test_p4_v35_command:V35_COMMAND_REPORT:26' \
-            'test_p4_v35_intent:V35_INTENT_REPORT:31' \
-            'test_p4_v35_log:V35_LOG_REPORT:26'; do
+            'test_p4_v35_party:V35_PARTY_REPORT:57' \
+            'test_p4_v35_command:V35_COMMAND_REPORT:30' \
+            'test_p4_v35_intent:V35_INTENT_REPORT:35' \
+            'test_p4_v35_log:V35_LOG_REPORT:33'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=24 assertions=1105 legacy=4 failed=0'
+          echo 'CI_P4_CONTRACTS_REPORT suites=24 assertions=1124 legacy=4 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
       - name: Upload P4 contract evidence
         if: always()

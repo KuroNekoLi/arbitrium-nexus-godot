@@ -76,6 +76,25 @@ func run() -> void:
 	var partial: Array = Formatter.rows_for([
 		{"event_seq": 5, "kind": "HPDamageApplied", "details": {"amount": 3}}], tr_id, names)
 	check(partial[0]["category"] == "GENERIC", "V35L-FMT-MISSING-FIELD-NOT-INFERRED")
+	# V3.5.5 revision: resource / intent / reaction kinds restate their own fields.
+	var wrap := func(inner: Dictionary) -> Dictionary: return {"core_event": {"event": {"details": inner}}}
+	var skills := func(id: String) -> String: return "S" + id
+	var typed: Array = Formatter.rows_for([
+		{"event_seq": 20, "kind": "SPCostReservedOnly", "details": wrap.call({"actor_id": "C", "ap_paid": 1, "mp_cost": 2})},
+		{"event_seq": 21, "kind": "PlayerResourcesClosed", "details": wrap.call({"ap_remaining": 5, "rp_created": 5})},
+		{"event_seq": 22, "kind": "EnemyActionDeclared", "details": {"public_intent":
+			{"enemy_id": "Boss", "skill_id": "boss_strike", "target_ids": ["A", "B"]}}},
+		{"event_seq": 23, "kind": "ReactionWindowOpened", "details": {}},
+		{"event_seq": 24, "kind": "SPCostReservedOnly", "details": wrap.call({"actor_id": "C"})},
+	], tr_id, names, skills)
+	check(typed[0]["category"] == "RESOURCE" and typed[0]["text"] == screen.tr("BATTLE_LOG_COST") % ["NC", 1, 2],
+		"V35L-FMT-COST-FIELDS")
+	check(typed[1]["category"] == "RESOURCE" and typed[1]["text"] == screen.tr("BATTLE_LOG_PHASE_CLOSED") % [5, 5],
+		"V35L-FMT-PHASE-CLOSED-FIELDS")
+	check(typed[2]["category"] == "INTENT" and typed[2]["text"] ==
+		screen.tr("BATTLE_LOG_ENEMY_DECLARED") % ["NBoss", "Sboss_strike", "NA, NB"], "V35L-FMT-DECLARED-FIELDS")
+	check(typed[3]["category"] == "DEFENSE", "V35L-FMT-REACTION-OPEN")
+	check(typed[4]["category"] == "GENERIC", "V35L-FMT-COST-MISSING-FIELD-NOT-INFERRED")
 
 	# Real Domain: play a full chant then end the phase.
 	var before: String = Model.state_hash(screen.snapshot)
@@ -106,6 +125,12 @@ func run() -> void:
 	for seq: int in real_seqs:
 		max_seq = maxi(max_seq, seq)
 	check(int(shown[-1]["seq_end"]) == max_seq, "V35L-REAL-NEWEST-IS-LAST-EVENT")
+	var meaningful: int = shown.filter(func(r: Dictionary) -> bool: return r["category"] != "GENERIC").size()
+	check(meaningful * 2 >= shown.size(), "V35L-REAL-ROWS-MOSTLY-SPECIFIC")
+	var no_raw_keys := true
+	for row: Dictionary in shown:
+		no_raw_keys = no_raw_keys and not str(row["text"]).contains("BATTLE_")
+	check(no_raw_keys, "V35L-REAL-NO-UNTRANSLATED-KEYS")
 	var row_nodes: Array = log_panel.entry_list.get_children()
 	check(row_nodes.size() == shown.size() and str(row_nodes[-1].get_node("Seq").text) == Formatter.seq_label(shown[-1]),
 		"V35L-REAL-ROW-NODES-MATCH")
@@ -127,7 +152,9 @@ func run() -> void:
 	for row: Dictionary in rebuilt.visible_rows():
 		en_ok = en_ok and row["text"] == Formatter.rows_for(
 			captured.filter(func(e: Dictionary) -> bool: return int(e["event_seq"]) >= int(row["seq"]) and int(e["event_seq"]) <= int(row["seq_end"])),
-			tr_id, func(id: String) -> String: return screen.tr(str(screen.view_model["actor_name_keys"].get(id, "BATTLE_HERO_" + id))))[0]["text"]
+			tr_id, screen.log_actor_name,
+			func(skill: String) -> String: return screen.tr(str(screen.config.get("intent_name_keys", {}).get(
+				skill, "BATTLE_" + skill.to_upper()))))[0]["text"]
 	check(en_ok, "V35L-LOCALE-RETRANSLATED")
 	for dim: Vector2i in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		root.size = dim

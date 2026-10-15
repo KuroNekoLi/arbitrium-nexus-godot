@@ -105,11 +105,18 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 	hud.get_node("BattleLogPanel").append_rows(_log_rows(events))
 	director.enqueue(events,command)
 
+## Same name fallbacks as the visible panels: EnemyStatus titles the Boss with
+## BATTLE_TITLE and the party roster uses BATTLE_HERO_<id>.
+func log_actor_name(id: String) -> String:
+	var fallback: String = "BATTLE_TITLE" if id == "Boss" else "BATTLE_HERO_" + id
+	return tr(str(view_model.get("actor_name_keys", {}).get(id, fallback)))
+
 func _log_rows(events: Array) -> Array:
-	var name_keys: Dictionary = view_model.get("actor_name_keys", {})
 	return LogFormatter.rows_for(events,
 		func(key: String) -> String: return tr(key),
-		func(id: String) -> String: return tr(str(name_keys.get(id, "BATTLE_HERO_" + id))))
+		log_actor_name,
+		func(skill_id: String) -> String: return tr(str(config.get("intent_name_keys", {}).get(
+			skill_id, "BATTLE_" + skill_id.to_upper()))))
 
 func present(state: Dictionary) -> void:
 	snapshot = state.duplicate(true)

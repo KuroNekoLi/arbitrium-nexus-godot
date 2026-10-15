@@ -130,3 +130,8 @@ BATTLE_END_SUB,Pass to enemy phase,結束我方階段
 BATTLE_INTENT_TARGET,Targeted: %s,目標：%s
 BATTLE_LOG_DAMAGE,%s takes %d damage,%s 受到 %d 傷害
 BATTLE_LOG_ACTION,%s action settled,%s 行動結算
+BATTLE_LOG_COST,"%s pays %d AP · %d MP","%s 支付 %d AP · %d MP"
+BATTLE_LOG_PHASE_CLOSED,Phase closed: %d AP left → %d RP,階段結束：剩餘 %d AP → %d RP
+BATTLE_LOG_ENEMY_DECLARED,%s declares %s → %s,%s 宣告 %s → %s
+BATTLE_LOG_INTENT_COMMITTED,%s reveals its intent,%s 公開了意圖
+BATTLE_LOG_REACTION_OPEN,Reaction window opened,反應窗口開啟

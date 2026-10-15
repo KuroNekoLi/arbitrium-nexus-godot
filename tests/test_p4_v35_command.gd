@@ -54,6 +54,17 @@ func run() -> void:
 			check(icons_ok, "V35C-ICONS-" + tag)
 			check(subs_ok, "V35C-SUBTITLES-TRANSLATED-" + tag)
 			check(inside_ok, "V35C-SUBTITLE-INSIDE-NONBLOCKING-" + tag)
+			# Titles shrink-to-fit (>= 11pt) instead of collapsing to "Last Sp…".
+			var titles_ok := true
+			for key: String in KEYS:
+				var button: Button = commands.command_buttons[key]
+				var style: StyleBox = button.get_theme_stylebox("normal")
+				var room: float = button.size.x - style.get_margin(SIDE_LEFT) - style.get_margin(SIDE_RIGHT) \
+					- float(button.get_theme_constant("icon_max_width") + button.get_theme_constant("h_separation"))
+				var size: int = button.get_theme_font_size("font_size")
+				titles_ok = titles_ok and size >= 11 and button.get_theme_font("font").get_string_size(
+					button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= room + 0.5
+			check(titles_ok, "V35C-TITLES-FIT-" + tag)
 	check(Model.state_hash(screen.snapshot) == before, "V35C-LAYOUT-NO-DOMAIN-CHANGE")
 
 	root.size = Vector2i(1280, 720)

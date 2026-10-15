@@ -39,6 +39,15 @@ func card_id(state: Dictionary, actor: String, definition: String) -> String:
 func encloses(outer: Control, inner: Control) -> bool:
 	return outer.get_global_rect().grow(1.0).encloses(inner.get_global_rect())
 
+## Empty labels pass; non-empty labels must be at least as wide as their text
+## (catches ellipsis-collapsed pills that render as empty capsules).
+func text_fits(label: Label) -> bool:
+	if label.text.is_empty():
+		return true
+	var width: float = label.get_theme_font("font").get_string_size(label.text,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x
+	return label.visible and label.size.x + 0.5 >= width
+
 func run() -> void:
 	root.size = Vector2i(1280, 720)
 	var screen: Control = Scene.instantiate()
@@ -73,6 +82,10 @@ func run() -> void:
 				"V35P-BADGE-SLOT-ON-PORTRAIT-" + tag)
 			check(hero_a.get_node("Layout/Stats/Subtitle").get_theme_stylebox("normal") is StyleBoxFlat,
 				"V35P-STATUS-PILL-" + tag)
+			var pills_ok := true
+			for id: String in ["A", "B", "C"]:
+				pills_ok = pills_ok and text_fits(hud.roster[id].get_node("Layout/Stats/Subtitle"))
+			check(pills_ok, "V35P-STATUS-PILL-TEXT-VISIBLE-" + tag)
 			var header: Control = hud.get_node("TopBar")
 			var resource: Control = header.get_node("ResourcePanel")
 			check(resource.size.y <= 64 and encloses(resource, header.rp_value) and encloses(resource, header.ap_value),

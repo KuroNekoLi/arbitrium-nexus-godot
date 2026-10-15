@@ -75,9 +75,29 @@ func _add_command(parent: Node, key: String, kind: String,
 	subtitle.offset_bottom = -2
 	action.add_child(subtitle)
 	action.tooltip_text = tr(key) + "\n" + subtitle.text
+	action.set_meta("title_font_size", 15 if Visual.is_emphasis(key) else 14)
+	action.resized.connect(_fit_title.bind(action))
 	command_buttons[key] = action
 	subtitles[key] = subtitle
 	return action
+
+const TITLE_MIN_FONT: int = 11
+
+## Steps the title font down (base → 11) until it fits the button's text area;
+## ellipsis stays as the final fallback. Presentation only (V3.5.5 VIS04/10).
+func _fit_title(action: Button) -> void:
+	var base: int = int(action.get_meta("title_font_size", 14))
+	var style: StyleBox = action.get_theme_stylebox("normal")
+	var room: float = action.size.x - style.get_margin(SIDE_LEFT) - style.get_margin(SIDE_RIGHT)
+	if action.icon != null:
+		room -= float(action.get_theme_constant("icon_max_width") + action.get_theme_constant("h_separation"))
+	var font: Font = action.get_theme_font("font")
+	var chosen: int = base
+	while chosen > TITLE_MIN_FONT and \
+			font.get_string_size(action.text, HORIZONTAL_ALIGNMENT_LEFT, -1, chosen).x > room:
+		chosen -= 1
+	if action.get_theme_font_size("font_size") != chosen:
+		action.add_theme_font_size_override("font_size", chosen)
 
 func _ready() -> void:
 	var commands: VBoxContainer = UI.column(self)

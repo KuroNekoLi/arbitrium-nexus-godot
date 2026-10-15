@@ -48,6 +48,9 @@ func _ready() -> void:
 	for item: Label in [name_label, hp_label, mana_label, subtitle]:
 		item.autowrap_mode = TextServer.AUTOWRAP_OFF
 		item.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	# The status pill is SHRINK_BEGIN; with ellipsis trimming its minimum width is
+	# ~0 and the text vanishes (V3.5.5 VIS01). Status labels are short words.
+	subtitle.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 	name_label.add_theme_font_size_override("font_size", 15)
 	hp_label.add_theme_font_size_override("font_size", 12)
 	mana_label.add_theme_font_size_override("font_size", 12)

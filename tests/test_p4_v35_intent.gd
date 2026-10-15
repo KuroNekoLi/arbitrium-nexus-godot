@@ -20,6 +20,15 @@ func check(ok: bool, id: String) -> void:
 func encloses(outer: Control, inner: Control) -> bool:
 	return outer.get_global_rect().grow(1.0).encloses(inner.get_global_rect())
 
+## Non-empty chips must be at least as wide as their text (catches
+## ellipsis-collapsed chips that render as empty capsules, V3.5.5 VIS09).
+func text_fits(label: Label) -> bool:
+	if label.text.is_empty():
+		return true
+	var width: float = label.get_theme_font("font").get_string_size(label.text,
+		HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size")).x
+	return label.visible and label.size.x + 0.5 >= width
+
 func sample(targets: Array, hits: int) -> Array:
 	return [{"name_key": "BATTLE_ATTACK", "skill_id": "ATTACK", "target_ids": targets, "hit_count": hits}]
 
@@ -64,6 +73,10 @@ func run() -> void:
 			check(inside and encloses(panel, panel.hit_chip) and encloses(panel, panel.intent_icon),
 				"V35I-MOCK-INSIDE-PANEL-" + tag)
 			check(panel.intent.text.contains("2"), "V35I-V33-DETAIL-KEPT-" + tag)
+			var fits := text_fits(panel.hit_chip)
+			for chip: Label in panel.target_badges.get_children():
+				fits = fits and text_fits(chip)
+			check(fits, "V35I-CHIP-TEXT-VISIBLE-" + tag)
 	check(Model.state_hash(screen.snapshot) == before, "V35I-MOCK-NO-DOMAIN-CHANGE")
 
 	# Withheld intent / no targets / no hit_count: nothing invented.
