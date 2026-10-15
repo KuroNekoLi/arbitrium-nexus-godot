@@ -1,6 +1,6 @@
 # Phase 3 M5.2 — Status / Targeting / Barrier / HP Lifecycle Engineering Note
 
-**Status: IMPLEMENTED_AWAITING_ACTUAL_CI. Not yet M5.2 verified.**
+**Status: M5.2 STATUS DOMAIN VERIFIED — HEADLESS FIXTURE SCOPE; full M5 NOT VERIFIED.**
 
 ## Authority and predecessor
 
@@ -22,6 +22,27 @@ Read docs/combat/00–23 and docs/verification/PH3_M5_EXECUTION_PLAN.md, especia
 
 Does not complete M5.3 Boss FSM/Break/Exposed/Combo, M5.4 full multi-effect CORE-01 Outcome, M5.5 100-seed playable Boss war, actual presentation. Content-specific OnHit hit_count/status stacking and barrier absorption use VERSIONED PROVISIONAL catalogue. HP Barrier lifetime is now managed independently of Focus Ward. M5.1 numerical formula and M2 AP/MP payment remain unmodified. Do not expose legacy M4 FIXTURE_HP commands via M5 UI.
 
-## Actual CI evidence
+## Official executable acceptance — 2026-10-15 Asia/Taipei
 
-To fill after running CI: official commit/job/Godot, 48 new+941 predecessor+legacy exact counts, 48 stdout test case IDs, Seed/CommandTape hashes, errors/correction limit. Initial + at most TWO correction reruns for each failed test group. Never weaken a gameplay assertion to go green.
+Independently completed **SUCCESS** [Godot Actions #38670492488](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38670492488), job **116212229221**, tested source SHA **20e2e7da8cc841c73d9a558860681465460754a0**. Godot verified its release ZIP against SHA512 (Godot_v4.7.2-stable_linux.x86_64.zip: OK), runtime **4.7.2.stable.official.ed1daf0bf**, headless editor import PASS.
+
+**Executed: 48/48 M5.2 named Godot Domain assertions PASS; all 941/941 previous M1–M5.1 named Domain regression assertions PASS; cumulative 989/989 named Domain PASS, 0 failed, and all 4 legacy prototype headless scripts PASS.** The M5.2 independent workflow and entire preceding regression steps each exited zero; raw job logs/artifacts uploaded. This is a single successful initial CI execution: **zero correction iterations** and no assertions removed.
+
+### Actual fixed-seed replay evidence
+
+- Seed: **20261014**; actual accepted M5/M4/M3/M2 commands: **10**.
+- Initial SHA256: **c31261748b1b82c202a849c3236ef1833982dd00692cc406e7d3cabaf2cbc41c**.
+- Canonical events SHA256: **8f4f71a130323e6e8e9a6ccff69ce5310fb642c6baa74bccfd6b8fd920cc7cce**.
+- Final state SHA256: **31aa1bf68e6441d623337e2e59a78ba04400a040f2248531bcd290cb69f7e61e**.
+- Executed an actual M2-paid Burn SP on Boss, B Barrier SP on A, C HOT SP on A; an M3 publicly declared M5 true two-hit enemy action attached a valid ON_HIT status to the actual recipient; next Player Phase's deterministic status ticks resolved before Outcome/AP refill/draw; same command tape recomputed the identical M1 event/state SHA256.
+- Pure and separate actual-command scenarios validated stack cap3, REPLACE, REFRESH, IGNORE, damage-altering BUFF/DEBUFF, tagged dispel, HP Barrier expiration and FocusWard separation, strict CORE-02 DoT HP0→ActorIncapacitated→LastSpellInvalidated→ScheduledEffectCancelled event order, frozen incapacitated hand, no refund/once-use restoration, tagged M2-paid Revive (not a public free HP setter), Protect redirect to C vs on-hit status suppression without explicit follows_damage_recipient flag. These are all named individual cases in the inventory.
+
+### Source and capability boundary
+
+All skills and damage/status values in tests/fixtures/m5_2_fixture.gd remain **BALANCE_PROVISIONAL**, with versioned m5_status_definitions; StatusInstance is stored in the existing BattleState, and authoritative command ID/event_seq/RNG are preserved. M5.1's previous numerical model and cards remain regression-green. The true on-hit mechanism uses an existing M3 committed EnemyAction and M5.1 hit trace, never a client-supplied hit boolean; the registered status SP uses an owned Hand CardInstance, actual M2 AP/MP payment and Hand→Discard. In particular the current one-type-per-target HP Barrier restriction is an explicit fail-closed M5.2 engineering limitation, not an approved claim about every future shield.
+
+**M5.2 STATUS DOMAIN VERIFIED — HEADLESS FIXTURE SCOPE ONLY**. Full M5 **NOT VERIFIED**: M5.3 Boss FSM/Break/Exposed/Combo/Spell Counter and Analyze content; M5.4 fully integrated CORE-01 simultaneous action end boundary; M5.5 genuine full battle/100 fixed Seeds; full status catalog, mixed AoE target eligibility, real Last Spell success-to-HP release demonstration, actual user HUD/i18n/animations remain outside this 48-case stage.
+
+## M5.3 handoff
+
+Read docs/verification/PH3_M5_EXECUTION_PLAN.md, this engineering note, docs/verification/PH3_M5_1_ENGINEERING_NOTE.md, approved docs/combat/19,20,21,23 and the actual latest master. Preserve the single existing M2 ledger, M3 phase/reaction, M4 casting, M5 damage/status snapshots and deterministic replay. Only add Boss FSM/Break/Exposed/Combo under M5.3 authorization; never treat TEST_BALANCE provisional status numbers or trusted fixtures as content canon. M5.3 independent Godot CI must run all prior 989 named Domain assertions and four legacy runners.

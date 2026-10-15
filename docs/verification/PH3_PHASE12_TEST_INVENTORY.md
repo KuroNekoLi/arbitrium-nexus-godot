@@ -1172,3 +1172,61 @@ Official completed-success [Godot 4.7.2 CI #38668678354](https://github.com/Kuro
 | 44 | M51-44-REAL_DAMAGE_NOT_FREE_FIXTURE | test_m5_damage.gd | PASS |
 
 Replay Seed 20261014, 10 accepted commands; Initial SHA256 ed2a46bfe3d0483d1da78c21ea249bf467219ab775d54415dd5e40dd8e44f609; Event SHA256 62f244f463941b9b9d2d79344bdc53b308554d70571554015f71fafe72810db8; Final SHA256 9988c6cd48b65ab98a5acb269906e52cf9e960d3f79aac23c50dd4b3634608b2. M5.2–5.5 and full playable Boss battle are not verified.
+
+
+### M5.2 — Registered Status, real HP Barrier and Revive: 48 observed Godot named oracles (2026-10-15)
+
+Official completed-success [Godot 4.7.2 Actions #38670492488](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38670492488), tested SHA **20e2e7da8cc841c73d9a558860681465460754a0**, independent new suite **48/48 PASS**, all prior M1–M5.1 **941/941 PASS**, total **989/989 named Domain PASS** and 4 legacy headless runners PASS. Headless fixture only; not M5.3 Boss strategy or complete M5.
+
+| # | Exact actual Godot PASS case ID | Runner | Result |
+|---:|---|---|---|
+| 1 | M52-01-NO_UNPAID_STATUS_COMMAND | test_m5_status.gd | PASS |
+| 2 | M52-02-TARGET_TEAM_CHECKED | test_m5_status.gd | PASS |
+| 3 | M52-03-CARD_IN_HAND_REQUIRED | test_m5_status.gd | PASS |
+| 4 | M52-04-SP_COST_ONCE | test_m5_status.gd | PASS |
+| 5 | M52-05-REGISTERED_STATUS_CREATED | test_m5_status.gd | PASS |
+| 6 | M52-06-STATUS_HAS_SOURCE_AND_VERSION | test_m5_status.gd | PASS |
+| 7 | M52-07-NO_PREMATURE_TICK | test_m5_status.gd | PASS |
+| 8 | M52-08-AUTHORITATIVE_BARRIER_CAPACITY | test_m5_status.gd | PASS |
+| 9 | M52-09-WARD_SEPARATE_FROM_CASTING | test_m5_status.gd | PASS |
+| 10 | M52-10-MULTIPLE_REAL_STATUS_INSTANCES | test_m5_status.gd | PASS |
+| 11 | M52-11-ONE_AP_PER_PAID_CARD | test_m5_status.gd | PASS |
+| 12 | M52-12-ACTUAL_ENEMY_HIT_SHIELD | test_m5_status.gd | PASS |
+| 13 | M52-13-ENEMY_ON_HIT_STATUS_ATTACHED | test_m5_status.gd | PASS |
+| 14 | M52-14-TICK_PRIORITY_DOT_BEFORE_HOT | test_m5_status.gd | PASS |
+| 15 | M52-15-BOSS_DOT_REAL_HP | test_m5_status.gd | PASS |
+| 16 | M52-16-FIRST_TICK_REMAINING_ONE | test_m5_status.gd | PASS |
+| 17 | M52-17-TICKS_BEFORE_PLAYER_AP_REFRESH | test_m5_status.gd | PASS |
+| 18 | M52-18-CARDS_CONSERVED | test_m5_status.gd | PASS |
+| 19 | M52-19-HASH_INITIAL_UNCHANGED | test_m5_status.gd | PASS |
+| 20 | M52-20-DETERMINISTIC_EVENT_REPLAY | test_m5_status.gd | PASS |
+| 21 | M52-21-DETERMINISTIC_STATE_REPLAY | test_m5_status.gd | PASS |
+| 22 | M52-22-STABLE_RNG_NOT_FRAME_TIMER | test_m5_status.gd | PASS |
+| 23 | M52-23-STALE_TAPE_DENIED | test_m5_status.gd | PASS |
+| 24 | M52-24-CONTENT_VERSION_ALTERS_EVENTS | test_m5_status.gd | PASS |
+| 25 | M52-25-STACK_CAP_THREE | test_m5_status.gd | PASS |
+| 26 | M52-26-STACKED_DOT_REAL_DAMAGE | test_m5_status.gd | PASS |
+| 27 | M52-27-STATUS_EXPIRES_AFTER_TWO_TICKS | test_m5_status.gd | PASS |
+| 28 | M52-28-IGNORE_NO_RESET | test_m5_status.gd | PASS |
+| 29 | M52-29-REFRESH_RETAINS_INSTANCE_ID | test_m5_status.gd | PASS |
+| 30 | M52-30-BARRIER_REPLACE_NOT_ACCUMULATE | test_m5_status.gd | PASS |
+| 31 | M52-31-DISPEL_TARGETED_BY_TAG | test_m5_status.gd | PASS |
+| 32 | M52-32-BARRIER_LIFETIME_EXPIRED | test_m5_status.gd | PASS |
+| 33 | M52-33-BUFF_CHANGES_REAL_ATTACK | test_m5_status.gd | PASS |
+| 34 | M52-34-DEBUFF_CHANGES_DEFENSE | test_m5_status.gd | PASS |
+| 35 | M52-35-LAST_LEGALLY_COMMITS | test_m5_status.gd | PASS |
+| 36 | M52-36-DOT_HP0_IN_SAME_BOUNDARY | test_m5_status.gd | PASS |
+| 37 | M52-37-CORE02_STRICT_ORDER | test_m5_status.gd | PASS |
+| 38 | M52-38-NO_LAST_REFUND_OR_RESTORED_QUOTA | test_m5_status.gd | PASS |
+| 39 | M52-39-INCAPACITATED_HAND_FROZEN | test_m5_status.gd | PASS |
+| 40 | M52-40-ORDINARY_HEAL_CANNOT_REVIVE | test_m5_status.gd | PASS |
+| 41 | M52-41-ACTUAL_PAID_REVIVE | test_m5_status.gd | PASS |
+| 42 | M52-42-REVIVE_NEVER_RECREATES_LAST | test_m5_status.gd | PASS |
+| 43 | M52-43-REVIVE_PAYMENT_ONLY_ONCE | test_m5_status.gd | PASS |
+| 44 | M52-44-ON_HIT_PROTECT_REAL_RECIPIENT | test_m5_status.gd | PASS |
+| 45 | M52-45-ON_HIT_SUPPRESSED_UNLESS_TAGGED | test_m5_status.gd | PASS |
+| 46 | M52-46-ORIGIN_PRESERVED | test_m5_status.gd | PASS |
+| 47 | M52-47-REAL_STATUS_SP_CARD_CONSERVATION | test_m5_status.gd | PASS |
+| 48 | M52-48-ENEMY_DIRECT_HP_UNTRUSTED_REJECTED | test_m5_status.gd | PASS |
+
+Seed **20261014**, **10 accepted commands**, initial SHA256 **c31261748b1b82c202a849c3236ef1833982dd00692cc406e7d3cabaf2cbc41c**, canonical events SHA256 **8f4f71a130323e6e8e9a6ccff69ce5310fb642c6baa74bccfd6b8fd920cc7cce**, final state SHA256 **31aa1bf68e6441d623337e2e59a78ba04400a040f2248531bcd290cb69f7e61e**. First CI succeeded without repairs. See PH3_M5_2_ENGINEERING_NOTE.md. M5.3–M5.5 remain NOT VERIFIED.

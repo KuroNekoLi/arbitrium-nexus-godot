@@ -328,3 +328,19 @@ Official [Godot 4.7.2 CI #38668678354](https://github.com/KuroNekoLi/arbitrium-n
 | P2-D16 Replay/atomicity | M51-01-AUTHORITY_ENFORCED, M51-39-INITIAL_IMMUTABLE, M51-40-SAME_TAPE_EVENT_HASH, M51-41-SAME_TAPE_FINAL_HASH, M51-42-STALE_REPLAY_REFUSED | PASS |
 
 This is M5.1 **headless fixture scope only**, not M5.2–M5.5 complete battle or Last Spell-specific live damage gate. Seed/hashes/failed CI history in PH3_M5_1_ENGINEERING_NOTE.md.
+
+## M5.2 authentic Status / Targeting / HP Lifecycle — VERIFIED 2026-10-15
+
+**Supersedes prior earlier M5.2 NOT_VERIFIED planning.** Official [Godot 4.7.2 Actions #38670492488](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38670492488), tested SHA 20e2e7da8cc841c73d9a558860681465460754a0; **48/48 new M5.2 PASS**, **941/941 M1–M5.1 prior PASS**, **989/989 cumulative named Domain PASS**, four legacy smoke scripts PASS. Headless fixture scope ONLY.
+
+| Binding rule | Actual named executable Godot cases | Outcome / limit |
+|---|---|---|
+| P2-D13/PRE3-R03/R08 StatusInstance stack/refill/tick ordering | M52-05, M52-06, M52-07, M52-14, M52-16, M52-17, M52-25–M52-29 | PASS: versioned content and stable priority + id |
+| P2-D12 Focus Ward != HP Barrier, Guard→HP Barrier, expiry | M52-08, M52-09, M52-12, M52-30, M52-32 | PASS: registered barrier instance / defined expiration |
+| P2-D13 BUFF/DEBUFF/DoT/HoT/dispel | M52-15, M52-26, M52-27, M52-31, M52-33, M52-34 | PASS: actual HP/stat changes, registered fixture only |
+| PRE3-R06 Protect/hit-follows policy | M52-13, M52-44, M52-45 | PASS: real EnemyAction M5 verified hit trace, correct recipient |
+| CORE-02 DoT HP0 immediate before LastSpell release | M52-35–M52-39 | PASS: exact event ordering + frozen hand, no refund |
+| P2-D14 legit tagged Revive and ordinary Heal | M52-40–M52-43 | PASS: actual paid SP, no revived Last quota |
+| M2 resources/CardInstances, M3 phase, Replay and fail-closed | M52-01–M52-04, M52-10–M52-11, M52-18–M52-24, M52-46–M52-48 | PASS: unchanged state on denial / deterministic 10-command tape |
+
+Only M5.2 Domain is verified; M5.3–5.5 and full real Boss battle not verified. See PH3_M5_2_ENGINEERING_NOTE.md and PH3_PHASE12_TEST_INVENTORY.md for exact 48 case IDs/Seed/hashes.
