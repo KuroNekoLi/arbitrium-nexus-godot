@@ -1,17 +1,25 @@
 extends RefCounted
 ## Pure benchmark aggregation. Never classify missing measurements as zero.
 static func parse_frame_count(value: String, minimum: int, maximum: int) -> Dictionary:
-	if not value.is_valid_int():
+	# Reject malformed or out-of-range decimal strings *before* int().
+	# String.is_valid_int() also accepts some beyond-int64 decimal strings;
+	# calling int(value) then emits an engine ERROR even if a test returns PASS.
+	if value.is_empty():
 		return {"ok":false,"error":"INVALID_INTEGER"}
-	var count: int = int(value)
-	# Reject overflow/truncation as well as values outside the permitted frame budget.
+	for index: int in value.length():
+		var ch: String = value[index]
+		if ch < "0" or ch > "9":
+			return {"ok":false,"error":"INVALID_INTEGER"}
+	var digits: String = value.lstrip("0")
+	if digits.is_empty():
+		digits = "0"
+	var limit: String = str(maximum)
+	if digits.length() > limit.length() or (
+			digits.length() == limit.length() and digits > limit):
+		return {"ok":false,"error":"FRAME_COUNT_OUT_OF_RANGE"}
+	var count: int = int(digits)
 	if count < minimum or count > maximum:
 		return {"ok":false,"error":"FRAME_COUNT_OUT_OF_RANGE"}
-	# Frame counts use decimal digits only; leading zeroes are harmless.
-	var digits: String = value.trim_prefix("+").lstrip("0")
-	if digits.is_empty(): digits = "0"
-	if digits != str(count):
-		return {"ok":false,"error":"INTEGER_OVERFLOW"}
 	return {"ok":true,"value":count}
 
 static func summarize(values: Array, units: String) -> Dictionary:
