@@ -439,3 +439,5 @@ See [review and outstanding branches](../handoff/P4_APPROVED_MERGES_AND_PENDING_
 | G4 new positive Lv40 integration | All Branches Review §6 / UI02 | lv40_playable_battle.tscn / config-aware BattleScreen / Controller / test_p4_lv40_playable32/32首輪 | HEADLESS_PARTIALLY_VERIFIED，等待CI；原staging10保持 |
 | SW scoped screenshot writer | All Branches Review §6 | scripts/qa/screenshot_writer.gd / test_screenshot_writer；首輪45/46 FAIL，已修普通檔阻擋，待CI | IMPLEMENTED_NOT_VERIFIED；原GUI14/16未重跑 |
 | P45 static scene evidence | 獨立場景檢查、非原GUI runner | capture_lv40_playable_scene.gd；GTX1650、1280繁中/1920英文PNG、主控目視 | STATIC_RENDER_OBSERVED，非真人/完整GUI/效能驗收 |
+
+正式Master收據：f16227c1e67457de53b3547a73462416c32349ef；Actions38726127054（1238 Domain/100seeds/4Legacy）、38726127041（HUD/正向32/writer46）、38726127002（Legacy）均completed/success。GUI14/16及真人/P4.6不升級；詳ALL_BRANCHES_FINAL_MERGE_REPORT。
