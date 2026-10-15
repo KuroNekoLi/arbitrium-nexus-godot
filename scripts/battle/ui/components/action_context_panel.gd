@@ -58,7 +58,7 @@ func _ready() -> void:
 	disclosure.tooltip_text = tr("BATTLE_REDUCED") + " · " + tr("BATTLE_MUTE")
 	disclosure.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	disclosure.custom_minimum_size.y = 28
-	content.add_child(disclosure)
+	root.add_child(disclosure)
 	var settings := VBoxContainer.new()
 	settings.name = "PreferencesContent"
 	settings.visible = false
