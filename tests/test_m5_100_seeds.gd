@@ -46,17 +46,17 @@ func _init() -> void:
 			continue
 		var replay: Dictionary = Driver.replay(report)
 		var valid: bool = replay.get("ok",false)
-		check("M55-SEED-"+str(seed),valid and
-			["VICTORY","DEFEAT"].has(str(report["outcome"])) and
-			int(report["rejected"]) == 0 and
-			int(report["accepted"]) > 0 and
+		check("M55-SEED-"+str(seed),valid and \
+			["VICTORY","DEFEAT"].has(str(report["outcome"])) and \
+			int(report["rejected"]) == 0 and \
+			int(report["accepted"]) > 0 and \
 			int(report["events"]) <= Driver.MAX_EVENTS)
 		replay_ok = replay_ok and valid
 		if not Zones.validate_state(report["final"]["core"]["cards"]):
 			resource_ok = false
 		if not ["VICTORY","DEFEAT"].has(str(report["outcome"])):
 			status_ok = false
-		if int(report["rejected"]) != 0 or
+		if int(report["rejected"]) != 0 or \
 				int(report["accepted"]) > Driver.MAX_COMMANDS:
 			policy_ok = false
 		if int(report["first_hp0_event_seq"]) >= 0:
@@ -94,7 +94,7 @@ func _init() -> void:
 	check("M55-100-08-OBSERVED_HP_ZERO_BOUNDARIES",first_hp0_count >= 1)
 	check("M55-100-09-FALLBACK_GENUINELY_USED",fallback_count >= 1)
 	check("M55-100-10-FINITE_ALL_ENCOUNTERS",
-		maximum_rounds <= F.MAX_ROUNDS and max_events <= Driver.MAX_EVENTS and
+		maximum_rounds <= F.MAX_ROUNDS and max_events <= Driver.MAX_EVENTS and \
 		total_commands <= Driver.MAX_COMMANDS*N)
 	print("M5_5_100_SEEDS_REPORT executed=",passed+failed,
 		" passed=",passed," failed=",failed," runs=",N,
