@@ -32,6 +32,12 @@ AP修正後真9PNG：outputs/p4_input_capture/v35_ap_fixed_20261015；主控已�
 本批AP static capture已用2次，最多剩1次（不能新prefix當重置）。新32test用1次最多剩2；HUD/Layout/Integration用1次最多剩2。不同未開始stage群組另建scope，不得覆蓋此帳本。
 本次CI推送後如無法在quota內確認，必須標CI_PENDING，後續先讀最新runs，不直接再跑suite。新32test尚未掛入canonical CI，屬必要待辦。
 
+### Push receipts / duplicate CI caution
+程式checkpoint9b7dbc72830eba6bf67b817e6053c3bdae26e1ec已push V3及safe branch；master仍50e2eaf不動。
+source [Fast38754989017](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38754989017)與[Render38754989102](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38754989102)於交接時in_progress，結果CI_PENDING。Render是本批AP capture第3次，**不可再重跑**。
+兩分支push觸發重複Fast及來源歷史V31 workflow；已向safe Fast38754993605與source V31契約38754988926發cancel請求，保留紀錄。取消不保證尚未執行case；下一agent先查各job steps/logs並重算實際群組次數，不得把取消當作零次或重設quota。本報告早期「最多剩2」是push前帳本，以實際CI執行優先。
+沒有等待CI完工是使用者額度停工規則，不宣稱CI成功；不要自動再次dispatch以補收據。
+
 ## Files to modify / create — separate staged commits
 
 ### V3.5.1 finish Top Left (first next task)
