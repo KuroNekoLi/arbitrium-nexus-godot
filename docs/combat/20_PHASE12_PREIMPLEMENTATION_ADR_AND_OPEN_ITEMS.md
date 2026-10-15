@@ -1,6 +1,6 @@
 # 20 — Phase 1–2 實作前待決清查、授權預設與重大驗收點（2026-10-14）
 
-> **Documentation status · 2026-10-15 — DELEGATED_DEFAULT + FINAL_USER_APPROVED_CORE**：PRE3-R01～18 屬授權的工程預設，**第7節 USER_APPROVED CORE-01～04** 高於同檔早先的 CORE_CONFIRM/推薦草案。Godot M5.4 已驗證 CORE-01/02 的限定 fixture 範圍。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — DELEGATED_DEFAULT + FINAL_USER_APPROVED_CORE**：PRE3-R01～18 屬授權的工程預設，**第7節 USER_APPROVED CORE-01～04** 高於同檔早先的 CORE_CONFIRM/推薦草案。Godot M5.4 已驗證 CORE-01/02 的限定 fixture 範圍。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 > **範圍：** 以 ChatGPT Library `/docs/combat/00`～`19` 的 P1/P2 合約為清查依據，並比對 GitHub `master` 當前文件。這是經使用者要求「幫我決策」後，新增的**授權設計預設（DELEGATED_DEFAULT）**，不是過往逐項由使用者明示選 A/B/C 的 APPROVED 決議；不變更先前 P1-D、P2-D、P2-S、M-D 的已核准契約。工程預設可以作為 Phase 2 規格驗收案例與 Phase 3 headless engine 的第一版明文規則；**BALANCE_PROVISIONAL** 與 **CORE_CONFIRM** 不得宣告最終核准，更不等於 Godot 測試 PASS。

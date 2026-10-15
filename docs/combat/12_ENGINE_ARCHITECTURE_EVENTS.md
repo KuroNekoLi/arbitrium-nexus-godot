@@ -1,6 +1,6 @@
 # 12 — Godot 引擎架構、資料模型、事件佇列與可重播性
 
-> **Documentation status · 2026-10-15 — ENGINEERING_DETAIL + HISTORICAL_SNAPSHOT**：既有 `M1 CombatModel`、M2～M5 單一交易／Seeded RNG／事件紀錄是整合基礎；本章的偽碼不構成已實作 runtime API，請核對目前的 reducer 與 tests。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — ENGINEERING_DETAIL + HISTORICAL_SNAPSHOT**：既有 `M1 CombatModel`、M2～M5 單一交易／Seeded RNG／事件紀錄是整合基礎；本章的偽碼不構成已實作 runtime API，請核對目前的 reducer 與 tests。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 

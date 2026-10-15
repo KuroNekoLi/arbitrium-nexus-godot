@@ -1,6 +1,6 @@
 # 17 — 戰鬥設計接續指南與 OPEN 問題（2026-10-14 最新）
 
-> **Documentation status · 2026-10-15 — HISTORICAL_HANDOFF**：原「下一題 M-D18」「P2-D08 OPEN」已被後續核准取代，不能再作 Codex 或使用者下一題。當前未決項目請先查現行 Open Issues。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — HISTORICAL_HANDOFF**：原「下一題 M-D18」「P2-D08 OPEN」已被後續核准取代，不能再作 Codex 或使用者下一題。當前未決項目請先查現行 Open Issues。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 > **2026-10-15 現行交接（A 方案）**：此檔原「下一題 M-D18」及部分 OPEN 表格是歷史截面，M-D18～31、P2-D10～16 方向已有核准，不應再次詢問；見目標 `19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md` 及 20/21 的 CORE-01～04 最終裁決。Lv40 新增內容25–31及 Python工具位於本 repo。目標 Godot 原型的 8 張卡／每階段最多兩張出牌，與新版已核准的每人12 SP／共享 AP 結構**仍為待實作差距，不是規則再開放決策**。合併詳情：`UPSTREAM_RECONCILIATION_A_2026-10-15.md`。

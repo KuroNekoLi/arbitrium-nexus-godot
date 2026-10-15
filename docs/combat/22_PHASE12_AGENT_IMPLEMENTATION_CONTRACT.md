@@ -1,6 +1,6 @@
 # 22 — Astraea Phase 1–2：Codex Agent 實作契約與需求追溯規範
 
-> **Documentation status · 2026-10-15 — ENGINEERING_PROCESS_CONTRACT + HISTORICAL_REPO_CONTEXT**：文中 `astraea-combat-rules docs-only／缺少 project.godot` 是舊倉庫的撰寫背景，**不適用現行本倉**；目前執行目標是 `arbitrium-nexus-godot`（root 有 project.godot）。仍應遵守測試先行、回歸與需求追溯。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — ENGINEERING_PROCESS_CONTRACT + HISTORICAL_REPO_CONTEXT**：文中 `astraea-combat-rules docs-only／缺少 project.godot` 是舊倉庫的撰寫背景，**不適用現行本倉**；目前執行目標是 `arbitrium-nexus-godot`（root 有 project.godot）。仍應遵守測試先行、回歸與需求追溯。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 > **建立日期：2026-10-14｜狀態：ENGINEERING PROCESS CONTRACT（開發流程規範），不是新玩法 ADR。** 既有 Phase 1–2 Gameplay 正式規則以 `00`～`21` 及最新版 USER_APPROVED 裁決為準。此文件只建立 Code Agent 的**工作方法、驗證義務、輸入輸出契約與交付條件**，不將尚未核准的遊戲數值／引擎配置升格成 Canon。其配套工作計畫為 `23_PHASE3_EXECUTION_PLAN.md`。

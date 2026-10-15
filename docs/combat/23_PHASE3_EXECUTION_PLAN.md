@@ -1,6 +1,6 @@
 # 23 — Astraea Phase 3：Godot 戰鬥引擎五階段實作計畫與 Gate
 
-> **Documentation status · 2026-10-15 — HISTORICAL_EXECUTION_PLAN + APPROVED_MILESTONE_SPLIT**：首段 `PLAN ONLY / NOT IMPLEMENTED` 是 2026-10-14 原計畫截面；M1～M5.4 已具 Headless CI，M5.5 尚待實作與驗證。M5.1～5.5 的正式工作包拆分不變。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — HISTORICAL_EXECUTION_PLAN + APPROVED_MILESTONE_SPLIT**：首段 `PLAN ONLY / NOT IMPLEMENTED` 是 2026-10-14 原計畫截面；M1～M5.5 已完成 Headless Battle/Fixture 範圍的正式驗收。M5.1～5.5 的正式工作包拆分不變。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 > **日期：2026-10-14｜狀態：PLANNED / NOT IMPLEMENTED / NOT TESTED。** 本文件是 Codex 分階段開發任務書；**不表示 Godot 專案已存在、測試已通過、UI 已完成**。玩法來源只來自現行 `docs/combat/00`～`21`，本文件不重新制定戰鬥規則。先讀 `AGENTS.md` 與 `22_PHASE12_AGENT_IMPLEMENTATION_CONTRACT.md`，任何歷史 `DRAW`、Last Spell 死後續唱、強制 Reaction 倒數等提案都已被 USER_APPROVED 最新裁決取代。

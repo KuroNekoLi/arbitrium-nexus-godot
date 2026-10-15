@@ -1,6 +1,6 @@
 # 13 — 自動化測試、驗收條件與平衡實驗
 
-> **Documentation status · 2026-10-15 — TEST_SPEC + HISTORICAL_NOT_EXECUTED**：原 `SPECIFIED / NOT EXECUTED` 是當初尚未執行的**規格 oracle**，不是目前 M1～M5.4 的實際 CI 狀態。驗證範圍需看最新 Engineering Note 與執行 Run；不可把規格表數目當已跑測試。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — TEST_SPEC + HISTORICAL_NOT_EXECUTED**：原 `SPECIFIED / NOT EXECUTED` 是當初尚未執行的**規格 oracle**，不是目前 M1～M5.4 的實際 CI 狀態。驗證範圍需看最新 Engineering Note 與執行 Run；不可把規格表數目當已跑測試。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 

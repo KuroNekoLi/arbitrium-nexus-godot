@@ -1,6 +1,6 @@
 # 18 — 魔法／AP 行動經濟核准決策（M-D01～M-D17）與 Phase 2 最新補記
 
-> **Documentation status · 2026-10-15 — APPROVED_P2_D08_D09_AND_M_D01_D17**：P2-D08/09、M-D01～17 已核准之方向仍有效；M-D04 的跨輪債務為 PROVISIONAL，M-D18～31 與 P2-D10～16 見19，CORE-01～04 見20/21。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.4 1,081 項 Domain CI 有證據，M5.5 仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
+> **Documentation status · 2026-10-15 — APPROVED_P2_D08_D09_AND_M_D01_D17**：P2-D08/09、M-D01～17 已核准之方向仍有效；M-D04 的跨輪債務為 PROVISIONAL，M-D18～31 與 P2-D10～16 見19，CORE-01～04 見20/21。 先讀 [Combat Spec Index](COMBAT_SPEC_INDEX.md)；目前未驗證項目見 [Open Issues](COMBAT_OPEN_ISSUES.md)。**M1～M5.5：1,238/1,238 Domain assertions；100 場固定 Seed 完整戰鬥與 Replay 已通過 [Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。Godot Scene／真人可玩／正式平衡仍未驗證。** 舊正文的「當時狀態」僅供歷史追溯，不得升格為新核准或新 CI。
 
 
 > **後續決策更新**：此檔只記錄 M-D01～M-D17。M-D18～M-D31、P2-D10～D16 設計方向已核准，請繼續閱讀 [`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`](19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md)。M-D04 跨輪債務仍是 PROVISIONAL。
