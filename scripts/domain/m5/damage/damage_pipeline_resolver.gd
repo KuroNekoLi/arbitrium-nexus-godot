@@ -103,6 +103,11 @@ static func resolve(core: Dictionary, source_id: String, declared_target: String
 		return _error("M51_MISSING_RECIPIENT_STATS")
 	var element: String = str(profile.get("element_id","NEUTRAL"))
 	var resistance: Variant = config.get("m5_element_resistance",{}).get(recipient,{})
+	# Provisional Lv40 content defines neutral treatment for unknown elements.
+	# All legacy/fixture profiles still fail closed without configured resistance.
+	if config.get("m5_lv40_enabled",false) == true and resistance is Dictionary and not resistance.has(element):
+		resistance = resistance.duplicate(true)
+		resistance[element] = 10000
 	if not resistance is Dictionary or not resistance.get(element,null) is int:
 		return _error("M51_ELEMENT_NOT_CONFIGURED")
 	var resist_bp: int = int(resistance[element])
