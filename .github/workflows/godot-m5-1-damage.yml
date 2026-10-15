@@ -1,25 +1,7 @@
 name: Godot Phase3 M5.1 Hit Crit Damage Acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m5-1-damage.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/phase/phase_engine.gd'
-      - 'scripts/domain/m4/integration/m4_domain_resolver.gd'
-      - 'scripts/domain/m4/casting/casting_timeline_resolver.gd'
-      - 'tests/fixtures/m5_1_fixture.gd'
-      - 'tests/test_m5_damage.gd'
-      - 'docs/verification/PH3_M5_1_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m5-1-damage.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m4/**'
-      - 'tests/fixtures/m5_1_fixture.gd'
-      - 'tests/test_m5_damage.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

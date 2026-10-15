@@ -1,28 +1,7 @@
 name: Godot Phase3 M5.4 Outcome CORE-01/02
 on:
-  push:
-    branches: [master, 'phase3/m5-4-outcome-core01']
-    paths:
-      - '.github/workflows/godot-m5-4-outcome.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/phase/phase_engine.gd'
-      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
-      - 'tests/fixtures/m5_4_fixture.gd'
-      - 'tests/fixtures/m5_3_fixture.gd'
-      - 'tests/fixtures/m5_2_fixture.gd'
-      - 'tests/test_m5_outcome.gd'
-      - 'tests/test_m5_boss_combo.gd'
-      - 'tests/test_m5_status.gd'
-      - 'docs/verification/PH3_M5_2_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m5-4-outcome.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/**'
-      - 'tests/test_m5_outcome.gd'
-      - 'tests/test_m5_boss_combo.gd'
-      - 'tests/test_m5_status.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

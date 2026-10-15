@@ -1,22 +1,7 @@
 name: Godot Phase3 M5.2 Status Targeting Barrier HP Lifecycle
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m5-2-status.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/phase/phase_engine.gd'
-      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
-      - 'tests/fixtures/m5_2_fixture.gd'
-      - 'tests/test_m5_status.gd'
-      - 'docs/verification/PH3_M5_2_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m5-2-status.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/**'
-      - 'tests/test_m5_status.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

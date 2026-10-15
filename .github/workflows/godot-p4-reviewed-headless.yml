@@ -1,17 +1,7 @@
 name: Godot P4 reviewed headless slice
 on:
-  push:
-    branches: [master, 'integration/p4-approved-headless-slice-20261015']
-    paths:
-      - '.github/workflows/godot-p4-reviewed-headless.yml'
-      - 'scripts/domain/**'
-      - 'tests/test_lv40_content.gd'
-      - 'tests/test_p4_balance_metrics.gd'
-      - 'tests/test_p4_profile_metrics.gd'
-      - 'tests/profile_p4.gd'
-      - 'tools/balance/**'
-      - 'tools/qa/**'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

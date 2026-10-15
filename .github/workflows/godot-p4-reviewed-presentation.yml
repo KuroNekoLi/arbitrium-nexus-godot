@@ -1,16 +1,7 @@
 name: Godot P4 reviewed presentation contracts
 on:
-  push:
-    branches: [master, 'integration/p4-approved-presentation-contracts-20261015']
-    paths:
-      - '.github/workflows/godot-p4-reviewed-presentation.yml'
-      - 'scripts/battle/battle_command_factory.gd'
-      - 'scripts/battle/presentation/battle_presentation_adapter.gd'
-      - 'scripts/battle/presentation/battle_translations.gd'
-      - 'resources/ui/**'
-      - 'tests/test_p4_localization.gd'
-      - 'tests/test_p4_lv40_readmodel.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

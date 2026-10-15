@@ -1,20 +1,7 @@
 name: Godot P4 HUD reviewed headless contracts
 on:
-  push:
-    branches: [master, 'integration/p4-approved-hud-headless-20261015', 'integration/p4-final-playable-20261015']
-    paths:
-      - '.github/workflows/godot-p4-hud-headless.yml'
-      - 'scripts/battle/**'
-      - 'scripts/ui/**'
-      - 'scenes/battle/**'
-      - 'tests/test_p4_component_contract.gd'
-      - 'tests/test_p4_feedback.gd'
-      - 'tests/test_p4_feedback_edges.gd'
-      - 'tests/test_p4_lv40_ui.gd'
-      - 'tests/test_p4_lv40_playable.gd'
-      - 'tests/test_screenshot_writer.gd'
-      - 'scripts/qa/**'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

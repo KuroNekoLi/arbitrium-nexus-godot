@@ -1,25 +1,7 @@
 name: Godot Phase3 M5.3 Boss Break Exposed Combo
 on:
-  push:
-    branches: [master, 'phase3/m5-3-boss-break-exposed-combo']
-    paths:
-      - '.github/workflows/godot-m5-3-boss-combo.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/phase/phase_engine.gd'
-      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
-      - 'tests/fixtures/m5_3_fixture.gd'
-      - 'tests/fixtures/m5_2_fixture.gd'
-      - 'tests/test_m5_boss_combo.gd'
-      - 'tests/test_m5_status.gd'
-      - 'docs/verification/PH3_M5_2_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m5-3-boss-combo.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/**'
-      - 'tests/test_m5_boss_combo.gd'
-      - 'tests/test_m5_status.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

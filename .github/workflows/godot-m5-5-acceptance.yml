@@ -1,29 +1,8 @@
 name: Godot Phase3 M5.5 Full Battle Seed Replay
 on:
-  push:
-    branches: [master, 'phase3/m5-5-full-battle-replay', 'engineering/ci-evidence-gate-20261015', 'integration/p4-final-playable-20261015']
-    paths:
-      - '.github/workflows/godot-m5-5-acceptance.yml'
-      - 'tools/ci/**'
-      - 'scripts/**'
-      - 'scenes/**'
-      - 'resources/**'
-      - 'assets/**'
-      - 'addons/**'
-      - 'tests/**'
-      - 'project.godot'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m5-5-acceptance.yml'
-      - 'tools/ci/**'
-      - 'scripts/**'
-      - 'scenes/**'
-      - 'resources/**'
-      - 'assets/**'
-      - 'addons/**'
-      - 'tests/**'
-      - 'project.godot'
+  workflow_call:
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
