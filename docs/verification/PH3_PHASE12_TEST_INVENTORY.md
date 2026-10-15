@@ -1230,3 +1230,56 @@ Official completed-success [Godot 4.7.2 Actions #38670492488](https://github.com
 | 48 | M52-48-ENEMY_DIRECT_HP_UNTRUSTED_REJECTED | test_m5_status.gd | PASS |
 
 Seed **20261014**, **10 accepted commands**, initial SHA256 **c31261748b1b82c202a849c3236ef1833982dd00692cc406e7d3cabaf2cbc41c**, canonical events SHA256 **8f4f71a130323e6e8e9a6ccff69ce5310fb642c6baa74bccfd6b8fd920cc7cce**, final state SHA256 **31aa1bf68e6441d623337e2e59a78ba04400a040f2248531bcd290cb69f7e61e**. First CI succeeded without repairs. See PH3_M5_2_ENGINEERING_NOTE.md. M5.3–M5.5 remain NOT VERIFIED.
+
+## M5.3 — 44 named Boss/Break/Exposed/Combo Domain oracles (2026-10-15)
+
+Official [Godot Actions #38674222091](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38674222091) on code SHA `e9e33ce86bd1232aa1323c4a9c8a97ce85ef12b0`: **44/44 PASS**, M1–M5.2 **989/989** regressions PASS, total **1033/1033 Domain**, four legacy scripts success. All remain fixture-only and `BALANCE_PROVISIONAL`.
+
+| # | Named case ID | Runner | Status |
+|---:|---|---|---|
+| 1 | `M53-01-SINGLE_M5_BASELINE` | `test_m5_boss_combo.gd` | PASS |
+| 2 | `M53-02-UNTRUSTED_BREAK_DENIED` | `test_m5_boss_combo.gd` | PASS |
+| 3 | `M53-03-CANNOT_STEAL_CARD` | `test_m5_boss_combo.gd` | PASS |
+| 4 | `M53-04-INVALID_COMBO_MODE_DENIED` | `test_m5_boss_combo.gd` | PASS |
+| 5 | `M53-05-M2_AP_PAID_ONCE` | `test_m5_boss_combo.gd` | PASS |
+| 6 | `M53-06-M2_MP_PAID_ONCE` | `test_m5_boss_combo.gd` | PASS |
+| 7 | `M53-07-CARD_HAND_TO_DISCARD` | `test_m5_boss_combo.gd` | PASS |
+| 8 | `M53-08-MULTI_HIT_BEFORE_BREAK` | `test_m5_boss_combo.gd` | PASS |
+| 9 | `M53-09-BREAK_LOCKED_ON_WHOLE_SP` | `test_m5_boss_combo.gd` | PASS |
+| 10 | `M53-10-BREAK_DISTINCT_FROM_CASTING` | `test_m5_boss_combo.gd` | PASS |
+| 11 | `M53-11-EXPOSED_SINGLE_OPPORTUNITY` | `test_m5_boss_combo.gd` | PASS |
+| 12 | `M53-12-COMBO_OFFER_WITH_SOURCE` | `test_m5_boss_combo.gd` | PASS |
+| 13 | `M53-13-SOURCE_CANNOT_SELF_COMBO` | `test_m5_boss_combo.gd` | PASS |
+| 14 | `M53-14-STILL_ORIGINAL_IMMUTABLE` | `test_m5_boss_combo.gd` | PASS |
+| 15 | `M53-15-TWO_DIFFERENT_ACTORS_PAID` | `test_m5_boss_combo.gd` | PASS |
+| 16 | `M53-16-EXTRA_COMBO_AP_ZERO` | `test_m5_boss_combo.gd` | PASS |
+| 17 | `M53-17-EXPOSED_CONSUMED_BY_NEXT_SP` | `test_m5_boss_combo.gd` | PASS |
+| 18 | `M53-18-COMBO_CONSUMED_ONCE` | `test_m5_boss_combo.gd` | PASS |
+| 19 | `M53-19-COMBO_DAMAGE_THROUGH_M51` | `test_m5_boss_combo.gd` | PASS |
+| 20 | `M53-20-BREAK_LOCK_NO_STOCKPILE` | `test_m5_boss_combo.gd` | PASS |
+| 21 | `M53-21-DOUBLE_COMBO_DENIED` | `test_m5_boss_combo.gd` | PASS |
+| 22 | `M53-22-BOSS_INTENT_COMMITTED` | `test_m5_boss_combo.gd` | PASS |
+| 23 | `M53-23-BREAK_FALLBACK_PUBLIC` | `test_m5_boss_combo.gd` | PASS |
+| 24 | `M53-24-BOSS_COMMITTED_TARGET` | `test_m5_boss_combo.gd` | PASS |
+| 25 | `M53-25-DECLARED_INTENT_LOCKED` | `test_m5_boss_combo.gd` | PASS |
+| 26 | `M53-26-FALLBACK_START_AND_SETTLE` | `test_m5_boss_combo.gd` | PASS |
+| 27 | `M53-27-BREAK_GAUGE_RESTORED` | `test_m5_boss_combo.gd` | PASS |
+| 28 | `M53-28-FALLBACK_LOWER_HITS` | `test_m5_boss_combo.gd` | PASS |
+| 29 | `M53-29-PHASE_ADVANCED` | `test_m5_boss_combo.gd` | PASS |
+| 30 | `M53-30-NEXT_INTENT_NO_FALLBACK` | `test_m5_boss_combo.gd` | PASS |
+| 31 | `M53-31-SEED_TAPE_REPLAY` | `test_m5_boss_combo.gd` | PASS |
+| 32 | `M53-32-EVENT_HASH_REPLAY` | `test_m5_boss_combo.gd` | PASS |
+| 33 | `M53-33-STATE_HASH_REPLAY` | `test_m5_boss_combo.gd` | PASS |
+| 34 | `M53-34-BREAK_DAMAGE_LOCK_IGNORES` | `test_m5_boss_combo.gd` | PASS |
+| 35 | `M53-35-EXPOSED_NOT_REFRESHED` | `test_m5_boss_combo.gd` | PASS |
+| 36 | `M53-36-FINISHER_MISS_PAYS` | `test_m5_boss_combo.gd` | PASS |
+| 37 | `M53-37-MISS_PRESERVES_EXPOSED` | `test_m5_boss_combo.gd` | PASS |
+| 38 | `M53-38-MISS_PRESERVES_COMBO` | `test_m5_boss_combo.gd` | PASS |
+| 39 | `M53-39-SELF_CREATED_EXPOSED_NOT_CONSUMED` | `test_m5_boss_combo.gd` | PASS |
+| 40 | `M53-40-NEW_PLAYER_PHASE_KEEP_EXPOSED` | `test_m5_boss_combo.gd` | PASS |
+| 41 | `M53-41-EXPOSED_EXPIRES_AFTER_NEXT_PLAYER_PHASE` | `test_m5_boss_combo.gd` | PASS |
+| 42 | `M53-42-INVALID_FALLBACK_FAIL_CLOSED` | `test_m5_boss_combo.gd` | PASS |
+| 43 | `M53-43-REPLAY_BAD_TAPE_STOPS` | `test_m5_boss_combo.gd` | PASS |
+| 44 | `M53-44-NO_CARD_DUPLICATION` | `test_m5_boss_combo.gd` | PASS |
+
+Seed **20261014**, **9 accepted commands**, initial SHA256 **c96738c4f4bc66e08aa6c5825648f086baac22d7527acf2275e554c045bfdbde**, events SHA256 **ab66610a558b00751c56920924dddb915b2bc11915768479ceb5cf7d970ff9bc**, final state SHA256 **a4d00e293e09cbb9f39b7a05e3f8eeb776ae972745b37e2f4f97099800fcdf22**. See PH3_M5_3_ENGINEERING_NOTE.md. M5.4–M5.5 NOT VERIFIED; Analyze and Spell Counter content explicitly NOT VERIFIED.
