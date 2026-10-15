@@ -1,6 +1,6 @@
 # 04 — 每角 12 卡牌組、抽牌、洗牌、施法卡的區域
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + HISTORICAL_TBD**：每角12張 SP、開局4張、Player Phase 補至4／手牌上限8／每人免費換牌1次已核准。不得把歷史「僅提案／TBD」當成目前狀態。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + HISTORICAL_TBD**：每角12張 SP、開局4張、Player Phase 補至4／手牌上限8／每人免費換牌1次已核准。不得把歷史「僅提案／TBD」當成目前狀態。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 

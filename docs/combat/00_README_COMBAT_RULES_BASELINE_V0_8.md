@@ -1,6 +1,6 @@
 # Combat Rules v0.8 — 文件入口與閱讀契約（Phase 1 已批准修訂，2026-10-14）
 
-> **Documentation status · 2026-10-15 — BASELINE_INDEX + HISTORICAL_SNAPSHOTS**：此檔仍保存 v0.8 領域目錄／已核准玩法；現行 Agent 必須**先讀 COMBAT_SPEC_INDEX**，舊的「Library only／未執行」只描述 2026-10-14 編寫時。19 和 20/21 後續決策不可被先前段落覆寫。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — BASELINE_INDEX + HISTORICAL_SNAPSHOTS**：此檔仍保存 v0.8 領域目錄／已核准玩法；現行 Agent 必須**先讀 COMBAT_SPEC_INDEX**，舊的「Library only／未執行」只描述 2026-10-14 編寫時。19 和 20/21 後續決策不可被先前段落覆寫。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 > **2026-10-15／A 方案語義合併已完成**：本 repo `docs/combat/00`～`24` 保留已有較新/詳盡的版本；來源 `astraea-combat-rules@cac49361` 的差異已逐章審核，詳見 [A 方案合併稽核](UPSTREAM_RECONCILIATION_A_2026-10-15.md)。目前 **19 的唯一現行檔名** 為 [`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`](19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md)；來源舊名僅為同組裁決的不同快照。核心 USER_APPROVED 另以 20/21 的四項最終決策為準。後續內容讀 25/26（角色、共用治療與各人12張）、27（40等Boss）、29/30/31（Python v0.2／Agent交接）。這些平衡數字仍為 PROVISIONAL，**不得把已核准設計或 Python 模擬視為 Godot 實作證明**。以下歷史「LIBRARY ONLY／Godot 未執行」字樣只描述其撰寫時狀態，不能否定目標 repo 後續的實際工程測試紀錄。

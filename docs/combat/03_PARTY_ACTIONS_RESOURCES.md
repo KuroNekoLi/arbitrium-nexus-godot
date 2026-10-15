@@ -1,6 +1,6 @@
 # 03 — 三人行動經濟、AP/RP/MP 與基本指令
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + BALANCE_PROVISIONAL**：共享 AP／RP 與個別 MP 的規則以 P1、18/19 為準：CurrentAP 可合法超過 BaseAP6、正常 RP 上限6、MP 不自然回滿。舊表的數值候選／待決須按後續批准與實測區分。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + BALANCE_PROVISIONAL**：共享 AP／RP 與個別 MP 的規則以 P1、18/19 為準：CurrentAP 可合法超過 BaseAP6、正常 RP 上限6、MP 不自然回滿。舊表的數值候選／待決須按後續批准與實測區分。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 

@@ -1,6 +1,6 @@
 # 01 — 已批准決策、候選數值與來源衝突
 
-> **Documentation status · 2026-10-15 — APPROVED_P1_REGISTRY + HISTORICAL_OPEN**：已核准 P1 行為依此追溯；舊待決、2RP上限、每人回合出牌上限與 d20 候選須服從 18/19/20/21 後續明示決策，不可將 P2-D08 或 CORE-01～04 重列未決。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_P1_REGISTRY + HISTORICAL_OPEN**：已核准 P1 行為依此追溯；舊待決、2RP上限、每人回合出牌上限與 d20 候選須服從 18/19/20/21 後續明示決策，不可將 P2-D08 或 CORE-01～04 重列未決。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 

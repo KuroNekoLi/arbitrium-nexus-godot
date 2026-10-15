@@ -1,6 +1,6 @@
 # 08 — Last Spell：不可逆終極詠唱與 Exhausted
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + BALANCE_PROVISIONAL**：Last Spell 強制 Full、不能手動 Cancel；釋放前 HP0 強制 invalidation，釋放後效果不可追溯取消；成功釋放後 Exhausted 不等於死亡。M5.4 有 CORE-02 headless 驗收。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + BALANCE_PROVISIONAL**：Last Spell 強制 Full、不能手動 Cancel；釋放前 HP0 強制 invalidation，釋放後效果不可追溯取消；成功釋放後 Exhausted 不等於死亡。M5.4 有 CORE-02 headless 驗收。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 ## 1. 已批准核心

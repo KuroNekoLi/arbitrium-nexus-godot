@@ -1,6 +1,6 @@
 # 05 — 雙模式詠唱、Concentration、個體化干擾
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + PROVISIONAL_NUMBERS**：Chantless／Full Chant、退款與 Last Spell：MP 同卡兩模式預設同成本、Casting Interrupt 部分退 MP（比例 provisional）、施法者 Last Spell 釋放前 HP0 強制失效（CORE-02）。舊 TBD 不反向推翻已核准方向。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + PROVISIONAL_NUMBERS**：Chantless／Full Chant、退款與 Last Spell：MP 同卡兩模式預設同成本、Casting Interrupt 部分退 MP（比例 provisional）、施法者 Last Spell 釋放前 HP0 強制失效（CORE-02）。舊 TBD 不反向推翻已核准方向。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 

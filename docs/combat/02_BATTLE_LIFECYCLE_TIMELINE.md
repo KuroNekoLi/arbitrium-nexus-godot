@@ -1,6 +1,6 @@
 # 02 — 戰鬥狀態機、回合與事件時序
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + HISTORICAL_EVENT_TBD**：回合、Reaction 與合法 Action 邊界有核准內容；CORE-01/02/04 見 20/21；M5.4 已對勝敗時序進行 headless 驗證。早期事件排序未決清單是歷史快照。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + HISTORICAL_EVENT_TBD**：回合、Reaction 與合法 Action 邊界有核准內容；CORE-01/02/04 見 20/21；M5.4 已對勝敗時序進行 headless 驗證。早期事件排序未決清單是歷史快照。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 

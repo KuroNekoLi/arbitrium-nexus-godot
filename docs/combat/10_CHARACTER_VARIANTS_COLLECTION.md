@@ -1,6 +1,6 @@
 # 10 — 角色、Variant、Skin、卡池及配置資格
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + LATER_CONTENT_DIRECTION**：Character／Variant／Skin 與配牌資格參見 25 主角初始劍士、後期 Variant 解鎖；26 確認通用基本攻擊／治療／防護魔法對所有符合資格角色開放。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + LATER_CONTENT_DIRECTION**：Character／Variant／Skin 與配牌資格參見 25 主角初始劍士、後期 Variant 解鎖；26 確認通用基本攻擊／治療／防護魔法對所有符合資格角色開放。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 ## 1. 定義（APPROVED）

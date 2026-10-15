@@ -1,6 +1,6 @@
 # 09 — Combo System：標籤、Opportunity、UI提示與確認
 
-> **Documentation status · 2026-10-15 — APPROVED_DETAIL + EXTENSION_UNVERIFIED**：M5.3 已驗證兩名不同角色、兩張真的 M2 付費 SP、額外 Combo AP=0；完整詠唱／Last Spell 共鳴及各卡數值屬內容未驗證。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + EXTENSION_UNVERIFIED**：M5.3 已驗證兩名不同角色、兩張真的 M2 付費 SP、額外 Combo AP=0；完整詠唱／Last Spell 共鳴及各卡數值屬內容未驗證。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot Domain M1～M5.5：1,238/1,238 通過；100 場固定 Seed 的完整戰鬥與 Replay 已驗證（[Master CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)）。Scene／真人可玩／正式平衡仍未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
 
 
 ## 1. 已批准玩法
