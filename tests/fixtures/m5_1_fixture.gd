@@ -2,7 +2,7 @@ extends RefCounted
 ## Versioned, completely TEST-ONLY M5.1 numeric fixture, not balancing canon.
 const Prior = preload("res://tests/fixtures/m4_5_scenario.gd")
 const Phase = preload("res://scripts/domain/m3/phase/phase_engine.gd")
-static const SEED: int = 20261014
+const SEED: int = 20261014
 static func profile(kind: String = "PHYSICAL", mode: String = "GUARANTEED",
 		hits: int = 1, crit: bool = false, element: String = "NEUTRAL") -> Dictionary:
 	return {"damage_kind":kind,"hit_mode":mode,"hit_count":hits,
