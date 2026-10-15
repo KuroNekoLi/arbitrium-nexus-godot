@@ -42,7 +42,7 @@
 - **P2-S15/S16 Spell Counter: `BLOCKED_CONTENT / NOT VERIFIED`**. No approved Counter card, targetable spell-release Reaction Window or payment policy exists; cannot silently treat Casting Interrupt as Spell Counter.
 - **P2-S02–S12 Analyze/Enemy Intel: `DEFERRED_CONTENT / NOT VERIFIED`**.
 - Boss tactical catalogue currently supports a single enemy, single-target damage actions and stable-priority tie resolution. Multiple Boss units, active-Casting fallback edge, AoE alternatives, and actual Counter-interrupted fallback action need additional approved effect content and gameplay tests.
-- Provisional `break_max=9`, BreakDamage values, exposed duration numerical implementation and Combo profile are fixture-only; no lasting balance approvals.
+- Provisional `break_max=9`, BreakDamage values, **which skill exposes** and Combo damage profiles are fixture-only; no lasting balance approvals. The Exposed expiry boundary itself is **user-approved P2-S17**, not provisional.
 - CastingCombo/LastSpell resonance requires real qualifying registered Cards/Reaction windows, not instant or unpaid enhancement. Full Chant tactical SP is intentionally **fail-closed**, not declared supported.
 - M5.4 is still required to prove full CORE-01 multi-effect simultaneous Outcome; M5.5 still requires one complete 3-person Boss encounter and at least 100 seeded full battles. Final HUD, i18n, animation and player-facing action preview remain future work.
 - `M5.3 DOMAIN VERIFIED` never means complete M5 or PLAYABLE VERIFIED.
