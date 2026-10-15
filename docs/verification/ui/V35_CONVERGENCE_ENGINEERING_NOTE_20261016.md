@@ -38,6 +38,14 @@ Signal 類似 callback／Flow intent。Presentation Adapter 是 read-only UI mod
 
 畫面、raw logs 在 managed worktree 的 `outputs/p4_input_capture/v35_final_batch{1,2,3}/` 及其父目錄 `v35-final-*.log`。最後截圖及 CI 收據另補。暫不宣告 High-Fidelity VERIFIED 或 USER_APPROVED。
 
+## 整合收據與新終極法術需求
+
+`81f3d941ae033f9c6523c8fdb2e7049e4cf023d4`：Fast Actions [38776234917](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38776234917) completed/success；205 Fast + 1149 P4 assertions、4 legacy suites、GUI28、SP gesture17。完整既有 Domain/100 seed [38776283682](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38776283682) completed/success；100 runs、100 victories、0 rejected、5244 commands、100 distinct tapes，僅證明固定 fixture，不是零敗率平衡。
+
+後續依本輪新裁決增加 `last_spell_preview.gd`：點選即開 cut-in，角色圖使用當前 Arena 的同一 Texture2D idle frame，不新增正式角色造型；戰場三人暫時隱藏，隊伍狀態欄仍可讀，取消／提交恢復。`Last.inspect` 提供真報價及 delay；合法 targets 由 M5 preview 取得，預選 Boss 但允許查看其他合法 target。只有「啟動」才送 confirmed FULL Command。headless 首次25/25，native GUI 第二次25/25（三名角色開啟／取消與啟動皆經真正滑鼠事件），第三次留給 CI。
+
+新需求發生在原 V3.5 CI 第三次執行後；因此本工作分支後續 push **不再重跑已用盡的 P4-contracts/V3.5/手勢群組**。CI 加明示 SHA gate；其他分支 canonical gate 保留，不刪測試或放寬 oracle。新 Last Preview 25-case suite 是新裁決獨立需求，不是複製舊群組。最終截圖仍需追加授權；不能用新 renderer 名稱或新分支重置截圖批次。
+
 ## 面試追問與延伸
 
 1. 為何 Command 有 expected_event_seq？防止 stale UI 對新版狀態重複付款。

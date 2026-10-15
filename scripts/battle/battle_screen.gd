@@ -27,6 +27,7 @@ var legal_targets: Array = []
 var pending_command: Dictionary = {}
 var keyboard_index: int = 0
 var view_model: Dictionary = {}
+var _last_actor_visibility: Dictionary = {}
 @onready var design: Control = $Design
 @onready var hud: Control = $Design/HUD
 
@@ -265,6 +266,10 @@ func cancel_action() -> void:
 	pending_command = {}
 	legal_targets = []
 	if not is_node_ready(): return
+	hud.last_preview.hide()
+	for actor: String in _last_actor_visibility:
+		$Design/Arena.get_node(actor).visible = _last_actor_visibility[actor]
+	_last_actor_visibility.clear()
 	hud.set_targets([])
 	hud.set_selected_card("")
 	hud.details.text = tr("BATTLE_SELECT")
@@ -277,7 +282,7 @@ func cancel_action() -> void:
 	hud.feedback.text = ""
 
 func _drop_card(instance: String, pointer: Vector2) -> void:
-	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible:
+	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible:
 		return
 	var full: bool = false
 	for card: Control in hud.card_views:
@@ -303,7 +308,42 @@ func _drop_card(instance: String, pointer: Vector2) -> void:
 	_update_action_summary()
 	hud.feedback.text = tr("BATTLE_INVALID_DROP")
 
+func _open_last_preview() -> void:
+	if hud.reaction_panel.visible or hud.result_panel.visible:
+		return
+	cancel_action()
+	var inspected: Dictionary = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd").inspect(snapshot["core"], selected_actor, config)
+	var targets: Array = []
+	for target: String in snapshot["core"]["battle"]["actors"]:
+		var command: Dictionary = Factory.build(snapshot, "ACTIVATE_LAST_SPELL_M4", {
+			"actor_id": selected_actor, "target_actor_id": target, "confirmed": true, "casting_mode": "FULL"})
+		if Factory.preview(snapshot, command, config)["accepted"]:
+			targets.append({"id": target, "name": log_actor_name(target)})
+	var actor: Node2D = $Design/Arena.get_node(selected_actor)
+	var texture: Texture2D = actor.body.sprite_frames.get_frame_texture("idle", 0)
+	var character: String = str(Lv40Encounter.CHARACTERS.get(selected_actor, "")) if config.get("m5_lv40_enabled", false) else ""
+	var title: String = tr("last_spell." + character + ".name") if not character.is_empty() else tr("BATTLE_LAST")
+	hud.last_preview.present(title, inspected, texture, targets, _reason(str(inspected.get("error", ""))))
+	for id: String in ["A", "B", "C"]:
+		var visual: Node2D = $Design/Arena.get_node(id)
+		_last_actor_visibility[id] = visual.visible
+		visual.hide()
+	hud._sync_modal_focus()
+
 func _command_requested(kind: String, fields: Dictionary) -> void:
+	if kind == "ACTIVATE_LAST_PREVIEW":
+		var command: Dictionary = Factory.build(snapshot, "ACTIVATE_LAST_SPELL_M4", {
+			"actor_id": selected_actor, "target_actor_id": str(fields.get("target_id", "")),
+			"confirmed": true, "casting_mode": "FULL"})
+		var preview: Dictionary = Factory.preview(snapshot, command, config)
+		if preview["accepted"]:
+			action_requested.emit(command)
+		else:
+			hud.last_preview.error_label.text = _reason(str(preview["error"]))
+		return
+	if kind == "ACTIVATE_LAST_SPELL_M4":
+		_open_last_preview()
+		return
 	if kind == "HOLD_CHANT":
 		if hud.reaction_panel.visible or hud.result_panel.visible:
 			return
@@ -416,7 +456,7 @@ func _input(event: InputEvent) -> void:
 	if snapshot.is_empty(): return
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
-	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible: return
+	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible: return
 	if event.is_action_pressed("end_turn"):
 		_command_requested("END_PLAYER_PHASE",{})
 		get_viewport().set_input_as_handled()

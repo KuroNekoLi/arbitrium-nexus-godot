@@ -160,6 +160,21 @@ func run() -> void:
 	await create_timer(0.4).timeout
 	await capture(live, "vis12_lv40_idle_1280_zh", "REAL_DOMAIN_LV40_BALANCE_PROVISIONAL",
 		{"content_version": live.config.get("content_version", ""), "tactical": live.view_model["tactical"]})
+	# USER_APPROVED Last Spell preview: passive quotes for all three real slots.
+	for actor: String in ["A", "B", "C"]:
+		live.select_actor(actor)
+		live._command_requested("ACTIVATE_LAST_SPELL_M4", {})
+		await capture(live, "vis13_last_preview_" + actor + "_1280_zh", "REAL_DOMAIN_LV40_BALANCE_PROVISIONAL",
+			{"actor_id": actor, "inspection": live.hud.last_preview.inspection,
+			"art_source": "existing Arena idle frame; provisional cut-in, not newly painted CG"})
+		live.cancel_action()
+	live.select_actor("A")
+	live._command_requested("ACTIVATE_LAST_SPELL_M4", {})
+	live._command_requested("ACTIVATE_LAST_PREVIEW", {"target_id": "Boss"})
+	live._command_requested("ACTIVATE_LAST_SPELL_M4", {})
+	await capture(live, "vis14_last_unavailable_1280_zh", "REAL_DOMAIN_LV40_BALANCE_PROVISIONAL",
+		{"disabled": live.hud.last_preview.activate_button.disabled})
+	live.cancel_action()
 
 	var directory: String = ProjectSettings.globalize_path(Writer.OUTPUT_SCOPE).path_join(prefix)
 	var f: FileAccess = FileAccess.open(directory.path_join("v35_capture_manifest.json"), FileAccess.WRITE)

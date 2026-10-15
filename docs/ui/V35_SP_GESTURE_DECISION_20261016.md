@@ -10,6 +10,7 @@
 - SPG-04：點選及鍵盤保留目標→Confirm 的可及性路徑；Reaction 仍必須手動 Confirm／Pass；Last Spell 仍是獨立不可逆確認入口。
 - SPG-05：右下名稱改為「符卡詳情／SPELL CARD DETAILS」，只有點選符卡檢視時出現；Idle、普通指令及拖放過程不顯示此面板。取消／換角／出牌後收合。Last Spell／其他指令的確認另由 `CommandConfirmation` 承載；設定與錯誤提示不屬於符卡詳情。
 - SPG-06：EN／繁中／保存重播不出現在戰鬥 HUD；右上僅呈現 Boss 名稱、HP、存在時的 Break／狀態與已公開 Intent。保留底層本地化與 Tape API，不以移除按鈕刪除功能。
+- SPG-07：點選終極法術立即進入專屬角色 cut-in 預覽，覆蓋左側戰場三名角色（保留隊伍狀態欄），右側顯示真實報價／釋放時程／風險與「啟動／取消」。啟動前不付款；取消還原戰場；不是符卡詳情或 SP 拖放。圖片目前沿用既有立繪作可替換展示素材，未宣稱新繪正式 CG 完成。
 
 本決策只取代 `BATTLE_UI_COMPONENT_CONTRACT.md` §6 中「拖卡→明確 confirm」的 SP 滑鼠路徑，不更動 AP、MP、RNG、Damage、Casting 時程、Reaction 或 Last Spell 規則。歷史 P4.4 14/16 群組不重新執行，也不因此改為通過。
 

@@ -63,6 +63,7 @@ var command_prompt_title: Label
 var command_prompt_description: Label
 var command_prompt_column: VBoxContainer
 var preferences_panel: PanelContainer
+var last_preview: Control
 
 func _ready() -> void:
 	theme = preload("res://resources/ui/battle_theme.tres")
@@ -194,6 +195,13 @@ func _build() -> void:
 	# both modal panels so it blocks the background, never their own buttons.
 	move_child(_modal_shield,reaction_panel.get_index())
 	move_child(command_prompt, result_panel.get_index())
+	last_preview = preload("res://scripts/battle/ui/components/last_spell_preview.gd").new()
+	last_preview.size = Vector2(1280, 720)
+	last_preview.z_index = 115
+	add_child(last_preview)
+	last_preview.activation_requested.connect(func(target: String) -> void:
+		command_requested.emit("ACTIVATE_LAST_PREVIEW", {"target_id": target}))
+	last_preview.cancel_requested.connect(func() -> void: cancel_requested.emit())
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection
@@ -232,7 +240,7 @@ func _restore_background_focus() -> void:
 
 ## GUI modal isolation is presentation-only; it never confirms or passes a window.
 func _sync_modal_focus() -> void:
-	var active: bool = result_panel.visible or reaction_panel.visible or command_prompt.visible
+	var active: bool = result_panel.visible or reaction_panel.visible or command_prompt.visible or last_preview.visible
 	_modal_shield.visible = active
 	if active:
 		if not _modal_active:
@@ -240,8 +248,8 @@ func _sync_modal_focus() -> void:
 		# SimpleCards also refreshes hover from geometry outside native GUI picking.
 		# NONE prevents its focus-on-hover from escaping into a covered hand.
 		for child: Node in get_children():
-			if child not in [reaction_panel,result_panel,command_prompt,_modal_shield]: _suspend_focus(child)
-		var panel: Control = result_panel if result_panel.visible else reaction_panel if reaction_panel.visible else command_prompt
+			if child not in [reaction_panel,result_panel,command_prompt,last_preview,_modal_shield]: _suspend_focus(child)
+		var panel: Control = result_panel if result_panel.visible else reaction_panel if reaction_panel.visible else last_preview if last_preview.visible else command_prompt
 		var buttons: Array[Control] = []
 		_focus_buttons(panel,buttons)
 		for i: int in buttons.size():
