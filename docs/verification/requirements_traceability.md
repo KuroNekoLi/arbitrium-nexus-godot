@@ -344,3 +344,21 @@ This is M5.1 **headless fixture scope only**, not M5.2–M5.5 complete battle or
 | M2 resources/CardInstances, M3 phase, Replay and fail-closed | M52-01–M52-04, M52-10–M52-11, M52-18–M52-24, M52-46–M52-48 | PASS: unchanged state on denial / deterministic 10-command tape |
 
 Only M5.2 Domain is verified; M5.3–5.5 and full real Boss battle not verified. See PH3_M5_2_ENGINEERING_NOTE.md and PH3_PHASE12_TEST_INVENTORY.md for exact 48 case IDs/Seed/hashes.
+
+## M5.3 — Boss FSM / public Intent / whole-SP Break / Exposed / paid Combo — VERIFIED 2026-10-15
+
+**Supersedes only M5.3 historical NOT_VERIFIED snapshots above.** Official [Godot 4.7.2 Actions #38674222091](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38674222091), tested code SHA e9e33ce86bd1232aa1323c4a9c8a97ce85ef12b0; **44/44 M5.3 new cases PASS** + **989/989 predecessors PASS** = **1033/1033 named Domain assertions**, 4 legacy smoke scripts success. Headless fixture scope only.
+
+| Binding rule / source | Named Godot tests | Verifiable scope / limitation |
+|---|---|---|
+| 06 Boss FSM, public intent unchanged after Reaction | M53-22–25, M53-30, M53-42 | PASS: deterministic committed single-target Boss policy and next-action published fallback; multi-enemy/conditional hidden branches untested |
+| P2-S25–31 whole-SP Break, fallback action and reset | M53-08–10, M53-20, M53-23, M53-26–28, M53-34 | PASS: full two hits before Break, locked Gauge, public fallback, actual resolved action restores Gauge; Counter-cancelled fallback is content-blocked |
+| P2-S17–24 Exposed created, one use, no refresh, expiry, Miss | M53-11, M53-17, M53-35, M53-37, M53-39–41 | PASS: no same-SP exploit, successful later SP consumption, retained on Miss, explicit next Player Phase-end expiry |
+| 09 COMBO-001～004: different actor and real second SP | M53-12–13, M53-15–19, M53-21, M53-36, M53-38 | PASS: actual M2 paid CardInstance, original AP/MP cost once, 0 additional Combo AP; defensive/casting/resonance content untested |
+| M2 payment, M5.1 real HP, M4.4 HP0, M1 replay | M53-01–07, M53-14, M53-29, M53-31–33, M53-43–44 | PASS: no duplicate cards, event and state hash replay, fail-closed rejection, 9 accepted command tape |
+| P2-S15/S16 Spell Counter | none | **BLOCKED_CONTENT / NOT VERIFIED**; no approved Counter skill/window; must not be conflated with Casting Interrupt |
+| P2-S02～S12 Analyze/Enemy Intel | none | **DEFERRED_CONTENT / NOT VERIFIED** |
+| CORE-01 full same-action multi-effect outcome | none | **M5.4 NOT VERIFIED**, existing basic outcome only |
+| M5.5 100-seed complete Boss battle | none | **NOT VERIFIED** |
+
+Full source, hashes and limits: [PH3_M5_3_ENGINEERING_NOTE.md](PH3_M5_3_ENGINEERING_NOTE.md). Do not promote whole M5 to VERIFIED based on this M5.3 subgate.
