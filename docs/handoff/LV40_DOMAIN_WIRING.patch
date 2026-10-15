@@ -1,0 +1,421 @@
+diff --git a/scripts/domain/m5/integration/m5_domain_resolver.gd b/scripts/domain/m5/integration/m5_domain_resolver.gd
+--- a/scripts/domain/m5/integration/m5_domain_resolver.gd
++++ b/scripts/domain/m5/integration/m5_domain_resolver.gd
+@@ -10,6 +10,7 @@ const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
+ const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+ const BossAI = preload("res://scripts/domain/m5/boss/boss_ai_policy.gd")
+ const Tactical = preload("res://scripts/domain/m5/combo/tactical_sp_resolver.gd")
++const Lv40 = preload("res://scripts/domain/m5/lv40/lv40_domain_extension.gd")
+ static func _deny(original: Dictionary, error: String) -> Dictionary:
+ 	var copy: Dictionary = original.duplicate(true)
+ 	return {"accepted":false,"error":error,"state":copy,"events":[],
+@@ -248,6 +249,8 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
+ 			"outcome","win","defeat","apply_damage"]:
+ 		if command.has(forbidden):
+ 			return _deny(state,"M51_UNTRUSTED_DAMAGE_PAYLOAD")
++	if config.get("m5_lv40_enabled",false) == true:
++		return Lv40.apply(state,command,config)
+ 	if config.get("m5_3_enabled",false) == true:
+ 		var kind: String = str(command.get("type",""))
+ 		if kind == "PLAY_TACTICAL_SP_M53":
+diff --git a/scripts/domain/m3/phase/phase_engine.gd b/scripts/domain/m3/phase/phase_engine.gd
+--- a/scripts/domain/m3/phase/phase_engine.gd
++++ b/scripts/domain/m3/phase/phase_engine.gd
+@@ -11,6 +11,7 @@ const ReactionWindow = preload("res://scripts/domain/m3/reaction/reaction_window
+ const ReactionQueue = preload("res://scripts/domain/m3/reaction/reaction_queue_resolver.gd")
+ const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
+ const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
++const Lv40Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
+ const SCHEMA: String = "m3.1-phase-fixture-v1"
+ const PLAYER_KINDS: Array[String] = [
+ 	"COMMIT_SP_CARD_FIXTURE", "FREE_SWAP", "EXTRA_DRAW_FIXTURE",
+@@ -307,7 +308,19 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
+ 			defense["original_target_actor_id"] = str(window_state["original_target_actor_id"])
+ 			defense["damage_recipient_actor_id"] = str(window_state["damage_recipient_actor_id"])
+ 			defense["enemy_action_cancelled_fixture"] = not bool(window_state["action_active"])
+-		if kind == "RESOLVE_ENEMY_ATTACK_M5":
++			if config.get("m5_lv40_enabled",false) == true:
++				defense["lv40_counter_actor_id"] = str(window_state.get("lv40_counter_actor_id",""))
++		if kind == "RESOLVE_ENEMY_ATTACK_M5" and config.get("m5_lv40_enabled",false) == true:
++			var resolved_lv40: Dictionary = Lv40Boss.resolve(next["core"],current_action["public_intent"],defense,config,command_id)
++			if not resolved_lv40["ok"]:
++				return _reject(original,str(resolved_lv40["error"]))
++			next["core"] = resolved_lv40["core"]
++			for record: Dictionary in resolved_lv40["timeline"]:
++				if str(record["kind"]) == "core_event":
++					_core_events(next,emitted,[record["raw"]],command_id)
++				else:
++					_emit(next,emitted,str(record["kind"]),command_id,record,"m5_lv40")
++		elif kind == "RESOLVE_ENEMY_ATTACK_M5":
+ 			if not config.get("m5_damage_enabled",false) == true:
+ 				return _reject(original,"M51_DAMAGE_NOT_ENABLED")
+ 			var intent: Dictionary = current_action["public_intent"]
+diff --git a/scripts/domain/m4/casting/casting_timeline_resolver.gd b/scripts/domain/m4/casting/casting_timeline_resolver.gd
+--- a/scripts/domain/m4/casting/casting_timeline_resolver.gd
++++ b/scripts/domain/m4/casting/casting_timeline_resolver.gd
+@@ -7,6 +7,7 @@ const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+ const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
+ const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
+ const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
++const Lv40Cast = preload("res://scripts/domain/m5/lv40/lv40_cast_effect.gd")
+ 
+ static func _before(a: Dictionary, b: Dictionary) -> bool:
+ 	if int(a["planned_resolve_round"]) != int(b["planned_resolve_round"]):
+@@ -30,6 +31,13 @@ static func settle_due(core: Dictionary, next_round: int,
+ 	due.sort_custom(_before)
+ 	var timeline: Array = []
+ 	for cast: Dictionary in due:
++		if config.get("m5_lv40_enabled",false) == true:
++			var lv40_release: Dictionary = Lv40Cast.settle(source,cast,next_round,config,command_id)
++			if not lv40_release["ok"]:
++				return lv40_release
++			source = lv40_release["core"]
++			timeline.append_array(lv40_release["timeline"])
++			continue
+ 		if str(cast.get("kind","")) == "LAST_SPELL":
+ 			var last_release: Dictionary = LastSpell.settle(source,cast,next_round)
+ 			if not last_release["ok"]:
+diff --git a/scripts/domain/m3/reaction/reaction_eligibility.gd b/scripts/domain/m3/reaction/reaction_eligibility.gd
+--- a/scripts/domain/m3/reaction/reaction_eligibility.gd
++++ b/scripts/domain/m3/reaction/reaction_eligibility.gd
+@@ -5,6 +5,7 @@ extends RefCounted
+ const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+ const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
+ const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
++const Lv40Reaction = preload("res://scripts/domain/m5/lv40/lv40_reaction.gd")
+ 
+ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
+ 		catalogue: Dictionary, action_active: bool = true, window: Dictionary = {}) -> Dictionary:
+@@ -51,7 +52,12 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
+ 	if rp_cost < 0 or mp_cost < 0:
+ 		return {"ok": false, "error": "INVALID_REACTION_COST"}
+ 	var effect: String = str(definition.get("fixture_effect", ""))
+-	if not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
++	var lv40_effect: bool = core["battle"].has("lv40") and ["LV40_PROTECT_COUNTER","LV40_BARRIER"].has(effect)
++	if lv40_effect:
++		var content_check: Dictionary = Lv40Reaction.check(core,action,window,entry,effect,action_active)
++		if not content_check["ok"]:
++			return content_check
++	if not lv40_effect and not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
+ 		return {"ok": false, "error": "UNIMPLEMENTED_REACTION_EFFECT"}
+ 	if effect == "FOCUS_WARD_FIXTURE":
+ 		if not definition.get("focus_ward_amount",null) is int or int(definition["focus_ward_amount"]) <= 0:
+@@ -75,7 +81,7 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
+ 		return {"ok": false, "error": "INVALID_REACTION_TARGET"}
+ 	if int(battle["actors"][target_id].get("hp", 0)) <= 0:
+ 		return {"ok": false, "error": "TARGET_INCAPACITATED"}
+-	if dependent and not action["public_intent"].get("target_ids", []).has(target_id):
++	if dependent and not lv40_effect and not action["public_intent"].get("target_ids", []).has(target_id):
+ 		return {"ok": false, "error": "REACTION_TARGET_MISMATCH"}
+ 	if rp_cost > int(battle["party_resources"]["rp"]):
+ 		return {"ok": false, "error": "INSUFFICIENT_RP"}
+diff --git a/scripts/domain/m3/reaction/reaction_queue_resolver.gd b/scripts/domain/m3/reaction/reaction_queue_resolver.gd
+--- a/scripts/domain/m3/reaction/reaction_queue_resolver.gd
++++ b/scripts/domain/m3/reaction/reaction_queue_resolver.gd
+@@ -7,6 +7,7 @@ const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
+ const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
+ const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
+ const FocusWard = preload("res://scripts/domain/m4/casting/focus_ward_resolver.gd")
++const Lv40Reaction = preload("res://scripts/domain/m5/lv40/lv40_reaction.gd")
+ 
+ static func _fail(state: Dictionary, reason: String) -> Dictionary:
+ 	return {"ok": false, "error": reason, "state": state.duplicate(true), "records": []}
+@@ -181,6 +182,13 @@ static func apply(state: Dictionary, instruction: Dictionary,
+ 					continue
+ 				updated["core"] = paid["state"]
+ 				records.append({"kind": "CORE_EVENTS", "events": paid["events"]})
++				if config.get("m5_lv40_enabled",false) == true and ["LV40_PROTECT_COUNTER","LV40_BARRIER"].has(str(can["effect"])):
++					var lv40_effect: Dictionary = Lv40Reaction.execute(updated,action,reaction,str(can["effect"]))
++					if not lv40_effect["ok"]:
++						return _fail(state,str(lv40_effect["error"]))
++					updated = lv40_effect["state"]
++					w = updated["reaction_window"]
++					records.append_array(lv40_effect["records"])
+ 				if str(can["effect"]) == "FOCUS_WARD_FIXTURE":
+ 					var card: String = str(reaction["card_instance_id"])
+ 					var definition_id: String = str(state["core"]["cards"]["actors"][actor_id]["instances"][card]["definition_id"])
+diff --git a/scripts/domain/m5/status/status_resolver.gd b/scripts/domain/m5/status/status_resolver.gd
+--- a/scripts/domain/m5/status/status_resolver.gd
++++ b/scripts/domain/m5/status/status_resolver.gd
+@@ -18,7 +18,7 @@ static func _definition(config: Dictionary, status_id: String) -> Dictionary:
+ static func _legal(d: Dictionary) -> bool:
+ 	if not KINDS.has(str(d.get("kind",""))) or \
+ 			not POLICIES.has(str(d.get("stack_policy",""))) or \
+-			str(d.get("tick_trigger","")) != "NEXT_PLAYER_PHASE":
++			not ["NEXT_PLAYER_PHASE","ENEMY_PHASE_END"].has(str(d.get("tick_trigger",""))):
+ 		return false
+ 	for field: String in ["priority","duration_ticks","stack_cap","tick_amount"]:
+ 		if not d.get(field,null) is int:
+@@ -66,7 +66,7 @@ static func validate(core: Dictionary, config: Dictionary) -> bool:
+ 				int(s["remaining_ticks"]) > int(definition["duration_ticks"]) or \
+ 				int(s["applied_round"]) > int(battle["round"]):
+ 			return false
+-		if s.get("tick_trigger","") != "NEXT_PLAYER_PHASE":
++		if s.get("tick_trigger","") != definition.get("tick_trigger",""):
+ 			return false
+ 		if definition["kind"] == "BARRIER":
+ 			if guards.has(target):
+@@ -131,7 +131,7 @@ static func grant(core: Dictionary, source_actor_id: String,
+ 			"source_actor_id":source_actor_id,"target_actor_id":target_actor_id,
+ 			"stacks":1,"remaining_ticks":int(d["duration_ticks"]),
+ 			"applied_round":int(s["battle"]["round"]),
+-			"priority":int(d["priority"]),"tick_trigger":"NEXT_PLAYER_PHASE",
++			"priority":int(d["priority"]),"tick_trigger":str(d["tick_trigger"]),
+ 			"definition_version":str(config.get("m5_status_version","m5.2-provisional-v1")),
+ 			"dispel_tags":d["dispel_tags"].duplicate(true)
+ 		})
+@@ -176,7 +176,9 @@ static func _sort(a: Dictionary, b: Dictionary) -> bool:
+ 	return str(a["status_instance_id"]) < str(b["status_instance_id"])
+ 
+ static func tick(core: Dictionary, next_round: int, config: Dictionary,
+-		command_id: String) -> Dictionary:
++		command_id: String, trigger: String = "NEXT_PLAYER_PHASE") -> Dictionary:
++	if not ["NEXT_PLAYER_PHASE","ENEMY_PHASE_END"].has(trigger):
++		return _fail("M52_INVALID_TICK_TRIGGER")
+ 	if not validate(core,config):
+ 		return _fail("M52_INVALID_STATUS_INSTANCES")
+ 	var state: Dictionary = core.duplicate(true)
+@@ -187,7 +189,7 @@ static func tick(core: Dictionary, next_round: int, config: Dictionary,
+ 	for status: Dictionary in ordered:
+ 		var target: String = str(status["target_actor_id"])
+ 		var d: Dictionary = _definition(config,str(status["status_id"]))
+-		if int(status["applied_round"]) >= next_round:
++		if str(status["tick_trigger"]) != trigger or int(status["applied_round"]) >= next_round:
+ 			remain.append(status)
+ 			continue
+ 		timeline.append({"kind":"StatusTickStarted","status_instance_id":status["status_instance_id"],
+diff --git a/scripts/domain/m5/damage/damage_pipeline_resolver.gd b/scripts/domain/m5/damage/damage_pipeline_resolver.gd
+--- a/scripts/domain/m5/damage/damage_pipeline_resolver.gd
++++ b/scripts/domain/m5/damage/damage_pipeline_resolver.gd
+@@ -103,6 +103,11 @@ static func resolve(core: Dictionary, source_id: String, declared_target: String
+ 		return _error("M51_MISSING_RECIPIENT_STATS")
+ 	var element: String = str(profile.get("element_id","NEUTRAL"))
+ 	var resistance: Variant = config.get("m5_element_resistance",{}).get(recipient,{})
++	# Provisional Lv40 content defines neutral treatment for unknown elements.
++	# All legacy/fixture profiles still fail closed without configured resistance.
++	if config.get("m5_lv40_enabled",false) == true and resistance is Dictionary and not resistance.has(element):
++		resistance = resistance.duplicate(true)
++		resistance[element] = 10000
+ 	if not resistance is Dictionary or not resistance.get(element,null) is int:
+ 		return _error("M51_ELEMENT_NOT_CONFIGURED")
+ 	var resist_bp: int = int(resistance[element])
+diff --git a/tests/test_lv40_content.gd b/tests/test_lv40_content.gd
+--- a/tests/test_lv40_content.gd
++++ b/tests/test_lv40_content.gd
+@@ -3,6 +3,7 @@ const Encounter = preload("res://scripts/domain/m5/lv40/lv40_encounter.gd")
+ const M4 = preload("res://scripts/domain/m4/integration/m4_domain_resolver.gd")
+ const Model = preload("res://scripts/domain/m1/combat_model.gd")
+ const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
++const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
+ var passed: int = 0
+ var failed: int = 0
+ 
+@@ -22,6 +23,15 @@ func _initialize() -> void:
+ 		quit(1)
+ 		return
+ 	check(M4.validate_state(s),"DEMO-01-CONTENT-M4-SCHEMA")
++	check(bool(c.get("m5_lv40_enabled",false)) and str(s["core"]["battle"]["lv40"]["version"]) == str(c["m5_lv40_content_version"]), "DEMO-01-VERSIONED-OPT-IN")
++	check(str(c["m5_status_definitions"]["SCORCH_TEST"]["tick_trigger"]) == "ENEMY_PHASE_END", "DEMO-10-SCORCH-REGISTERED-BOUNDARY")
++	var granted: Dictionary = Status.grant(s["core"],"B","Boss","SCORCH_TEST","content-tick",c)
++	check(granted.get("ok",false) and Status.validate(granted["core"],c), "DEMO-10-REAL-STATUS-SCHEMA")
++	if granted.get("ok",false):
++		var early: Dictionary = Status.tick(granted["core"],2,c,"content-no-early","NEXT_PLAYER_PHASE")
++		check(early.get("ok",false) and early["timeline"].is_empty() and early["core"]["battle"]["statuses"] == granted["core"]["battle"]["statuses"], "DEMO-10-NO-PLAYER-PHASE-SCORCH-TICK")
++		var due: Dictionary = Status.tick(granted["core"],2,c,"content-enemy-tick","ENEMY_PHASE_END")
++		check(due.get("ok",false) and due["timeline"].size() > 0 and int(due["core"]["battle"]["statuses"][0]["remaining_ticks"]) == 1, "DEMO-10-SCORCH-ENEMY-END-ONLY")
+ 	check(s["core"]["battle"]["enemies"] == ["Boss"],"DEMO-01-SINGLE-BOSS")
+ 	check(int(s["core"]["battle"]["party_resources"]["current_ap"]) == 6,"DEMO-01-AP6")
+ 	for actor: String in Encounter.LOADOUTS:
+diff --git a/tests/test_lv40_domain.gd b/tests/test_lv40_domain.gd
+--- a/tests/test_lv40_domain.gd
++++ b/tests/test_lv40_domain.gd
+@@ -105,6 +105,14 @@ func announce(r: Dictionary, skill: String) -> void:
+ func _initialize() -> void:
+ 	var r: Dictionary = rig()
+ 	check(M4.validate_state(r["state"]),"DEMO-01-M5-ENVELOPE")
++	# A real paid physical SP leaves its owner hand; reusing the instance fails atomically.
++	var paid_card: String = in_hand(r["state"],"A","R01")
++	check(step(r,"PLAY_LV40_CARD",{"actor_id":"A","card_instance_id":paid_card,
++		"target_actor_id":"Boss","casting_mode":"CHANTLESS"}), "DEMO-13-LIVE-SP-ACCEPTED")
++	check(r["state"]["core"]["cards"]["actors"]["A"]["zones"]["discard"].has(paid_card), "DEMO-13-LIVE-SP-DISCARDED")
++	deny(r,"PLAY_LV40_CARD",{"actor_id":"A","card_instance_id":paid_card,
++		"target_actor_id":"Boss","casting_mode":"CHANTLESS"}, "DEMO-13-USED-SP-ATOMIC")
++	r = rig()
+ 	# Canonical unchanged intent across HP thresholds, then next publication.
+ 	r["state"]["core"]["battle"]["actors"]["Boss"]["hp"] = 1700
+ 	check(enemy(r),"DEMO-02-LOCKED-INTENT-EXECUTES")
+@@ -128,6 +136,8 @@ func _initialize() -> void:
+ 		tape.append(c)
+ 	var replayed: Dictionary = M5.replay(initial,tape,r["config"])
+ 	check(replayed["accepted"] and replayed["state_hash"] == Model.state_hash(r["state"]) and replayed["event_hash"] == Model.event_hash(r["events"]),"DEMO-13-FULL-TAPE-REPLAY")
++	var same_replay: Dictionary = M5.replay(initial,tape,r["config"])
++	check(same_replay["accepted"] and same_replay["state_hash"] == replayed["state_hash"] and same_replay["event_hash"] == replayed["event_hash"], "DEMO-13-IDENTICAL-SEEDED-REPLAY")
+ 	print("LV40_REPLAY seed=20261014 tape=",JSON.stringify(tape)," event_hash=",Model.event_hash(r["events"])," final_hash=",Model.state_hash(r["state"]))
+ 	# Interrupt paid A05, no second free attack in the cooldown slot.
+ 	r = rig()
+diff --git a/tests/test_lv40_edges.gd b/tests/test_lv40_edges.gd
+--- a/tests/test_lv40_edges.gd
++++ b/tests/test_lv40_edges.gd
+@@ -48,6 +48,9 @@ func _initialize() -> void:
+ 	r = rig()
+ 	check(play(r,"B","A07","Boss"),"DEMO-10-A07-STATUS")
+ 	check(r["state"]["core"]["battle"]["statuses"].size() == 1,"DEMO-10-A07-REAL-STATUS-INSTANCE")
++	var early: Dictionary = StatusEngine.tick(r["state"]["core"],2,r["config"],"early","NEXT_PLAYER_PHASE")
++	check(early.get("ok",false) and early["timeline"].is_empty() and early["core"]["battle"]["statuses"] == r["state"]["core"]["battle"]["statuses"],"DEMO-10-NO-EARLY-PLAYER-TICK")
++	check(not StatusEngine.tick(r["state"]["core"],2,r["config"],"invalid","CLIENT_TICK").get("ok",false),"DEMO-10-REJECT-UNKNOWN-TICK-BOUNDARY")
+ 	announce(r,"B05")
+ 	check(enemy(r) and step(r,"END_ENEMY_PHASE") and has_event(r["last"],"StatusTickStarted"),"DEMO-10-A07-ENEMY-END-TICK")
+ 	check(step(r,"START_PLAYER_PHASE") and not has_event(r["last"],"StatusTickStarted"),"DEMO-10-A07-NO-DOUBLE-PLAYER-TICK")
+@@ -89,5 +92,8 @@ func _initialize() -> void:
+ 	p["element_id"] = "UNLISTED"
+ 	var unknown: Dictionary = Damage.resolve(r["state"]["core"],"A","Boss",p,{},r["config"],"unknown")
+ 	check(unknown.get("ok",false),"DEMO-07-UNKNOWN-NEUTRAL")
++	var legacy: Dictionary = r["config"].duplicate(true)
++	legacy["m5_lv40_enabled"] = false
++	check(not Damage.resolve(r["state"]["core"],"A","Boss",p,{},legacy,"unknown-legacy").get("ok",false), "DEMO-07-NON-LV40-UNKNOWN-REJECT")
+ 	print("LV40_EDGES_REPORT executed=",passed+failed," passed=",passed," failed=",failed)
+ 	quit(1 if failed else 0)
+diff --git a/scripts/domain/m5/lv40/lv40_domain_extension.gd b/scripts/domain/m5/lv40/lv40_domain_extension.gd
+--- a/scripts/domain/m5/lv40/lv40_domain_extension.gd
++++ b/scripts/domain/m5/lv40/lv40_domain_extension.gd
+@@ -120,7 +120,7 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
+ 			for record: Dictionary in publication["timeline"]:
+ 				emit(next,output,record,id)
+ 			emit(next,output,{"kind":"BossIntentCommitted","public_intent":publication["intent"]},id)
+-	if not M4.validate_state(next):
++	if not M4.validate_state(next) or not Status.validate(next["core"],config):
+ 		return deny(state,"LV40_INVARIANT_FAILED")
+ 	return receipt(next,output)
+ 
+@@ -129,7 +129,7 @@ static func end_enemy(core: Dictionary, config: Dictionary, id: String) -> Dicti
+ 	var records: Array = []
+ 	# Existing M5 Status engine owns instance stacking, refresh, tick and dispel.
+ 	# The optional boundary selector is added by the pending integration patch.
+-	var tick: Dictionary = Status.call("tick",next,int(next["battle"]["round"])+1,config,id,"ENEMY_PHASE_END")
++	var tick: Dictionary = Status.tick(next,int(next["battle"]["round"])+1,config,id,"ENEMY_PHASE_END")
+ 	if not tick["ok"]:
+ 		return tick
+ 	next = tick["core"]
+diff --git a/docs/verification/PH4_LV40_DOMAIN_NOTE.md b/docs/verification/PH4_LV40_DOMAIN_NOTE.md
+--- a/docs/verification/PH4_LV40_DOMAIN_NOTE.md
++++ b/docs/verification/PH4_LV40_DOMAIN_NOTE.md
+@@ -1,7 +1,7 @@
+ # Phase4.5 Lv40 Domain handoff
+ 
+-施工中；HEAD 5103e40a4b95da82f2561b29c2604e9514fd398b，Godot 4.7.2.stable.official.ed1daf0bf。
+-依使用者並行限制，P4.4 提交完成通知之前只新增 Lv40 模組／測試，既有入口尚未接線。
++原始交接基準 `5103e40a4b95da82f2561b29c2604e9514fd398b` (master / P4.3)，handoff 起始 commit `977a289654e1470bcda83c6c25c14d4cda4c86ab`。
++2026-10-15 checkpoint 上的 Lv40 Domain 接線修改已提交到 `handoff/p4-lv40-chat-20261015`，**IMPLEMENTED_NOT_VERIFIED**；與原始交接所述「入口尚未接線」相比，此段為後續試驗實作，絕非 Godot runtime 或 CI PASS。先前提供的 Godot 4.7.2.stable.official.ed1daf0bf 是原交接環境記錄；接收對話目前無 Godot binary，未重新執行。P4.4 GUI Gate 仍有待授權，master 未改。
+ 
+ ## 穩定公開接口
+ 
+@@ -32,8 +32,27 @@ docs26 §5 精確三副12 SP，覆蓋 docs25 歷史配置。docs27 B01–B11 行
+ 
+ ## 驗證狀態
+ 
+-IMPLEMENTED_NOT_VERIFIED；入口接線、測試結果、精確 changed paths 會在交付時補上。
+-未執行 CI；依使用者限制不 commit/push、不改 RTM/UI/CI/project.godot。
++**IMPLEMENTED_NOT_VERIFIED / NOT_EXECUTED**：本次接收對話有 GitHub 讀寫能力，但沒有本機 Godot 4.7.2 binary 或 checkout；所有新增提交都限定在交接 WIP 分支。沒有執行任何新 Godot runner、全部 Domain regression、GUI input / screenshot、CI、真人 playtest，**不可宣稱 PASS**。以前的 32/32 Content、1238/1238 Domain、100 seeds 及 P4.4 14/16 GUI 只是原交接的歷史證據，不是接線後結果；既有 P4.4 GUI 三次嘗試額度未重置或重跑。
++
++### 本次接線：Source → Code → Test（待執行）
++
++| 受影響檔案 | 本次接線 / 保留條件 | 待執行測試與 Oracle |
++|---|---|---|
++| `scripts/domain/m5/integration/m5_domain_resolver.gd` | M5 shared untrusted payload / balance / terminal guard 之後，僅在 `m5_lv40_enabled` 時呼叫 Lv40 Extension；原 fixture/M53 流程不變 | `tests/test_lv40_domain.gd`：真卡支付、重複／stale／錯 owner／錯 target、Replay |
++| `scripts/domain/m3/phase/phase_engine.gd` | 仍由 M3 驗證 declared action/window；交 Lv40Boss.resolve 實際結算 AoE、蓄力、release、B03 中斷、R05 counter；原 M5 single-target 保留 | domain / edge：B02 多 hit、B04 AoE、B05→B06、B08→B09、B10、B11、Guard / Protect |
++| `scripts/domain/m4/casting/casting_timeline_resolver.gd` | M4 已排序 due cast，Lv40 以既有 payment/release authority 與 Damage pipeline 執行；非 Lv40 仍走舊路 | domain / edge：Full Chant、Last Spell、HP0 失效、事件順序 |
++| `scripts/domain/m3/reaction/reaction_eligibility.gd`、`reaction_queue_resolver.gd` | 已宣告的單體窗口中 R05/T05 eligibility；維持 M2 confirm-time 真實扣費、JIT skip；不自動 Pass | domain / edge：R05/T05、先 R05 後 T05 skipped 且不付費、AoE 無 Protect |
++| `scripts/domain/m5/status/status_resolver.gd` | 預設 NEXT_PLAYER_PHASE 繼續有效；新增明確 ENEMY_PHASE_END tick selector，validate/real instance/grant 一致 | content / edge：Scorch 不在玩家階段重複 tick、敵方階段結束 tick、非法 selector 拒絕 |
++| `scripts/domain/m5/damage/damage_pipeline_resolver.gd` | 僅版本化 Lv40 opt-in 設定時，未列舉 element 中性 10000 bp；保留舊模式 fail-closed | edge：未知元素 Lv40 neutral；關閉 Lv40 後拒絕 |
++| `scripts/domain/m5/lv40/lv40_domain_extension.gd` | 靜態呼叫既有 Status.tick；成功交易後額外檢查 Status.validate；拒絕仍還原原 snapshot/event/RNG | content / domain / edge：版本、Status、拒絕原子性與 Replay |
++| `tests/test_lv40_content.gd`、`test_lv40_domain.gd`、`test_lv40_edges.gd` | 保留舊 assertions 並新增已註明的 content/status/payment/seed/rejection 測例 | 需要真 Godot 4.7.2.stable 才能報 PASS/FAIL |
++
++### 驗收 Gate 與未解風險
++
++- 必須從本次**最新 branch HEAD** 在 Godot 4.7.2 執行原有三個 Lv40 runner、完整 M1–M5.5 Domain regression（交接前 1238 assertions）及 100 個固定 seed、四組 legacy 回歸；記錄**每群實際** attempt 1/2/3、exit code、完整 raw log、重現 seed/tape、State/Event hash。若任一群第三次仍失敗，停止該 Gate，不能以改名重跑洗掉失敗。
++- 無執行環境、無新 CI run URL、無執行後的 replay hash；本次只有**程式碼／測試提交**，沒有 runtime 或 GUI 證據。
++- `resources/combat/lv40/pending_integration.patch` 是原未套用草稿：已逐段對照實際路徑，沒有直接將原檔案當作可執行 `git apply` patch；它仍為歷史提案，不再代表目前 HEAD 的待改入口。
++- `M5.apply(state,command,config)` 仍為唯一外部入口；UI、`project.godot`、CI、素材、平衡值、RTM、P4.4 Gate 未修改。Lv40 Doc29 候選 A / `BALANCE_PROVISIONAL` 不轉成 USER_APPROVED。
+ 
+ ### 授權與中斷交接
+diff --git a/docs/handoff/CODEX_RETURN.md b/docs/handoff/CODEX_RETURN.md
+--- /dev/null
++++ b/docs/handoff/CODEX_RETURN.md
+@@ -0,0 +1,77 @@
++# Lv40 Domain Wiring — GPT return to Codex (2026-10-15)
++
++## Identity
++
++- Package: **Lv40 Domain wiring ONLY** (Phase 4.5, within the already-authorized M5 extension).
++- Repository: `KuroNekoLi/arbitrium-nexus-godot`.
++- Checkpoint branch: `handoff/p4-lv40-chat-20261015`.
++- Full original input SHA: `977a289654e1470bcda83c6c25c14d4cda4c86ab`.
++- Source master / P4.3 base: `5103e40a4b95da82f2561b29c2604e9514fd398b`.
++- Latest code + verification-note commit before this return: `5e2d0d2f8fd821988a455f2ad95c6515987b88fa`.
++- Final branch HEAD: retrieve at review time; return document and patch are additional WIP commits.
++- Output: 11 modified GDScript files (8 implementation + 3 test) and updated `docs/verification/PH4_LV40_DOMAIN_NOTE.md`; unified diff at `docs/handoff/LV40_DOMAIN_WIRING.patch`.
++- Missing execution inputs: local Godot 4.7.2 binary, local repository checkout and execution environment. The GitHub connector can read and write this checkpoint, **not** execute Godot.
++- **Status: IMPLEMENTED_NOT_VERIFIED / NOT_EXECUTED.** These changes have been committed **only to the checkpoint branch**. Do not merge master, stamp P4.5 VERIFIED or claim CI PASS.
++
++## Changes
++
++| Exact path | Mode | Boundary / change | Rule / why |
++|---|---|---|---|
++| `scripts/domain/m5/integration/m5_domain_resolver.gd` | MODIFY | Opt-in Lv40 dispatch after existing M5 untrusted-payload / balance / terminal guards | Single public transaction M5.apply; legacy fixture unchanged |
++| `scripts/domain/m3/phase/phase_engine.gd` | MODIFY | Existing declared-action + window guards call Lv40Boss.resolve for charge, release, AoE and counter | M3 scheduling authority, M5 damage |
++| `scripts/domain/m4/casting/casting_timeline_resolver.gd` | MODIFY | Due Full/Last entries delegate to existing Lv40Cast.settle with authoritative M2 settlement | M4 release ordering, no double payment |
++| `scripts/domain/m3/reaction/reaction_eligibility.gd` | MODIFY | R05/T05 tagged content checks with existing JIT resource and recipient validation | M3 manual reaction window |
++| `scripts/domain/m3/reaction/reaction_queue_resolver.gd` | MODIFY | After actual M2 pay, execute approved R05 redirect+counter marker / T05 HP barrier | M2 pay-on-confirm, no free effects |
++| `scripts/domain/m5/status/status_resolver.gd` | MODIFY | Versioned tick boundary `NEXT_PLAYER_PHASE` (default) or `ENEMY_PHASE_END`, status instance agreement | Single Status authority; Scorch ticks at enemy end |
++| `scripts/domain/m5/damage/damage_pipeline_resolver.gd` | MODIFY | Lv40-only missing-element neutral 10000 bp fallback; unchanged non-Lv40 fail-closed | Content-scoped candidate policy |
++| `scripts/domain/m5/lv40/lv40_domain_extension.gd` | MODIFY | Direct typed Status.tick and Status.validate postcondition | Atomicity, no duplicate status pipeline |
++| `tests/test_lv40_content.gd` | MODIFY | Opt-in/version schema; real Scorch instance; enemy-end-only tick | Content and status boundary oracles |
++| `tests/test_lv40_domain.gd` | MODIFY | Real SP hand→discard, spent-card reject, identical seeded replay hashes | M2 conservation, M5 replay |
++| `tests/test_lv40_edges.gd` | MODIFY | No early Scorch tick; invalid trigger; Lv40 neutral vs legacy reject | Negative and compatibility boundaries |
++| `docs/verification/PH4_LV40_DOMAIN_NOTE.md` | MODIFY | Exact wiring paths, evidence status, prior-GUI retry policy, gate plan | Reproducible engineering record |
++
++No second combat state, RNG, damage calculator or reaction-payment authority was introduced. `pending_integration.patch` was **reviewed and translated to narrow exact edits**, not blindly applied as a standard git diff. Original content modules, provisional balance, GUI and P4.4 files were preserved.
++
++## Contract
++
++- Formal external API: `M5.apply(state, command, config)`; replay: `M5.replay(initial, tape, config)`.
++- New content command: `PLAY_LV40_CARD` with `type, command_id, expected_event_seq, actor_id, card_instance_id, target_actor_id, casting_mode`, optional `combo_mode`; never accepts supplied costs, HP, skills or effect numbers.
++- Lv40 gate: `m5_lv40_enabled=true`, matching `m5_lv40_content_version`, `m5_balance_authority=BALANCE_PROVISIONAL`. Existing M5 danger/terminal checks still precede the new dispatcher.
++- M3 enemy execution: original scheduler/windows close through `RESOLVE_ENEMY_ATTACK_M5`; Lv40Boss reports trusted `timeline` and updated `core`. R05 defense carries `lv40_counter_actor_id` set only by a paid, confirmed reaction.
++- M4 due release: `Lv40Cast.settle(core,cast,next_round,config,command_id)`; existing sorted due list governs lifecycle.
++- Status: `Status.tick(core,next_round,config,command_id,trigger="NEXT_PLAYER_PHASE")`. Existing calls without selector retain original PlayerPhase semantics; explicit `ENEMY_PHASE_END` is used solely by Lv40 extension.
++- Output event envelope: `event_seq,kind,command_id,source,details,phase,round`, with existing core event wrappers. Rejected command uses original state duplicate, empty events, unchanged RNG/event sequence.
++- Candidate balance remains **BALANCE_PROVISIONAL** under docs26/27/29 candidate A; no 400-battle or human playtest approval.
++
++## Tests / evidence
++
++- Environment: GitHub connector only; no current Godot binary / local checkout. Source record mentions Godot `4.7.2.stable.official.ed1daf0bf` on the earlier operator machine, **not** verified in this receiving runtime.
++- Executed current-turn Godot commands: **NONE**. Lv40 three suites attempt count **0** in this receiving session; no new logs, screenshots, runtime hash or CI run URL.
++- Tests added without weakening existing oracles; `NOT_EXECUTED` must be reported, not PASS.
++- **Pending commands on a local verified Godot 4.7.2 checkout**:
++  ```bash
++  godot --version
++  godot --headless --path . --editor --import --quit
++  for test in test_lv40_content test_lv40_domain test_lv40_edges; do
++    godot --headless --path . --script "res://tests/${test}.gd" > "outputs/p4_logs/${test}_wiring_attempt1.log" 2>&1 || exit 1
++  done
++  ```
++  Run all existing M1–M5.5 Domain suites, 100 fixed seed replay and four legacy smoke groups; preserve every raw log and exit code. Verify deterministic event/final hashes and error/atomicity paths. Do not assert parity from old 1,238/1,238 logs.
++- Carried forward unchanged: P4.3 successful CI #38685051780; P4.4 local feedback 45/45, edges 80/80, 1238 Domain / 100 seeds / four legacy suites (PRE-WIRING), GUI input capture attempt 3 = **14/16 FAIL** (two PNG saves failed). P4.4 GUI allowed 3 attempts used; no fourth run without prior authorization.
++- Master remains unchanged as required; branch workflow push filter excludes checkpoint, so **no new CI validation** occurred.
++
++## Codex next actions (maximum five)
++
++1. Fetch `handoff/p4-lv40-chat-20261015`, pin the actual full SHA; compare against input `977a289...`, preserve local/user dirty changes. **Do not re-apply the diff to an already updated branch.**
++2. Review all 8 code paths and the unified diff from `LV40_DOMAIN_WIRING.patch`, especially `Status.tick`, Boss charge/release/intent retention, Action/Reaction JIT ordering and Last Spell release invariants. Use approved docs26/27/29, docs22 and `COMBAT_SPEC_INDEX.md`.
++3. With Godot 4.7.2, run the three Lv40 runners + complete Domain regression + 100 seeds + four legacy suites on the modified branch; record each group's existing attempt counter, true failures, raw logs, exact seed/tape and final/event hashes. Do not weaken an assertion to get green.
++4. Preserve the unresolved P4.4 GUI 14/16/attempt3 evidence; no additional GUI run without its specific user authorization; report any Lv40 Domain failures separately.
++5. Only after applicable gates pass, update verification/RTM documents and obtain required approval for merge to master; P4.5 cannot be declared VERIFIED from this return alone.
++
++## Risks / learning
++
++- Major unresolved risk is **runtime correctness**: Code was statically reviewed against existing entrypoints but never parsed or executed under Godot here; any type/parse or API conflict must be treated as a genuine failure until tested.
++- Rollback is scoped: revert only the Lv40 wiring/test/note commits on the checkpoint branch or apply their inverse; do not reset or force push user history.
++- Architecture rationale: M5 is a transactional reducer, M3/M4/M2 enforce ordering and payments, and Lv40 modules supply content-specific policy only.
++- Android / Kotlin analogy: this is like keeping a single `ViewModel.reduce(Action) -> State + Effect` transaction and calling domain use cases rather than letting Compose UI or animation callbacks charge MP / alter HP. The `event_seq` and command ID are optimistic concurrency/idempotency guards; seeded event + state hashes are replay determinism oracles.
++- Source → code → test → evidence: mapping above is complete through **test source**, but **actual runtime evidence is still MISSING**.
