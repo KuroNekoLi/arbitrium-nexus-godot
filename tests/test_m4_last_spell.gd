@@ -187,7 +187,7 @@ func _init() -> void:
 	check("LAST-001-NO_SECOND_ACTIVATION",wrong(s,"ACTIVATE_LAST_SPELL_M4",
 		"second-nova",last_command(),"LAST_SPELL_ALREADY_USED"))
 	check("LAST-001-CANNOT_BASIC_ATTACK_WHILE_CONCENTRATING",wrong(s,
-		"BASIC_ATTACK_RESOURCE_ONLY","attack-cast",{"actor_id":"A"},"ACTOR_UNAVAILABLE"))
+		"BASIC_ATTACK_RESOURCE_ONLY","attack-cast",{"actor_id":"A"},"ACTOR_UNAVAILABLE_OR_PHASE"))
 	check("LAST-001-STALE_REJECTED",not M4.apply(s,cmd(seed,"ACTIVATE_LAST_SPELL_M4",
 		"stale",last_command()),config)["accepted"])
 	check("LAST-001-DUPLICATE_COMMAND_REJECTED",wrong(s,"ACTIVATE_LAST_SPELL_M4",
@@ -254,7 +254,7 @@ func _init() -> void:
 	if not closed["accepted"]:
 		printerr("M4_3_CLOSE_R1_FAILED ",closed["error"]);quit(1);return
 	s = closed["state"]
-	var open_r2: Dictionary = perform(s,tape,"START_PLAYER_PHASE","r2-open")
+	var open_r2: Dictionary = perform(s,tape,"START_PLAYER_PHASE","enter-r2")
 	if not open_r2["accepted"]:
 		printerr("M4_3_OPEN_R2_FAILED ",open_r2["error"]);quit(1);return
 	s = open_r2["state"]
@@ -266,7 +266,7 @@ func _init() -> void:
 	var closed2: Dictionary = end_enemy(enemy2["state"],tape,"r2")
 	if not closed2["accepted"]:
 		printerr("M4_3_CLOSE_R2_FAILED ",closed2["error"]);quit(1);return
-	var open_r3: Dictionary = perform(closed2["state"],tape,"START_PLAYER_PHASE","r3-open")
+	var open_r3: Dictionary = perform(closed2["state"],tape,"START_PLAYER_PHASE","enter-r3")
 	if not open_r3["accepted"]:
 		printerr("M4_3_OPEN_R3_FAILED ",open_r3["error"]);quit(1);return
 	s = open_r3["state"]
@@ -278,7 +278,7 @@ func _init() -> void:
 	var closed3: Dictionary = end_enemy(enemy3["state"],tape,"r3")
 	if not closed3["accepted"]:
 		printerr("M4_3_CLOSE_R3_FAILED ",closed3["error"]);quit(1);return
-	var open_r4: Dictionary = perform(closed3["state"],tape,"START_PLAYER_PHASE","r4-open")
+	var open_r4: Dictionary = perform(closed3["state"],tape,"START_PLAYER_PHASE","enter-r4")
 	if not open_r4["accepted"]:
 		printerr("M4_3_OPEN_R4_FAILED ",open_r4["error"]);quit(1);return
 	s = open_r4["state"]
