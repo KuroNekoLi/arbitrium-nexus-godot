@@ -22,3 +22,16 @@
 
 This is a **Design System Token/Theme** separation. A Godot `Theme` plays the same role as a Compose MaterialTheme; a locally overridden ProgressBar fill serves semantic color for an individual status. Its display must subscribe to read-model state, not introduce a parallel reducer or data transaction.
 
+
+## Real CI receipts — 2026-10-15
+
+**HEADLESS_VERIFIED + REAL_RENDER_VERIFIED for V3.1 scope.** This does not certify V3 as a finished commercial art release.
+
+1. [Godot V3.1 Headless #38741223147](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38741223147) ran against implementation SHA `5ae9c7a08613ea473412bf4e8e83cfb33831d261` with **31/31 V31_VISUAL_REPORT PASS**. Also passed unmodified: Scene 8/8, P4 HUD 36/36, V1 Component 24/24, V2.1 Layout 18/18, V2.2 Context 23/23, V2.4 Hand 39/39, P4 Integration 31/31, Localization 198/198, Lv40 Playable 32/32. Godot import and each strict log had zero errors.
+2. [Normal true-render #38741497546](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38741497546) produced the existing **nine** Godot 4.7.2 Xvfb/Mesa Compatibility screenshot states at 1280/1920, zh_TW/en and 0/1/4/8-card variants: `V23_CAPTURE_REPORT executed=30 passed=30 failed=0`.
+3. [Dedicated Boss Break true-render #38742019804](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38742019804) ran at SHA `84dd52296b9a2409ea991b9810d362366b608252`: both the nine default screenshots **30/30** and three Break-scenario rendered screenshots **20/20** passed strict PNG decoding and Godot logs. [Original PNGs, manifest and runner logs (artifact #11976377981)](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38742019804/artifacts/11976377981) are retained for 14 days.
+4. The three special Break screenshots (`v31_boss_break_1280_zh.png`, `v31_boss_locked_1280_zh.png`, `v31_boss_break_1920_en.png`) are **explicit projection-only MOCK fixtures** for presentation geometry. They never modify the Game Domain, real Break Gauge, BattleController or accepted combat commands.
+5. I visually inspected the in-run 640×360 JPEG previews: the revised navy/gold theme renders throughout the HUD; Boss HP red fill, Break gold fill and public Intent occupy distinct lines within the enemy panel. Screenshot fixture assertion also checks the Intent Label global bottom stays within the panel rectangle. This is evidence of general placement, not exact text pixel-fitting or pointer GUI testing.
+6. The real-render log emitted the graphics-driver V-Sync unsupported warning under Mesa/Xvfb, but **no script/import errors**. Strict error detection was preserved (no blanket ignore or altered test oracles).
+
+**Review status: V3.1 implementation accepted by automated headless and renderer gates; final visual style requires user approval.** Outstanding: high-fidelity card frame/art family, Boss status ornaments and thinner typography hierarchy, long locked/exposed labels and narrow-viewport text overflow, hand selected/card art polishing, and reference image pinned into durable repo storage with hash. **V2 remains under independent Codex review.** This V3 branch is isolated and not merged into master. Do not copy an unreviewed V2 HUD wholesale over reviewed code; reconcile by selective integration once V2 is approved.
