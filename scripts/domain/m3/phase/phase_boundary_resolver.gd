@@ -55,7 +55,7 @@ static func validate_hooks(hooks: Array) -> bool:
 		ids[id] = true
 	return true
 
-static func check_action_outcome(core: Dictionary) -> Dictionary:
+static func check_action_outcome(core: Dictionary, config: Dictionary = {}) -> Dictionary:
 	if not Integrated.validate_state(core):
 		return {"ok": false, "error": "INVALID_CORE", "core": core.duplicate(true), "event": {}}
 	var next: Dictionary = core.duplicate(true)
@@ -63,6 +63,18 @@ static func check_action_outcome(core: Dictionary) -> Dictionary:
 	next["battle"]["outcome"] = result
 	var event: Dictionary = {"kind": "BattleOutcomeEvaluated", "outcome": result,
 		"victory_priority": true, "scope": "M3_1_HP_BOUNDARY_ONLY"}
+	if config.get("m5_4_outcome_enabled",false) == true:
+		event["scope"] = "M5_4_COMMITTED_ACTION_OR_PHASE_BOUNDARY"
+		# All-Exhausted while HP>0 remains an explicit pending user decision.
+		# Never reclassify it as all Incapacitated/DEFEAT.
+		var all_exhausted: bool = not next["battle"]["allies"].is_empty()
+		for ally: Variant in next["battle"]["allies"]:
+			var member: Dictionary = next["battle"]["actors"][ally]
+			if int(member["hp"]) <= 0 or str(member["status"]) != "EXHAUSTED":
+				all_exhausted = false
+		if all_exhausted and result == "ONGOING":
+			event["core_rule_edge"] = "ALL_EXHAUSTED_HP_POSITIVE_PENDING_DECISION"
+			event["auto_defeat"] = false
 	return {"ok": true, "error": "", "core": next, "event": event}
 
 static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
@@ -146,7 +158,7 @@ static func open_player(core: Dictionary, hooks: Array, config: Dictionary,
 					accounted = true
 			if not accounted:
 				return _failure(core, "UNRESOLVED_CASTING_ZONE")
-	var checked: Dictionary = check_action_outcome(state)
+	var checked: Dictionary = check_action_outcome(state,config)
 	if not checked["ok"]:
 		return _failure(core, str(checked["error"]))
 	state = checked["core"]
