@@ -5,6 +5,7 @@ extends RefCounted
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const BasicGuard = preload("res://scripts/domain/m3/reaction/basic_guard_resolver.gd")
 const BasicProtect = preload("res://scripts/domain/m3/reaction/basic_protect_resolver.gd")
+const Lv40Reaction = preload("res://scripts/domain/m5/lv40/lv40_reaction.gd")
 
 static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 		catalogue: Dictionary, action_active: bool = true, window: Dictionary = {}) -> Dictionary:
@@ -51,7 +52,12 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 	if rp_cost < 0 or mp_cost < 0:
 		return {"ok": false, "error": "INVALID_REACTION_COST"}
 	var effect: String = str(definition.get("fixture_effect", ""))
-	if not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
+	var lv40_effect: bool = core["battle"].has("lv40") and ["LV40_PROTECT_COUNTER","LV40_BARRIER"].has(effect)
+	if lv40_effect:
+		var content_check: Dictionary = Lv40Reaction.check(core,action,window,entry,effect,action_active)
+		if not content_check["ok"]:
+			return content_check
+	if not lv40_effect and not ["NOOP_FIXTURE", "CANCEL_ACTION_FIXTURE", "INDEPENDENT_SUPPORT_FIXTURE", "FOCUS_WARD_FIXTURE"].has(effect):
 		return {"ok": false, "error": "UNIMPLEMENTED_REACTION_EFFECT"}
 	if effect == "FOCUS_WARD_FIXTURE":
 		if not definition.get("focus_ward_amount",null) is int or int(definition["focus_ward_amount"]) <= 0:
@@ -75,7 +81,7 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 		return {"ok": false, "error": "INVALID_REACTION_TARGET"}
 	if int(battle["actors"][target_id].get("hp", 0)) <= 0:
 		return {"ok": false, "error": "TARGET_INCAPACITATED"}
-	if dependent and not action["public_intent"].get("target_ids", []).has(target_id):
+	if dependent and not lv40_effect and not action["public_intent"].get("target_ids", []).has(target_id):
 		return {"ok": false, "error": "REACTION_TARGET_MISMATCH"}
 	if rp_cost > int(battle["party_resources"]["rp"]):
 		return {"ok": false, "error": "INSUFFICIENT_RP"}
