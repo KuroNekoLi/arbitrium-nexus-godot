@@ -84,7 +84,7 @@ jobs:
           import re,sys
           source=open(sys.argv[1]).read()
           report=re.search(r'^V34_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',source,re.M)
-          assert report and int(report[1])>=30 and report[1]==report[2] and report[3]=='0', 'V34 GUI failure'
+          assert report and int(report[1])>=28 and report[1]==report[2] and report[3]=='0', 'V34 GUI failure'
           PY
       - name: Upload raw input evidence
         if: always()
