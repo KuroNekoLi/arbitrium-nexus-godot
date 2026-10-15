@@ -1,7 +1,7 @@
 name: Godot Phase3 M5.5 Full Battle Seed Replay
 on:
   push:
-    branches: [master, 'phase3/m5-5-full-battle-replay', 'engineering/ci-evidence-gate-20261015']
+    branches: [master, 'phase3/m5-5-full-battle-replay', 'engineering/ci-evidence-gate-20261015', 'integration/p4-reviewed-20261015']
     paths:
       - '.github/workflows/godot-m5-5-acceptance.yml'
       - 'tools/ci/**'
@@ -78,6 +78,45 @@ jobs:
           cat "$RUNNER_TEMP/m5-5-logs/failure-probe.log"
           test "$code" -eq 17
           grep -q '^G0_PROBE_EXPECTED_FAILURE:' "$RUNNER_TEMP/m5-5-logs/failure-probe.log"
+      # Deliberately do not repeat test_lv40_domain.gd: the review checkpoint
+      # records three executions already, with attempt 3 passing 83/83.
+      # Running it automatically here would violate the recorded test budget.
+      - name: P4 reviewed content + component + localization + readmodel + metrics + staging
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for spec in \
+            'test_lv40_content:LV40_CONTENT_REPORT:37' \
+            'test_p4_component_contract:V1_COMPONENT_REPORT:24' \
+            'test_p4_localization:P4_LOCALIZATION_REPORT:198' \
+            'test_p4_lv40_readmodel:P4_READMODEL_REPORT:29' \
+            'test_p4_balance_metrics:P4_BALANCE_METRICS_REPORT:35' \
+            'test_p4_profile_metrics:P4_PROFILE_METRICS_REPORT:30' \
+            'test_p4_lv40_ui:P4_LV40_UI_STAGING_REPORT:10'; do
+            IFS=':' read -r script label exact <<< "$spec"
+            log="$RUNNER_TEMP/m5-5-logs/$script.log"
+            timeout 150s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$log" 2>&1 || {
+              cat "$log"; exit 1;
+            }
+            cat "$log"
+            grep -qx "$label executed=$exact passed=$exact failed=0" "$log"
+            python3 tools/ci/assert_godot_logs.py "$log"
+          done
+          # test_p4_lv40_ui is intentionally contract-blocked staging,
+          # never a proof of a playable Lv40 encounter.
+      - name: P4 Lv40 Last Spell edge third-and-final recorded attempt
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          # Review ledger: data-attempt1 timed out, edges-attempt2 = 32/37.
+          # This is the final permitted attempt. If it fails, stop and report.
+          log="$RUNNER_TEMP/m5-5-logs/test_lv40_edges_attempt3.log"
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_lv40_edges.gd > "$log" 2>&1 || {
+            cat "$log"; exit 1;
+          }
+          cat "$log"
+          grep -qx 'LV40_EDGES_REPORT executed=37 passed=37 failed=0' "$log"
+          python3 tools/ci/assert_godot_logs.py "$log"
       - name: M5.5 authentic three-party Boss battle and 32 named oracles
         shell: bash
         run: |
