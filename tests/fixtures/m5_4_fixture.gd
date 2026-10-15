@@ -21,6 +21,9 @@ static func config() -> Dictionary:
 	# release/tick boundary. All balancing values are TEST-ONLY.
 	return c
 
+static func initial(seed: int = SEED, choices: Dictionary = {}) -> Dictionary:
+	return Prior.initial(seed,choices)
+
 static func paired_ko(seed: int = SEED) -> Dictionary:
 	var state: Dictionary = Prior.initial(seed,{"A":"blank","B":"blank","C":"setup"})
 	if state.is_empty():
