@@ -10,6 +10,7 @@ const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const BossAI = preload("res://scripts/domain/m5/boss/boss_ai_policy.gd")
 const Tactical = preload("res://scripts/domain/m5/combo/tactical_sp_resolver.gd")
+const Lv40 = preload("res://scripts/domain/m5/lv40/lv40_domain_extension.gd")
 static func _deny(original: Dictionary, error: String) -> Dictionary:
 	var copy: Dictionary = original.duplicate(true)
 	return {"accepted":false,"error":error,"state":copy,"events":[],
@@ -248,6 +249,8 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
 			"outcome","win","defeat","apply_damage"]:
 		if command.has(forbidden):
 			return _deny(state,"M51_UNTRUSTED_DAMAGE_PAYLOAD")
+	if config.get("m5_lv40_enabled",false) == true:
+		return Lv40.apply(state,command,config)
 	if config.get("m5_3_enabled",false) == true:
 		var kind: String = str(command.get("type",""))
 		if kind == "PLAY_TACTICAL_SP_M53":
