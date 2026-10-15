@@ -1,0 +1,6 @@
+interface:
+  display_name: "Godot 資源庫管理員"
+  short_description: "自動盤點、搜尋免費素材、審核授權、下載至 Vault、索引選材；重大採用提供候選比較報告"
+  default_prompt: "請使用 $godot-resource-library-manager，從使用者的成果需求推導素材清單；優先重用本地及 Vault，必要時依授權與安全預算取得免費資源並建立可搜尋索引。一般素材自行選用；重大採用先提交推薦項與 2–4 個候選的評估報告，獲核准再正式定案。完成後交接 Asset Pipeline 與實作/QA Agent，勿宣稱不存在的下載、場景或驗證成果。"
+policy:
+  allow_implicit_invocation: true
