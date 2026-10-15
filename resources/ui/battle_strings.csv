@@ -1,0 +1,92 @@
+keys,en,zh_TW
+BATTLE_TITLE,ARBITRIUM NEXUS,仲裁核心
+BATTLE_PROTOTYPE,Integration demo · provisional content,整合展示 · 暫定內容
+BATTLE_PHASE_PLAYER_PHASE,PLAYER PHASE,玩家階段
+BATTLE_PHASE_ENEMY_PHASE,ENEMY PHASE,敵方階段
+BATTLE_PHASE_AWAITING_PLAYER_START,NEXT ROUND,下一回合
+BATTLE_ROUND,ROUND %d,第 %d 回合
+BATTLE_HP,HP %d / %d,生命 %d / %d
+BATTLE_MP,MP %d / %d,魔力 %d / %d
+BATTLE_RESOURCES,AP %d    RP %d,行動 AP %d    反應 RP %d
+BATTLE_BREAK,BREAK %d / %d,失衡 %d / %d
+BATTLE_BARRIER,Barrier %s,屏障 %s
+BATTLE_STABILITY,Stability %s · Focus Ward %s,詠唱穩定度 %s · 專注護盾 %s
+BATTLE_INTENT,ENEMY INTENT,敵方意圖
+BATTLE_INTENT_DETAIL,%s → %s · %d hits,%s → %s · %d 段
+BATTLE_PROTECTABLE,Single target · Protect available,單體攻擊 · 可守護
+BATTLE_BOSS_STRIKE,Core assault,核心突擊
+BATTLE_BOSS_FALLBACK,Disrupted strike,失衡突擊
+BATTLE_HERO_A,Kleya,克蕾雅
+BATTLE_HERO_B,Nova,諾瓦
+BATTLE_HERO_C,Yora,尤拉
+BATTLE_ROLE_A,Vanguard,前鋒
+BATTLE_ROLE_B,Tactical support,戰術支援
+BATTLE_ROLE_C,Spellcaster,施法者
+BATTLE_ACTIVE,Ready,可行動
+BATTLE_CONCENTRATING,Concentrating,詠唱中
+BATTLE_EXHAUSTED,Exhausted,力竭
+BATTLE_INCAPACITATED,Incapacitated,失能
+BATTLE_BASIC,Basic attack,普通攻擊
+BATTLE_ANALYZE,Analyze,解析
+BATTLE_ITEM,Item,道具
+BATTLE_SWAP,Free swap,免費換牌
+BATTLE_LAST,Last Spell,終極法術
+BATTLE_END,End phase,結束階段
+BATTLE_CONFIRM,Confirm,確認
+BATTLE_CANCEL,Cancel,返回
+BATTLE_SAVE,Save replay,保存重播
+BATTLE_SAVED,Replay saved,已保存重播
+BATTLE_SAVE_FAILED,Could not save replay,重播保存失敗
+BATTLE_DETAILS,ACTION DETAILS,行動詳情
+BATTLE_SELECT,Select a card or basic command,選擇卡牌或基本指令
+BATTLE_TARGET,Choose a highlighted target,請選擇高亮目標
+BATTLE_CONFIRM_HINT,Target selected · confirm to commit,已選擇目標 · 確認後執行
+BATTLE_COST,AP %d · MP %d,AP %d · MP %d
+BATTLE_EMPTY,No cards in this hand,目前沒有手牌
+BATTLE_UNAVAILABLE,Unavailable,不可使用
+BATTLE_NOT_IMPLEMENTED,Not implemented in this integration slice,本輪整合尚未實作
+BATTLE_ERROR,Action rejected: %s,行動遭拒：%s
+BATTLE_ERROR_RESOURCE,Insufficient resources,資源不足
+BATTLE_ERROR_ACTOR,Actor cannot act,角色目前無法行動
+BATTLE_ERROR_TARGET,Invalid target,目標不合法
+BATTLE_ERROR_STALE,State changed; select again,狀態已改變，請重新選擇
+BATTLE_ERROR_GENERIC,Unavailable in the current state,目前狀態無法執行
+BATTLE_INVALID_DROP,Invalid drop; card returned,放置位置不合法，卡牌已返回
+BATTLE_REACTION,REACTION · WAITING FOR YOUR CHOICE,反應窗口 · 等待你的選擇
+BATTLE_GUARD,Guard · 1 RP,防禦 · 1 RP
+BATTLE_PROTECT,Protect · 2 RP,守護 · 2 RP
+BATTLE_QUEUE,Queue,排入
+BATTLE_REMOVE,Remove,移除
+BATTLE_UP,Move earlier,向前排列
+BATTLE_PASS,Pass,略過
+BATTLE_QUEUE_EMPTY,No reactions queued,尚未排入反應
+BATTLE_REACTION_ORDER,%d. %s · %s,%d. %s · %s
+BATTLE_CHANTLESS,Chantless,破棄詠唱
+BATTLE_FULL,Full chant,完整詠唱
+BATTLE_COMBO,Use combo,使用連攜
+BATTLE_EXPOSED,Exposed,戰術破綻
+BATTLE_BREAK_LOCKED,Break · next action downgraded,失衡 · 下次行動降級
+BATTLE_LAST_WARNING,Full chant only. Cannot cancel after committing. HP0 before release invalidates it; success causes Exhausted.,僅限完整詠唱。提交後不可取消，釋放前生命歸零即失效，成功後本戰力竭。
+BATTLE_VICTORY,VICTORY,戰鬥勝利
+BATTLE_DEFEAT,DEFEAT,戰鬥失敗
+BATTLE_KEY_HINT,1–3 party · arrows cards · Enter select/confirm · Esc cancel · Space end,1–3 選角 · 方向鍵選牌 · Enter 選取／確認 · Esc 返回 · 空白結束
+BATTLE_SETUP,Fracture slash,破綻斬擊
+BATTLE_SETUP_DESC,Strike twice and create Break / Exposed setup.,兩段斬擊，建立失衡與戰術破綻。
+BATTLE_FINISH,Astral finisher,星焰追擊
+BATTLE_FINISH_DESC,Strike a foe. May exploit an existing combo opportunity.,攻擊敵人，可選擇利用已成立的連攜。
+BATTLE_REGULAR,Arcane surge,奧術湧流
+BATTLE_REGULAR_DESC,Cast now or begin a full chant for the next player phase.,立即施放，或完整詠唱至下一玩家階段。
+BATTLE_BURN,Ember mark,餘燼印記
+BATTLE_BURN_DESC,Apply the registered damage-over-time effect.,施加版本化的持續傷害效果。
+BATTLE_WARD,Aegis barrier,星紋屏障
+BATTLE_WARD_DESC,Grant an ally an HP barrier. Not Focus Ward.,為隊友施加生命屏障，不是專注護盾。
+BATTLE_REGEN,Restoring light,回生微光
+BATTLE_REGEN_DESC,Grant an ally the registered healing-over-time effect.,為隊友施加版本化的持續治療效果。
+BATTLE_LOG,COMBAT RECORD,戰鬥紀錄
+BATTLE_LOG_EVENT,#%d · %s,#%d · %s
+BATTLE_EVENT_PAYMENT,Resources paid,已支付資源
+BATTLE_EVENT_CARD,Card zone updated,卡牌區域已更新
+BATTLE_EVENT_DAMAGE,HP damage applied,已結算生命傷害
+BATTLE_EVENT_ACTION,Action settled,行動結算完成
+BATTLE_EVENT_GENERIC,Combat state updated,戰鬥狀態已更新
+BATTLE_MISS,MISS,未命中

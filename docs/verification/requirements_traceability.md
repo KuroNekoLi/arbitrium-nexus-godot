@@ -408,3 +408,5 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 |---|---|---|---|---|
 | P4.1 / CORE-03 | COMBAT_PHASE4_HANDOFF §2、UI01/04 | scenes/battle/battle_screen.tscn、scripts/battle/presentation/battle_actor.gd | P41-SCENE-01～07（尺寸兩例，共8）；outputs/p4_1_1280.png、p4_1_1920.png、p4_1_sprite3d_spike.png；ui/P4_1_ENGINEERING_NOTE.md | 本機8/8，遠端CI待核對 |
 | Single authority / no UI mutation | COMBAT_IMPLEMENTATION_CONTRACT §2 | battle_presentation_adapter.gd | 真M5 fixture snapshot；回歸outputs/p4_logs/p41_regression | 本機驗證中；不變更Domain |
+| P4.1 remote gate | P4.1 | 66a8b3faf776ca2d4f8371718e89ea3c89aef4fe | Actions 38681239677 success | VERIFIED |
+| P4.2 / UI01-02-05 | Handoff P4.2 | BattleHUD / BattleCardView / BattleCommandFactory / i18n | test_p4_hud 36/36；outputs/p4_2_*；ui/P4_2_ENGINEERING_NOTE.md | 本機驗收通過；遠端待核對 |

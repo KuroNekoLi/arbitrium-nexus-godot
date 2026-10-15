@@ -39,6 +39,15 @@ func update_status(hp: int, max_hp: int, mana: int, max_mana: int, hand_count: i
 	hp_label.text = "HP  %d / %d" % [hp, max_hp]
 	mana_label.text = "MP  %d / %d     手牌 %d" % [mana, max_mana, hand_count]
 
+## Phase 4 projection keeps the legacy API intact; no redundant hand counter.
+func update_projection(actor: Dictionary, state_text: String) -> void:
+	hp_label.text = tr("BATTLE_HP") % [actor["hp"], actor["max_hp"]]
+	mana_label.text = tr("BATTLE_MP") % [actor["mp"], actor["max_mp"]]
+	(get_node("Layout/Stats/Subtitle") as Label).text = state_text
+	for item: Label in [hp_label, mana_label]:
+		item.add_theme_font_size_override("font_size", 15)
+	(get_node("Layout/Stats/Subtitle") as Label).add_theme_font_size_override("font_size", 14)
+
 func set_selected(selected: bool) -> void:
 	button_pressed = selected
 	_apply_style()

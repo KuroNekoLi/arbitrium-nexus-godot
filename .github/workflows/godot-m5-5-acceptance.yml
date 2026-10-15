@@ -266,6 +266,14 @@ jobs:
           cat "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log"
           grep -q '^P4_1_REPORT executed=8 passed=8 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log"
           if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_scene.log"; then exit 1; fi
+      - name: Phase 4 HUD interaction
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          timeout 120s "$GODOT_BIN" --headless --path . --script res://tests/test_p4_hud.gd > "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log" 2>&1
+          cat "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log"
+          grep -q '^P4_2_REPORT executed=36 passed=36 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log"
+          if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_hud.log"; then exit 1; fi
       - name: Upload full logs
         if: always()
         uses: actions/upload-artifact@v4

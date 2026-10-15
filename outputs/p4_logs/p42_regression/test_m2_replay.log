@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS M2_5_CROSS_RESOLVER_REPLAY_EQUAL
+PASS M2_5_REPLAY_EVENTS_MONOTONIC
+PASS M2_5_REPLAY_RNG_UNCHANGED
+PASS M2_5_REPLAY_AP_RP_DEBT
+PASS M2_5_REPLAY_DISTINCT_TAPE_HASH
+PASS M2_5_REPLAY_FAILURE_ATOMIC
+M2_5_PARTIAL_REPLAY_PROOF seed=20261014 ruleset=arbitrium-phase3-m2.1-v1 content=m2.1-placeholder-content-v1 config=m2.2-cost-fixture-v1 initial_hash=1cbc1e9c568be6458b92f9641e32bb4375273a1e946df0e7a51f5e46aae4bb2e event_hash=28de6c96641655057122a210a73f9c3fa77890c0c20eded0417d5e62ebb7ce85 final_state_hash=7389a7975f13b209982a3ba83dd4fd7ceeeb0c4947bda77f3712f4b8da70d9a9 tape=[{"actor_id":"A","card":{"ap_cost":8,"card_id":"fixture-sp","max_borrow_per_card":2,"mp_cost":2,"overload_eligible":true},"casting_mode":"CHANTLESS","command_id":"c1","expected_event_seq":0,"type":"PAY_SP_COST_ONLY"},{"amount":3,"command_id":"e1","effect_instance_id":"fx1","expected_event_seq":1,"source_cost_command_id":"c1","type":"AP_REFUND_EFFECT"},{"amount":1,"command_id":"e2","effect_instance_id":"fx2","expected_event_seq":2,"source_cost_command_id":"c1","type":"REDUCE_AP_DEBT_EFFECT"},{"amount":2,"command_id":"r1","expected_event_seq":3,"type":"GRANT_AP"},{"command_id":"r2","expected_event_seq":4,"type":"CONVERT_AP_TO_RP"},{"amount":2,"command_id":"r3","expected_event_seq":5,"type":"SPEND_RP"},{"command_id":"r4","expected_event_seq":6,"type":"EXPIRE_RP"},{"command_id":"r5","expected_event_seq":7,"type":"START_PLAYER_RESOURCES"}] coverage=M2_1_M2_2_ONLY
+M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=6 passed=6 failed=0 skipped=0 card_instance_and_swap=BLOCKED_M2_3_M2_4

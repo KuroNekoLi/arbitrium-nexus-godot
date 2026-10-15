@@ -1,0 +1,42 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS M2_1_SETUP
+PASS M2_1_JSON_INTEGRAL_FIXTURE
+PASS M2_1_FRACTIONAL_COST_REJECTED
+PASS P1-ECO-001
+PASS M2_1_ATTACK_INDEPENDENT
+PASS M2_1_ATTACK_NO_DAMAGE
+PASS P1-ECO-002
+PASS P1-ECO-003
+PASS P1-ECO-004
+PASS P1-ECO-005
+PASS P1-ECO-006
+PASS P1-ECO-007
+PASS P1-ECO-008
+PASS P1-ECO-009-UPDATED
+PASS M2_1_RP_CAP_OVERRIDE_FIXTURE
+PASS M18-AP-001
+PASS M18-RP-002
+PASS M19-MP-001
+PASS M20-MP-002
+PASS M31-MP-001
+PASS M2_1_NO_NATURAL_MP
+PASS M2_1_MP_CLAIM_RESETS
+PASS M2_1_MP_UNDERFLOW
+PASS M2_1_MP_PAY
+PASS M2_1_INVALID_AMOUNTS
+PASS M2_1_IDEMPOTENCY
+PASS M2_1_INVALID_PHASE
+PASS M2_1_ACTOR_GUARDS
+PASS M2_1_NO_SILENT_BALANCE
+PASS M2_1_FULL_MP_CLAIM
+PASS M2_1_IMMUTABLE_INPUT
+PASS M2_1_DEBT_DEFERRED
+PASS M2_1_MP_STATE_INVARIANT
+PASS M2_1_PUBLIC_ATTACK_NOT_READY
+PASS M2_1_REPLAY_IDENTICAL
+PASS M2_1_RNG_PRESERVED
+PASS M2_1_EVENT_SEQUENCING
+PASS M2_1_REPLAY_FAILURE
+M2_1_REPLAY_PROOF seed=20261014 ruleset=arbitrium-phase3-m2.1-v1 content=m2.1-placeholder-content-v1 provisional=m2.1-resource-fixture-v1 initial_hash=bd82cb22128b1bed934a529cc3e2f47f4ed383208c88e37d19c1dc89366808ee event_hash=12bec6c26e706fd3b2c683613b5b74bd2f4c01763b46ff8fd1575d0de73de454 final_state_hash=45f4c513fa481b2b0aabd66daa5a3aa8afa9c1b5eb32805e90a217527ffa6f4b tape=[{"amount":8,"command_id":"r-1","expected_event_seq":0,"type":"GRANT_AP"},{"actor_id":"A","command_id":"r-2","expected_event_seq":1,"type":"BASIC_ATTACK_RESOURCE_ONLY"},{"actor_id":"A","command_id":"r-3","expected_event_seq":2,"type":"BASIC_ATTACK_RESOURCE_ONLY"},{"command_id":"r-4","expected_event_seq":3,"type":"CONVERT_AP_TO_RP"},{"amount":2,"command_id":"r-5","expected_event_seq":4,"type":"SPEND_RP"},{"command_id":"r-6","expected_event_seq":5,"type":"EXPIRE_RP"},{"command_id":"r-7","expected_event_seq":6,"type":"START_PLAYER_RESOURCES"}]
+M2_1_TEST_REPORT executed=38 passed=38 failed=0 skipped=0

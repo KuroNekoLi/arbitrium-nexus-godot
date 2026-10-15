@@ -37,3 +37,8 @@ The existing `assets/*.png` and `assets/portraits/party_portraits.png` are reuse
 - License text: `addons/kenney_rpg_audio/LICENSE.txt`.
 
 Attribution is not required by CC0, but is included here as a courtesy. Check each asset's included license before redistributing extracted files separately from this project.
+# Phase 4 font / framework research
+
+Noto Sans TC: Copyright 2014-2021 Adobe. SIL Open Font License 1.1; see assets/fonts/OFL.txt. Official source: https://github.com/google/fonts/tree/main/ofl/notosanstc .
+
+CGF https://github.com/db0/godot-card-game-framework (AGPL-3.0 with upstream addendum) was researched as an interaction reference only. No CGF source or assets are bundled. Existing SimpleCards remains the interaction dependency.
