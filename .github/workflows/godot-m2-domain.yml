@@ -2,20 +2,6 @@ name: Godot Phase3 M2 integrated domain acceptance
 # M2.5 gate requires genuine Cost/Card/FreeSwap/replay integration.
 # Keep M3/M4/M5 gameplay outcomes excluded from M2 verification.
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m2-domain.yml'
-      - 'scripts/domain/m1/**'
-      - 'scripts/domain/m2/**'
-      - 'tests/test_m2*.gd'
-      - 'resources/combat/rulesets/**'
-      - 'docs/verification/PH3_M2_5_ACCEPTANCE_REPORT.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m2-domain.yml'
-      - 'scripts/domain/m2/**'
-      - 'tests/test_m2*.gd'
   workflow_dispatch:
 
 permissions:

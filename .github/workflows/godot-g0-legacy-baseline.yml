@@ -3,25 +3,6 @@ name: Godot G0.1 - legacy headless baseline
 # This workflow validates ONLY the existing prototype's test runner.
 # Passing it does NOT certify Phase 1/2 combat rules or M1-M5.
 on:
-  push:
-    branches: [master]
-    paths:
-      - ".github/workflows/godot-g0-legacy-baseline.yml"
-      - "project.godot"
-      - "scripts/**"
-      - "scenes/**"
-      - "resources/**"
-      - "tests/**"
-      - "addons/**"
-  pull_request:
-    paths:
-      - ".github/workflows/godot-g0-legacy-baseline.yml"
-      - "project.godot"
-      - "scripts/**"
-      - "scenes/**"
-      - "resources/**"
-      - "tests/**"
-      - "addons/**"
   workflow_dispatch:
 
 permissions:

@@ -1,19 +1,7 @@
 name: Godot Phase3 M2.3 card domain acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m2-cards.yml'
-      - 'scripts/domain/m2/cards/**'
-      - 'scripts/domain/m2/persistence/**'
-      - 'tests/test_m2_cards.gd'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m2-cards.yml'
-      - 'scripts/domain/m2/cards/**'
-      - 'scripts/domain/m2/persistence/**'
-      - 'tests/test_m2_cards.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

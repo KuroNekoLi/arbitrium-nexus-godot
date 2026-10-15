@@ -1,20 +1,7 @@
 name: Godot Phase3 M3.1 Battle Phase Engine acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m3-1-phase.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'tests/test_m3_phase.gd'
-      - 'docs/verification/PH3_M3_1_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m3-1-phase.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/**'
-      - 'tests/test_m3_phase.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

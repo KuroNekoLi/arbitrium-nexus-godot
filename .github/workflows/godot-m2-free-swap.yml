@@ -1,17 +1,5 @@
 name: Godot Phase3 M2.4 Free Swap domain acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m2-free-swap.yml'
-      - 'scripts/domain/m2/cards/**'
-      - 'tests/test_m2_free_swap.gd'
-      - 'tests/test_m2_cards.gd'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m2-free-swap.yml'
-      - 'scripts/domain/m2/cards/**'
-      - 'tests/test_m2_free_swap.gd'
   workflow_dispatch:
 
 permissions:

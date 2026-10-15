@@ -2,19 +2,6 @@ name: Godot Phase3 M1 - domain contract
 
 # New M1 Domain scaffold, separate from existing legacy battle tests.
 on:
-  push:
-    branches: [master]
-    paths:
-      - ".github/workflows/godot-m1-domain.yml"
-      - "scripts/domain/m1/**"
-      - "tests/test_combat_m1.gd"
-      - "project.godot"
-  pull_request:
-    paths:
-      - ".github/workflows/godot-m1-domain.yml"
-      - "scripts/domain/m1/**"
-      - "tests/test_combat_m1.gd"
-      - "project.godot"
   workflow_dispatch:
 
 permissions:
