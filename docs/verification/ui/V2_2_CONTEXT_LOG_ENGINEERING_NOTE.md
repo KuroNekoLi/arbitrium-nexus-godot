@@ -21,3 +21,14 @@
 ## Engineering learning
 
 This decomposition maps to Compose's `Column { LazyColumn(weight(1f)) { preview }; ConfirmRow(); Feedback() }` with a separate `BattleLog` view. Keeping `hud.log_label` as a facade is the migration-friendly step: callers remain stable while the child owner changes. Unlike `LazyColumn`, a Godot `ScrollContainer` owns input and may affect focus traversal; true mouse and keyboard verification remains necessary.
+
+## V2.2 CI evidence (authoritative receipt)
+
+- **Scope:** Godot 4.7.2 headless source contract regression only; GUI rendering fidelity and original P4.4 GUI input remain **NOT VERIFIED**.
+- Tested SHA: `e7f22221c13ac9bef211d6eaf9b2e8d885bb0ab9`.
+- Successful Actions: [Run #38731749684](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38731749684), first run of corrected expectation, `completed/success`.
+- `V2_CONTEXT_REPORT executed=23 passed=23 failed=0` and `V2_LAYOUT_REPORT executed=18 passed=18 failed=0`.
+- Preserved: `V1_COMPONENT_REPORT 24/24`, P4 Scene 8/8, P4 HUD 36/36, P4 Integration 31/31, P4 Feedback 45/45, Feedback Edge 80/80, Lv40 positive 32/32, Screenshot Writer 46/46, Localization 198/198, ReadModel 29/29. No `SCRIPT ERROR` was reported in GitHub Actions Job Log.
+- Historical first V2.2 job [#38731545566](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38731545566) failed due to CI **expecting 21** assertions while the new suite actually executed **23/23 PASS** (two cases execute at two resolutions). The follow-up changed only the expected CI count, did not modify the test source or weaken original oracles. Previous failure stays documented.
+- Headless test cannot validate scroll gestures, mouse focus, card selection animations or pixel-level fidelity. Approval of visual reference PNG and fresh Godot screenshot comparisons remain outstanding.
+- New documentary or CI-alignment commits after the tested SHA do not mean the test was rerun.
