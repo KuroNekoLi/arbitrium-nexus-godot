@@ -1,6 +1,6 @@
 # Phase 3 M4.4 — Last Spell Forced Invalidation Engineering Note
 
-Status at implementation: IMPLEMENTED AWAITING ACTUAL GODOT CI; do not certify until actual run completes.
+Status: M4_4_INVALIDATION_DOMAIN_VERIFIED — completed official Godot4.7.2 headless CI PASS. This does not certify overall M4 or M5.
 
 ## Authority and prerequisite
 User-approved CORE-02 and PRE3-R13/14/15 in docs/combat/08_LAST_SPELL_EXHAUSTED.md, 20_PHASE12_PREIMPLEMENTATION_ADR_AND_OPEN_ITEMS.md, 21_PHASE2_SPEC_ACCEPTANCE_REPORT.md, 23_PHASE3_EXECUTION_PLAN.md. Previous master 9a071e0b6fffd75da3a8c208f52f65e80ac67613, official M4.3 [CI #38658513064](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38658513064) 759/759 prior named Domain assertions and 4 legacy smoke runners passed.
@@ -17,3 +17,16 @@ These HP0 and Revive commands are internal, versioned trusted encounter FIXTURES
 
 ## Release gate
 M4.4 VERIFIED only after official Godot4.7.2 CI recorded actual case counts, replay Seed, initial/event/final SHA256, 759 prior named tests, 4 legacy runners. Repair limit: first run plus at most two corrected reruns per failing group; third failure stop with retained logs, never weaken accepted gameplay assertions. Overall M4 still requires M4.5 integration acceptance.
+
+
+## Final actual official CI evidence — 2026-10-15 Taipei
+
+- Initial implementation source SHA **7a8c3e5590cb1ca4cc6dd7eb65cbc2ba70f86676**, [initial official CI #38660642396](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38660642396) SHA512 and import PASS. New suite executed 59 actual tests: 58 PASS, 1 FAIL in P2-LAST-02-A_CANNOT_REACT_OR_ATTACK. The test expected ACTOR_UNAVAILABLE_OR_PHASE when requesting BASIC_ATTACK_RESOURCE_ONLY during ENEMY_PHASE; existing M3 prior-stage contract FIRST rejects INVALID_PHASE before actor eligibility. The actual HP0/Last Spell/Revive/replay behaviors all passed. No gameplay code modification or oracle relaxation was needed.
+- First and ONLY corrective test change at SHA **8030ce5fe8fed346a4612013f5d77cef2913e3d2**: changed that ONE negative expected error to the existing M3 INVALID_PHASE, keeping rejection/atomic no-mutation oracles and all 59 test cases.
+- **Official successful [GitHub Actions #38660801424](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38660801424), job 116181297531**, tested source SHA 8030ce5fe8fed346a4612013f5d77cef2913e3d2. Official Godot **4.7.2.stable.official.ed1daf0bf**, release ZIP SHA512 verified, editor import PASS. New test_m4_incapacitation.gd **59/59 PASS, failed=0**, exact stdout marker **M4_4_INVALIDATION_DOMAIN_VERIFIED**. In the same job M4.3 **55/55**, M4.2 **59/59**, M4.1 **47/47**, M1–M3.5 **598/598** passed, cumulative **818/818 named Domain assertions**; four legacy smoke runners all exit0.
+- Fixed Seed **20261014**, **17** actual accepted command tape. Initial SHA256 **a01369270c5d4807e2ca706883d34f15f1d3f2b7a6c6ec6712b5c6a50fd1e2d5**; Event SHA256 **eb269474180802ebb859f6de842e80dbfb2ab4789213810602c51a20fbd8d32e**; final state SHA256 **361407d3eded12d6688a78fc2bd77a82efd18c4dc0ff9b2da517c411dcbfaa8b**. Same initial state/Seed/17 commands reproduce identical final event and state SHA256 through M4.replay. Wrong sequence and duplicate inputs return unchanged state.
+- Verified T1 Last Spell started with existing M2 AP/MP reserved and once_used; T2 actual M3 EnemyAction with closed Reaction Window + authorized hit FIXTURE made A HP0, emitted **ActorIncapacitated → LastSpellInvalidated(CASTER_INCAPACITATED) → ScheduledEffectCancelled → BattleOutcomeEvaluated** in the SAME outer command; no CastingInterrupted or M-D22 MP refund, no AP, debt or once-use refund. T3 did NOT release or emit LastSpellEffectDeferredToM5, and incapacitated A hand was frozen across player-start draw. An explicitly tagged, configured Revive restored HP but not the removed last spell, used-once quota or paid costs. An untagged healing fixture was rejected.
+- Opposite tests: normal Full Chant with HP0 moved exact CardInstance Casting→Discard using real M2 integration and no interruption refund. Successful Last Spell emitted effect contract BEFORE later HP0; HP0 never retroactively invalidated it, and legitimate later Revive restored EXHAUSTED rather than ACTIVE. Untrusted client HP/damage/refund fields, wrong declared enemy action, wrong recipient after Protect, absent authoritative hit proof, missing effect, reused command and stale event seq were all rejected without mutation.
+- Intentionally NOT IMPLEMENTED in M4.4: M5 genuine damage/hit/HP and status effects, actual Revive skill costs and healing, playable UI confirmation/animations; M4.5 full integration/Replay cross-suite acceptance. Internal configuration-gated fixture commands must never be exposed to arbitrary players or network clients. Overall M4 DOMAIN VERIFIED remains forbidden until M4.5 gate.
+
+**Bounded verdict: M4.4 VERIFIED, real headless fixture integration.**

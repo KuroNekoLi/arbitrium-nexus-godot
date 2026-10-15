@@ -277,3 +277,19 @@ Tested SHA 12d651289ae85078d166fbc1bf68e83a991bb603, official successful [Godot4
 | Deterministic Replay and strict command IDs | LAST-REPLAY-SAME_SEED_FINAL, LAST-REPLAY-SAME_SEED_EVENTS, LAST-REPLAY-STALE_FAIL_CLOSED | PASS Seed20261014 / 25 commands |
 
 M4.4 CORE-02 forced HP0 invalidation and M4.5 final complete M4 acceptance remain NOT VERIFIED. These tests do not prove actual Last Spell damage or UI confirmation dialog.
+
+
+## M4.4 — HP0 Forced Invalidation CORE-02 (2026-10-15, independent verified Domain)
+
+Source tested SHA **8030ce5fe8fed346a4612013f5d77cef2913e3d2**, official [Godot4.7.2 CI #38660801424](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38660801424). **M4.4 59/59 PASS**, previous M1–M4.3 **759/759 PASS**, cumulative **818/818** Domain named assertions, four old prototype runners PASS. Detailed initial failure / correction, seed and SHA256 in PH3_M4_4_ENGINEERING_NOTE.md.
+
+| Requirement | Actual executable oracle | M4.4 verdict (fixture scope) |
+|---|---|---|
+| CORE-02 & PRE3-R15: caster HP0 instant LastSpellInvalidated before effect | P2-LAST-02-HIT_EVENT_CHAIN, CORE-02-INVALIDATE_CAUSE, CORE-02-PENDING_INSTANCE_ERASED_NOW, CORE-02-SCHEDULE_CANCELED_NOW | PASS ordered same-event forced invalidation; NOT ordinary CastingInterrupt |
+| P2-LAST-01/02: T1 commit, T2 HP0, T3 no release | P2-LAST-01-T3_RELEASE_SCHEDULED, P2-LAST-01-NO_RELEASE_T3, P2-LAST-02-INSTANT_HP0 | PASS real M3 phase boundary & M2 payment |
+| PRE3-R13 hand/card freeze, ordinary Full Chant HP0 | PRE3-13-CARD_ZONES_FROZEN, P2-LAST-02-HAND_FROZEN_AFTER_ROUND, PRE3-13-ORDINARY_CARD_MOVED, PRE3-13-ORDINARY_NO_MP_REFUND | PASS exact physical CardInstance from Casting to Discard, no MP refund |
+| PRE3-R15 MP/AP/Overload/once-used unchanged and Revive cannot resume | P2-LAST-03-NO_MP_REFUND, P2-LAST-03-NO_AP_REFUND, P2-LAST-04-LAST_CANNOT_START_AGAIN, P2-LAST-04-INVALIDATED_HISTORY_PERSISTS | PASS permanent one-use marker, no refund |
+| PRE3-R14 late HP0 after successful release | P2-LAST-06-NO_RETROACTIVE_INVALIDATION, PRE3-14-EXHAUSTED_PERSISTS_AFTER_REVIVE | PASS lifetime Exhausted; released effect not canceled |
+| Fixture integrity and Replay | PRE3-13-GATED_FIXTURE_NOT_PUBLIC, PRE3-13-UNRELATED_ACTOR_CANNOT_BE_KILLED, P2-LAST-05-REPLAY_IDENTICAL_EVENTS, P2-LAST-05-REPLAY_IDENTICAL_FINAL | PASS exact Seed20261014 / 17 commands, no direct player HP0 override |
+
+**M4.5 final M4 Domain acceptance NOT_VERIFIED. M5 real damage/hit/Revive skills and UI NOT_IMPLEMENTED.**

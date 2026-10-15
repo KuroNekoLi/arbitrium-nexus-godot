@@ -960,3 +960,72 @@ Official full Godot 4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-godot
 | 55 | LAST-REPLAY-STALE_FAIL_CLOSED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
 
 Seed 20261014; 25 commands; initial SHA256 a01369270c5d4807e2ca706883d34f15f1d3f2b7a6c6ec6712b5c6a50fd1e2d5; event SHA256 7b62efd51f31a176a309cf65c01c1512d544e5267109cb8f702f064fc86d68c3; final SHA256 2295c874442f8673dd74c6280df37b15f647574237e21756165e886e2ff162ea. Provisional values are NOT authorized balance canon.
+
+
+### M4.4 — Forced Invalidation CORE-02 (59 actual Godot assertions, 2026-10-15)
+
+Official successful Godot4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38660801424 at source 8030ce5fe8fed346a4612013f5d77cef2913e3d2. New M4.4 **59/59 PASS**; all M1–M4.3 prior **759/759 PASS**, cumulative **818/818** named Domain cases, four legacy headless scripts exit0. Internal fixture only, M5 not implied.
+
+| # | Exact Godot stdout test ID | Runner | Result |
+|---:|---|---|---|
+| 1 | P2-LAST-01-COMMITTED_ONCE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 2 | P2-LAST-01-T3_RELEASE_SCHEDULED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 3 | P2-LAST-01-COST_PAID_AT_START | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 4 | P2-LAST-01-NO_CARD_ZONE_FOR_LAST | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 5 | P2-LAST-01-T2_NO_PREMATURE_RELEASE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 6 | PRE3-13-HP0_NOT_CLIENT_COMMAND | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 7 | PRE3-13-HIT_REQUIRES_PROOF | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 8 | PRE3-13-HIT_SOURCE_MUST_MATCH | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 9 | PRE3-13-UNRELATED_ACTOR_CANNOT_BE_KILLED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 10 | PRE3-13-UNKNOWN_EFFECT_REJECTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 11 | PRE3-13-GATED_FIXTURE_NOT_PUBLIC | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 12 | PRE3-13-ACTIVE_CAST_BEFORE_HIT | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 13 | P2-LAST-02-INSTANT_HP0 | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 14 | P2-LAST-02-HIT_EVENT_CHAIN | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 15 | CORE-02-INVALIDATE_CAUSE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 16 | CORE-02-PENDING_INSTANCE_ERASED_NOW | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 17 | CORE-02-SCHEDULE_CANCELED_NOW | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 18 | P2-LAST-02-CANONICAL_INVALIDATED_HISTORY | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 19 | P2-LAST-03-ONCE_PER_BATTLE_NOT_REFUNDED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 20 | P2-LAST-03-NO_MP_REFUND | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 21 | P2-LAST-03-NO_AP_REFUND | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 22 | PRE3-14-DEBT_NOT_REFUNDED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 23 | PRE3-13-CARD_ZONES_FROZEN | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 24 | PRE3-13-RNG_UNCHANGED_ON_HP0 | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 25 | P2-LAST-02-M5_DAMAGE_NOT_INVENTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 26 | P2-LAST-02-OUTCOME_STILL_ONGOING | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 27 | P2-LAST-02-A_CANNOT_REACT_OR_ATTACK | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 28 | P2-LAST-02-CANT_REPEAT_HP_ZERO | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 29 | P2-LAST-02-STALE_SEQUENCE_REJECTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 30 | P2-LAST-02-DUPLICATE_COMMAND_REJECTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 31 | P2-LAST-01-NO_RELEASE_T3 | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 32 | P2-LAST-02-HAND_FROZEN_AFTER_ROUND | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 33 | PRE3-13-ORDINARY_HEAL_CANNOT_REVIVE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 34 | P2-LAST-03-REVIVE_REQUIRES_PROVISIONED_FIXTURE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 35 | P2-LAST-04-REVIVE_HP_RESTORED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 36 | P2-LAST-04-CANNOT_REVIVE_OLD_SPELL | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 37 | P2-LAST-04-ONCE_USED_STAYS_USED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 38 | P2-LAST-04-INVALIDATED_HISTORY_PERSISTS | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 39 | P2-LAST-04-STILL_NO_MP_REFUND | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 40 | P2-LAST-04-LAST_CANNOT_START_AGAIN | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 41 | P2-LAST-04-CANCEL_NEVER_ACCEPTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 42 | P2-LAST-04-DUPLICATE_REVIVE_REJECTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 43 | P2-LAST-05-REPLAY_ACCEPTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 44 | P2-LAST-05-REPLAY_IDENTICAL_FINAL | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 45 | P2-LAST-05-REPLAY_IDENTICAL_EVENTS | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 46 | P2-LAST-05-INITIAL_SNAPSHOT_UNCHANGED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 47 | P2-LAST-05-STALE_TAPE_FAIL_CLOSED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 48 | PRE3-13-ORDINARY_FULL_HP0_ACCEPTED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 49 | PRE3-13-ORDINARY_FULL_INVALIDATED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 50 | PRE3-13-ORDINARY_CARD_MOVED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 51 | PRE3-13-ORDINARY_NO_MP_REFUND | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 52 | PRE3-13-ORDINARY_EXACT_INVALIDATION | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 53 | P2-LAST-06-SUCCESS_FIRST | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 54 | P2-LAST-06-SUCCESS_EFFECT_ALREADY_PUBLISHED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 55 | P2-LAST-06-EXHAUSTED_CAN_BE_HIT | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 56 | P2-LAST-06-NO_RETROACTIVE_INVALIDATION | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 57 | PRE3-14-EXHAUSTED_PERSISTS_AFTER_REVIVE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 58 | P2-LAST-06-RELEASE_HISTORY_UNCHANGED | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+| 59 | PRE3-14-EXHAUSTED_CANNOT_ATTACK_AFTER_REVIVE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
+
+Replay Seed 20261014; command tape 17; initial SHA256 a01369270c5d4807e2ca706883d34f15f1d3f2b7a6c6ec6712b5c6a50fd1e2d5; event SHA256 eb269474180802ebb859f6de842e80dbfb2ab4789213810602c51a20fbd8d32e; final state SHA256 361407d3eded12d6688a78fc2bd77a82efd18c4dc0ff9b2da517c411dcbfaa8b. Last Spell forced HP0/Revive tests and successful-release-then-HP0 opposite case verified; M4.5 pending.
