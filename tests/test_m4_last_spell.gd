@@ -292,7 +292,7 @@ func _init() -> void:
 		and s["core"]["battle"]["party_resources"]["current_ap"] == 6)
 	check("LAST-005-ONCE_USED_PERSISTS",s["core"]["battle"]["last_spell_used_by_actor"]["A"] == 1)
 	check("LAST-005-EXHAUSTED_CANNOT_ATTACK",wrong(s,"BASIC_ATTACK_RESOURCE_ONLY","ex-attack",
-		{"actor_id":"A"},"ACTOR_UNAVAILABLE"))
+		{"actor_id":"A"},"ACTOR_UNAVAILABLE_OR_PHASE"))
 	check("LAST-005-EXHAUSTED_CANNOT_CAST",wrong(s,"ACTIVATE_LAST_SPELL_M4",
 		"ex-recast",last_command(),"LAST_SPELL_ALREADY_USED"))
 	check("LAST-005-EXHAUSTED_TARGETABLE_ALIVE",s["core"]["battle"]["actors"]["A"]["hp"] == 100
