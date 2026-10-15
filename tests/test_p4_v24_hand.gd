@@ -55,6 +55,8 @@ func run() -> void:
 	check(hand.selected_instance.is_empty() and not hud.card_views[0].selected_visual, "V24-CANCEL-REMOVES-SELECTION")
 	screen.present(_case(1))
 	check(hud.card_views.size() == 1, "V24-ONE-CARD")
+	# CardInstance transition uses the original 0.18s SimpleCards tween; measure settled pose.
+	await create_timer(0.22).timeout
 	check(absf((hud.card_views[0].position.x + hud.card_views[0].size.x * 0.5) - hand.size.x * 0.5) < 12.0, "V24-ONE-CARD-CENTERED")
 	screen.present(_case(8))
 	check(hud.card_views.size() == 8, "V24-EIGHT-CARDS")
