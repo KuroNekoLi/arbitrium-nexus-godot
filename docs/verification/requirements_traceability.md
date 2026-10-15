@@ -1,5 +1,12 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+## V3.1–V3.3 Review 2026-10-15
+
+來源85d5c64b396145beca43153d66c644ab2497a269；基準master a355d0b。
+保留V2穩定wrap/modal；新增Frame成本實際寬度、idle StyleBox還原、Boss Locked/Exposed分行；Domain無差異。
+V31/V32/V33與V3 merge90納入canonical Fast，17組817assertions；canonical Render 12PNG；Full保持1238/100Seeds/4Legacy。
+狀態CI_PENDING；GUI_NOT_VERIFIED（原P43/P44/V25/V26皆不重跑）。完整帳本及最終收據見[整合報告](ui/V3_REVIEW_AND_MERGE_REPORT.md)。
+
 ## V2 Review 2026-10-15
 
 正式收據：V2來源822b1ce已由d9e6e2a merge；最終程式d1a971a9c4800e04196ba648416f900148ea122d已在master，Master Fast38743758109／Render38743758086／Full38743758255均success。V27 8/8、13組P4契約576、1238 Domain/100seeds保持；V26第三次47/47只在d9e6e2a staged驗證，Master沒有第4次。下表CI_PENDING保留為施工時快照，最終狀態以本收據及V2_REVIEW_AND_MERGE_REPORT為準。

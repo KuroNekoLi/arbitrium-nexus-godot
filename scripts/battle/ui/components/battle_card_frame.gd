@@ -83,6 +83,11 @@ static func build(face: PanelContainer, appearance: Resource, cost_text: String,
 		accent.lightened(0.24) if legal else SECONDARY)
 	cost_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	# Ellipsis makes the Label minimum width zero. Reserve the measured cost
+	# width before the expanding spacer can consume the entire badge row.
+	var text_width: float = cost_label.get_theme_font("font").get_string_size(
+		cost_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x
+	cost_label.custom_minimum_size.x = minf(130.0, ceilf(text_width))
 	cost_label.tooltip_text = cost_text
 
 	var artwork_frame := PanelContainer.new()

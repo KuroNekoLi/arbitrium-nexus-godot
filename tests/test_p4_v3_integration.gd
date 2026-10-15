@@ -45,6 +45,10 @@ func run() -> void:
 				var card: Control = screen.hud.card_views[0]
 				var prefix: String = "V3-MERGE-%s-%d-%s-" % [locale, resolution.x, str(active)]
 				check(card.legal == active, prefix + "TRUE-LEGALITY")
+				var cost: Label = card.face.get_node("CardContents/CostRow/CostBadge/CostLabel")
+				var required_width: float = minf(130.0, ceilf(cost.get_theme_font("font").get_string_size(
+					card.cost_text, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x))
+				check(cost.size.x >= required_width and required_width > 0, prefix + "COST-VISIBLE-WIDTH")
 				check(card.face.size.x <= 164.0 and card.face.size.y <= 218.0, prefix + "BOUNDED-FACE")
 				check(_labels_fit(card), prefix + "LABELS-WITHIN-FACE")
 				check(card.tooltip_text.contains(card.tr(card.appearance.description_key)), prefix + "FULL-DESCRIPTION")
@@ -64,6 +68,13 @@ func run() -> void:
 				check(card.face.size.x <= 164.0 and card.face.size.y <= 218.0, prefix + "LONG-FACE")
 				check(_labels_fit(card), prefix + "LONG-LABELS")
 				check(Model.state_hash(screen.snapshot) == before, prefix + "DOMAIN-UNCHANGED")
+	var panel: Control = screen.hud.get_node("EnemyStatus")
+	var projection: Dictionary = screen.hud.vm.duplicate(true)
+	projection["tactical"] = {"break_gauge": 0, "break_max": 80, "break_locked": true, "exposed": {"Boss": true}}
+	panel.render_enemy(projection)
+	check(panel.break_stats.text.split("\n").size() == 3, "V3-MERGE-STATUSES-SEPARATE-LINES")
+	check(panel.intent.tooltip_text == panel.intent.text and panel.break_stats.tooltip_text == panel.break_stats.text,
+		"V3-MERGE-FULL-BOSS-TOOLTIPS")
 	screen.queue_free()
 	await process_frame
 	print("V3_MERGE_REPORT executed=%d passed=%d failed=%d" % [executed, executed - failed, failed])

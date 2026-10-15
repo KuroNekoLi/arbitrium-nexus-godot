@@ -29,3 +29,25 @@ static func setup_read_only_bar(bar: ProgressBar, accent: Color) -> void:
 	bar.add_theme_stylebox_override("background", bar_track())
 	bar.add_theme_stylebox_override("fill", bar_fill(accent))
 
+
+## V3.3 semantic visual surfaces; ornamental only, never a legal threat score.
+const METAL: Color = Color("#B59C6D")
+const PANEL_DEEP: Color = Color("#0C1C2F")
+
+static func inset_frame(border: Color, background: Color = PANEL_DEEP) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = background
+	box.border_color = border
+	box.set_border_width_all(1)
+	box.set_corner_radius_all(5)
+	box.content_margin_left = 7.0
+	box.content_margin_right = 7.0
+	box.content_margin_top = 5.0
+	box.content_margin_bottom = 5.0
+	return box
+
+static func heading_rule() -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = METAL.darkened(0.2)
+	return box
+
