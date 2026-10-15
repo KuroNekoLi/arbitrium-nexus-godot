@@ -18,7 +18,7 @@ static func _definition(config: Dictionary, status_id: String) -> Dictionary:
 static func _legal(d: Dictionary) -> bool:
 	if not KINDS.has(str(d.get("kind",""))) or \
 			not POLICIES.has(str(d.get("stack_policy",""))) or \
-			str(d.get("tick_trigger","")) != "NEXT_PLAYER_PHASE":
+			not ["NEXT_PLAYER_PHASE","ENEMY_PHASE_END"].has(str(d.get("tick_trigger",""))):
 		return false
 	for field: String in ["priority","duration_ticks","stack_cap","tick_amount"]:
 		if not d.get(field,null) is int:
@@ -66,7 +66,7 @@ static func validate(core: Dictionary, config: Dictionary) -> bool:
 				int(s["remaining_ticks"]) > int(definition["duration_ticks"]) or \
 				int(s["applied_round"]) > int(battle["round"]):
 			return false
-		if s.get("tick_trigger","") != "NEXT_PLAYER_PHASE":
+		if s.get("tick_trigger","") != definition.get("tick_trigger",""):
 			return false
 		if definition["kind"] == "BARRIER":
 			if guards.has(target):
@@ -131,7 +131,7 @@ static func grant(core: Dictionary, source_actor_id: String,
 			"source_actor_id":source_actor_id,"target_actor_id":target_actor_id,
 			"stacks":1,"remaining_ticks":int(d["duration_ticks"]),
 			"applied_round":int(s["battle"]["round"]),
-			"priority":int(d["priority"]),"tick_trigger":"NEXT_PLAYER_PHASE",
+			"priority":int(d["priority"]),"tick_trigger":str(d["tick_trigger"]),
 			"definition_version":str(config.get("m5_status_version","m5.2-provisional-v1")),
 			"dispel_tags":d["dispel_tags"].duplicate(true)
 		})
@@ -176,7 +176,9 @@ static func _sort(a: Dictionary, b: Dictionary) -> bool:
 	return str(a["status_instance_id"]) < str(b["status_instance_id"])
 
 static func tick(core: Dictionary, next_round: int, config: Dictionary,
-		command_id: String) -> Dictionary:
+		command_id: String, trigger: String = "NEXT_PLAYER_PHASE") -> Dictionary:
+	if not ["NEXT_PLAYER_PHASE","ENEMY_PHASE_END"].has(trigger):
+		return _fail("M52_INVALID_TICK_TRIGGER")
 	if not validate(core,config):
 		return _fail("M52_INVALID_STATUS_INSTANCES")
 	var state: Dictionary = core.duplicate(true)
@@ -187,7 +189,7 @@ static func tick(core: Dictionary, next_round: int, config: Dictionary,
 	for status: Dictionary in ordered:
 		var target: String = str(status["target_actor_id"])
 		var d: Dictionary = _definition(config,str(status["status_id"]))
-		if int(status["applied_round"]) >= next_round:
+		if str(status["tick_trigger"]) != trigger or int(status["applied_round"]) >= next_round:
 			remain.append(status)
 			continue
 		timeline.append({"kind":"StatusTickStarted","status_instance_id":status["status_instance_id"],

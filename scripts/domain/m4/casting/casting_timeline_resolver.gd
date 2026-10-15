@@ -7,6 +7,7 @@ const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
+const Lv40Cast = preload("res://scripts/domain/m5/lv40/lv40_cast_effect.gd")
 
 static func _before(a: Dictionary, b: Dictionary) -> bool:
 	if int(a["planned_resolve_round"]) != int(b["planned_resolve_round"]):
@@ -30,6 +31,13 @@ static func settle_due(core: Dictionary, next_round: int,
 	due.sort_custom(_before)
 	var timeline: Array = []
 	for cast: Dictionary in due:
+		if config.get("m5_lv40_enabled",false) == true:
+			var lv40_release: Dictionary = Lv40Cast.settle(source,cast,next_round,config,command_id)
+			if not lv40_release["ok"]:
+				return lv40_release
+			source = lv40_release["core"]
+			timeline.append_array(lv40_release["timeline"])
+			continue
 		if str(cast.get("kind","")) == "LAST_SPELL":
 			var last_release: Dictionary = LastSpell.settle(source,cast,next_round)
 			if not last_release["ok"]:
