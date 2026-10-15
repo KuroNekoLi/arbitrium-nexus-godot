@@ -1,6 +1,6 @@
 # Combat Phase 4 — Godot Presentation / Playable Integration Handoff
 
-> **IMPLEMENTATION PLAN / NOT EXECUTED**（2026-10-15）。文件整理不包含下載資源、不包含 Scene 實作、不宣稱 Phase 4 CI 已通過。M5.5 仍是尚未驗證的獨立前置工作包。
+> **PHASE 4 IMPLEMENTATION PLAN / NOT EXECUTED**（2026-10-15）。Phase 3 M5.5 已完成 **Headless Battle Domain** Gate（1,238/1,238，100 fixed seeds + Full Replay），[master 合併](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/9c8b14b873047ca181a229cfaab5d2351541ceab)、[Godot CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295) Success。**本文件只規劃 Phase 4**，沒有下載資源、沒有 Scene/HUD/i18n 實作、沒有真人可玩 Gate。
 
 ## 1. 執行前讀取
 
@@ -8,7 +8,7 @@
 
 先執行 read-only audit：master SHA、Godot CLI/version、project.godot、Scene tree、UI 圖像／正式設計、CardDefinition、Command/Reducer、最新 Test IDs、固定 Replay、素材授權與雙語資源。不得從舊 `31` 推斷實作位置。
 
-## 2. 工作分層（M5.5 可與不依賴它的 UI 骨架並行）
+## 2. 工作分層（M5.5 Headless 已通過，開始 Phase 4 仍需逐項驗收）
 
 | Gate | 最小工作 | 必須完成才能宣稱通過 |
 |---|---|---|
@@ -37,4 +37,4 @@ Scene input
 
 ## 5. 禁止將此 Handoff 當作完成聲明
 
-M1～M5.4 Domain 1,081/1,081（Godot [#38676746490](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38676746490)），**不等於 M5.5、Godot Lv40 content parity、畫面、英文繁中 UI、真人遊玩、平衡**都完成。
+M1～M5.5 **Headless Domain 1,238/1,238**（Godot [M5.5 分支 CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295)，[PR CI #38678188918](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678188918)；正式程式碼已合併 [master 9c8b14b8](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/9c8b14b873047ca181a229cfaab5d2351541ceab)）。**這僅證明版本化 Fixture Domain 的三人 Boss 全戰、100 seeds 和 Replay；Godot Lv40 正式 Content Parity、真正 Scene/Controller、英文繁中 HUD、真人遊玩與平衡依然未完成。**
