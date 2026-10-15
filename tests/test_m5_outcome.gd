@@ -71,9 +71,13 @@ func cycle(state: Dictionary, record: bool = false) -> Dictionary:
 	current = cmd(current["state"],"OPEN_REACTION_WINDOW",{
 		"enemy_action_id":eid},record)
 	if not current["accepted"]: return current
-	current = cmd(current["state"],"PASS_REACTION",{
-		"window_id":str(current["state"]["reaction_window"]["window_id"])},record)
-	if not current["accepted"]: return current
+	# CORE-04: if everyone is Concentrating/Incapacitated there is no
+	# legal Reaction. M3 closes the *empty* window automatically; do not
+	# send an invalid Pass for a window that was never drafting.
+	if str(current["state"]["reaction_window"].get("status","")) != "CLOSED":
+		current = cmd(current["state"],"PASS_REACTION",{
+			"window_id":str(current["state"]["reaction_window"]["window_id"])},record)
+		if not current["accepted"]: return current
 	current = cmd(current["state"],"RESOLVE_ENEMY_ATTACK_M5",{
 		"enemy_action_id":eid},record)
 	if not current["accepted"]: return current
