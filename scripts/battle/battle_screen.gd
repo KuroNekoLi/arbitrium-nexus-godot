@@ -1,4 +1,6 @@
 extends Control
+## Reversible scene-specific profile; Lv40 stays fail-closed until merged contracts.
+@export_enum("fixture", "lv40") var encounter_profile: String = "fixture"
 const Encounter = preload("res://tests/fixtures/m5_full_battle_fixture.gd")
 const Adapter = preload("res://scripts/battle/presentation/battle_presentation_adapter.gd")
 const Factory = preload("res://scripts/battle/battle_command_factory.gd")
@@ -30,6 +32,15 @@ func _enter_tree() -> void:
 	TranslationServer.set_locale("zh_TW")
 
 func _ready() -> void:
+	# The inherited Lv40 scene must never silently start a legacy fixture.
+	# Formal activation requires a reviewed Domain+ReadModel+Localization merge.
+	if encounter_profile == "lv40":
+		resized.connect(_fit_design)
+		_fit_design()
+		hud.feedback.text = tr("BATTLE_NOT_IMPLEMENTED")
+		hud.end_button.disabled = true
+		push_warning("BLOCKED_CONTRACT: Lv40 Domain, ReadModel and Localization are not merged")
+		return
 	config = Encounter.config()
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
