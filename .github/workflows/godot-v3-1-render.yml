@@ -6,6 +6,7 @@ on:
       - '.github/workflows/godot-v3-1-render.yml'
       - 'resources/ui/battle_theme.tres'
       - 'tests/capture_p4_v23_layout.gd'
+      - 'tests/capture_p4_v31_boss.gd'
       - 'scripts/battle/ui/**'
       - 'scenes/battle/ui/**'
   workflow_dispatch:
@@ -68,6 +69,38 @@ jobs:
           test -s "$base/v23_idle_1920_en.png"
           test -s "$base/v23_selected_1280_zh.png"
           echo "V23_EVIDENCE_DIR=$base" >> "$GITHUB_ENV"
+      - name: Render Break-bar projection-only fixtures (not gameplay state)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          printf -v prefix 'v31_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/capture_p4_v31_boss.gd -- \
+            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/boss.log" 2>&1 || {
+              cat "$RUNNER_TEMP/v23/boss.log"; exit 1;
+            }
+          grep -E '^(V31_BOSS_RENDER_REPORT |PASS V31-|FAIL V31-)' "$RUNNER_TEMP/v23/boss.log"
+          grep -qx 'V31_BOSS_RENDER_REPORT executed=20 passed=20 failed=0' "$RUNNER_TEMP/v23/boss.log"
+          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v23/boss.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/boss.log"
+          base="outputs/p4_input_capture/$prefix"
+          test -s "$base/v31_boss_break_1280_zh.png"
+          test -s "$base/v31_boss_locked_1280_zh.png"
+          test -s "$base/v31_boss_break_1920_en.png"
+          test -s "$base/v31_boss_projection_fixture_manifest.json"
+          echo "V31_BOSS_DIR=$base" >> "$GITHUB_ENV"
+      - name: Review-only Boss Break screenshot preview
+        if: success()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -s "$V31_BOSS_DIR/v31_boss_break_thumb.jpg"
+          echo 'V31_BREAK_IMAGE_BASE64_BEGIN'
+          base64 -w 0 "$V31_BOSS_DIR/v31_boss_break_thumb.jpg"
+          echo
+          echo 'V31_BREAK_IMAGE_BASE64_END'
       - name: Render review-only JPEG preview in logs
         if: success()
         shell: bash
@@ -86,11 +119,13 @@ jobs:
           printf -v base 'outputs/p4_input_capture/v23_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
           mkdir -p "$base/runner_logs"
           cp -f "$RUNNER_TEMP/v23/"*.log "$base/runner_logs/" 2>/dev/null || true
-      - name: Upload V2.3 PNGs, manifests and raw logs
+      - name: Upload V3.1 real PNGs, projection-only fixtures and raw logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: v31-real-render-screenshots
-          path: outputs/p4_input_capture/v23_*/
+          path: |
+            outputs/p4_input_capture/v23_*/
+            outputs/p4_input_capture/v31_*/
           retention-days: 14
 
