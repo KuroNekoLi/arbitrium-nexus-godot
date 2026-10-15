@@ -77,3 +77,10 @@
 - **文件變更**：同步更新既有 35 份 `docs/combat/` 原始文件的**現行狀態 Banner**，並修正 Spec Index、Open Issues、Implementation Contract、Phase4 Handoff；原有歷史內容、CORE-01～04 已核准規則以及內容 Provisional 身分維持不變。現行完整證據：[M5.5 Acceptance Report](../verification/PH3_M5_5_ACCEPTANCE_REPORT.md)、[M5 Handoff](../verification/PH3_M5_HANDOFF.md)。
 - **仍需獨立驗收**：Spell Counter 合法窗口/內容、Analyze/Enemy Intel、全隊 Exhausted 正HP 終局、正式 Lv40 卡牌與 Boss 內容、Godot 2.5D Scene/HUD/i18n、真人可玩與平衡。**下一階段為 Phase 4，不再稱呼 M5.5 未完成**。
 - 此項更新僅修改文件；**不宣稱此文件提交重新執行了 Godot CLI 或 GitHub Actions**。完整 Domain PASS 證據固定指向上述已實際跑過的 CI Commit。
+
+## 7. M5.5 狀態同步後的 GitHub 完整回讀驗證（2026-10-15）
+
+- `docs/combat/` 現有 **40 份 Markdown**；原先 35 份（含 archive）的現行狀態 Banner **35/35 已改成 M5.5 驗證完成**（仍說明內容/Playable 未驗證）；另 5 份 Spec Index／Contract／Open Issues／Phase4 Handoff／Audit 已依其實際職責更新。
+- 從正式 `master` Git tree 逐檔回讀 **40/40**；擷取 **206 個相對檔案連結**，以 repo Tree 驗證檔案目標 **206/206 存在、0 缺失**。不包含 URL fragment 標題錨點的渲染驗證或外部 HTTP 連線驗證。
+- 相對於 M5.5 文件同步前的 `81f4e3a758a95ad48d65b328c46c59f9c74d51d3`，本輪僅修改 `docs/combat/` 路徑，不涉及 `scripts/`、`tests/`、`scenes/`、`assets/` 或 Workflow。
+- 正式 Godot 驗收**沿用先前已完成**的 [Master Actions #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)，而不是聲稱這輪文件提交重新跑了 1,238 項 Domain 測試。
