@@ -35,3 +35,15 @@ CD remains **not implemented**: no signed Desktop Godot exports or automated Rel
 | [Previous canonical Master Full #38726127054](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38726127054) | **SUCCESS** | 11:16:11–11:20:10 UTC (~239 s) | **1238/1238** with 100/100 authentic full battles and Replay; not yet the newly routed Full wrapper |
 
 Observed Fast duration is around **60% shorter** than the older canonical full run (96 s vs 239 s). Because integration/fast run concurrently and are different scopes, do not add their durations and interpret that as developer waiting time. Stage workflow edits which only change historical manual triggers were committed **after** both green code tests; they do not change tested Godot scripts or new CI runner behavior. The new Full routing must be independently verified **on master** after Fast-forward, since staging branches do not receive the master-only Full push event.
+
+## Automatic P4 coverage parity — fast parallel lane
+
+Disabling the 24 old automatic gates must **not** silently disable P4 assertions. `ci-fast.yml` therefore has a second **parallel** `p4-contracts` job that runs all nine P4/Level40/metrics suites and four Legacy smoke tests:
+
+- Lv40 Content **37/37**; Component **24/24**; Event Feedback **45/45**; Feedback Edges **80/80**; Lv40 Staging Negative Gate **10/10**;
+- Localization **198/198**; ReadModel **29/29**; Balance Metrics **35/35**; Profile Metrics **30/30**;
+- **488/488 named P4/Lv40/metrics assertions plus 4 Legacy suites**.
+
+This job runs **concurrently** with Fast's Golden Battle/Replay/5 Seed/Playable tests. P4 coverage is no longer lost on HUD-only changes; `tools/qa/**` and `tools/balance/**` trigger the lane as well. Neither job executes the exhausted/restricted original GUI, Lv40 Domain or Lv40 Edges test attempts. A `10/10` negative staging test still does not imply the Lv40 scene is playable (positive headless 32 is a different test).
+
+Both jobs must succeed for the single Fast workflow to pass. Parallelization aims to keep developer wall time near the slower job instead of summing the two. Runner minutes are not the same as developer wait time.
