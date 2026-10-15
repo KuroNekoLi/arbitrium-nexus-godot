@@ -22,23 +22,23 @@ func _init() -> void:
 	var second: Dictionary = Driver.run(F.SEED)
 	var receipts: Dictionary = M5.replay(a["initial"],a["tape"],a["config"])
 	var replay: Dictionary = Driver.replay(a)
-	check("M55-REP-01-REAL_BATTLE_TERMINAL",a["ok"] and
+	check("M55-REP-01-REAL_BATTLE_TERMINAL",a["ok"] and \
 		["VICTORY","DEFEAT"].has(a["outcome"]))
-	check("M55-REP-02-SAME_SEED_IDENTICAL_CARD_SHUFFLE",second["ok"] and
+	check("M55-REP-02-SAME_SEED_IDENTICAL_CARD_SHUFFLE",second["ok"] and \
 		Model.state_hash(second["initial"]) == a["initial_hash"])
-	check("M55-REP-03-SAME_SEED_IDENTICAL_TAPE",second["ok"] and
+	check("M55-REP-03-SAME_SEED_IDENTICAL_TAPE",second["ok"] and \
 		second["tape_hash"] == a["tape_hash"])
-	check("M55-REP-04-SAME_SEED_IDENTICAL_EVENTS",second["ok"] and
+	check("M55-REP-04-SAME_SEED_IDENTICAL_EVENTS",second["ok"] and \
 		second["event_hash"] == a["event_hash"])
-	check("M55-REP-05-SAME_SEED_IDENTICAL_FINAL_STATE",second["ok"] and
+	check("M55-REP-05-SAME_SEED_IDENTICAL_FINAL_STATE",second["ok"] and \
 		second["final_hash"] == a["final_hash"])
 	check("M55-REP-06-M5_REDUCER_REPLAY_ACCEPTED",receipts["accepted"])
-	check("M55-REP-07-REPLAY_EVENT_HASH",replay.get("ok",false) and
+	check("M55-REP-07-REPLAY_EVENT_HASH",replay.get("ok",false) and \
 		receipts["event_hash"] == a["event_hash"])
-	check("M55-REP-08-REPLAY_FINAL_HASH",replay.get("ok",false) and
+	check("M55-REP-08-REPLAY_FINAL_HASH",replay.get("ok",false) and \
 		receipts["state_hash"] == a["final_hash"])
 	check("M55-REP-09-ALL_ACTUAL_COMMANDS_RETAIN_SEQ",
-		a["tape"].size() == int(a["accepted"]) and
+		a["tape"].size() == int(a["accepted"]) and \
 		int(a["tape"][0]["expected_event_seq"]) == 0)
 	var original_hash: String = Model.state_hash(a["initial"])
 	check("M55-REP-10-REPLAY_PRESERVES_INITIAL",
@@ -46,15 +46,15 @@ func _init() -> void:
 	var tampered: Array[Dictionary] = a["tape"].duplicate(true)
 	tampered[0]["expected_event_seq"] = -1
 	var refused: Dictionary = M5.replay(a["initial"],tampered,a["config"])
-	check("M55-REP-11-STALE_TAPE_FAIL_CLOSED",not refused["accepted"] and
-		refused["events"].is_empty() and
+	check("M55-REP-11-STALE_TAPE_FAIL_CLOSED",not refused["accepted"] and \
+		refused["events"].is_empty() and \
 		Model.state_hash(refused["state"]) == original_hash)
 	var appended: Array[Dictionary] = a["tape"].duplicate(true)
 	appended.append({"type":"END_PLAYER_PHASE","command_id":"post-win-forged",
 		"expected_event_seq":int(a["final"]["event_seq"])})
 	var terminal: Dictionary = M5.replay(a["initial"],appended,a["config"])
 	check("M55-REP-12-POST_TERMINAL_TAPE_FAIL_CLOSED",
-		not terminal["accepted"] and terminal["error"] == "BATTLE_ENDED" and
+		not terminal["accepted"] and terminal["error"] == "BATTLE_ENDED" and \
 		Model.state_hash(terminal["state"]) == a["final_hash"])
 	# Presentation options are explicitly *not* part of the Domain command
 	# tape. Reuse the same tape in three viewport policy configurations:
@@ -64,8 +64,8 @@ func _init() -> void:
 		presentation["presentation_only_mode"] = _mode
 		var ui_replay: Dictionary = M5.replay(a["initial"],a["tape"],presentation)
 		check("M55-REP-13-PRESENTATION_"+_mode,
-			ui_replay["accepted"] and
-			ui_replay["event_hash"] == a["event_hash"] and
+			ui_replay["accepted"] and \
+			ui_replay["event_hash"] == a["event_hash"] and \
 			ui_replay["state_hash"] == a["final_hash"])
 	print("M5_5_REPLAY_REPORT executed=",passed+failed,
 		" passed=",passed," failed=",failed)
