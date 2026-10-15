@@ -150,6 +150,10 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 	card_views = hand.card_views
 	reaction_panel.render_window(vm["reaction"], reaction_choices,vm.get("actor_name_keys",{}))
 
+func set_selected_card(instance: String) -> void:
+	# Display-only selection; legacy BattleScreen stays authoritative for actions.
+	hand.set_selected_instance(instance)
+
 func _arrange_hand() -> void:
 	# Legacy compatibility adapter; the HandView owns ArcShape.
 	hand._arrange_hand()

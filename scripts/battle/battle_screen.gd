@@ -170,6 +170,7 @@ func select_card(instance: String) -> void:
 	var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
 	if not own["zones"]["hand"].has(instance): return
 	pending_card = instance
+	hud.set_selected_card(instance)
 	pending_kind = "CARD"
 	selected_target = ""
 	legal_targets = _targets_for_card(instance)
@@ -220,6 +221,7 @@ func cancel_action() -> void:
 	legal_targets = []
 	if not is_node_ready(): return
 	hud.set_targets([])
+	hud.set_selected_card("")
 	hud.details.text = tr("BATTLE_SELECT")
 	hud.mode.hide()
 	hud.combo.hide()

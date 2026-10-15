@@ -11,6 +11,9 @@ var home: Vector2
 var home_rotation: float = 0.0
 var home_scale: Vector2 = Vector2.ONE
 var hover_tween: Tween
+var selected_visual: bool = false
+var _hover_visual: bool = false
+var _style: StyleBoxFlat
 
 func _card_ready() -> void:
 	if _layout:
@@ -27,6 +30,7 @@ func _card_ready() -> void:
 	face.mouse_behavior_recursive = Control.MOUSE_BEHAVIOR_DISABLED
 	face.focus_behavior_recursive = Control.FOCUS_BEHAVIOR_DISABLED
 	var style := StyleBoxFlat.new()
+	_style = style
 	style.bg_color = Color("0b192b")
 	style.border_color = appearance.accent if legal else Color("647180")
 	style.set_border_width_all(2)
@@ -36,6 +40,7 @@ func _card_ready() -> void:
 	style.content_margin_top = 7
 	style.content_margin_bottom = 7
 	face.add_theme_stylebox_override("panel",style)
+	face.pivot_offset = size * 0.5
 	add_child(face)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation",4)
@@ -69,11 +74,11 @@ func _card_ready() -> void:
 		column.add_child(reason)
 	tooltip_text = tr(appearance.description_key) + ("\n"+unavailable_reason if not legal else "")
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
-	drag_started.connect(func(_card: Card) -> void: z_index = 50)
+	drag_started.connect(func(_card: Card) -> void: z_index = 90)
 	drag_ended.connect(func(_card: Card) -> void:
 		release_requested.emit(instance_id,get_global_mouse_position())
 		_restore_home.call_deferred()
-		z_index = 0)
+		_apply_visual_state())
 	card_hovered.connect(_hover.bind(true))
 	card_unhovered.connect(_hover.bind(false))
 	card_focused.connect(_hover.bind(true))
@@ -87,12 +92,37 @@ func _restore_home() -> void:
 	tween_rotation(rad_to_deg(home_rotation),0.18)
 	tween_scale(home_scale,0.18)
 
+## UI-only selection/focus: raise the FACE rather than moving the Card hit rect.
+## SimpleCards still owns drag, focus and click. Selected state persists across redraw.
+func set_selected_visual(active: bool) -> void:
+	selected_visual = active
+	_apply_visual_state()
+
 func _hover(active: bool) -> void:
-	if holding or not is_instance_valid(face): return
-	if hover_tween: hover_tween.kill()
-	z_index = 30 if active else 0
-	hover_tween = create_tween()
-	hover_tween.tween_property(face,"position:y",-18.0 if active else 0.0,0.12)
+	_hover_visual = active
+	if holding or not is_instance_valid(face):
+		return
+	_apply_visual_state()
+
+func _apply_visual_state() -> void:
+	if not is_instance_valid(face):
+		return
+	if hover_tween:
+		hover_tween.kill()
+	var prominent: bool = selected_visual or _hover_visual or focused or hovered
+	if holding:
+		z_index = 90
+	else:
+		z_index = 65 if selected_visual else 55 if prominent else 0
+	var lift: float = -38.0 if selected_visual else -31.0 if prominent else 0.0
+	var magnify: Vector2 = Vector2.ONE * (1.055 if selected_visual else 1.035 if prominent else 1.0)
+	_style.set_border_width_all(3 if prominent else 2)
+	_style.border_color = Color("ffe8a3") if selected_visual else Color("9beafc") if prominent else appearance.accent if legal else Color("647180")
+	_style.shadow_color = Color(0.56, 0.83, 1.0, 0.56) if selected_visual else Color(0.33, 0.70, 0.92, 0.42) if prominent else Color.TRANSPARENT
+	_style.shadow_size = 9 if prominent else 0
+	hover_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
+	hover_tween.tween_property(face, "position:y", lift, 0.14)
+	hover_tween.tween_property(face, "scale", magnify, 0.14)
 
 func _exit_tree() -> void:
 	if hover_tween: hover_tween.kill()
