@@ -1,5 +1,8 @@
 # 28 — Level 40 Boss Python Balance Pilot v0.1
 
+> **Documentation status · 2026-10-15 — HISTORICAL_PYTHON_PROTOTYPE**：僅紀錄 Python v0.1 的 400 場獨立近似模擬；29 v0.2 更新平衡研究。Python 原型不是 Godot Reducer、Domain CI 或批准後的 Boss 數值。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > 日期：2026-10-15。狀態：**PYTHON PROTOTYPE EXECUTED / NOT GODOT ENGINE TESTED / CONTENT_PROVISIONAL**。
 > 規格來源：Library `25_STARTER_PARTY_CARD_CONTENT_V0_2.md`、`26_UNIVERSAL_BASIC_MAGIC_AND_STARTER_DECK_V0_3.md`、`27_LEVEL40_DEMO_BOSS_ENCOUNTER_V0_1.md`，以及更高優先權的現行 Combat Rules。排除舊 GDD、舊 Counter-Function。
 

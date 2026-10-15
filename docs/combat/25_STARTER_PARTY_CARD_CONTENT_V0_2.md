@@ -1,5 +1,8 @@
 # 25 — Astraea Starter Party & Card Content Design v0.2
 
+> **Documentation status · 2026-10-15 — APPROVED_VARIANT_DIRECTION + CONTENT_PROVISIONAL_V0_2**：主角初期固定劍士、未來 Variant 解鎖是 USER_APPROVED；角色名、技能、係數與基本卡組均為內容候選。**26 v0.3 取代 25 的 UNIVERSAL 基礎魔法與三副 Starter Deck 候選**，不可再拿 25 的 U01～U04 當完整最新通用卡池。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > 日期：2026-10-15｜狀態：**MIXED — USER_APPROVED 主角 Variant 方向 + CONTENT_PROVISIONAL 角色／卡牌／數值**  
 > 用途：Godot 4.x deterministic combat engine 的初始內容資料與後續平衡測試候選；不宣稱已執行、測試 PASS 或正式平衡核定。  
 > **唯一規格來源：Library `/docs/combat/00`～`24` 的最新有效 Combat Rules／使用者決議**。不得引用 `Life_RPG_Astraea_GDD_v1.1.md`、舊 `COMBAT_SYSTEM.md` 的過時機制，亦不得使用 `Counter-Function` 作為新版遊戲機制。  
@@ -122,6 +125,9 @@
 > 採前置防護、治療、MP 支援三軸。治療不是每輪無腦最佳選擇：還要考慮共享 AP、Enemy Intent、是否留 AP→RP。一般治療不得恢復 Incapacitated；`Revive` 另屬未來正式定義內容。
 
 ## 9. 精確三套 12 張 Starter Deck（36 CardInstances）
+
+> **2026-10-15 v0.3 後續覆寫**：本節 v0.2 卡牌實例配置僅作歷史候選；請以 [26 §5](26_UNIVERSAL_BASIC_MAGIC_AND_STARTER_DECK_V0_3.md) 的三副 Starter Deck v0.3 配置作為後續測試候選。兩者均非最終已核准數值。
+
 
 本版選擇每人 4 UNIVERSAL + 5 ROLE_TAG + 3 CHARACTER，**只是測試副牌**，不是遊戲全域比例或同名卡上限。每種卡在該副牌目前只放1實例，故不需要預先替未核准的重複卡攜帶上限做決策。
 

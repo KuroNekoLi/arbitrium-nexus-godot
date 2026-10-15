@@ -1,5 +1,8 @@
 # 27 — Level 40 Demo Boss Encounter v0.1（秘紋守衛・零式）
 
+> **Documentation status · 2026-10-15 — LEVEL40_CONTENT_PROVISIONAL_SPEC**：Lv40 三人對單 Boss 範例與技能、數值只屬候選。Python v0.2 資料由 29 更新；M1～M5.4 CI 不證明該 Lv40 Encounter 的 Godot parity／真人可玩或平衡。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > 2026-10-15｜狀態 **CONTENT_PROVISIONAL / SPECIFIED_NOT_TESTED**。本文件是面向首場完整示範戰鬥的**獨立內容 fixture 與測試契約**，不更新、覆寫任何既有 USER_APPROVED／P1/P2/M 玩法規則。唯一上游是 Library 最新有效 Combat Rules `00`–`24`、`25_STARTER_PARTY_CARD_CONTENT_V0_2.md`、`26_UNIVERSAL_BASIC_MAGIC_AND_STARTER_DECK_V0_3.md`。禁止引用舊 `Life_RPG_Astraea_GDD_v1.1.md` 或舊 `COMBAT_SYSTEM.md`，禁止重引 Counter-Function。尚未進行 Godot 或真正遊玩測試；不得宣稱勝率／平衡 PASS。
 >
 > **範圍**：一場 3v1、等級40、無額外小怪或自由走位的完整戰鬥。三人是朝霧蓮（劍士 Variant）、九條朱音（爆發魔法師）、白石紬（治療支援）；各用 `26` 定義的12張個別卡牌、均可配置通用攻擊／治療／防護魔法。敵人為新建測試原創 Boss `TEST_BOSS_ARCANE_SENTRY`，本地化顯示「秘紋守衛・零式／Arcane Sentry Type-0」。不導入新職業、地圖位置、Revive、商業系統或第二個敵人。

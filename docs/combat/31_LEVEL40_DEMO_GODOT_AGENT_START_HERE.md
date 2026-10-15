@@ -1,5 +1,8 @@
 # 31 — Lv40 Demo Boss: Godot Agent START HERE / Python v0.2 Handoff
 
+> **Documentation status · 2026-10-15 — HISTORICAL_AGENT_HANDOFF_OTHER_REPOS**：文件引用 `astraea-combat-rules` 與 `Astraea-Academy` 為來源/早期工作目標；**現行 Godot 目標是本倉 `KuroNekoLi/arbitrium-nexus-godot`**。保留舊路徑追溯，不得讓 Codex 改錯 repo。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > Created: 2026-10-15. **SPEC HANDOFF ONLY**. The Python v0.2 simulation and 11 local Python tests have executed. **Godot runtime parity, playable demo, CI and the balance acceptance gates have NOT passed.**
 >
 > Repositories: **specifications / Python** = `KuroNekoLi/astraea-combat-rules` (`master`); **actual Godot 4.7.2 project** = `KuroNekoLi/Astraea-Academy` (`main`, `godot/`). **Do not** use `KuroNekoLi/astraea-life-rpg` (legacy Flutter app) for this task.

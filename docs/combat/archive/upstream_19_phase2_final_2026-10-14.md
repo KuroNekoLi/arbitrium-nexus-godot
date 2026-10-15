@@ -1,3 +1,5 @@
+> **Documentation status · 2026-10-15 — ARCHIVED_SOURCE_SNAPSHOT_NOT_CANONICAL**：此為原始上游同主題 19 的異名來源存檔；生效唯一現行 19 是 `../19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`，CORE-01～04 最新核准仍在 20/21。 導覽：[Combat Spec Index](../COMBAT_SPEC_INDEX.md)；未決：[Open Issues](../COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
 > **ARCHIVE — NOT A CURRENT AUTHORITATIVE FILE IN THE GODOT REPOSITORY.** This is a source-snapshot copy of `KuroNekoLi/astraea-combat-rules@cac49361/docs/combat/19_PHASE2_FINAL_APPROVED_M_D18_D31_P2_D10_D16.md`. The active decision document is `../19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`, subject to latest USER_APPROVED CORE-01–04 in 20/21. Preserve for comparison only. 
 
 # 19 — Phase 2 最終批准快照：M-D18～M-D31、P2-D10～D16

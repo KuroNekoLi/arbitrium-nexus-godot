@@ -1,5 +1,8 @@
 # Combat Rules upstream transfer — collision audit and pending decisions
 
+> **Documentation status · 2026-10-15 — HISTORICAL_IMPORT_STATUS**：此檔初始 `UNRESOLVED` 說的是檔案匯入早期截面；使用者已選擇 A 並完成語義合併，現行對照詳見 `UPSTREAM_RECONCILIATION_A_2026-10-15.md`。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 Date: 2026-10-15  
 Source: `KuroNekoLi/astraea-combat-rules@cac49361e1cbc0e783fbdf75699080724f1c70a9` (`master`)  
 Target: `KuroNekoLi/arbitrium-nexus-godot` (`master`), pre-transfer HEAD `81f04531af7cad2b387d04b8646e204054bbabcf`  

@@ -1,5 +1,8 @@
 # 上游戰鬥規格語義合併稽核 — 方案 A（2026-10-15）
 
+> **Documentation status · 2026-10-15 — HISTORICAL_SEMANTIC_MERGE_AUDIT**：2026-10-15 方案 A 上游對照作業本身已結束；其 `未修改遊戲規則` 只說明該次提交，不妨礙後續獨立 M5.4 程式驗收。核准玩法仍依 18/19/20/21。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > **文件合併：已完成。Godot 程式規則遷移：未執行。** 這是 `master` 文件整合和衝突追溯，不是 Godot 戰鬥測試或後續里程碑的執行驗收。
 
 ## 來源、邊界、決策

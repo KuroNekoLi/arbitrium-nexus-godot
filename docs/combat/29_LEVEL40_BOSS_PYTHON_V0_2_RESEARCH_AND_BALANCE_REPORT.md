@@ -1,5 +1,8 @@
 # 29 — Astraea Level 40 Chapter Boss：卡牌 RPG 參考研究、Python v0.2 與平衡結果
 
+> **Documentation status · 2026-10-15 — PYTHON_RESEARCH_V0_2 + BALANCE_PROVISIONAL**：Python v0.2 的測試和建議數值是研究證據，不是 Godot parity、Domain 正式戰鬥 100 seed 或使用者正式平衡核准；26 的 UNIVERSAL v0.3 起始牌組仍是內容候選。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > 日期：2026-10-15 · **PYTHON PROTOTYPE TESTED / BALANCE PROVISIONAL / GODOT NOT EXECUTED**
 > 依據：Library `/docs/combat/00–28` 最新有效 Combat Rules；`25` 角色與卡牌、`26` 通用魔法與起始牌組、`27` Lv40 Encounter、`28` Python v0.1 報告。
 > **不引用 Life_RPG_Astraea_GDD_v1.1.md／舊 Counter-Function。** 此文件不修訂 USER_APPROVED 的 AP、RP、MP、詠唱、Break、Exposed、Last Spell 與勝敗核心契約。

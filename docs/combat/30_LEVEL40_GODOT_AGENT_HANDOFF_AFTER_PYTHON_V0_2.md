@@ -1,5 +1,8 @@
 # 30 — Astraea Lv40 Demo Boss：Godot Agent 後續交接規格（暫不執行）
 
+> **Documentation status · 2026-10-15 — HISTORICAL_AGENT_HANDOFF**：原文 `NO GODOT EXECUTION / NO GITHUB PUSH` 是當時交接內容，現在文件已在 GitHub，且 M1～M5.4 有 CI。啟動 Codex 時必須以本倉、Index、最新驗收為準；不可將本 handoff 當作當前已完成工作聲明。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > 日期2026-10-15｜HANDOFF READY / NO GODOT EXECUTION / NO GITHUB PUSH。**本文件只供未來Agent啟動時使用**。除非使用者另指令，請勿現在啟動Godot、實作畫面或推送 GitHub。
 
 ## 0. 任務入口

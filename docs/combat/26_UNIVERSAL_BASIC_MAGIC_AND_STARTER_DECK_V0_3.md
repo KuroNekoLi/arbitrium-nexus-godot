@@ -1,5 +1,8 @@
 # 26 — Universal Basic Magic & Starter Deck v0.3
 
+> **Documentation status · 2026-10-15 — APPROVED_UNIVERSAL_MAGIC_DIRECTION + CONTENT_PROVISIONAL_V0_3**：所有三名角色可合法配備通用基本攻擊、治療、防護魔法為 USER_APPROVED_DIRECTION；技能名稱、費率、起始牌組仍是最新 **v0.3 候選**，不得誤認內容/平衡已獲批准。 導覽：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；未決：[Open Issues](COMBAT_OPEN_ISSUES.md)。M5.5／完整可玩驗證尚未完成。以下保留來源快照，不能解讀為此刻最新驗收。
+
+
 > 日期：2026-10-15  
 > 決策狀態：**USER_APPROVED_DIRECTION（所有角色具備基礎攻擊／治療／防護魔法的配牌資格）**；卡名、MP/AP、係數、卡片配置與平衡目標均 **CONTENT_PROVISIONAL／NOT TESTED**。  
 > 適用範圍：Godot 4.x Astraea 三人 JRPG + 每角色獨立牌組。唯一系統權威是 `docs/combat/00`–`25` 的最新有效 Combat Rules 及後續明示核准事項。**不引用**舊 `Life_RPG_Astraea_GDD_v1.1.md`、舊 `COMBAT_SYSTEM.md`，**不重引 Counter-Function**。  
