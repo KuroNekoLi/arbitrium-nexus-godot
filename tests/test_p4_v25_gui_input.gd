@@ -21,25 +21,34 @@ func _eight_hand() -> Dictionary:
 		zones["hand"].append(zones["draw"].pop_back())
 	return state
 
+## Window input events use physical pixels; canvas_items Control transforms are
+## still in the 1280x720 logical viewport after a 1920x1080 window resize.
+func _window_point(logical: Vector2) -> Vector2:
+	var viewport: Vector2 = root.get_visible_rect().size
+	return Vector2(logical.x * float(root.size.x) / viewport.x,
+		logical.y * float(root.size.y) / viewport.y)
+
 func _move(point: Vector2) -> void:
-	root.warp_mouse(point)
+	var physical: Vector2 = _window_point(point)
+	root.warp_mouse(physical)
 	var move := InputEventMouseMotion.new()
-	move.position = point
-	move.global_position = point
+	move.position = physical
+	move.global_position = physical
 	root.push_input(move)
 	await create_timer(0.03).timeout
 
 func _click(point: Vector2) -> void:
 	await _move(point)
+	var physical: Vector2 = _window_point(point)
 	var down := InputEventMouseButton.new()
-	down.position = point
-	down.global_position = point
+	down.position = physical
+	down.global_position = physical
 	down.button_index = MOUSE_BUTTON_LEFT
 	down.pressed = true
 	root.push_input(down)
 	var up := InputEventMouseButton.new()
-	up.position = point
-	up.global_position = point
+	up.position = physical
+	up.global_position = physical
 	up.button_index = MOUSE_BUTTON_LEFT
 	up.pressed = false
 	root.push_input(up)
