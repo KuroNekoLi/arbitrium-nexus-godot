@@ -100,8 +100,6 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 	# V3.5.4: log rows are derived only from real DomainEvents (raw events are
 	# kept so a locale rebuild re-translates instead of replaying stale text).
 	log_events.append_array(events.duplicate(true))
-	if log_events.size() > LOG_EVENT_LIMIT:
-		log_events = log_events.slice(log_events.size() - LOG_EVENT_LIMIT)
 	hud.get_node("BattleLogPanel").append_rows(_log_rows(events))
 	director.enqueue(events,command)
 
@@ -137,6 +135,7 @@ func present(state: Dictionary) -> void:
 		var legal: bool = not targets.is_empty()
 		var cost_text: String = tr("BATTLE_COST") % [price.get("ap_cost",config["definitions"][definition]["ap_cost"]),price.get("mp_cost",config["definitions"][definition]["mp_cost"])]
 		cards.append({"instance_id":instance,"appearance":appearance,"cost":cost_text,
+			"can_full_chant": definition == "regular" or config.get("lv40_cards", {}).get(definition, {}).get("mode", "") == "DUAL",
 			"legal":legal,"reason":_reason(str(price.get("error",""))) if not legal else ""})
 	hud.render(view_model,selected_actor,cards,_reaction_choices())
 	hud.confirm_button.disabled = true
@@ -181,9 +180,11 @@ func select_actor(actor: String) -> void:
 	cancel_action()
 	present(snapshot)
 
-func select_card(instance: String) -> void:
+func select_card(instance: String, inspect_details: bool = true) -> void:
 	var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
 	if not own["zones"]["hand"].has(instance): return
+	hud.clear_command_confirmation()
+	hud.get_node("Context").visible = inspect_details
 	pending_card = instance
 	hud.set_selected_card(instance)
 	pending_kind = "CARD"
@@ -191,7 +192,7 @@ func select_card(instance: String) -> void:
 	legal_targets = _targets_for_card(instance)
 	var definition: String = str(own["instances"][instance]["definition_id"])
 	var appearance: Resource = load("res://resources/ui/appearances/"+definition+".tres")
-	hud.details.text = tr(appearance.name_key)+"\n"+tr(appearance.description_key)
+	hud.details.text = tr(appearance.description_key)
 	hud.mode.visible = definition == "regular" or config.get("lv40_cards",{}).get(definition,{}).get("mode","") == "DUAL"
 	hud.mode.select(0)
 	hud.combo.visible = (definition in ["finish","A06","T04"]) and not view_model["tactical"].get("combo",{}).is_empty()
@@ -199,6 +200,31 @@ func select_card(instance: String) -> void:
 	hud.feedback.text = tr("BATTLE_TARGET") if not legal_targets.is_empty() else _reason("ACTOR_UNAVAILABLE" if view_model["actors"][selected_actor]["status"] != "ACTIVE" else "INSUFFICIENT_RESOURCES")
 	hud.set_targets(legal_targets)
 	hud.confirm_button.disabled = true
+	_update_action_summary()
+
+func _update_action_summary() -> void:
+	var context: Control = hud.get_node("Context")
+	var target: String = log_actor_name(selected_target) if not selected_target.is_empty() else tr("BATTLE_TARGET")
+	if pending_kind == "CARD":
+		var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
+		var definition: String = str(own["instances"][pending_card]["definition_id"])
+		var appearance: Resource = load("res://resources/ui/appearances/" + definition + ".tres")
+		var quote: Dictionary = Cost.quote(snapshot["core"]["battle"], {
+			"actor_id": selected_actor, "card": config["definitions"][definition],
+			"casting_mode": "FULL" if hud.mode.selected == 1 else "CHANTLESS"}, config["costs"])
+		# Unavailable quotes have no trustworthy payable cost; omit rather than infer.
+		var cost: String = tr("BATTLE_COST") % [quote["ap_cost"], quote["mp_cost"]] if quote.get("ok", false) else ""
+		context.render_summary(tr(appearance.name_key), appearance.artwork, cost, target)
+	elif pending_kind in ["BASIC_ATTACK_RESOURCE_ONLY", "ACTIVATE_LAST_SPELL_M4", "FREE_SWAP"]:
+		var key: String = "BATTLE_BASIC" if pending_kind == "BASIC_ATTACK_RESOURCE_ONLY" else "BATTLE_LAST" if pending_kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_SWAP"
+		var cost: String = ""
+		if pending_kind == "BASIC_ATTACK_RESOURCE_ONLY" and config.get("resources", {}).has("basic_attack_ap_cost"):
+			cost = "%d AP" % int(config["resources"]["basic_attack_ap_cost"])
+		elif pending_kind == "ACTIVATE_LAST_SPELL_M4":
+			var inspected: Dictionary = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd").inspect(snapshot["core"], selected_actor, config)
+			if inspected.get("ok", false):
+				cost = tr("BATTLE_COST") % [inspected["quote"]["ap_cost"], inspected["quote"]["mp_cost"]]
+		context.render_summary(tr(key), preload("res://scripts/battle/ui/components/battle_command_visual.gd").icon_for(key), cost, target)
 
 func select_target(target: String) -> void:
 	if not legal_targets.has(target):
@@ -219,9 +245,13 @@ func _refresh_preview() -> void:
 			fields["confirmed"] = true
 		pending_command = Factory.build(snapshot,pending_kind,fields)
 	var result: Dictionary = Factory.preview(snapshot,pending_command,config)
+	_update_action_summary()
 	hud.confirm_button.disabled = not result["accepted"]
 	hud.feedback.text = tr("BATTLE_CONFIRM_HINT") if result["accepted"] else _reason(str(result["error"]))
-	if result["accepted"]: hud.confirm_button.grab_focus()
+	if pending_kind != "CARD":
+		var key: String = "BATTLE_BASIC" if pending_kind == "BASIC_ATTACK_RESOURCE_ONLY" else "BATTLE_LAST" if pending_kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_SWAP"
+		hud.show_command_confirmation(tr(key), hud.details.text)
+	if result["accepted"] and hud.confirm_button.is_visible_in_tree(): hud.confirm_button.grab_focus()
 
 func confirm_action() -> void:
 	if pending_command.is_empty() or hud.confirm_button.disabled: return
@@ -238,20 +268,59 @@ func cancel_action() -> void:
 	hud.set_targets([])
 	hud.set_selected_card("")
 	hud.details.text = tr("BATTLE_SELECT")
+	hud.get_node("Context").clear_summary()
+	hud.get_node("Context").hide()
+	hud.clear_command_confirmation()
 	hud.mode.hide()
 	hud.combo.hide()
 	hud.confirm_button.disabled = true
 	hud.feedback.text = ""
 
 func _drop_card(instance: String, pointer: Vector2) -> void:
-	select_card(instance)
+	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible:
+		return
+	var full: bool = false
+	for card: Control in hud.card_views:
+		if card.instance_id == instance:
+			full = card.can_full_chant and card.full_chant_held
+			break
+	select_card(instance, false)
+	if pending_card != instance:
+		return
+	if full and hud.mode.visible:
+		hud.mode.select(1)
+		legal_targets = _targets_for_card(instance, "FULL")
+		hud.set_targets(legal_targets)
 	for target: String in legal_targets:
 		if hud.target_buttons[target].get_global_rect().has_point(pointer):
 			select_target(target)
+			confirm_action()
+			hud.mode.select(0)
 			return
+	hud.mode.select(0)
+	legal_targets = _targets_for_card(instance)
+	hud.set_targets(legal_targets)
+	_update_action_summary()
 	hud.feedback.text = tr("BATTLE_INVALID_DROP")
 
 func _command_requested(kind: String, fields: Dictionary) -> void:
+	if kind == "HOLD_CHANT":
+		if hud.reaction_panel.visible or hud.result_panel.visible:
+			return
+		var instance: String = str(fields.get("instance_id", ""))
+		if fields.get("full", false):
+			select_card(instance, false)
+			if pending_card == instance and hud.mode.visible:
+				hud.mode.select(1)
+				legal_targets = _targets_for_card(instance, "FULL")
+				hud.set_targets(legal_targets)
+				_update_action_summary()
+		elif pending_card == instance:
+			hud.mode.select(0)
+			legal_targets = _targets_for_card(instance)
+			hud.set_targets(legal_targets)
+			_update_action_summary()
+		return
 	if kind == "SKIP_ANIMATION":
 		director.skip_all()
 		return
@@ -265,6 +334,8 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 		return
 	if kind == "RESTART_BATTLE":
 		director.reset_session()
+		log_events.clear()
+		hud.get_node("BattleLogPanel").clear_rows()
 		controller.begin(_initial_state(),config)
 		cancel_action()
 		present(controller.snapshot())
@@ -277,6 +348,7 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 			legal_targets = _targets_for_card(pending_card,"FULL" if hud.mode.selected == 1 else "CHANTLESS")
 			hud.set_targets(legal_targets)
 		if selected_target != "": _refresh_preview()
+		else: _update_action_summary()
 		return
 	if kind == "FREE_SWAP":
 		if pending_card.is_empty():
@@ -297,6 +369,7 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 				legal_targets.append(target)
 		hud.set_targets(legal_targets)
 		hud.details.text = tr("BATTLE_LAST_WARNING" if kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_BASIC")
+		_update_action_summary()
 		hud.feedback.text = tr("BATTLE_TARGET")
 		return
 	var args: Dictionary = fields.duplicate(true)
@@ -343,7 +416,7 @@ func _input(event: InputEvent) -> void:
 	if snapshot.is_empty(): return
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
-	if hud.reaction_panel.visible or hud.result_panel.visible: return
+	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible: return
 	if event.is_action_pressed("end_turn"):
 		_command_requested("END_PLAYER_PHASE",{})
 		get_viewport().set_input_as_handled()

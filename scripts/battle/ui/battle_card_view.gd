@@ -2,6 +2,12 @@ extends "res://addons/simple_cards/card/card.gd"
 const Frame = preload("res://scripts/battle/ui/components/battle_card_frame.gd")
 signal selection_requested(instance: String)
 signal release_requested(instance: String, pointer: Vector2)
+signal chant_held(instance: String, full: bool)
+const FULL_CHANT_HOLD_SECONDS: float = 0.45
+var can_full_chant: bool = false
+var full_chant_held: bool = false
+var _press_seconds: float = 0.0
+var chant_hint: Label
 var instance_id: String = ""
 var appearance: Resource
 var cost_text: String = ""
@@ -39,6 +45,17 @@ func _card_ready() -> void:
 	add_child(face)
 	# Independent native Controls. Source data is never baked into card artwork.
 	Frame.build(face, appearance, cost_text, legal, unavailable_reason)
+	chant_hint = Label.new()
+	chant_hint.name = "HoldChantHint"
+	chant_hint.text = tr("BATTLE_FULL")
+	chant_hint.add_theme_font_size_override("font_size", 13)
+	chant_hint.add_theme_color_override("font_color", Color("#E1BEFF"))
+	chant_hint.add_theme_color_override("font_outline_color", Color("#091321"))
+	chant_hint.add_theme_constant_override("outline_size", 5)
+	chant_hint.position = Vector2(10, 35)
+	chant_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chant_hint.hide()
+	face.add_child(chant_hint)
 	tooltip_text = tr(appearance.description_key) + ("\n" + unavailable_reason if not legal else "")
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
 	drag_started.connect(func(_card: Card) -> void: z_index = 90)
@@ -50,6 +67,28 @@ func _card_ready() -> void:
 	card_unhovered.connect(_hover.bind(false))
 	card_focused.connect(_hover.bind(true))
 	card_unfocused.connect(_hover.bind(false))
+
+func _on_button_down() -> void:
+	_press_seconds = 0.0
+	full_chant_held = false
+	super._on_button_down()
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	if not _released and can_full_chant and not full_chant_held:
+		_press_seconds += delta
+		if _press_seconds >= FULL_CHANT_HOLD_SECONDS:
+			full_chant_held = true
+			chant_hint.show()
+			chant_held.emit(instance_id, true)
+
+func _on_button_up() -> void:
+	# drag_ended consumers capture FULL before the held gesture is cleared.
+	super._on_button_up()
+	full_chant_held = false
+	_press_seconds = 0.0
+	chant_hint.hide()
+	chant_held.emit(instance_id, false)
 
 func _restore_home() -> void:
 	if not is_inside_tree(): return

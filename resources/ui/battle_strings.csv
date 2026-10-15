@@ -1,4 +1,6 @@
 keys,en,zh_TW
+BATTLE_CONTEXT_EMPTY,Choose an action then its target,選擇行動，再指定目標
+BATTLE_LOG_EMPTY,Events appear here after your first action,行動後將在此顯示戰鬥紀錄
 BATTLE_TEAM_AP,PARTY AP,隊伍 AP
 BATTLE_TITLE,ARBITRIUM NEXUS,仲裁核心
 BATTLE_PROTOTYPE,Integration demo · provisional content,整合展示 · 暫定內容
@@ -38,7 +40,7 @@ BATTLE_CANCEL,Cancel,返回
 BATTLE_SAVE,Save replay,保存重播
 BATTLE_SAVED,Replay saved,已保存重播
 BATTLE_SAVE_FAILED,Could not save replay,重播保存失敗
-BATTLE_DETAILS,ACTION DETAILS,行動詳情
+BATTLE_DETAILS,SPELL CARD DETAILS,符卡詳情
 BATTLE_SELECT,Select a card or basic command,選擇卡牌或基本指令
 BATTLE_TARGET,Choose a highlighted target,請選擇高亮目標
 BATTLE_CONFIRM_HINT,Target selected · confirm to commit,已選擇目標 · 確認後執行

@@ -135,11 +135,31 @@ jobs:
             'test_p4_v35_party:V35_PARTY_REPORT:57' \
             'test_p4_v35_command:V35_COMMAND_REPORT:30' \
             'test_p4_v35_intent:V35_INTENT_REPORT:35' \
-            'test_p4_v35_log:V35_LOG_REPORT:33'; do
+            'test_p4_v35_log:V35_LOG_REPORT:33' \
+            'test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=24 assertions=1124 legacy=4 failed=0'
+          echo 'CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
+      - name: Authorized V3.5 scoped input gate (not historical P4.4)
+        if: github.ref == 'refs/heads/ui/v35-convergence-final-20261016'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          for suite in test_p4_v34_gui_input test_p4_sp_drag_gesture; do
+            log="$RUNNER_TEMP/p4-logs/$suite.log"
+            timeout 150s xvfb-run -a -s '-screen 0 1920x1080x24' \
+              env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+              "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+              --script "res://tests/$suite.gd" > "$log" 2>&1 || {
+                cat "$log"; exit 1;
+              }
+            python3 tools/ci/assert_godot_logs.py "$log"
+          done
+          grep -Fx 'V34_GUI_REPORT executed=28 passed=28 failed=0' "$RUNNER_TEMP/p4-logs/test_p4_v34_gui_input.log"
+          grep -Fx 'SP_GESTURE_REPORT executed=17 passed=17 failed=0' "$RUNNER_TEMP/p4-logs/test_p4_sp_drag_gesture.log"
       - name: Upload P4 contract evidence
         if: always()
         uses: actions/upload-artifact@v4

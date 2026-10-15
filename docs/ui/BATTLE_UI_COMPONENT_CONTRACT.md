@@ -1,5 +1,7 @@
 # Battle UI Component Contract — V0 / API-first decomposition
 
+2026-10-16 更新：SP 滑鼠拖放與長按詠唱操作，依 [USER_APPROVED 新裁決](V35_SP_GESTURE_DECISION_20261016.md)；下文舊有拖放後 Confirm 僅保留歷史，不再適用 SP 拖放。
+
 > **STATUS: DESIGN CONTRACT / NOT IMPLEMENTED / NOT TESTED**（2026-10-15）。
 > Source: `ui/hud-visual-refactor-20261015` from `master@5103e40a4b95da82f2561b29c2604e9514fd398b`；Godot 4.7.2；1280×720 Design。
 > 與 `docs/ui/01_SCREEN_LAYOUT_AND_COMPONENTS.md` 的目標樹並行：該文件是視覺功能規格，**本文是以現有程式實查後制定的分階段拆分契約**。不調整任何 `docs/combat/` 玩法。
