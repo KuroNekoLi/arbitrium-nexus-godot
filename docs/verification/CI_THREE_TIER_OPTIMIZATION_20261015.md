@@ -24,3 +24,14 @@ No new run of historically exhausted \`test_lv40_domain.gd\`, \`test_lv40_edges.
 4. Run Full before published release if there is no recent green Full for the exact releasable code SHA. If Full fails, treat that as a real regression even when Fast is green.
 
 CD remains **not implemented**: no signed Desktop Godot exports or automated Release artifact deployment have been falsely claimed.
+
+## Staging-branch measured evidence (2026-10-15)
+
+| Run | Final status | Recorded run start → last update | Tests |
+|---|---|---|---|
+| [Fast #38728753826](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38728753826) | **SUCCESS** | 11:38:20–11:39:56 UTC (~96 s) | Golden 32, Replay 15, authentic Fast Seeds 5/5, P4 8+36+31, Lv40 playable 32, screenshot writer 46; Godot binary cache HIT |
+| [Integration #38728754049](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38728754049) | **SUCCESS** | 11:38:20–11:39:36 UTC (~76 s) | 26 actual tests, exactly **1128/1128**, four legacy smoke; Godot log gate clean |
+| [Initial Integration #38728534186](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38728534186) | FAILURE, root cause fixed | Earlier stage build | Test reporter had extra legitimate \`skipped=0\` field after \`failed=0\`; custom assertion rejected it. Runner now validates required prefix and accepts only subsequent optional statistics; never changes actual tests |
+| [Previous canonical Master Full #38726127054](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38726127054) | **SUCCESS** | 11:16:11–11:20:10 UTC (~239 s) | **1238/1238** with 100/100 authentic full battles and Replay; not yet the newly routed Full wrapper |
+
+Observed Fast duration is around **60% shorter** than the older canonical full run (96 s vs 239 s). Because integration/fast run concurrently and are different scopes, do not add their durations and interpret that as developer waiting time. Stage workflow edits which only change historical manual triggers were committed **after** both green code tests; they do not change tested Godot scripts or new CI runner behavior. The new Full routing must be independently verified **on master** after Fast-forward, since staging branches do not receive the master-only Full push event.
