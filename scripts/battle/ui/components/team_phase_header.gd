@@ -21,4 +21,3 @@ func _ready() -> void:
 func render_phase(projection: Dictionary) -> void:
 	header.text = tr("BATTLE_PHASE_" + projection["phase"]) + "   ·   " + tr("BATTLE_ROUND") % projection["round"]
 	resources.text = tr("BATTLE_RESOURCES") % [projection["resources"]["current_ap"], projection["resources"]["rp"]]
-

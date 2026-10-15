@@ -50,4 +50,3 @@ func render_window(window: Dictionary, choices: Array) -> void:
 	reaction_column.add_child(actions)
 	UI.button(actions,"BATTLE_CONFIRM",func() -> void: command_requested.emit("CONFIRM_REACTIONS",{}))
 	UI.button(actions,"BATTLE_PASS",func() -> void: command_requested.emit("PASS_REACTION",{}))
-

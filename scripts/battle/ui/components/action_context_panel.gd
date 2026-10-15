@@ -55,4 +55,3 @@ func _ready() -> void:
 	mute_toggle.add_theme_font_size_override("font_size",12)
 	mute_toggle.toggled.connect(func(enabled: bool) -> void: command_requested.emit("MUTE_AUDIO",{"enabled":enabled}))
 	context.add_child(mute_toggle)
-

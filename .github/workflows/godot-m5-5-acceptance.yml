@@ -28,6 +28,12 @@ on:
       - 'tests/**'
       - 'project.godot'
   workflow_dispatch:
+    inputs:
+      allow_lv40_edge_rerun:
+        description: "Requires explicit new owner authorization; 3 attempts are exhausted"
+        required: false
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -108,7 +114,10 @@ jobs:
           done
           # test_p4_lv40_ui is intentionally contract-blocked staging,
           # never a proof of a playable Lv40 encounter.
-      - name: P4 Lv40 Last Spell edge third-and-final recorded attempt
+      - name: P4 Lv40 Last Spell edge rerun ONLY with new explicit owner authorization
+        # Third and final authorized run PASSED in Actions #38714794598.
+        # Never run again on push or PR: avoid silently consuming a fourth attempt.
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_lv40_edge_rerun }}
         shell: bash
         run: |
           set -Eeuo pipefail

@@ -36,4 +36,3 @@ func render_party(projection: Dictionary, selected_actor: String) -> String:
 		if id == selected_actor:
 			selected_info = tr("BATTLE_HERO_" + id) + " · " + " · ".join(info)
 	return selected_info
-

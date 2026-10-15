@@ -60,4 +60,3 @@ func _arrange_hand() -> void:
 		card.home_rotation = card.rotation
 		card.scale = Vector2.ONE * fit
 		card.home_scale = card.scale
-

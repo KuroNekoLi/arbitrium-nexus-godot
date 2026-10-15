@@ -41,7 +41,7 @@ func _ready() -> void:
 		_fit_design()
 		hud.feedback.text = tr("BATTLE_NOT_IMPLEMENTED")
 		hud.end_button.disabled = true
-		push_warning("BLOCKED_CONTRACT: Lv40 Domain, ReadModel and Localization are not merged")
+		push_warning("BLOCKED_CONTRACT: Lv40 playable BattleScreen/Controller wiring remains staging-only")
 		return
 	config = Encounter.config()
 	hud.actor_requested.connect(select_actor)

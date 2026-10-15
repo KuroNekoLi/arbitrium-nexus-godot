@@ -18,4 +18,3 @@ func _ready() -> void:
 func render_commands(projection: Dictionary) -> void:
 	end_button.text = tr("BATTLE_END")
 	end_button.disabled = projection["phase"] != "PLAYER_PHASE" or projection["outcome"] != "ONGOING"
-

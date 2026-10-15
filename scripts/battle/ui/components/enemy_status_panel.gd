@@ -25,4 +25,3 @@ func render_enemy(projection: Dictionary) -> void:
 		var announced: Dictionary = projection["intent"][0]
 		var target: String = str(announced["target_ids"][0])
 		intent.text = tr("BATTLE_INTENT_DETAIL") % [tr("BATTLE_" + str(announced["skill_id"]).to_upper()), tr("BATTLE_HERO_" + target), announced["hit_count"]]
-

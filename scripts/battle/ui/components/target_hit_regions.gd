@@ -23,4 +23,3 @@ func set_targets(ids: Array) -> void:
 		target.mouse_filter = Control.MOUSE_FILTER_STOP if ids.has(id) else Control.MOUSE_FILTER_IGNORE
 		target.focus_mode = Control.FOCUS_ALL if ids.has(id) else Control.FOCUS_NONE
 		target.text = "◇" if ids.has(id) else ""
-

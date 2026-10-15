@@ -20,4 +20,3 @@ static func column(panel: PanelContainer) -> VBoxContainer:
 	result.add_theme_constant_override("separation", 6)
 	panel.add_child(result)
 	return result
-
