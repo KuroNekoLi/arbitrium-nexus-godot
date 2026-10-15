@@ -1,0 +1,55 @@
+# V3.4 Review and Master Integration
+
+2026-10-15。狀態：IMPLEMENTED_NOT_VERIFIED — staged/Master CI待驗證；GUI_NOT_VERIFIED。
+
+## Source / Scope
+
+使用者在V3.1–3.3審查中明示V3.4已好，納入獨立批次。
+基準：已推master的2ce71a2f2d88b425ccfc9e99d5e65a15363b35b8；來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f。
+分支integration/v34-reviewed-20261015；只merge此明確V3.4 source，不自動跟進後續未知功能。
+內容：保留三個HeroRosterItem／真肖像／Kenney邊框，HP與MP獨立named bars、可見焦點；CommandMenu六項指令保留signal及fields，只加skin與input-transparent accent rail。Analyze/Item仍UNIMPLEMENTED，不假稱可玩。
+
+## Review Finding / Fix
+
+**V34-R01 / P1：共享元件的翻譯初始化依賴。**
+來源V3.4把legacy update_status改用BATTLE_HP/MP翻譯key，但舊main從未安裝BattleScreen catalogues。全新程序載入舊場景可重現String formatting error；test_combat_ui雖印UI TEST PASS，stderr仍有12個ERROR。嚴格helper正確判FAILED_PROCESS_GATE，不能以exit0忽略。
+修正：HeroRosterItem._ready呼叫既有BattleTranslations.install()。該入口先驗證所有catalogues再原子註冊，且冪等、不改locale；所有元件共用同一份已擁有的Translation，不自行創另一套翻譯。沒有更動舊玩法或任何Domain。
+新增test_p4_v34_legacy_roster：全新程序、不建立BattleScreen，兩語update_status、真bar數值、零最大值僅render clamp、無手牌計數、離場重入與兩份Translation不重複，共18條。
+
+## Requirements / Evidence
+
+| Requirement | Source | Implementation / oracle | Status |
+|---|---|---|---|
+| 三角色切換／獨立HP/MP／可見focus | UI02 §2/6、DesignSystem，視覺PROVISIONAL | HeroRosterItem/visual_tokens；V34 102 | 本機first102/102，最終CI待回填 |
+| 六個Command名稱與fields保留 | M5 Command契約、UI02 §3 | CommandMenu；原V34 signal測試不改 | 本機firstPASS，最終CI待回填 |
+| Legacy API獨立可用 | Architecture skill／preserve existing scenes | 共用catalogue installer；legacy18及原4Legacy | first舊UI error被抓出，修正後待CI |
+| 全解析度／雙語真圖 | QA／既有Render gate | V23九PNG30+V31三PNG20 | 本機與CI帳本見最終收據 |
+| Domain Single Source of Truth | CombatImplementationContract | Domain/ContentConfig/seed driver無diff；原1238/100Seeds | 沿用Full，不弱化oracle |
+
+Godot4.7.2.stable.official.ed1daf0bf、Compatibility/OpenGL3.3/GTX1650；只在隔離managed worktree施工，保留原使用者8張PNG。首輪logs與execution.json保存在專案外../v34-headless-attempt1/，含正確exit17 probe與失敗stderr。helper在legacy error處停止，原排定test_turn_flow未執行，不能記PASS。
+本輪最多三次：V34/legacy原群組本機first→stagedsecond→Masterthird；新增legacy18由stagedfirst→Mastersecond。視覺capture本機first→stagedsecond→Masterthird。舊P43/P44、V25、V26 GUI完全不重跑。
+canonical Fast補V34 102+legacy18，P4平行19組937assertions+4Legacy；不用來源workflow的dynamic>=70當正式oracle。Full1238/100Seeds不改；Render保持12圖並補shared hero script path filter。
+
+## Engineering Learning
+
+1. 目標與來源：共享Godot元件不能只在某個大型scene初始化後才正確運作；依architecture與UI翻譯契約補足邊界。
+2. 原理：Godot tr找不到key就回傳key本身；若key字串沒有%d，繼續以%傳兩個數字就產生格式錯誤。呼叫者印PASS或exit0不等於沒有runtime error。
+3. 概念：Scene._ready是元件已入tree的初始化點；Translation是共享Resource，由既有installer管理ownership及冪等。
+4. 主要責任：HeroRosterItem只顯示數字與發選角signal；BattleTranslations只管catalogue；CommandMenu發既有意圖；M5才擁有資源/傷害/勝敗。
+5. 取捨：只在legacy main加install可修這個入口，卻仍使獨立元件依賴外部隱藏前置；元件明確確保既有installer更穩健。沒有到處新增Translation或手寫中英fallback。
+6. Kotlin/Android對照：像共用View不應假設只被某Activity建立；DI/應用資源初始化要可重入。idempotent install類似共享repository initialize-once；狀態Flow仍唯讀。
+7. 測法：不同runner各自啟動Godot，先確認catalogue未安裝，再獨立建立元件；兩語/零值/queue_free重入；嚴格檢查stderr與摘要；原legacy照跑。
+8. 證據：首輪102 PASS不掩蓋legacyERROR，修正待staged/Master收據。GUI/真人不冒充headless驗收。
+9. 面試追問：為何某scene正常、另scene錯？為何exit0仍紅燈？共享Translation怎麼防重複？誰負責cleanup？renderer為何只能clamp顯示不能修State？
+10. 延伸：[Internationalization](https://docs.godotengine.org/en/4.7/tutorials/i18n/internationalizing_games.html)、[Scene organization](https://docs.godotengine.org/en/4.7/tutorials/best_practices/scene_organization.html)。
+11. Skills：延續本輪已讀orchestrator/SpecGuardian、architecture、UIUX、rendering、QA；循序review共享API、翻譯生命週期、真圖、CI與保留oracle。
+
+## Assets / Limits / Rollback
+
+無新增/下載素材，沿用Kenney既有CC0框、肖像、NotoSansTC及原manifest/credits；沒有換Theme系統、插件或角色Canon。
+原GUI限制不解除，V3.4真滑鼠/鍵盤playtest未執行；本次限技術/headless/靜態畫面整合，不宣告V3.5或商用品質核准。
+原Boss碎片/角色映射與8卡重疊限制延續V3報告。本次merge可revert回2ce71a2，不需Domain或存檔遷移，不刪來源分支。
+
+## Final Receipts
+
+待staged/Master成功後回填tested SHA、Actions URL、assertions與PNG目視收據。

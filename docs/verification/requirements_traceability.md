@@ -1,5 +1,11 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+## V3.4 Review 2026-10-15
+
+來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f；基準master2ce71a2。Hero HP/MP、六Command皮膚保留API；修正legacy沒有catalogue造成格式錯誤，新增獨立元件18條。
+V34首輪102/102，但legacy stderr有ERROR而正確紅燈；修正後CI_PENDING。canonical P4 19組937+4Legacy；Domain/100Seeds保持，歷史GUI不重跑。
+完整失敗與最終收據見[V3.4審查報告](ui/V3_4_REVIEW_AND_MERGE_REPORT.md)。
+
 ## V3.1–V3.3 Review 2026-10-15
 
 來源85d5c64b396145beca43153d66c644ab2497a269；基準master a355d0b。

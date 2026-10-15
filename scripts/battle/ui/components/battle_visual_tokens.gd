@@ -51,3 +51,50 @@ static func heading_rule() -> StyleBoxFlat:
 	box.bg_color = METAL.darkened(0.2)
 	return box
 
+## V3.4 party resources and command identity. All accent colors are visual only.
+const HERO_HP: Color = Color("#70D6A0")
+const HERO_MP: Color = Color("#68CAFF")
+const HERO_SELECTED: Color = Color("#B59C6D")
+const COMMAND_STANDARD: Color = Color("#6CCDFC")
+const COMMAND_UTILITY: Color = Color("#7892A7")
+const COMMAND_SUPPORT: Color = Color("#77D9C6")
+const COMMAND_LAST: Color = Color("#D4A8DD")
+const COMMAND_END: Color = Color("#D4AE71")
+
+static func hero_surface(accent: Color, selected: bool, hover: bool = false) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#142D43") if selected else Color("#12283C") if hover else Color("#081725")
+	style.border_color = accent.lerp(METAL, 0.25) if selected else accent.darkened(0.12) if hover else Color("#31495C")
+	style.set_border_width_all(2 if selected or hover else 1)
+	style.set_corner_radius_all(8)
+	style.content_margin_left = 7
+	style.content_margin_right = 7
+	style.content_margin_top = 5
+	style.content_margin_bottom = 5
+	if selected:
+		style.shadow_color = Color(accent.r, accent.g, accent.b, 0.24)
+		style.shadow_size = 4
+	return style
+
+static func hero_portrait_surface(accent: Color, selected: bool) -> StyleBoxFlat:
+	var style := inset_frame(accent if selected else accent.darkened(0.35), Color("#07111D"))
+	style.set_border_width_all(2 if selected else 1)
+	style.content_margin_left = 3
+	style.content_margin_right = 3
+	style.content_margin_top = 3
+	style.content_margin_bottom = 3
+	return style
+
+static func command_surface(accent: Color, active: bool, hover: bool = false) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#19364B") if active else Color("#152C40") if hover else Color("#0C2033")
+	style.border_color = accent if active else accent.darkened(0.15) if hover else Color("#415566")
+	style.set_border_width_all(2 if active else 1)
+	style.set_corner_radius_all(5)
+	style.content_margin_left = 12
+	style.content_margin_right = 6
+	style.content_margin_top = 4
+	style.content_margin_bottom = 4
+	return style
+
+
