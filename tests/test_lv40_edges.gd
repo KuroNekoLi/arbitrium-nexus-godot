@@ -61,8 +61,15 @@ func _initialize() -> void:
 	check(step(r,"ACTIVATE_LAST_SPELL_M4",{"actor_id":"B","target_actor_id":"Boss","confirmed":true,"casting_mode":"FULL"}),"DEMO-12-INSTABILITY-SETUP")
 	var cast_id: String = Effects.casting_id(r["state"]["core"],"B")
 	r["state"]["core"]["battle"]["casting_instances"][cast_id]["current_stability"] = 5
+	# A full three-hit sequence must remain a live Last Spell stability scenario.
+	# The old fixture killed Akane before the third hit (HP=0 invalidates Last Spell).
+	# A setup-only HP Barrier absorbs damage without blocking on-hit Casting disruption.
+	# Do not let Akane Guard while CONCENTRATING; that would violate M4.
+	r["state"]["core"]["battle"]["hp_barriers"]["B"] = 4000.0
 	announce(r,"B03")
-	check(enemy(r) and has_event(r["last"],"LastSpellDestabilizedDelayed") and next_round(r),"DEMO-12-FIRST-THRESHOLD-DELAY")
+	check(enemy(r) and has_event(r["last"],"LastSpellDestabilizedDelayed") and
+		int(r["state"]["core"]["battle"]["actors"]["B"]["hp"]) > 0 and
+		next_round(r),"DEMO-12-FIRST-THRESHOLD-DELAY")
 	announce(r,"B03")
 	check(enemy(r) and next_round(r),"DEMO-12-SECOND-HIT")
 	announce(r,"B03")
