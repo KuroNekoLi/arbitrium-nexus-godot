@@ -52,7 +52,7 @@ jobs:
           echo "V23_CAPTURE_PREFIX=$prefix" >> "$GITHUB_ENV"
           timeout 180s xvfb-run -a -s "-screen 0 1920x1080x24" \
             env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --rendering-method gl_compatibility \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
             --script res://tests/capture_p4_v23_layout.gd -- \
             "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/render.log" 2>&1 || {
               cat "$RUNNER_TEMP/v23/render.log"; exit 1;
