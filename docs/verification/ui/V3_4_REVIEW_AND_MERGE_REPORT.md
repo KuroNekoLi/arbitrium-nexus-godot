@@ -1,6 +1,6 @@
 # V3.4 Review and Master Integration
 
-2026-10-15。狀態：IMPLEMENTED_NOT_VERIFIED — staged/Master CI待驗證；GUI_NOT_VERIFIED。
+2026-10-15。狀態：VERIFIED — 技術／headless／靜態畫面整合已merge並通過Master CI；GUI_NOT_VERIFIED，不是最終美術或真人可玩性核准。
 
 ## Source / Scope
 
@@ -57,4 +57,13 @@ canonical Fast補V34 102+legacy18，P4平行19組937assertions+4Legacy；不用�
 
 ## Final Receipts
 
-待staged/Master成功後回填tested SHA、Actions URL、assertions與PNG目視收據。
+施工時「待CI」保留；最終狀態以下列收據為準。
+
+- Production merge／staged受測SHA：e1f506159fd90f14a1872a248d96e33493c7f894，parents包括master2ce71a2與V3.4來源53fdbdf。
+- 後續正常merge GUI handoff/tests/docs：89871c97ec774c2ab0b0db1032785ca6b50eee9c，parent包括f73e31c；已fast-forward推master。相對staged e1f5061，scripts/ui、scripts/battle、scripts/domain、resources、scenes及project.godot完全沒有差異。
+- staged全部completed/success：[Fast38750705109](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750705109)、[Integration38750705120](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750705120)、[Full38750705220](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750705220)、[Render38750705205](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38750705205)。raw job116476039555已讀：19組937、V34 102/102、legacy18/18、原4Legacy通過。原本ERROR已修復，不改測試期待。
+- 正式Master受測89871c97ec774c2ab0b0db1032785ca6b50eee9c：[Fast38751653887](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38751653887)、[Full38751653715](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38751653715)、[Render38751653611](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38751653611)全部completed/success。
+- 已讀正式raw jobs116479318876／116479318153／116479317746：V34 102/102、legacy18/18、V3merge90/90、P4共19組937+4Legacy；原1238 Domain基線與100固定Seed完整戰鬥Replay保持全綠；12張真PNG（V23 30/30、V31Render20/20）。V26步驟明確skipped，歷史V25/V34 GUI job沒有啟動。
+- 主控原生12PNG與logs在outputs/p4_input_capture/v34_review_local_20261015/、v34_review_boss_20261015/與專案外../v34-render-*-attempt1.log。實際目視1280繁中idle及1920英文idle原圖：三角色資訊、HP/MP各自獨立bar、全部command按鈕、卡牌成本可見；30/30及20/20。不以640縮圖或headless當完整視覺驗收。
+- 保留來源GUI28與歷史收據，不重跑任何耗盡群組，不把helper靜態修正冒稱驗證成功。最後文件收據commit僅文件，不冒充另有程式/GUI測試。
+- 遠端integration/v34-reviewed保留e1f5061 staged Gate；local後續tests/docs merge直接推master而不再次觸發integration重跑，避免超出本批三次帳本。來源分支未刪除，未force push。兩個工作樹生成的SimpleCards cache變更全部排除提交。

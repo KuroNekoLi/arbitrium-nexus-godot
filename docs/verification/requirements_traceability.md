@@ -3,7 +3,7 @@
 ## V3.4 Review 2026-10-15
 
 來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f；基準master2ce71a2。Hero HP/MP、六Command皮膚保留API；修正legacy沒有catalogue造成格式錯誤，新增獨立元件18條。
-V34首輪102/102，但legacy stderr有ERROR而正確紅燈；修正後CI_PENDING。canonical P4 19組937+4Legacy；Domain/100Seeds保持，歷史GUI不重跑。
+V34首輪102/102，但legacy stderr有ERROR而正確紅燈；修正後VERIFIED（技術/headless/靜態畫面）。正式Master89871c9：Fast38751653887／Full38751653715／Render38751653611全success；V34 102/102、legacy18/18、P4 19組937+4Legacy；1238 Domain/100Seeds保持，歷史GUI不重跑。
 完整失敗與最終收據見[V3.4審查報告](ui/V3_4_REVIEW_AND_MERGE_REPORT.md)。
 
 ## V3.1–V3.3 Review 2026-10-15
@@ -11,7 +11,7 @@ V34首輪102/102，但legacy stderr有ERROR而正確紅燈；修正後CI_PENDING
 來源85d5c64b396145beca43153d66c644ab2497a269；基準master a355d0b。
 保留V2穩定wrap/modal；新增Frame成本實際寬度、idle StyleBox還原、Boss Locked/Exposed分行；Domain無差異。
 V31/V32/V33與V3 merge90納入canonical Fast，17組817assertions；canonical Render 12PNG；Full保持1238/100Seeds/4Legacy。
-狀態CI_PENDING；GUI_NOT_VERIFIED（原P43/P44/V25/V26皆不重跑）。完整帳本及最終收據見[整合報告](ui/V3_REVIEW_AND_MERGE_REPORT.md)。
+狀態VERIFIED（技術/headless/靜態畫面）；Master2ce71a2：Fast38750028130／Full38750028321／Render38750027917全success。GUI_NOT_VERIFIED（原P43/P44/V25/V26皆不重跑）。完整帳本及最終收據見[整合報告](ui/V3_REVIEW_AND_MERGE_REPORT.md)。
 
 ## V2 Review 2026-10-15
 
