@@ -4,6 +4,7 @@ extends RefCounted
 const Instance = preload("res://scripts/domain/m4/casting/casting_instance_resolver.gd")
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
 
 static func _before(a: Dictionary, b: Dictionary) -> bool:
 	if int(a["planned_resolve_round"]) != int(b["planned_resolve_round"]):
@@ -27,6 +28,13 @@ static func settle_due(core: Dictionary, next_round: int,
 	due.sort_custom(_before)
 	var timeline: Array = []
 	for cast: Dictionary in due:
+		if str(cast.get("kind","")) == "LAST_SPELL":
+			var last_release: Dictionary = LastSpell.settle(source,cast,next_round)
+			if not last_release["ok"]:
+				return {"ok":false,"error":str(last_release["error"])}
+			source = last_release["core"]
+			timeline.append_array(last_release["timeline"])
+			continue
 		var actor: String = str(cast["caster_id"])
 		var card: String = str(cast["card_instance_id"])
 		var id: String = str(cast["casting_id"])

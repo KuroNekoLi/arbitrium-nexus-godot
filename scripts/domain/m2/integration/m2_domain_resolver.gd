@@ -172,6 +172,29 @@ static func apply(state: Dictionary, instruction: Dictionary, config: Dictionary
 			next["cards"] = moved["state"]
 			_log(next, "resources", paid["events"], produced)
 			_log(next, "cards", moved["events"], produced)
+		"COMMIT_LAST_SPELL_COST_M4":
+			# Independent skill slot, no M2 CardInstance or card zone movement.
+			# Same M2 CostResolver owns AP/MP/Overload and the real receipt.
+			if battle["phase"] != "PLAYER_PHASE" or not _actor_available(battle,actor_id):
+				return _rejected(state,"ACTOR_UNAVAILABLE_OR_PHASE")
+			var slots: Variant = config.get("last_spell_slots",null)
+			var costs: Variant = config.get("last_spell_cost_definitions",null)
+			if not slots is Dictionary or not slots.has(actor_id) or \
+					not slots[actor_id] is Dictionary or not bool(slots[actor_id].get("unlocked",false)):
+				return _rejected(state,"LAST_SPELL_LOCKED")
+			var spell_id: String = str(slots[actor_id].get("spell_id",""))
+			if spell_id.is_empty() or not costs is Dictionary or not costs.has(spell_id) or \
+					not costs[spell_id] is Dictionary:
+				return _rejected(state,"LAST_SPELL_MISSING_COST")
+			var charged: Dictionary = Cost.apply(battle,{
+				"type":"PAY_SP_COST_ONLY","command_id":command_id,
+				"actor_id":actor_id,"expected_event_seq":int(battle["event_seq"]),
+				"casting_mode":"FULL","card":costs[spell_id].duplicate(true)
+			},config.get("costs",{}))
+			if not charged["accepted"]:
+				return _rejected(state,str(charged["error"]))
+			next["battle"] = charged["state"]
+			_log(next,"resources",charged["events"],produced)
 		"BASIC_ATTACK_RESOURCE_ONLY":
 			# M3.1 entry-point to the EXISTING per-actor M2.1 cost/MP policy.
 			# The enemy hit and damage remain M5, not a second combat engine.

@@ -9,6 +9,8 @@ const Profile = preload("res://scripts/domain/m4/casting/casting_profile_resolve
 const Instance = preload("res://scripts/domain/m4/casting/casting_instance_resolver.gd")
 const Disruption = preload("res://scripts/domain/m4/casting/casting_disruption_resolver.gd")
 const Refund = preload("res://scripts/domain/m4/casting/casting_refund_policy.gd")
+const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
+const LastInstability = preload("res://scripts/domain/m4/last_spell/last_spell_instability_resolver.gd")
 
 static func validate_state(state: Dictionary) -> bool:
 	return Phase.validate_state(state) and Instance.valid(state["core"])
@@ -118,6 +120,18 @@ static func _disrupt(original: Dictionary, command: Dictionary, config: Dictiona
 	_event(next,out,"CastingStabilityChanged",id,{
 		"casting_id":casting_id,"before":int(trace["stability_before"]),
 		"after":int(trace["stability_after"]),"stability_lost":int(trace["stability_lost"])})
+	if bool(applied["interrupted"]) and str(spell.get("kind","")) == "LAST_SPELL":
+		var special: Dictionary = LastInstability.handle(applied["instance"],
+			config.get("last_spell_instability",{}))
+		if not special["ok"]:
+			return _reject(original,str(special["error"]))
+		next["core"]["battle"]["casting_instances"][casting_id] = special["instance"]
+		_event(next,out,str(special["event"]["kind"]),id,special["event"])
+		if not validate_state(next):
+			return _reject(original,"LAST_SPELL_INVARIANT_BROKEN")
+		next["seen_command_ids"].append(id)
+		return {"accepted":true,"error":"","state":next,"events":out,
+			"state_hash":Model.state_hash(next),"event_hash":Model.event_hash(out)}
 	if bool(applied["interrupted"]):
 		var caster: String = str(spell["caster_id"])
 		# Quoted from the M2-authoritative paid_mp receipt, never from
@@ -171,6 +185,50 @@ static func apply(original: Dictionary, command: Dictionary,
 	var kind: String = str(command.get("type", ""))
 	if kind == "APPLY_CASTING_DISRUPTION_M4_FIXTURE":
 		return _disrupt(original,command,config)
+	if kind == "ACTIVATE_LAST_SPELL_M4":
+		var id: String = str(command.get("command_id",""))
+		if id.strip_edges().is_empty():
+			return _reject(original,"INVALID_COMMAND_ID")
+		if original["seen_command_ids"].has(id):
+			return _reject(original,"DUPLICATE_COMMAND")
+		if not command.get("expected_event_seq",null) is int:
+			return _reject(original,"INVALID_EXPECTED_EVENT_SEQ")
+		if int(command["expected_event_seq"]) != int(original["event_seq"]):
+			return _reject(original,"STALE_STATE")
+		if original["phase"] != "PLAYER_PHASE" or original["core"]["battle"]["outcome"] != "ONGOING":
+			return _reject(original,"INVALID_PHASE")
+		if command.get("confirmed",false) != true:
+			return _reject(original,"LAST_SPELL_CONFIRMATION_REQUIRED")
+		if str(command.get("casting_mode","FULL")) != "FULL":
+			return _reject(original,"LAST_SPELL_FULL_CHANT_ONLY")
+		var actor: String = str(command.get("actor_id",""))
+		var submitted: Dictionary = LastSpell.commit(original["core"],actor,
+			str(command.get("target_actor_id","")),id,config)
+		if not submitted["ok"]:
+			return _reject(original,str(submitted["error"]))
+		var next: Dictionary = original.duplicate(true)
+		next["core"] = submitted["core"]
+		var output: Array = []
+		for wrapped: Dictionary in submitted["events"]:
+			_event(next,output,str(wrapped["event"]["kind"]),id,
+				{"core_event":wrapped},"m2")
+		_event(next,output,"LastSpellCommitted",id,{
+			"casting_id":submitted["instance"]["casting_id"],"caster_id":actor,
+			"spell_id":submitted["instance"]["spell_id"],
+			"planned_resolve_round":submitted["instance"]["planned_resolve_round"],
+			"once_used":true,"mode":"FULL","cannot_cancel":true,
+			"no_card_instance":true,"cost_paid_once":true})
+		var result: Dictionary = Boundary.check_action_outcome(next["core"])
+		if not result["ok"]:
+			return _reject(original,str(result["error"]))
+		next["core"] = result["core"]
+		_event(next,output,"BattleOutcomeEvaluated",id,result["event"],"boundary")
+		if not validate_state(next):
+			return _reject(original,"LAST_SPELL_INVARIANT_BROKEN")
+		next["seen_command_ids"].append(id)
+		return {"accepted":true,"error":"","state":next,"events":output,
+			"state_hash":Model.state_hash(next),"event_hash":Model.event_hash(output)}
+
 	if kind != "CAST_SPELL_M4":
 		var delegated: Dictionary = Phase.apply(original,command,config)
 		if delegated["accepted"] and not validate_state(delegated["state"]):

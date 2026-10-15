@@ -45,8 +45,17 @@ static func valid(core: Dictionary) -> bool:
 			return false
 		if str(core["battle"]["actors"][actor]["status"]) != "CONCENTRATING":
 			return false
-		if Zones.location(core["cards"], actor, card) != "casting":
-			return false
+		if str(spell.get("kind","")) == "LAST_SPELL":
+			if not card.is_empty() or not bool(spell.get("committed_once",false)) or \
+					int(core["battle"].get("last_spell_used_by_actor",{}).get(actor,0)) != 1:
+				return false
+			if not spell.get("delay_used",null) is bool or not spell.get("disrupted_count",null) is int:
+				return false
+			if not ["CASTING","DESTABILIZED"].has(str(spell.get("last_spell_state",""))):
+				return false
+		else:
+			if Zones.location(core["cards"], actor, card) != "casting":
+				return false
 		if spell.get("planned_resolve_round", null) is not int:
 			return false
 		if spell.get("state", "") != "CASTING" or spell.get("mode", "") != "FULL":
