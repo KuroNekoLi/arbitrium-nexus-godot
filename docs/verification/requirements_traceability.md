@@ -293,3 +293,21 @@ Source tested SHA **8030ce5fe8fed346a4612013f5d77cef2913e3d2**, official [Godot4
 | Fixture integrity and Replay | PRE3-13-GATED_FIXTURE_NOT_PUBLIC, PRE3-13-UNRELATED_ACTOR_CANNOT_BE_KILLED, P2-LAST-05-REPLAY_IDENTICAL_EVENTS, P2-LAST-05-REPLAY_IDENTICAL_FINAL | PASS exact Seed20261014 / 17 commands, no direct player HP0 override |
 
 **M4.5 final M4 Domain acceptance NOT_VERIFIED. M5 real damage/hit/Revive skills and UI NOT_IMPLEMENTED.**
+
+
+## Final M4.5 integration and regression gate — verified 2026-10-15
+
+**Supersedes previous earlier phase status "M4.5 NOT_VERIFIED".** Final M4 Domain is VERIFIED **HEADLESS FIXTURE SCOPE ONLY**. Official [Godot 4.7.2 CI #38665591370](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38665591370) tested source SHA 7dc487f3f6ad1021f73293d7de222f1700fb819f: **41/41 M4.5 integration, 38/38 M4.5 replay, 818/818 M1–M4.4 predecessor** named Domain tests; **897/897 total PASS**, 4 legacy smoke scripts exit0.
+
+| Requirement | New real M4.5 oracle(s) | Bounded result |
+|---|---|---|
+| M2 payments/card conservation and normal Full release before renew/draw | M45-INT-03-ALL_36_CARDS_CONSERVED, M45-INT-07-MIXED_COST_ACTUAL_M2, M45-INT-19-B_FULL_RELEASED, M45-INT-20-RELEASE_BEFORE_AP_AND_DRAW | PASS, damage deferred M5 |
+| M3 CAST_COMPATIBLE Ward/Protect payment only on Confirm | M45-INT-11-CONCENTRATING_CAST_COMPATIBLE_PAID, M45-INT-12-WARD_ON_LAST_INSTANCE, M45-INT-14-RP_LEGAL_ON_CONFIRM | PASS |
+| ON_HIT interception vs DIRECT instance disruption | M45-INT-15-ON_HIT_SUPPRESSED_AFTER_PROTECT, M45-INT-16-DIRECT_BYPASSES_PROTECT | PASS trusted hit fixture |
+| Last Spell one-use/delay and no ordinary refund | M45-INT-06-LAST_USES_NO_CARD_ZONE, M45-INT-17-FIRST_INSTABILITY_DELAY_ONCE, M45-INT-18-NO_INTERRUPTION_REFUND_ON_LAST | PASS provisional stability/weaken |
+| CORE-02 caster HP0 immediately invalidates, never refunded or released | M45-INT-28-CORE02_INSTANT_ACTOR_ZERO, M45-INT-29-CORE02_STRICT_CHAIN, M45-INT-30-SCHEDULE_ERASED_AT_DAMAGE_BOUNDARY, M45-INT-31-NEVER_REFUND_AP_MP_OR_USAGE | PASS trusted HP0 fixture |
+| Revive cannot restart canceled Last Spell | M45-INT-32-T4_NO_RESURRECTED_LAST_EFFECT, M45-INT-34-REVIVE_NOT_RESTORE_LAST, M45-INT-35-REVIVED_CANNOT_RECAST | PASS fixture |
+| Same Seed / Command Tape / ContentConfig / UI modes | M45-REP-02-FINAL_STATE_EQUAL, M45-REP-04-REPEATED_SAME_SEED_EVENTS, M45-REP-25-SMART_NO_DOMAIN_MUTATION, M45-REP-27-ALL_UI_MODES_EQUAL_EVENTS | PASS 34 commands |
+| Negative authorization and atomicity | M45-REP-29-STALE_TAPE_FAILS_CLOSED, M45-REP-31-DUPLICATE_COMMAND_REJECTED, M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED, M45-INT-41-NO_PUBLIC_KILL_COMMAND | PASS |
+
+Only M4 Domain is verified. Full M5 hit/HP/damage/Status/Boss Break and presentation require independent implementation. See PH3_M4_5_ACCEPTANCE_REPORT.md and PH3_M4_HANDOFF.md.

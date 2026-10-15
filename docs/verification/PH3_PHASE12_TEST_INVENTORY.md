@@ -1029,3 +1029,92 @@ Official successful Godot4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-
 | 59 | PRE3-14-EXHAUSTED_CANNOT_ATTACK_AFTER_REVIVE | test_m4_incapacitation.gd | PASS — M4.4 headless Domain |
 
 Replay Seed 20261014; command tape 17; initial SHA256 a01369270c5d4807e2ca706883d34f15f1d3f2b7a6c6ec6712b5c6a50fd1e2d5; event SHA256 eb269474180802ebb859f6de842e80dbfb2ab4789213810602c51a20fbd8d32e; final state SHA256 361407d3eded12d6688a78fc2bd77a82efd18c4dc0ff9b2da517c411dcbfaa8b. Last Spell forced HP0/Revive tests and successful-release-then-HP0 opposite case verified; M4.5 pending.
+
+
+### M4.5 integrated acceptance — 79 actually executed Godot assertions (2026-10-15)
+
+Official successful [Godot 4.7.2 CI #38665591370](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38665591370) tested source 7dc487f3f6ad1021f73293d7de222f1700fb819f. M4.5 integration **41/41**, Replay **38/38**, predecessors **818/818**, total **897/897** named Domain PASS, 4 legacy smoke PASS. Headless fixture scope only, not M5 real damage.
+
+| # | Exact actual stdout PASS case | Runner | Result |
+|---:|---|---|---|
+| 1 | M45-INT-01-EXECUTED_ALL_REAL_COMMANDS | test_m4_integration.gd | PASS |
+| 2 | M45-INT-02-VALID_M4_DOMAIN | test_m4_integration.gd | PASS |
+| 3 | M45-INT-03-ALL_36_CARDS_CONSERVED | test_m4_integration.gd | PASS |
+| 4 | M45-INT-04-ORIGIN_IMMUTABLE | test_m4_integration.gd | PASS |
+| 5 | M45-INT-05-THREE_ACTORS_MIXED_FREE_ORDER | test_m4_integration.gd | PASS |
+| 6 | M45-INT-06-LAST_USES_NO_CARD_ZONE | test_m4_integration.gd | PASS |
+| 7 | M45-INT-07-MIXED_COST_ACTUAL_M2 | test_m4_integration.gd | PASS |
+| 8 | M45-INT-08-CHASE_CARD_SINGLE_CAST_ZONE | test_m4_integration.gd | PASS |
+| 9 | M45-INT-09-DRAFT_THREE_RP_NO_PAYMENT | test_m4_integration.gd | PASS |
+| 10 | M45-INT-10-TWO_ACTOR_REACTION_QUEUE | test_m4_integration.gd | PASS |
+| 11 | M45-INT-11-CONCENTRATING_CAST_COMPATIBLE_PAID | test_m4_integration.gd | PASS |
+| 12 | M45-INT-12-WARD_ON_LAST_INSTANCE | test_m4_integration.gd | PASS |
+| 13 | M45-INT-13-PROTECT_TARGET_IS_C | test_m4_integration.gd | PASS |
+| 14 | M45-INT-14-RP_LEGAL_ON_CONFIRM | test_m4_integration.gd | PASS |
+| 15 | M45-INT-15-ON_HIT_SUPPRESSED_AFTER_PROTECT | test_m4_integration.gd | PASS |
+| 16 | M45-INT-16-DIRECT_BYPASSES_PROTECT | test_m4_integration.gd | PASS |
+| 17 | M45-INT-17-FIRST_INSTABILITY_DELAY_ONCE | test_m4_integration.gd | PASS |
+| 18 | M45-INT-18-NO_INTERRUPTION_REFUND_ON_LAST | test_m4_integration.gd | PASS |
+| 19 | M45-INT-19-B_FULL_RELEASED | test_m4_integration.gd | PASS |
+| 20 | M45-INT-20-RELEASE_BEFORE_AP_AND_DRAW | test_m4_integration.gd | PASS |
+| 21 | M45-INT-21-B_CARD_EXACT_CAST_TO_DISCARD | test_m4_integration.gd | PASS |
+| 22 | M45-INT-22-RENEW_PRESERVES_LAST_CAST | test_m4_integration.gd | PASS |
+| 23 | M45-INT-23-R2_PROTECT_FRESH_WINDOW | test_m4_integration.gd | PASS |
+| 24 | M45-INT-24-PROTECT_GUARDIAN_INCAPACITATED | test_m4_integration.gd | PASS |
+| 25 | M45-INT-25-CASTER_NOT_INVALIDATED_BY_PROTECTED_HIT | test_m4_integration.gd | PASS |
+| 26 | M45-INT-26-C_NORMAL_FULL_RELEASED | test_m4_integration.gd | PASS |
+| 27 | M45-INT-27-LAST_DOES_NOT_EARLY_RELEASE | test_m4_integration.gd | PASS |
+| 28 | M45-INT-28-CORE02_INSTANT_ACTOR_ZERO | test_m4_integration.gd | PASS |
+| 29 | M45-INT-29-CORE02_STRICT_CHAIN | test_m4_integration.gd | PASS |
+| 30 | M45-INT-30-SCHEDULE_ERASED_AT_DAMAGE_BOUNDARY | test_m4_integration.gd | PASS |
+| 31 | M45-INT-31-NEVER_REFUND_AP_MP_OR_USAGE | test_m4_integration.gd | PASS |
+| 32 | M45-INT-32-T4_NO_RESURRECTED_LAST_EFFECT | test_m4_integration.gd | PASS |
+| 33 | M45-INT-33-T4_INCAPACITATED_HAND_FROZEN | test_m4_integration.gd | PASS |
+| 34 | M45-INT-34-REVIVE_NOT_RESTORE_LAST | test_m4_integration.gd | PASS |
+| 35 | M45-INT-35-REVIVED_CANNOT_RECAST | test_m4_integration.gd | PASS |
+| 36 | M45-INT-36-M5_HP_DAMAGE_NOT_INVENTED | test_m4_integration.gd | PASS |
+| 37 | M45-INT-37-REAL_CARD_ZONES_PRESERVED | test_m4_integration.gd | PASS |
+| 38 | M45-INT-38-M4_STATUS_LIFETIME_VALID | test_m4_integration.gd | PASS |
+| 39 | M45-INT-39-COMMANDS_UNIQUE | test_m4_integration.gd | PASS |
+| 40 | M45-INT-40-UNTRUSTED_HP_COMMAND_REJECTED | test_m4_integration.gd | PASS |
+| 41 | M45-INT-41-NO_PUBLIC_KILL_COMMAND | test_m4_integration.gd | PASS |
+| 42 | M45-REP-01-FULL_TAPE_EXECUTED | test_m4_replay.gd | PASS |
+| 43 | M45-REP-02-FINAL_STATE_EQUAL | test_m4_replay.gd | PASS |
+| 44 | M45-REP-03-REPEATED_SAME_SEED_STATE | test_m4_replay.gd | PASS |
+| 45 | M45-REP-04-REPEATED_SAME_SEED_EVENTS | test_m4_replay.gd | PASS |
+| 46 | M45-REP-05-CANONICAL_LOG_MATCH | test_m4_replay.gd | PASS |
+| 47 | M45-REP-06-OUTER_EVENT_SEQUENCE_MONOTONIC | test_m4_replay.gd | PASS |
+| 48 | M45-REP-07-CARD_INSTANCES_CONSERVED | test_m4_replay.gd | PASS |
+| 49 | M45-REP-08-M4_CORE_VALID | test_m4_replay.gd | PASS |
+| 50 | M45-REP-09-INPUT_INITIAL_UNCHANGED | test_m4_replay.gd | PASS |
+| 51 | M45-REP-10-INPUT_TAPE_UNCHANGED | test_m4_replay.gd | PASS |
+| 52 | M45-REP-11-TWO_CONCENTRATING_CASTS | test_m4_replay.gd | PASS |
+| 53 | M45-REP-12-ONE_LAST_COMMITTED | test_m4_replay.gd | PASS |
+| 54 | M45-REP-13-LAST_NOT_RELEASED | test_m4_replay.gd | PASS |
+| 55 | M45-REP-14-ONE_LAST_INVALIDATION | test_m4_replay.gd | PASS |
+| 56 | M45-REP-15-ORDINARY_SPELLS_RELEASED | test_m4_replay.gd | PASS |
+| 57 | M45-REP-16-PROTECT_TWICE | test_m4_replay.gd | PASS |
+| 58 | M45-REP-17-ONE_WARD_GRANTED | test_m4_replay.gd | PASS |
+| 59 | M45-REP-18-ONE_DESTABILIZATION | test_m4_replay.gd | PASS |
+| 60 | M45-REP-19-NO_LAST_MP_REFUND | test_m4_replay.gd | PASS |
+| 61 | M45-REP-20-REVIVE_NO_RECAST | test_m4_replay.gd | PASS |
+| 62 | M45-REP-21-EACH_COMMAND_RECEIPT_HASHED | test_m4_replay.gd | PASS |
+| 63 | M45-REP-22-RECEIPT_LAST_HASH_MATCHES | test_m4_replay.gd | PASS |
+| 64 | M45-REP-23-RECEIPTS_UNIQUE_COMMAND_IDS | test_m4_replay.gd | PASS |
+| 65 | M45-REP-24-APPENDING_NO_HIDDEN_COMMANDS | test_m4_replay.gd | PASS |
+| 66 | M45-REP-25-SMART_NO_DOMAIN_MUTATION | test_m4_replay.gd | PASS |
+| 67 | M45-REP-25-ALWAYS_ASK_NO_DOMAIN_MUTATION | test_m4_replay.gd | PASS |
+| 68 | M45-REP-25-QUICK_NO_DOMAIN_MUTATION | test_m4_replay.gd | PASS |
+| 69 | M45-REP-26-ALL_UI_MODES_EQUAL_STATE | test_m4_replay.gd | PASS |
+| 70 | M45-REP-27-ALL_UI_MODES_EQUAL_EVENTS | test_m4_replay.gd | PASS |
+| 71 | M45-REP-28-NO_REALTIME_STATE_FIELD | test_m4_replay.gd | PASS |
+| 72 | M45-REP-29-STALE_TAPE_FAILS_CLOSED | test_m4_replay.gd | PASS |
+| 73 | M45-REP-30-STALE_DOES_NOT_CHANGE_ORIGIN | test_m4_replay.gd | PASS |
+| 74 | M45-REP-31-DUPLICATE_COMMAND_REJECTED | test_m4_replay.gd | PASS |
+| 75 | M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED | test_m4_replay.gd | PASS |
+| 76 | M45-REP-33-VERSIONED_CONTENT_AFFECTS_REPLAY | test_m4_replay.gd | PASS |
+| 77 | M45-REP-34-SEED_DISTINGUISHES_INITIAL | test_m4_replay.gd | PASS |
+| 78 | M45-REP-35-NO_REAL_BOSS_HP_DAMAGE | test_m4_replay.gd | PASS |
+| 79 | M45-REP-36-BOTH_HP0_ACTORS_ACCOUNTED | test_m4_replay.gd | PASS |
+
+Seed20261014; 34 accepted commands; Initial SHA256 38f22585ad007413001f460772cbe2400c0b10e6601d6e03a4f3820490e49bdd; Event SHA256 82dfac4a2ea16cf30382a095d0881d74c5d90995eb01fad6f45fc61297d71a25; Final SHA256 c99b758c59c044c6c9fea8dae5306eac877c1a6b9381e8529578468d3f9ce7f6. Repairs and exclusions: PH3_M4_5_ACCEPTANCE_REPORT.md.
