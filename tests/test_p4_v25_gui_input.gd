@@ -72,6 +72,9 @@ func _mouse_pick(screen: Control, card: Control) -> bool:
 				screen.cancel_action()
 				return true
 	screen.cancel_action()
+	print("V25_HIT_DIAG want=%s viewport=%s window=%s screen=%s card=%s mouse=%s pending=%s" % [
+		want, root.get_visible_rect(), root.size, screen.size,
+		card.get_global_rect(), root.get_mouse_position(), screen.pending_card])
 	return false
 
 func run() -> void:
@@ -133,6 +136,7 @@ func run() -> void:
 	# Also exercise the same physical GUI geometry under 1920x1080 stretch.
 	root.size = Vector2i(1920, 1080)
 	await create_timer(0.25).timeout
+	print("V25_RESIZE_DIAG screen=%s design_scale=%s root=%s hand=%s" % [screen.size, screen.design.scale, root.size, screen.hud.hand.get_global_rect()])
 	screen.cancel_action()
 	var last: Control = screen.hud.card_views[7]
 	check(await _mouse_pick(screen, last), "V25-MOUSE-1920-LAST-CARD")
