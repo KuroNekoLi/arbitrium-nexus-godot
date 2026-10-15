@@ -1,5 +1,8 @@
 # 10 — 角色、Variant、Skin、卡池及配置資格
 
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + LATER_CONTENT_DIRECTION**：Character／Variant／Skin 與配牌資格參見 25 主角初始劍士、後期 Variant 解鎖；26 確認通用基本攻擊／治療／防護魔法對所有符合資格角色開放。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+
+
 ## 1. 定義（APPROVED）
 
 `Character`: 故事中的人（故事身份）。`Variant`: 其可玩戰鬥形態，改變基礎HP、閃避、詠唱韌性、干擾能力、被動、專屬卡使用權和Last Spell。`Skin`: 只變視覺，不改技能與戰鬥數值。兩者不得混淆，避免純造型改變配牌合法性。

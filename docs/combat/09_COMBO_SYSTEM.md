@@ -1,5 +1,8 @@
 # 09 — Combo System：標籤、Opportunity、UI提示與確認
 
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + EXTENSION_UNVERIFIED**：M5.3 已驗證兩名不同角色、兩張真的 M2 付費 SP、額外 Combo AP=0；完整詠唱／Last Spell 共鳴及各卡數值屬內容未驗證。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+
+
 ## 1. 已批准玩法
 
 Combo 系統獨立於普通卡池，**沒有必須額外抽取的「連攜卡」**。特定卡牌可經由角色、tag、目標狀態、出牌順序產生 `ComboOpportunity`，符合條件時 UI 顯示「可連攜」，玩家選普通出牌或連攜出牌，成功時播放合作演出並結算。兩名不同角色才構成初版雙人連攜；專屬連攜可另外要求 `character_id/variant_id`。一般雙人連攜**額外AP=0**，參與的技能卡原本 AP/MP 照常扣。

@@ -1,6 +1,7 @@
 # 03 — 三人行動經濟、AP/RP/MP 與基本指令
 
-> **2026-10-14 LIBRARY Phase 2 最新補充（現行 SoT）**：請優先閱讀 [`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`](19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md) 與 [`18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md`](18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md)。M-D18～M-D31 已核准；P2-D10～D16 的**設計方向**已整體核准，數值／部分結算邊界仍 TBD。較早段落的「P2-D08 未決」「換牌僅提案」「手牌上限 TBD」「完整詠唱較貴 MP」等屬歷史文字，與 19 衝突時以 19 為準。**僅 Library 更新，未同步 GitHub；尚無 Godot 執行／CI PASS 證據。**
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + BALANCE_PROVISIONAL**：共享 AP／RP 與個別 MP 的規則以 P1、18/19 為準：CurrentAP 可合法超過 BaseAP6、正常 RP 上限6、MP 不自然回滿。舊表的數值候選／待決須按後續批准與實測區分。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+
 
 
 ## 1. 隊伍共享 AP（APPROVED）
@@ -13,7 +14,7 @@
 
 | 指令 | 抽牌？ | 費用 | 目標與效果 | 狀態 |
 |---|---|---|---|---|
-| Basic Attack | 否 | 候選1 AP | 物理傷害、首次每回合回 MP；重複普攻是否允許見LEGACY-Q01 | 不需卡：APPROVED；數值: PROVISIONAL |
+| Basic Attack | 否 | 候選1 AP | 物理傷害、首次每回合回 MP；允許合法重複普攻（P1-D01）；唯每角色每 Player Phase 僅首次回 MP | 不需卡：APPROVED；數值: PROVISIONAL |
 | Player-phase Guard | 否 | AP費用 TBD | 玩家主動階段的防守指令，效果與成本另定，不與敵方Reaction Guard混為一談 | 存在方向：APPROVED；具體玩法 TBD |
 | Item | 否 | 候選1 AP+物品 | HP/MP恢復或特殊效果、受庫存限制 | 不需卡：APPROVED；具體數值TBD |
 | Skill Card | 是 | 卡定義 AP/MP | 戰技、魔法、干擾、支援與反擊 | APPROVED |

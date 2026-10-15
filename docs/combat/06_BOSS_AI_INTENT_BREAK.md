@@ -1,5 +1,8 @@
 # 06 — Boss 行為、意圖、蓄力與 Break Gauge
 
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + EXTENSION_UNVERIFIED**：M5.3 已驗證單 Boss 公開 Intent、整張 SP Break、下一次合格 Boss Action 降級及恢復；這不代表所有蓄力、AoE、複數 Boss 和 Spell Counter 行為已驗證。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+
+
 ## 1. Boss 行為架構（APPROVED）
 
 初版 FSM + 條件式優先權/權重，不需要ML。Boss可使用普通攻擊、蓄力魔法、防禦姿態、召喚/標記等特殊招式；有 Phase 轉換和公開意圖。**正式公開的招式／目標不得在玩家做出反應後無提示偷換**。合法變招條件必須在預告時展示。

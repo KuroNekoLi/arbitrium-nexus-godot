@@ -1,5 +1,8 @@
 # 08 — Last Spell：不可逆終極詠唱與 Exhausted
 
+> **Documentation status · 2026-10-15 — APPROVED_DETAIL + BALANCE_PROVISIONAL**：Last Spell 強制 Full、不能手動 Cancel；釋放前 HP0 強制 invalidation，釋放後效果不可追溯取消；成功釋放後 Exhausted 不等於死亡。M5.4 有 CORE-02 headless 驗收。 現行導航：[Combat Spec Index](COMBAT_SPEC_INDEX.md)；缺口：[Open Issues](COMBAT_OPEN_ISSUES.md)。**Godot domain M1～M5.4：1,081/1,081 已有 CI 證據；M5.5、完整可玩戰鬥未驗證。** 以下舊段落保留歷史脈絡，不是新測試或新核准。
+
+
 ## 1. 已批准核心
 
 每個戰鬥Variant有自己配置的Last Spell（可未解鎖）；它位於獨立能力槽，不在12張一般技能卡中，不需要抽取。每角色每場最多啟動一次。只能 Full Chant，**不能破棄瞬發**。啟動時支付 AP+MP 進入 Concentration，並不可由玩家主動取消。成功結算後該角色進入 `EXHAUSTED`，本場不得再普通攻擊、出牌、用道具、Reaction或發動新連攜；**不等於死亡**。
