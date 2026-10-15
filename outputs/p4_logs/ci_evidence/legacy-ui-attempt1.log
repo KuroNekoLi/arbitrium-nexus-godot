@@ -1,0 +1,128 @@
+WorkerThreadPool: 10 threads, 3 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: res://tests/test_combat_ui.gd remapped: res://tests/test_combat_ui.gd
+Completed load for: 'res://tests/test_combat_ui.gd' remapped 'res://tests/test_combat_ui.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://addons/simple_cards/card_global.gd remapped: res://addons/simple_cards/card_global.gd
+Completed load for: 'res://addons/simple_cards/card_global.gd' remapped 'res://addons/simple_cards/card_global.gd' at thread -1
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn remapped: res://scenes/main.tscn
+Loading resource: res://scripts/main.gd remapped: res://scripts/main.gd
+Loading resource: res://scenes/ui/hero_roster_item.tscn remapped: res://scenes/ui/hero_roster_item.tscn
+Loading resource: res://scripts/ui/hero_roster_item.gd remapped: res://scripts/ui/hero_roster_item.gd
+Loading resource: res://addons/kenney_fantasy_ui_borders/panel-border-000.png remapped: res://addons/kenney_fantasy_ui_borders/panel-border-000.png
+Loading resource: res://.godot/imported/panel-border-000.png-0de7d9a550115d46aa252bd08e90c876.ctex remapped: res://.godot/imported/panel-border-000.png-0de7d9a550115d46aa252bd08e90c876.ctex
+Completed load for: 'res://addons/kenney_fantasy_ui_borders/panel-border-000.png' remapped 'res://addons/kenney_fantasy_ui_borders/panel-border-000.png' at thread -1
+Completed load for: 'res://scripts/ui/hero_roster_item.gd' remapped 'res://scripts/ui/hero_roster_item.gd' at thread -1
+Completed load for: 'res://scenes/ui/hero_roster_item.tscn' remapped 'res://scenes/ui/hero_roster_item.tscn' at thread -1
+Loading resource: res://assets/battlefield_bg.png remapped: res://assets/battlefield_bg.png
+Loading resource: res://.godot/imported/battlefield_bg.png-0b0e21a8c0ae0acc1433c7a6a54c96bb.ctex remapped: res://.godot/imported/battlefield_bg.png-0b0e21a8c0ae0acc1433c7a6a54c96bb.ctex
+Completed load for: 'res://assets/battlefield_bg.png' remapped 'res://assets/battlefield_bg.png' at thread -1
+Loading resource: res://assets/nova_atlas.png remapped: res://assets/nova_atlas.png
+Loading resource: res://.godot/imported/nova_atlas.png-0989bda8305e8b1ac164988716fc2793.ctex remapped: res://.godot/imported/nova_atlas.png-0989bda8305e8b1ac164988716fc2793.ctex
+Completed load for: 'res://assets/nova_atlas.png' remapped 'res://assets/nova_atlas.png' at thread -1
+Loading resource: res://assets/kleya_atlas.png remapped: res://assets/kleya_atlas.png
+Loading resource: res://.godot/imported/kleya_atlas.png-c11d7c535d783de9ca5417fbc707e04a.ctex remapped: res://.godot/imported/kleya_atlas.png-c11d7c535d783de9ca5417fbc707e04a.ctex
+Completed load for: 'res://assets/kleya_atlas.png' remapped 'res://assets/kleya_atlas.png' at thread -1
+Loading resource: res://assets/yora_atlas.png remapped: res://assets/yora_atlas.png
+Loading resource: res://.godot/imported/yora_atlas.png-193b934d54963321be5d69da0d794f9c.ctex remapped: res://.godot/imported/yora_atlas.png-193b934d54963321be5d69da0d794f9c.ctex
+Completed load for: 'res://assets/yora_atlas.png' remapped 'res://assets/yora_atlas.png' at thread -1
+Loading resource: res://assets/nexus_party_splash.png remapped: res://assets/nexus_party_splash.png
+Loading resource: res://.godot/imported/nexus_party_splash.png-45fb07608c1abd00596e55c2eeb9fafc.ctex remapped: res://.godot/imported/nexus_party_splash.png-45fb07608c1abd00596e55c2eeb9fafc.ctex
+Completed load for: 'res://assets/nexus_party_splash.png' remapped 'res://assets/nexus_party_splash.png' at thread -1
+Loading resource: res://assets/portraits/party_portraits.png remapped: res://assets/portraits/party_portraits.png
+Loading resource: res://.godot/imported/party_portraits.png-c047bb0c118433d8f12f1c5b51b58811.ctex remapped: res://.godot/imported/party_portraits.png-c047bb0c118433d8f12f1c5b51b58811.ctex
+Completed load for: 'res://assets/portraits/party_portraits.png' remapped 'res://assets/portraits/party_portraits.png' at thread -1
+Loading resource: res://resources/cards/strike.tres remapped: res://resources/cards/strike.tres
+Completed load for: 'res://resources/cards/strike.tres' remapped 'res://resources/cards/strike.tres' at thread -1
+Loading resource: res://resources/cards/pierce.tres remapped: res://resources/cards/pierce.tres
+Completed load for: 'res://resources/cards/pierce.tres' remapped 'res://resources/cards/pierce.tres' at thread -1
+Loading resource: res://resources/cards/guard.tres remapped: res://resources/cards/guard.tres
+Completed load for: 'res://resources/cards/guard.tres' remapped 'res://resources/cards/guard.tres' at thread -1
+Loading resource: res://resources/cards/focus.tres remapped: res://resources/cards/focus.tres
+Completed load for: 'res://resources/cards/focus.tres' remapped 'res://resources/cards/focus.tres' at thread -1
+Loading resource: res://resources/cards/rupture.tres remapped: res://resources/cards/rupture.tres
+Completed load for: 'res://resources/cards/rupture.tres' remapped 'res://resources/cards/rupture.tres' at thread -1
+Loading resource: res://resources/cards/surge.tres remapped: res://resources/cards/surge.tres
+Completed load for: 'res://resources/cards/surge.tres' remapped 'res://resources/cards/surge.tres' at thread -1
+Loading resource: res://resources/cards/scan.tres remapped: res://resources/cards/scan.tres
+Completed load for: 'res://resources/cards/scan.tres' remapped 'res://resources/cards/scan.tres' at thread -1
+Loading resource: res://resources/cards/interrupt.tres remapped: res://resources/cards/interrupt.tres
+Completed load for: 'res://resources/cards/interrupt.tres' remapped 'res://resources/cards/interrupt.tres' at thread -1
+Loading resource: res://resources/cards/rapid_cut.tres remapped: res://resources/cards/rapid_cut.tres
+Completed load for: 'res://resources/cards/rapid_cut.tres' remapped 'res://resources/cards/rapid_cut.tres' at thread -1
+Loading resource: res://resources/cards/nova_burst.tres remapped: res://resources/cards/nova_burst.tres
+Completed load for: 'res://resources/cards/nova_burst.tres' remapped 'res://resources/cards/nova_burst.tres' at thread -1
+Loading resource: res://resources/cards/field_medic.tres remapped: res://resources/cards/field_medic.tres
+Completed load for: 'res://resources/cards/field_medic.tres' remapped 'res://resources/cards/field_medic.tres' at thread -1
+Loading resource: res://resources/cards/tactical_read.tres remapped: res://resources/cards/tactical_read.tres
+Completed load for: 'res://resources/cards/tactical_read.tres' remapped 'res://resources/cards/tactical_read.tres' at thread -1
+Loading resource: res://assets/card_art_atlas.png remapped: res://assets/card_art_atlas.png
+Loading resource: res://.godot/imported/card_art_atlas.png-15cab60d1d503adeb3fa7f0e62ef72a8.ctex remapped: res://.godot/imported/card_art_atlas.png-15cab60d1d503adeb3fa7f0e62ef72a8.ctex
+Completed load for: 'res://assets/card_art_atlas.png' remapped 'res://assets/card_art_atlas.png' at thread -1
+Loading resource: res://addons/kenney_particle_pack/slash_02.png remapped: res://addons/kenney_particle_pack/slash_02.png
+Loading resource: res://.godot/imported/slash_02.png-9e4b04958d7eb859bc50979f0096f8fb.ctex remapped: res://.godot/imported/slash_02.png-9e4b04958d7eb859bc50979f0096f8fb.ctex
+Completed load for: 'res://addons/kenney_particle_pack/slash_02.png' remapped 'res://addons/kenney_particle_pack/slash_02.png' at thread -1
+Loading resource: res://addons/kenney_particle_pack/magic_03.png remapped: res://addons/kenney_particle_pack/magic_03.png
+Loading resource: res://.godot/imported/magic_03.png-80512eff8444e33d0c62809d33371a2d.ctex remapped: res://.godot/imported/magic_03.png-80512eff8444e33d0c62809d33371a2d.ctex
+Completed load for: 'res://addons/kenney_particle_pack/magic_03.png' remapped 'res://addons/kenney_particle_pack/magic_03.png' at thread -1
+Loading resource: res://addons/kenney_particle_pack/spark_02.png remapped: res://addons/kenney_particle_pack/spark_02.png
+Loading resource: res://.godot/imported/spark_02.png-5e50dbc434260af2153ca5a43e08726b.ctex remapped: res://.godot/imported/spark_02.png-5e50dbc434260af2153ca5a43e08726b.ctex
+Completed load for: 'res://addons/kenney_particle_pack/spark_02.png' remapped 'res://addons/kenney_particle_pack/spark_02.png' at thread -1
+Loading resource: res://addons/kenney_ui_audio/click1.wav remapped: res://addons/kenney_ui_audio/click1.wav
+Loading resource: res://.godot/imported/click1.wav-6455415d999fb02a4d0e65426c8e3fbb.sample remapped: res://.godot/imported/click1.wav-6455415d999fb02a4d0e65426c8e3fbb.sample
+Completed load for: 'res://addons/kenney_ui_audio/click1.wav' remapped 'res://addons/kenney_ui_audio/click1.wav' at thread -1
+Loading resource: res://addons/kenney_ui_audio/switch3.wav remapped: res://addons/kenney_ui_audio/switch3.wav
+Loading resource: res://.godot/imported/switch3.wav-d5bafaa3cd1d942b879acd4703db9dee.sample remapped: res://.godot/imported/switch3.wav-d5bafaa3cd1d942b879acd4703db9dee.sample
+Completed load for: 'res://addons/kenney_ui_audio/switch3.wav' remapped 'res://addons/kenney_ui_audio/switch3.wav' at thread -1
+Loading resource: res://addons/kenney_ui_audio/rollover2.wav remapped: res://addons/kenney_ui_audio/rollover2.wav
+Loading resource: res://.godot/imported/rollover2.wav-76041bda4383c69214b9e7ccf1a2051e.sample remapped: res://.godot/imported/rollover2.wav-76041bda4383c69214b9e7ccf1a2051e.sample
+Completed load for: 'res://addons/kenney_ui_audio/rollover2.wav' remapped 'res://addons/kenney_ui_audio/rollover2.wav' at thread -1
+Loading resource: res://addons/kenney_rpg_audio/knifeSlice.ogg remapped: res://addons/kenney_rpg_audio/knifeSlice.ogg
+Loading resource: res://.godot/imported/knifeSlice.ogg-64eccdad57912518b66fa7e746381021.oggvorbisstr remapped: res://.godot/imported/knifeSlice.ogg-64eccdad57912518b66fa7e746381021.oggvorbisstr
+Completed load for: 'res://addons/kenney_rpg_audio/knifeSlice.ogg' remapped 'res://addons/kenney_rpg_audio/knifeSlice.ogg' at thread -1
+Loading resource: res://addons/kenney_rpg_audio/chop.ogg remapped: res://addons/kenney_rpg_audio/chop.ogg
+Loading resource: res://.godot/imported/chop.ogg-3d1710718d61d965afb9208737346ba3.oggvorbisstr remapped: res://.godot/imported/chop.ogg-3d1710718d61d965afb9208737346ba3.oggvorbisstr
+Completed load for: 'res://addons/kenney_rpg_audio/chop.ogg' remapped 'res://addons/kenney_rpg_audio/chop.ogg' at thread -1
+Completed load for: 'res://scripts/main.gd' remapped 'res://scripts/main.gd' at thread -1
+Completed load for: 'res://scenes/main.tscn' remapped 'res://scenes/main.tscn' at thread -1
+Loading resource: res://scripts/ui/backdrop.gd remapped: res://scripts/ui/backdrop.gd
+Completed load for: 'res://scripts/ui/backdrop.gd' remapped 'res://scripts/ui/backdrop.gd' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+UI TEST PASS // drag-to-play resolves card, updates boss HP, and creates asset-backed feedback
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Leaked instance: OggPacketSequence:9223372079183693345 - Reference count: 3
+Leaked instance: AudioStreamOggVorbis:9223372079200470562 - Reference count: 1
+Leaked instance: AudioStreamPlaybackOggVorbis:9223372089820448663 - Reference count: 1
+Leaked instance: OggPacketSequencePlayback:9223372089837225880 - Reference count: 1
+Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).
+Resource still in use: res://addons/kenney_rpg_audio/knifeSlice.ogg::OggPacketSequence_a2m3r (OggPacketSequence)
+Resource still in use: res://addons/kenney_rpg_audio/knifeSlice.ogg (AudioStreamOggVorbis)
+Orphan StringName: Master (static: 0, total: 2)
+StringName: 1 unclaimed string names at exit.
+WARNING: 4 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 2 resources still in use at exit.
+   at: clear (core/io/resource.cpp:817)

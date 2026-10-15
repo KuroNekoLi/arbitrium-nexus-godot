@@ -1,5 +1,7 @@
 extends SceneTree
 
+# Historical prototype smoke only; animation timing is not a current M5 oracle.
+
 func _initialize() -> void:
 	call_deferred("_run")
 
@@ -63,4 +65,12 @@ func _run() -> void:
 		quit(1)
 		return
 	print("UI TEST PASS // drag-to-play resolves card, updates boss HP, and creates asset-backed feedback")
-	quit(0)
+	# Stop active audio before shutdown so the mixer releases its Ogg playback refs.
+	for player: Node in game.find_children("*", "AudioStreamPlayer", true, false):
+		(player as AudioStreamPlayer).stop()
+		(player as AudioStreamPlayer).stream = null
+	game.queue_free()
+	await process_frame
+	# Audio teardown crosses the mixer thread; one immediate frame is not a fence.
+	await create_timer(0.15).timeout
+	call_deferred("quit", 0)

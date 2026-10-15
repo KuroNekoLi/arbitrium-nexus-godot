@@ -1,44 +1,28 @@
 name: Godot Phase3 M5.5 Full Battle Seed Replay
 on:
   push:
-    branches: [master, 'phase3/m5-5-full-battle-replay']
+    branches: [master, 'phase3/m5-5-full-battle-replay', 'engineering/ci-evidence-gate-20261015']
     paths:
       - '.github/workflows/godot-m5-5-acceptance.yml'
-      - 'scenes/battle/**'
-      - 'scripts/battle/**'
-      - 'resources/ui/**'
-      - 'assets/fonts/**'
-      - 'addons/simple_cards/**'
-      - 'scripts/ui/hero_roster_item.gd'
-      - 'tests/test_p4*'
-      - 'tests/capture_p4.gd'
+      - 'tools/ci/**'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'resources/**'
+      - 'assets/**'
+      - 'addons/**'
+      - 'tests/**'
       - 'project.godot'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/phase/phase_engine.gd'
-      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
-      - 'tests/fixtures/m5_full_battle_fixture.gd'
-      - 'tests/fixtures/m5_full_battle_driver.gd'
-      - 'tests/fixtures/m5_4_fixture.gd'
-      - 'tests/fixtures/m5_3_fixture.gd'
-      - 'tests/fixtures/m5_2_fixture.gd'
-      - 'tests/test_m5_integration.gd'
-      - 'tests/test_m5_replay.gd'
-      - 'tests/test_m5_100_seeds.gd'
-      - 'tests/test_m5_outcome.gd'
-      - 'tests/test_m5_boss_combo.gd'
-      - 'tests/test_m5_status.gd'
-      - 'docs/verification/PH3_M5_2_ENGINEERING_NOTE.md'
   pull_request:
     paths:
       - '.github/workflows/godot-m5-5-acceptance.yml'
-      - 'scripts/domain/m5/**'
-      - 'scripts/domain/m3/**'
-      - 'tests/test_m5_integration.gd'
-      - 'tests/test_m5_replay.gd'
-      - 'tests/test_m5_100_seeds.gd'
-      - 'tests/test_m5_outcome.gd'
-      - 'tests/test_m5_boss_combo.gd'
-      - 'tests/test_m5_status.gd'
+      - 'tools/ci/**'
+      - 'scripts/**'
+      - 'scenes/**'
+      - 'resources/**'
+      - 'assets/**'
+      - 'addons/**'
+      - 'tests/**'
+      - 'project.godot'
   workflow_dispatch:
 permissions:
   contents: read
@@ -48,6 +32,13 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - name: CI log gate positive and negative self-tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/m5-5-logs"
+          python3 -m unittest discover -s tests/ci -p 'test_*.py' -v > "$RUNNER_TEMP/m5-5-logs/ci-log-gate-tests.log" 2>&1
+          cat "$RUNNER_TEMP/m5-5-logs/ci-log-gate-tests.log"
       - name: Install SHA512 verified official Godot 4.7.2
         shell: bash
         run: |
@@ -75,6 +66,18 @@ jobs:
           timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/m5-5-logs/import.log" 2>&1 || {
             cat "$RUNNER_TEMP/m5-5-logs/import.log"; exit 1;
           }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/m5-5-logs/import.log"
+      - name: Godot intentional nonzero exit propagation probe
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          set +e
+          timeout 30s "$GODOT_BIN" --headless --path . --script res://tests/ci_failure_probe.gd > "$RUNNER_TEMP/m5-5-logs/failure-probe.log" 2>&1
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/m5-5-logs/failure-probe.log"
+          test "$code" -eq 17
+          grep -q '^G0_PROBE_EXPECTED_FAILURE:' "$RUNNER_TEMP/m5-5-logs/failure-probe.log"
       - name: M5.5 authentic three-party Boss battle and 32 named oracles
         shell: bash
         run: |
@@ -285,6 +288,16 @@ jobs:
           cat "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"
           grep -q '^P4_3_REPORT executed=31 passed=31 failed=0$' "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"
           if grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/m5-5-logs/test_p4_integration.log"; then exit 1; fi
+      - name: Reject Godot errors even when PASS summaries exist
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          logs=()
+          for path in "$RUNNER_TEMP/m5-5-logs/"*.log; do
+            # Intentional failure is checked separately for exact exit17 and marker.
+            if [[ "$(basename "$path")" != "failure-probe.log" ]]; then logs+=("$path"); fi
+          done
+          python3 tools/ci/assert_godot_logs.py "${logs[@]}"
       - name: Upload full logs
         if: always()
         uses: actions/upload-artifact@v4

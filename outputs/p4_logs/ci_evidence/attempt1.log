@@ -1,0 +1,24 @@
+test_ansi_wrapped_error (test_godot_log_gate.LogGateTests.test_ansi_wrapped_error) ... ok
+test_cli_clean_success (test_godot_log_gate.LogGateTests.test_cli_clean_success) ... ok
+test_cli_error_nonzero_despite_pass_marker (test_godot_log_gate.LogGateTests.test_cli_error_nonzero_despite_pass_marker) ... ok
+test_cli_missing_file_nonzero (test_godot_log_gate.LogGateTests.test_cli_missing_file_nonzero) ... ok
+test_duplicate_summary (test_godot_log_gate.LogGateTests.test_duplicate_summary) ... ok
+test_engine_error (test_godot_log_gate.LogGateTests.test_engine_error) ... ok
+test_failed_assertion (test_godot_log_gate.LogGateTests.test_failed_assertion) ... ok
+test_failed_count (test_godot_log_gate.LogGateTests.test_failed_count) ... ok
+test_inconsistent_count (test_godot_log_gate.LogGateTests.test_inconsistent_count) ... ok
+test_invalid_encoding_fails (test_godot_log_gate.LogGateTests.test_invalid_encoding_fails) ... ok
+test_parse_error (test_godot_log_gate.LogGateTests.test_parse_error) ... ok
+test_positive_summary (test_godot_log_gate.LogGateTests.test_positive_summary) ... ok
+test_probe_not_normal_pass_log (test_godot_log_gate.LogGateTests.test_probe_not_normal_pass_log) ... ok
+test_script_error_even_with_pass (test_godot_log_gate.LogGateTests.test_script_error_even_with_pass) ... ok
+test_seed_records_not_assertion_summary (test_godot_log_gate.LogGateTests.test_seed_records_not_assertion_summary) ... ok
+test_utf8_and_utf16_bom (test_godot_log_gate.LogGateTests.test_utf8_and_utf16_bom) ... ok
+test_version_log_has_no_required_summary (test_godot_log_gate.LogGateTests.test_version_log_has_no_required_summary) ... ok
+test_warnings_visible_not_silently_dropped (test_godot_log_gate.LogGateTests.test_warnings_visible_not_silently_dropped) ... ok
+test_zero_tests_not_success (test_godot_log_gate.LogGateTests.test_zero_tests_not_success) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.203s
+
+OK

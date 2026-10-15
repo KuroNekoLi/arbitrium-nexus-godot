@@ -1,5 +1,7 @@
 # Combat Specification Index — 戰鬥規格唯一閱讀入口
 
+2026-10-15 CI補記：新增CI-EVIDENCE-01/02失敗傳遞／日誌閘門與legacy UI測試清理，未改玩法。詳見[工程Note](../verification/CI_EVIDENCE_GATE_ENGINEERING_NOTE.md)；P4.4 GUI仍未驗收，依使用者決定不額外重跑。
+
 > 狀態：**CANONICAL NAVIGATION / DOCUMENT GOVERNANCE**｜審核：2026-10-15｜作用域：`KuroNekoLi/arbitrium-nexus-godot` 的 `docs/combat/`。本文件只規範閱讀、依據、版本及驗證邊界，不創造新戰鬥玩法。
 > **本次掃描來源**：2026-10-15 於 `master` 實際盤點原有 **35** 份 Markdown（含一份 archive）；文件正文中保留的「當時尚未做」只代表**歷史快照**。請用最新 GitHub 工程紀錄及執行 CI 核對當前狀態。
 > 入口：[`00_README_COMBAT_RULES_BASELINE_V0_8.md`](00_README_COMBAT_RULES_BASELINE_V0_8.md) 是 **v0.8 分散式規格的舊入口**；本文件是現行 Agent 的 **導航入口**。兩者並不相互廢止；任何原本已批准的規則均原樣保留。

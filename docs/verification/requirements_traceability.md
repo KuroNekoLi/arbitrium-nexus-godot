@@ -414,3 +414,6 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | P4.3 real transaction / replay | Handoff P4.3 / Contract §2 | battle_controller / battle_screen / animation_director（工作樹） | 三次27/27、27/27、30/31；付款順序oracle修正未重跑；ui/P4_3_ENGINEERING_NOTE.md | NOT VERIFIED / QA_EXECUTION_LIMIT；未push |
 | P4.3 actual input / fan reuse | UI02/04/05 | SimpleCards ArcShape / Tween / BattleCardView | test_p4_input_capture 16/16；outputs/p4_3_*；兩尺寸8張旋轉四角 | 本機GUI自動輸入PASS；非真人playtest |
 | P4.3 resumed gate | 使用者續作／Handoff P4.3 | 同名runner，修正SPCostReservedOnly oracle | p43_resume_attempt1 31/31；Scene8/8、HUD36/36、GUI16/16 | 本機通過；正式CI待核對 |
+| P4.3 official gate | Handoff P4.3 | 5103e40a4b95da82f2561b29c2604e9514fd398b | Actions38685051780 success | VERIFIED（其SHA範圍，非P4.4） |
+| CI-EVIDENCE-01 | docs/combat/22 §5.2 / QA | tools/ci/assert_godot_logs.py / M5.5 workflow | 19/19新基建自測；真Godot exit17；CI_EVIDENCE_GATE_ENGINEERING_NOTE.md | 本機通過，遠端待核對 |
+| CI-EVIDENCE-02 | docs/combat/22 §5.5 / lifecycle | tests/test_combat_ui.gd | 原assertions保留，第三輪errors0/warnings0 | 本機clean shutdown，非新版Gameplay驗收 |
