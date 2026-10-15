@@ -128,3 +128,5 @@ BATTLE_SWAP_SUB,0 AP · 1 per phase,0 AP · 每階段 1 次
 BATTLE_LAST_SUB,Irreversible finale,不可逆的終式
 BATTLE_END_SUB,Pass to enemy phase,結束我方階段
 BATTLE_INTENT_TARGET,Targeted: %s,目標：%s
+BATTLE_LOG_DAMAGE,%s takes %d damage,%s 受到 %d 傷害
+BATTLE_LOG_ACTION,%s action settled,%s 行動結算

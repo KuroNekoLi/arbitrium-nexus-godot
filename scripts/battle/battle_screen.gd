@@ -11,6 +11,9 @@ const Controller = preload("res://scripts/battle/battle_controller.gd")
 const Director = preload("res://scripts/battle/presentation/battle_animation_director.gd")
 const Effects = preload("res://scripts/battle/presentation/battle_effects.gd")
 const Bindings = preload("res://scripts/battle/ui/battle_input_bindings.gd")
+const LogFormatter = preload("res://scripts/battle/presentation/battle_log_formatter.gd")
+const LOG_EVENT_LIMIT: int = 64
+var log_events: Array = []
 var controller: Node
 var director: Node
 signal action_requested(command: Dictionary)
@@ -94,14 +97,19 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 			break
 	cancel_action()
 	present(state)
-	var records: PackedStringArray = []
-	for event: Dictionary in events:
-		var key: String = "BATTLE_EVENT_GENERIC"
-		if event["kind"] == "HPDamageApplied": key = "BATTLE_EVENT_DAMAGE"
-		elif event["kind"] == "PlayerActionSettled": key = "BATTLE_EVENT_ACTION"
-		records.append(tr("BATTLE_LOG_EVENT") % [event["event_seq"],tr(key)])
-	hud.log_label.text = "\n".join(records.slice(maxi(0,records.size()-3)))
+	# V3.5.4: log rows are derived only from real DomainEvents (raw events are
+	# kept so a locale rebuild re-translates instead of replaying stale text).
+	log_events.append_array(events.duplicate(true))
+	if log_events.size() > LOG_EVENT_LIMIT:
+		log_events = log_events.slice(log_events.size() - LOG_EVENT_LIMIT)
+	hud.get_node("BattleLogPanel").append_rows(_log_rows(events))
 	director.enqueue(events,command)
+
+func _log_rows(events: Array) -> Array:
+	var name_keys: Dictionary = view_model.get("actor_name_keys", {})
+	return LogFormatter.rows_for(events,
+		func(key: String) -> String: return tr(key),
+		func(id: String) -> String: return tr(str(name_keys.get(id, "BATTLE_HERO_" + id))))
 
 func present(state: Dictionary) -> void:
 	snapshot = state.duplicate(true)
@@ -302,6 +310,8 @@ func set_locale(locale: String) -> void:
 	parent.add_child(hud)
 	_connect_hud()
 	present(snapshot)
+	if not log_events.is_empty():
+		hud.get_node("BattleLogPanel").append_rows(_log_rows(log_events))
 	hud.reduced_toggle.set_pressed_no_signal(director.reduced_motion)
 	hud.mute_toggle.set_pressed_no_signal(not director.overlay.audio_enabled)
 

@@ -1,6 +1,7 @@
 extends PanelContainer
 ## V2.2 action details: preview/settings scroll; Confirm and Cancel stay fixed.
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
+const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
 signal command_requested(kind: String, fields: Dictionary)
 signal confirm_requested()
 signal cancel_requested()
@@ -33,9 +34,28 @@ func _ready() -> void:
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.add_theme_constant_override("separation", 4)
 	detail_scroll.add_child(content)
-	UI.label(content, "BATTLE_DETAILS", 14)
-	details = UI.label(content, "BATTLE_SELECT", 16)
-	details.custom_minimum_size.y = 84
+	# V3.5.4: gold heading + rule, details in a deep inset (presentation only).
+	var heading: Label = UI.label(content, "BATTLE_DETAILS", 14)
+	heading.name = "DetailsHeading"
+	heading.add_theme_color_override("font_color", Color("#D8C08A"))
+	var rule := PanelContainer.new()
+	rule.name = "DetailsRule"
+	rule.custom_minimum_size.y = 1
+	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rule.add_theme_stylebox_override("panel", Tokens.heading_rule())
+	content.add_child(rule)
+	var inset := PanelContainer.new()
+	inset.name = "DetailsInset"
+	var inset_style: StyleBoxFlat = Tokens.inset_frame(Tokens.METAL.darkened(0.35))
+	inset_style.content_margin_left = 8
+	inset_style.content_margin_right = 8
+	inset_style.content_margin_top = 4
+	inset_style.content_margin_bottom = 4
+	inset.add_theme_stylebox_override("panel", inset_style)
+	inset.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	content.add_child(inset)
+	details = UI.label(inset, "BATTLE_SELECT", 16)
+	details.custom_minimum_size.y = 76
 
 	mode = OptionButton.new()
 	mode.add_item(tr("BATTLE_CHANTLESS"))
@@ -81,8 +101,20 @@ func _ready() -> void:
 	action_row = HBoxContainer.new()
 	action_row.name = "ActionButtons"
 	root.add_child(action_row)
+	action_row.add_theme_constant_override("separation", 6)
 	confirm_button = UI.button(action_row, "BATTLE_CONFIRM", func() -> void: confirm_requested.emit())
-	UI.button(action_row, "BATTLE_CANCEL", func() -> void: cancel_requested.emit())
+	confirm_button.name = "ConfirmButton"
+	confirm_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	confirm_button.add_theme_stylebox_override("normal", Tokens.command_surface(Tokens.COMMAND_END, false))
+	confirm_button.add_theme_stylebox_override("hover", Tokens.command_surface(Tokens.COMMAND_END, false, true))
+	confirm_button.add_theme_stylebox_override("pressed", Tokens.command_surface(Tokens.COMMAND_END, true))
+	confirm_button.add_theme_stylebox_override("focus", Tokens.focus_ring())
+	confirm_button.add_theme_color_override("font_color", Tokens.COMMAND_END.lightened(0.5))
+	var cancel: Button = UI.button(action_row, "BATTLE_CANCEL", func() -> void: cancel_requested.emit())
+	cancel.name = "CancelButton"
+	cancel.add_theme_stylebox_override("normal", Tokens.command_surface(Tokens.COMMAND_UTILITY, false))
+	cancel.add_theme_stylebox_override("hover", Tokens.command_surface(Tokens.COMMAND_UTILITY, false, true))
+	cancel.add_theme_stylebox_override("focus", Tokens.focus_ring())
 
 	feedback = UI.label(root, "", 14)
 	feedback.add_theme_color_override("font_color", Color("ffd18d"))
