@@ -110,6 +110,10 @@ static func settle(core: Dictionary, spell: Dictionary, round_index: int) -> Dic
 	var s: Dictionary = core.duplicate(true)
 	s["battle"]["casting_instances"].erase(str(spell["casting_id"]))
 	s["battle"]["actors"][actor]["status"] = "EXHAUSTED"
+	# Lifetime Exhausted persists through HP0 and a legitimate Revive.
+	if not s["battle"].has("last_spell_resolved_by_actor"):
+		s["battle"]["last_spell_resolved_by_actor"] = {}
+	s["battle"]["last_spell_resolved_by_actor"][actor] = true
 	var records: Array = [
 		{"kind":"LastSpellReleased","casting_id":str(spell["casting_id"]),
 			"caster_id":actor,"spell_id":str(spell["spell_id"]),

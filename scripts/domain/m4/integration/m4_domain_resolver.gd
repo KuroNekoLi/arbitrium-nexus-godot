@@ -11,6 +11,7 @@ const Disruption = preload("res://scripts/domain/m4/casting/casting_disruption_r
 const Refund = preload("res://scripts/domain/m4/casting/casting_refund_policy.gd")
 const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
 const LastInstability = preload("res://scripts/domain/m4/last_spell/last_spell_instability_resolver.gd")
+const Invalidation = preload("res://scripts/domain/m4/casting/casting_invalidation_resolver.gd")
 
 static func validate_state(state: Dictionary) -> bool:
 	return Phase.validate_state(state) and Instance.valid(state["core"])
@@ -178,11 +179,111 @@ static func _disrupt(original: Dictionary, command: Dictionary, config: Dictiona
 	return {"accepted":true,"error":"","state":next,"events":out,
 		"state_hash":Model.state_hash(next),"event_hash":Model.event_hash(out)}
 
+
+## M4.4 trusted encounter-bound TEST-ONLY bridge until M5 supplies actual hits
+## and revive tagged skills. Never expose these as generic player HP commands.
+static func _life_fixture(original: Dictionary, command: Dictionary,
+		config: Dictionary, revive: bool) -> Dictionary:
+	var id: String = str(command.get("command_id",""))
+	if id.strip_edges().is_empty():
+		return _reject(original,"INVALID_COMMAND_ID")
+	if original["seen_command_ids"].has(id):
+		return _reject(original,"DUPLICATE_COMMAND")
+	if not command.get("expected_event_seq",null) is int:
+		return _reject(original,"INVALID_EXPECTED_EVENT_SEQ")
+	if int(command["expected_event_seq"]) != int(original["event_seq"]):
+		return _reject(original,"STALE_STATE")
+	if config.get("m4_4_trusted_life_fixture",false) != true:
+		return _reject(original,"M5_HP_ENGINE_NOT_AVAILABLE")
+	# No caller-specified final HP, damage, resource or execution outcome.
+	for field: String in ["hp_after","damage","mp_refund","ap_refund","once_used","effect_power"]:
+		if command.has(field):
+			return _reject(original,"UNTRUSTED_LIFE_PAYLOAD")
+	var catalogue: Variant = config.get("m4_4_life_effects",null)
+	var effect_id: String = str(command.get("effect_id",""))
+	if not catalogue is Dictionary or not catalogue.has(effect_id) or \
+			not catalogue[effect_id] is Dictionary:
+		return _reject(original,"UNKNOWN_LIFE_FIXTURE")
+	var effect: Dictionary = catalogue[effect_id]
+	if str(effect.get("authority","")) != "M4_4_TRUSTED_FIXTURE_ONLY":
+		return _reject(original,"UNTRUSTED_LIFE_FIXTURE")
+	var target: String = str(effect.get("target_actor_id",""))
+	if target.is_empty() or not original["core"]["battle"]["allies"].has(target):
+		return _reject(original,"INVALID_LIFE_FIXTURE_TARGET")
+	var next: Dictionary = original.duplicate(true)
+	var events: Array = []
+	if revive:
+		if str(effect.get("operation","")) != "REVIVE" or \
+				not effect.get("revive_tag",false) == true or \
+				not effect.get("hp_after",null) is int:
+			return _reject(original,"REVIVE_TAG_REQUIRED")
+		if original["phase"] != "PLAYER_PHASE" or original["core"]["battle"]["outcome"] != "ONGOING":
+			return _reject(original,"INVALID_REVIVE_PHASE")
+		var revived: Dictionary = Invalidation.revive(next["core"],target,int(effect["hp_after"]))
+		if not revived["ok"]:
+			return _reject(original,str(revived["error"]))
+		next["core"] = revived["core"]
+		_event(next,events,"ActorRevivedFixture",id,revived["event"],"m4_fixture")
+	else:
+		if str(effect.get("operation","")) != "HP_ZERO" or \
+				not effect.get("hp_after",null) is int or int(effect["hp_after"]) != 0:
+			return _reject(original,"INVALID_HP0_EFFECT_FIXTURE")
+		if original["phase"] != "ENEMY_PHASE" or str(original["active_enemy_action_id"]).is_empty():
+			return _reject(original,"NO_DECLARED_ENEMY_ACTION")
+		if original["reaction_window"].is_empty() or \
+				str(original["reaction_window"].get("status","")) != "CLOSED":
+			return _reject(original,"REACTION_WINDOW_NOT_RESOLVED")
+		if str(command.get("source_enemy_action_id","")) != str(original["active_enemy_action_id"]):
+			return _reject(original,"HP0_ACTION_ID_MISMATCH")
+		if command.get("verified_hit_fixture",false) != true or \
+				config.get("m4_4_verified_hit_fixture",false) != true:
+			return _reject(original,"M5_VERIFIED_HIT_REQUIRED")
+		var action: Dictionary = original["enemy_actions"][int(original["enemy_cursor"])]
+		var intent: Dictionary = action["public_intent"]
+		if str(intent.get("target_scope","")) != "SINGLE" or \
+				not intent.get("target_ids",null) is Array or intent["target_ids"].size() != 1:
+			return _reject(original,"HP0_FIXTURE_SCOPE_UNSUPPORTED")
+		var recipient: String = str(intent["target_ids"][0])
+		if not str(original["reaction_window"].get("damage_recipient_actor_id","")).is_empty():
+			recipient = str(original["reaction_window"]["damage_recipient_actor_id"])
+		if recipient != target:
+			return _reject(original,"HP0_PROTECT_RECIPIENT_MISMATCH")
+		if int(next["core"]["battle"]["actors"][target]["hp"]) <= 0:
+			return _reject(original,"ACTOR_ALREADY_AT_ZERO_HP")
+		next["core"]["battle"]["actors"][target]["hp"] = 0
+		var forced: Dictionary = Invalidation.incapacitate(next["core"],target,id,config)
+		if not forced["ok"]:
+			return _reject(original,str(forced["error"]))
+		next["core"] = forced["core"]
+		# Publish forced chain at the SAME action boundary, never on next tick.
+		for record: Dictionary in forced["timeline"]:
+			if str(record["kind"]) == "core_event":
+				_event(next,events,str(record["raw"]["event"]["kind"]),id,
+					{"core_event":record["raw"]},"m2")
+			else:
+				_event(next,events,str(record["kind"]),id,record,"m4_invalidation")
+	# Outcome is computed after all required effects, preserving CORE-01
+	# victory priority and the original M3 battle outcome contract.
+	var judged: Dictionary = Boundary.check_action_outcome(next["core"])
+	if not judged["ok"]:
+		return _reject(original,str(judged["error"]))
+	next["core"] = judged["core"]
+	_event(next,events,"BattleOutcomeEvaluated",id,judged["event"],"boundary")
+	if not validate_state(next):
+		return _reject(original,"M4_4_INVARIANT_BROKEN")
+	next["seen_command_ids"].append(id)
+	return {"accepted":true,"error":"","state":next,"events":events,
+		"state_hash":Model.state_hash(next),"event_hash":Model.event_hash(events)}
+
 static func apply(original: Dictionary, command: Dictionary,
 		config: Dictionary) -> Dictionary:
 	if not validate_state(original):
 		return _reject(original, "INVALID_M4_PHASE_STATE")
 	var kind: String = str(command.get("type", ""))
+	if kind == "APPLY_INCAPACITATION_M4_FIXTURE":
+		return _life_fixture(original,command,config,false)
+	if kind == "APPLY_REVIVE_M4_FIXTURE":
+		return _life_fixture(original,command,config,true)
 	if kind == "APPLY_CASTING_DISRUPTION_M4_FIXTURE":
 		return _disrupt(original,command,config)
 	if kind == "ACTIVATE_LAST_SPELL_M4":
