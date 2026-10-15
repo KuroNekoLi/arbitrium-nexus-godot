@@ -62,3 +62,21 @@ static func dot(core: Dictionary, actor: String, amount: int,
 			records.append({"kind":"ActorIncapacitated","actor_id":actor,"hp":0,
 				"reason":"STATUS_TICK_HP_ZERO"})
 	return {"ok":true,"core":next,"timeline":records}
+
+## M5.4 content-registered recoil after a legitimately paid and released
+## effect. Reuse the M5.2 HP/Barrier/CORE-02 writer rather than creating
+## another HP reducer. Only Domain-resolved ContentConfig supplies damage.
+static func registered_recoil(core: Dictionary, actor: String, amount: int,
+		barrier_mode: String, config: Dictionary, command_id: String) -> Dictionary:
+	if amount <= 0 or not ["ABSORB","BYPASS"].has(barrier_mode):
+		return {"ok":false,"error":"M54_INVALID_REGISTERED_RECOIL"}
+	var resolved: Dictionary = dot(core,actor,amount,barrier_mode,config,command_id)
+	if not resolved["ok"]:
+		return resolved
+	for event: Dictionary in resolved["timeline"]:
+		if str(event.get("kind","")) == "StatusHPDamageApplied":
+			event["kind"] = "RegisteredRecoilHPDamageApplied"
+			event["source"] = "VERSIONED_COMMITTED_EFFECT"
+		elif str(event.get("kind","")) == "HPBarrierAbsorbed":
+			event["origin"] = "REGISTERED_RECOIL"
+	return resolved
