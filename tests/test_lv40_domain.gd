@@ -105,6 +105,14 @@ func announce(r: Dictionary, skill: String) -> void:
 func _initialize() -> void:
 	var r: Dictionary = rig()
 	check(M4.validate_state(r["state"]),"DEMO-01-M5-ENVELOPE")
+	# A real paid physical SP leaves its owner hand; reusing the instance fails atomically.
+	var paid_card: String = in_hand(r["state"],"A","R01")
+	check(step(r,"PLAY_LV40_CARD",{"actor_id":"A","card_instance_id":paid_card,
+		"target_actor_id":"Boss","casting_mode":"CHANTLESS"}), "DEMO-13-LIVE-SP-ACCEPTED")
+	check(r["state"]["core"]["cards"]["actors"]["A"]["zones"]["discard"].has(paid_card), "DEMO-13-LIVE-SP-DISCARDED")
+	deny(r,"PLAY_LV40_CARD",{"actor_id":"A","card_instance_id":paid_card,
+		"target_actor_id":"Boss","casting_mode":"CHANTLESS"}, "DEMO-13-USED-SP-ATOMIC")
+	r = rig()
 	# Canonical unchanged intent across HP thresholds, then next publication.
 	r["state"]["core"]["battle"]["actors"]["Boss"]["hp"] = 1700
 	check(enemy(r),"DEMO-02-LOCKED-INTENT-EXECUTES")
@@ -128,6 +136,8 @@ func _initialize() -> void:
 		tape.append(c)
 	var replayed: Dictionary = M5.replay(initial,tape,r["config"])
 	check(replayed["accepted"] and replayed["state_hash"] == Model.state_hash(r["state"]) and replayed["event_hash"] == Model.event_hash(r["events"]),"DEMO-13-FULL-TAPE-REPLAY")
+	var same_replay: Dictionary = M5.replay(initial,tape,r["config"])
+	check(same_replay["accepted"] and same_replay["state_hash"] == replayed["state_hash"] and same_replay["event_hash"] == replayed["event_hash"], "DEMO-13-IDENTICAL-SEEDED-REPLAY")
 	print("LV40_REPLAY seed=20261014 tape=",JSON.stringify(tape)," event_hash=",Model.event_hash(r["events"])," final_hash=",Model.state_hash(r["state"]))
 	# Interrupt paid A05, no second free attack in the cooldown slot.
 	r = rig()
