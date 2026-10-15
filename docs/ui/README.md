@@ -36,6 +36,16 @@
 6. UI 繁體中文為主要設計語言，支援英文；所有玩家文字皆走 i18n。Guard/Protect 不需要手牌、Last Spell 獨立槽；React 不得有強制倒數／自動 Pass。
 7. 高保真概念圖只是 **視覺參考**。圖中可能存在假名字／假 Boss、錯誤花費或自動生成文字；要以正式 Spec、既有 Asset 和使用者核准的角色／Boss 設計為準。
 
+## 自動素材產線（2026-10-15 更新；僅規劃）
+
+在未來獲得正式製作授權的工作階段，使用者只需輸入「製作 XX 場景」「生產 XX 圖片」「製作 XX Boss 動畫」；由 `godot-card-rpg-orchestrator` 自動判斷需求並啟動：
+
+**`godot-resource-library-manager`（Repo/Vault 重用→合法資源搜尋→安全限額下載→索引→選型） → `godot-game-asset-pipeline`（圖片／音效／動畫素材處理與 Godot 匯入） → UI/2.5D/Architecture（場景實作） → QA（真正 Godot 截圖與驗收）**。
+
+一般素材自選、可逆可替換；對於主角／Boss 正式設計、整體美術風格、主要場景及大規模新插件等重大採用，先提交 **Major Asset Decision Report**，有推薦方案、真實備選、授權、成本、風格、效能、回退方式，使用者核准後再正式定案。素材倉庫規劃放在 Repo 外，避免整包素材塞進 Godot 或 Git；沒有下載／圖像生成／持久化權限時應說明工具缺口，不可宣稱已完成。
+
+詳細 SOP 與可用免費資源：[03 Resource Scout / Vault](03_FREE_OPEN_SOURCE_RESOURCE_SCOUT.md)。兩個 Skills：`.codex/skills/godot-resource-library-manager/SKILL.md`、`.codex/skills/godot-game-asset-pipeline/SKILL.md`。**本次未執行下載或真正場景生成。**
+
 ## 最值得優先重用的程式與素材
 
 - `scenes/ui/hero_roster_item.tscn` + `scripts/ui/hero_roster_item.gd`：已是角色資訊共用元件。
