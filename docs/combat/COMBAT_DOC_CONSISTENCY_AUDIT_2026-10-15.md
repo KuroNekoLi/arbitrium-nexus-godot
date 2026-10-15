@@ -57,3 +57,12 @@
 ## 4. 後續維護
 
 每次更新：同步 Index、Open Issues、Requirements Traceability，保留原始規格決策來源；新版規格必須有新決策 ID、測試、及正反情境。UI/美術與 Python 平衡可逐步做，但不擅自修改 core Gameplay。
+
+## 5. 實際 GitHub 回讀與相對連結驗證結果（2026-10-15）
+
+- **範圍確定**：原有 35/35 份 `docs/combat/**/*.md` 已各自新增現行狀態 banner，另外新增 5 份文件治理與 Phase4 handoff，完成後目標共 40 份 Markdown。
+- **GitHub Tree/Readback**：分批逐檔從 `master` 重新讀取 40/40 份 Markdown，檢查狀態 banner（原有35/35）與檔案連結的目標路徑。
+- **相對檔案連結**：共抽取並解析 **196** 個相對連結；目標路徑存在：**196/196**；缺失檔案路徑：**0**。僅驗證 GitHub Tree 中是否有該路徑，**不宣稱** URL fragment/標題錨點、外部網站或渲染後的所有互動都已檢查。
+- **修改邊界**：從整理前 `472195ed69bdaad82a76533dd2f73f27213e8dec` 對照整理後的 GitHub Compare，40 個修改／新增路徑**全部位於 `docs/combat/`**，沒有改動 `scripts/`、`tests/`、`scenes/`、`assets/` 或 Godot CI 工作流程。
+- **實際 CI 證據**：已存在的 M5.4 Godot 4.7.2 Run [#38676746490](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38676746490) 為 success；**本次純文件改動不等於重新執行 Godot**。現行 M5.5 仍未驗證。
+- **變更策略**：保留核准決策及全部歷史文本；只移除早期檔案中重複且會誤導的 `2026-10-14 LIBRARY Phase 2 最新補充（現行 SoT）` 開頭樣板段落，並針對 03 的重複普通攻擊、25 起始牌組覆寫增補精準說明。其他歷史主張於檔首明標優先順序。
