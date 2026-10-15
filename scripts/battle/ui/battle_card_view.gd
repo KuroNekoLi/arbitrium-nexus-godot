@@ -64,6 +64,11 @@ func _card_ready() -> void:
 	var desc := Label.new()
 	desc.text = tr(appearance.description_key)
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	# Give wrapping a stable width before the first Container layout. Without
+	# it, a one-pixel initial width can inflate the panel's minimum height.
+	desc.custom_minimum_size.x = 144
+	desc.max_lines_visible = 3 if legal else 2
+	desc.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	desc.add_theme_font_size_override("font_size",13)
 	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	column.add_child(desc)

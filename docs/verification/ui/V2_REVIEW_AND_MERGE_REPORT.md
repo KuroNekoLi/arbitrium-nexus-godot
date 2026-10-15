@@ -46,5 +46,11 @@ CI第3次V26只在integration/v2-reviewed首次發布分支執行；master執行
 10. Skills：orchestrator/SpecGuardian統籌；architecture生命週期/WeakRef；UIUX focus/手牌；QA保留oracles/三次帳本/CI。
 
 ## 限制／回退
+
+### 真實畫面目視後追加修正
+主控目視V23九張原生截圖發現4-card底部裁切；原V24只量Card hit rect而非內層face。新增test_p4_v27_face_bounds量實際face旋轉四角（0/1/4/8張、繁中/英文），首輪8執行/2PASS/6FAIL，face高度可達510/1062，Card hit rect仍218。
+修正CardView摘要已知wrap寬144及最多3行（不可用卡2行），超出以ellipsis並保留tooltip/右側完整詳情。不修改Card根節點尺寸/slot/hit算法/拖曳引擎。V27修正後等待CI；V26第三次47/47在d9e6e2a成功，後續不第4次重跑；此追加僅卡內文字/face minimum size，該GUI收據限定其原SHA，不冒充新SHA再驗證。
+V26 staged第三次：[38742124854](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38742124854)，同時V23 30/30；fast38742124852與integration38742124634 success；Full38742124849待核對。追加V27納入fast平行P4：13 suites/576 assertions。
+
 V2不是V3正式Art/Theme。原概念PNG尚未穩定pin在repo；既有Boss鄰角碎片/角色映射仍placeholder及provenance pending。無像素級/商用品質/真人平衡完成聲明。
 第三次V26若失敗，不merge此未過Gate。同步master先fetch，不force push不刪branch；回退本merge可恢復原V1 UI而不動Domain。

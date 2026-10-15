@@ -123,10 +123,11 @@ jobs:
           for spec in \
             'test_p4_v2_layout:V2_LAYOUT_REPORT:18' \
             'test_p4_v2_context_layout:V2_CONTEXT_REPORT:23' \
-            'test_p4_v24_hand:V24_HAND_REPORT:39'; do
+            'test_p4_v24_hand:V24_HAND_REPORT:39' \
+            'test_p4_v27_face_bounds:V27_FACE_REPORT:8'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=12 assertions=568 legacy=4 failed=0'
+          echo 'CI_P4_CONTRACTS_REPORT suites=13 assertions=576 legacy=4 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
       - name: Upload P4 contract evidence
         if: always()
