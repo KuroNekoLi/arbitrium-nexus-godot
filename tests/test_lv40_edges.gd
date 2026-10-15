@@ -48,6 +48,9 @@ func _initialize() -> void:
 	r = rig()
 	check(play(r,"B","A07","Boss"),"DEMO-10-A07-STATUS")
 	check(r["state"]["core"]["battle"]["statuses"].size() == 1,"DEMO-10-A07-REAL-STATUS-INSTANCE")
+	var early: Dictionary = StatusEngine.tick(r["state"]["core"],2,r["config"],"early","NEXT_PLAYER_PHASE")
+	check(early.get("ok",false) and early["timeline"].is_empty() and early["core"]["battle"]["statuses"] == r["state"]["core"]["battle"]["statuses"],"DEMO-10-NO-EARLY-PLAYER-TICK")
+	check(not StatusEngine.tick(r["state"]["core"],2,r["config"],"invalid","CLIENT_TICK").get("ok",false),"DEMO-10-REJECT-UNKNOWN-TICK-BOUNDARY")
 	announce(r,"B05")
 	check(enemy(r) and step(r,"END_ENEMY_PHASE") and has_event(r["last"],"StatusTickStarted"),"DEMO-10-A07-ENEMY-END-TICK")
 	check(step(r,"START_PLAYER_PHASE") and not has_event(r["last"],"StatusTickStarted"),"DEMO-10-A07-NO-DOUBLE-PLAYER-TICK")
@@ -89,5 +92,8 @@ func _initialize() -> void:
 	p["element_id"] = "UNLISTED"
 	var unknown: Dictionary = Damage.resolve(r["state"]["core"],"A","Boss",p,{},r["config"],"unknown")
 	check(unknown.get("ok",false),"DEMO-07-UNKNOWN-NEUTRAL")
+	var legacy: Dictionary = r["config"].duplicate(true)
+	legacy["m5_lv40_enabled"] = false
+	check(not Damage.resolve(r["state"]["core"],"A","Boss",p,{},legacy,"unknown-legacy").get("ok",false), "DEMO-07-NON-LV40-UNKNOWN-REJECT")
 	print("LV40_EDGES_REPORT executed=",passed+failed," passed=",passed," failed=",failed)
 	quit(1 if failed else 0)

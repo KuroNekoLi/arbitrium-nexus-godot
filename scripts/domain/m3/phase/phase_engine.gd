@@ -11,6 +11,7 @@ const ReactionWindow = preload("res://scripts/domain/m3/reaction/reaction_window
 const ReactionQueue = preload("res://scripts/domain/m3/reaction/reaction_queue_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
+const Lv40Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const SCHEMA: String = "m3.1-phase-fixture-v1"
 const PLAYER_KINDS: Array[String] = [
 	"COMMIT_SP_CARD_FIXTURE", "FREE_SWAP", "EXTRA_DRAW_FIXTURE",
@@ -307,7 +308,19 @@ static func apply(original: Dictionary, instruction: Dictionary, config: Diction
 			defense["original_target_actor_id"] = str(window_state["original_target_actor_id"])
 			defense["damage_recipient_actor_id"] = str(window_state["damage_recipient_actor_id"])
 			defense["enemy_action_cancelled_fixture"] = not bool(window_state["action_active"])
-		if kind == "RESOLVE_ENEMY_ATTACK_M5":
+			if config.get("m5_lv40_enabled",false) == true:
+				defense["lv40_counter_actor_id"] = str(window_state.get("lv40_counter_actor_id",""))
+		if kind == "RESOLVE_ENEMY_ATTACK_M5" and config.get("m5_lv40_enabled",false) == true:
+			var resolved_lv40: Dictionary = Lv40Boss.resolve(next["core"],current_action["public_intent"],defense,config,command_id)
+			if not resolved_lv40["ok"]:
+				return _reject(original,str(resolved_lv40["error"]))
+			next["core"] = resolved_lv40["core"]
+			for record: Dictionary in resolved_lv40["timeline"]:
+				if str(record["kind"]) == "core_event":
+					_core_events(next,emitted,[record["raw"]],command_id)
+				else:
+					_emit(next,emitted,str(record["kind"]),command_id,record,"m5_lv40")
+		elif kind == "RESOLVE_ENEMY_ATTACK_M5":
 			if not config.get("m5_damage_enabled",false) == true:
 				return _reject(original,"M51_DAMAGE_NOT_ENABLED")
 			var intent: Dictionary = current_action["public_intent"]

@@ -1,7 +1,7 @@
 # Phase4.5 Lv40 Domain handoff
 
-施工中；HEAD 5103e40a4b95da82f2561b29c2604e9514fd398b，Godot 4.7.2.stable.official.ed1daf0bf。
-依使用者並行限制，P4.4 提交完成通知之前只新增 Lv40 模組／測試，既有入口尚未接線。
+原始交接基準 `5103e40a4b95da82f2561b29c2604e9514fd398b` (master / P4.3)，handoff 起始 commit `977a289654e1470bcda83c6c25c14d4cda4c86ab`。
+2026-10-15 checkpoint 上的 Lv40 Domain 接線修改已提交到 `handoff/p4-lv40-chat-20261015`，**IMPLEMENTED_NOT_VERIFIED**；與原始交接所述「入口尚未接線」相比，此段為後續試驗實作，絕非 Godot runtime 或 CI PASS。先前提供的 Godot 4.7.2.stable.official.ed1daf0bf 是原交接環境記錄；接收對話目前無 Godot binary，未重新執行。P4.4 GUI Gate 仍有待授權，master 未改。
 
 ## 穩定公開接口
 
@@ -32,8 +32,27 @@ docs26 §5 精確三副12 SP，覆蓋 docs25 歷史配置。docs27 B01–B11 行
 
 ## 驗證狀態
 
-IMPLEMENTED_NOT_VERIFIED；入口接線、測試結果、精確 changed paths 會在交付時補上。
-未執行 CI；依使用者限制不 commit/push、不改 RTM/UI/CI/project.godot。
+**IMPLEMENTED_NOT_VERIFIED / NOT_EXECUTED**：本次接收對話有 GitHub 讀寫能力，但沒有本機 Godot 4.7.2 binary 或 checkout；所有新增提交都限定在交接 WIP 分支。沒有執行任何新 Godot runner、全部 Domain regression、GUI input / screenshot、CI、真人 playtest，**不可宣稱 PASS**。以前的 32/32 Content、1238/1238 Domain、100 seeds 及 P4.4 14/16 GUI 只是原交接的歷史證據，不是接線後結果；既有 P4.4 GUI 三次嘗試額度未重置或重跑。
+
+### 本次接線：Source → Code → Test（待執行）
+
+| 受影響檔案 | 本次接線 / 保留條件 | 待執行測試與 Oracle |
+|---|---|---|
+| `scripts/domain/m5/integration/m5_domain_resolver.gd` | M5 shared untrusted payload / balance / terminal guard 之後，僅在 `m5_lv40_enabled` 時呼叫 Lv40 Extension；原 fixture/M53 流程不變 | `tests/test_lv40_domain.gd`：真卡支付、重複／stale／錯 owner／錯 target、Replay |
+| `scripts/domain/m3/phase/phase_engine.gd` | 仍由 M3 驗證 declared action/window；交 Lv40Boss.resolve 實際結算 AoE、蓄力、release、B03 中斷、R05 counter；原 M5 single-target 保留 | domain / edge：B02 多 hit、B04 AoE、B05→B06、B08→B09、B10、B11、Guard / Protect |
+| `scripts/domain/m4/casting/casting_timeline_resolver.gd` | M4 已排序 due cast，Lv40 以既有 payment/release authority 與 Damage pipeline 執行；非 Lv40 仍走舊路 | domain / edge：Full Chant、Last Spell、HP0 失效、事件順序 |
+| `scripts/domain/m3/reaction/reaction_eligibility.gd`、`reaction_queue_resolver.gd` | 已宣告的單體窗口中 R05/T05 eligibility；維持 M2 confirm-time 真實扣費、JIT skip；不自動 Pass | domain / edge：R05/T05、先 R05 後 T05 skipped 且不付費、AoE 無 Protect |
+| `scripts/domain/m5/status/status_resolver.gd` | 預設 NEXT_PLAYER_PHASE 繼續有效；新增明確 ENEMY_PHASE_END tick selector，validate/real instance/grant 一致 | content / edge：Scorch 不在玩家階段重複 tick、敵方階段結束 tick、非法 selector 拒絕 |
+| `scripts/domain/m5/damage/damage_pipeline_resolver.gd` | 僅版本化 Lv40 opt-in 設定時，未列舉 element 中性 10000 bp；保留舊模式 fail-closed | edge：未知元素 Lv40 neutral；關閉 Lv40 後拒絕 |
+| `scripts/domain/m5/lv40/lv40_domain_extension.gd` | 靜態呼叫既有 Status.tick；成功交易後額外檢查 Status.validate；拒絕仍還原原 snapshot/event/RNG | content / domain / edge：版本、Status、拒絕原子性與 Replay |
+| `tests/test_lv40_content.gd`、`test_lv40_domain.gd`、`test_lv40_edges.gd` | 保留舊 assertions 並新增已註明的 content/status/payment/seed/rejection 測例 | 需要真 Godot 4.7.2.stable 才能報 PASS/FAIL |
+
+### 驗收 Gate 與未解風險
+
+- 必須從本次**最新 branch HEAD** 在 Godot 4.7.2 執行原有三個 Lv40 runner、完整 M1–M5.5 Domain regression（交接前 1238 assertions）及 100 個固定 seed、四組 legacy 回歸；記錄**每群實際** attempt 1/2/3、exit code、完整 raw log、重現 seed/tape、State/Event hash。若任一群第三次仍失敗，停止該 Gate，不能以改名重跑洗掉失敗。
+- 無執行環境、無新 CI run URL、無執行後的 replay hash；本次只有**程式碼／測試提交**，沒有 runtime 或 GUI 證據。
+- `resources/combat/lv40/pending_integration.patch` 是原未套用草稿：已逐段對照實際路徑，沒有直接將原檔案當作可執行 `git apply` patch；它仍為歷史提案，不再代表目前 HEAD 的待改入口。
+- `M5.apply(state,command,config)` 仍為唯一外部入口；UI、`project.godot`、CI、素材、平衡值、RTM、P4.4 Gate 未修改。Lv40 Doc29 候選 A / `BALANCE_PROVISIONAL` 不轉成 USER_APPROVED。
 
 ### 授權與中斷交接
 
