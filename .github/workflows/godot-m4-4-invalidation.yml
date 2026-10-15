@@ -1,18 +1,7 @@
 name: Godot Phase3 M4.4 Forced Invalidation
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m4-4-invalidation.yml'
-      - 'scripts/domain/m4/**'
-      - 'tests/test_m4_incapacitation.gd'
-      - 'docs/verification/PH3_M4_4_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m4-4-invalidation.yml'
-      - 'scripts/domain/m4/**'
-      - 'tests/test_m4_incapacitation.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

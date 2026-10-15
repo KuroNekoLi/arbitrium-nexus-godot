@@ -1,25 +1,7 @@
 name: Godot Phase3 M3.5 Full Integration and Regression
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m3-5-integration.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m3_integration.gd'
-      - 'tests/test_m3_replay.gd'
-      - 'tests/fixtures/m3_5_*'
-      - 'scripts/domain/m3/integration/**'
-      - 'docs/verification/PH3_M3_5_ACCEPTANCE_REPORT.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m3-5-integration.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/**'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m3_integration.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

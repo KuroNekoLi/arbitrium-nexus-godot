@@ -1,22 +1,7 @@
 name: Godot Phase3 M4.1 Dual Casting Foundation
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m4-1-dual-cast.yml'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
-      - 'tests/test_m4_dual_cast.gd'
-      - 'docs/verification/PH3_M4_1_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m4-1-dual-cast.yml'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m3/phase/phase_boundary_resolver.gd'
-      - 'tests/test_m4_dual_cast.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

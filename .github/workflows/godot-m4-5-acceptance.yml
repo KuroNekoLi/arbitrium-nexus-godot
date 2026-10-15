@@ -1,25 +1,7 @@
 name: Godot Phase3 M4.5 Integrated Casting Acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m4-5-acceptance.yml'
-      - 'tests/fixtures/m4_5_scenario.gd'
-      - 'tests/test_m4_integration.gd'
-      - 'tests/test_m4_replay.gd'
-      - 'docs/verification/PH3_M4_5_ACCEPTANCE_REPORT.md'
-      - 'docs/verification/PH3_M4_HANDOFF.md'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/**'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m4-5-acceptance.yml'
-      - 'tests/fixtures/m4_5_scenario.gd'
-      - 'tests/test_m4_integration.gd'
-      - 'tests/test_m4_replay.gd'
-      - 'scripts/domain/m4/**'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

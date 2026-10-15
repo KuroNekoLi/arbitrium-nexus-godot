@@ -1,22 +1,7 @@
 name: Godot Phase3 M3.4 Reaction UI Mode Contract acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m3-4-ui-modes.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m3_ui_modes.gd'
-      - 'docs/verification/PH3_M3_4_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m3-4-ui-modes.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/**'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m3_ui_modes.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

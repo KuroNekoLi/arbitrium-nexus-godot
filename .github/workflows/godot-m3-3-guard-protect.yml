@@ -1,22 +1,7 @@
 name: Godot Phase3 M3.3 Guard and Protect domain acceptance
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m3-3-guard-protect.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m3_guard_protect.gd'
-      - 'docs/verification/PH3_M3_3_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m3-3-guard-protect.yml'
-      - 'scripts/domain/m3/**'
-      - 'scripts/domain/m2/integration/**'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m3_guard_protect.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

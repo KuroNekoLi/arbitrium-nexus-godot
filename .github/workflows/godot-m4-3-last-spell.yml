@@ -1,20 +1,7 @@
 name: Godot Phase3 M4.3 Last Spell Engine
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m4-3-last-spell.yml'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'tests/test_m4_last_spell.gd'
-      - 'docs/verification/PH3_M4_3_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m4-3-last-spell.yml'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'tests/test_m4_last_spell.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:

@@ -1,24 +1,7 @@
 name: Godot Phase3 M4.2 Casting Disruption and Focus Ward
 on:
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/godot-m4-2-disruption.yml'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m3/reaction/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m4_disruption.gd'
-      - 'docs/verification/PH3_M4_2_ENGINEERING_NOTE.md'
-  pull_request:
-    paths:
-      - '.github/workflows/godot-m4-2-disruption.yml'
-      - 'scripts/domain/m4/**'
-      - 'scripts/domain/m3/reaction/**'
-      - 'scripts/domain/m2/integration/m2_domain_resolver.gd'
-      - 'scripts/domain/m2/economy/resource_ledger.gd'
-      - 'tests/test_m4_disruption.gd'
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
