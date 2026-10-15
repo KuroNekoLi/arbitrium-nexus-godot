@@ -6,6 +6,7 @@ const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const LastSpell = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
+const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
 
 static func _before(a: Dictionary, b: Dictionary) -> bool:
 	if int(a["planned_resolve_round"]) != int(b["planned_resolve_round"]):
@@ -43,9 +44,31 @@ static func settle_due(core: Dictionary, next_round: int,
 				if not last_hit["ok"]:
 					return {"ok":false,"error":str(last_hit["error"])}
 				timeline.append(last_release["timeline"][0])
+				if config.get("m5_4_outcome_enabled",false) == true:
+					# Release is committed before any later HP0; Exhausted
+					# is already lifetime-sticky and cannot be rolled back.
+					timeline.append(last_release["timeline"][2])
 				source = last_hit["core"]
 				timeline.append_array(last_hit["timeline"])
-				timeline.append(last_release["timeline"][2])
+				if config.get("m5_4_outcome_enabled",false) == true:
+					var recoil_table: Variant = config.get("m5_4_last_release_recoil",{})
+					if not recoil_table is Dictionary:
+						return {"ok":false,"error":"M54_INVALID_LAST_RECOIL_CATALOGUE"}
+					var recoil_spec: Variant = recoil_table.get(str(cast["spell_id"]),null)
+					if recoil_spec != null:
+						if not recoil_spec is Dictionary or not recoil_spec.get("amount",null) is int or \
+								int(recoil_spec["amount"]) <= 0 or \
+								not ["ABSORB","BYPASS"].has(str(recoil_spec.get("barrier_mode",""))):
+							return {"ok":false,"error":"M54_INVALID_LAST_RECOIL_PROFILE"}
+						var recoil: Dictionary = HP.registered_recoil(source,str(cast["caster_id"]),
+							int(recoil_spec["amount"]),str(recoil_spec["barrier_mode"]),config,
+							command_id+":last-recoil")
+						if not recoil["ok"]:
+							return {"ok":false,"error":str(recoil["error"])}
+						source = recoil["core"]
+						timeline.append_array(recoil["timeline"])
+				else:
+					timeline.append(last_release["timeline"][2])
 			else:
 				timeline.append_array(last_release["timeline"])
 			continue
