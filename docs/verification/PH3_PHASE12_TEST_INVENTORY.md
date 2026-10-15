@@ -895,3 +895,68 @@ Successful official Godot4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-
 | 59 | M42-NO_ORDINARY_REACTION_FROM_CONCENTRATING | test_m4_disruption.gd | PASS — M4.2 headless fixture |
 
 Seed 20261014, 12 accepted commands, initial SHA256 5aa5e836f5ed4812b932a4d33d64697a6163f3ebc9d41722ef158a64fc651426; event SHA256 d9f3f8781b59e0e61bd82112f9cad5f86e298400aaa1c8bda4b13aa9d4bc919c; final SHA256 fa38ea93d554ea1dc8b63966a07647c2ecd7eb369b50c39709768bf34119e1d7. M4.3–M4.5 not executed.
+
+
+### M4.3 Last Spell Engine — 55 executed Godot Domain assertions (2026-10-15)
+
+Official full Godot 4.7.2 CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38658279319 on source 12d651289ae85078d166fbc1bf68e83a991bb603: M4.3 **55/55** PASS, M1–M4.2 predecessors **704/704** PASS, total **759/759** named assertions, all four prototype runners exit0. Specific source: tests/test_m4_last_spell.gd. M4.4 HP0 invalidation and M5 damage absent; next task only.
+
+| # | Exact observed Godot stdout case ID | Runner | Result |
+|---:|---|---|---|
+| 1 | LAST-001-PRECONFIRM_QUOTE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 2 | LAST-001-LOCKED_VARIANT_REJECTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 3 | LAST-001-WRONG_ACTOR_REJECTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 4 | LAST-001-CONFIRM_MANDATORY | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 5 | LAST-001-CHANTLESS_FORBIDDEN | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 6 | LAST-001-MISSING_TARGET | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 7 | LAST-001-MP_FAILED_ATOMIC | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 8 | LAST-001-UNLOCK_ENFORCED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 9 | LAST-001-TIMELINE_MUST_BE_AUTHORIZED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 10 | LAST-001-SUBMIT_ACCEPTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 11 | LAST-001-ONCE_USED_COMMITTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 12 | LAST-001-NO_CARD_ZONE_MOVEMENT | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 13 | LAST-001-AP_MP_ONCE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 14 | LAST-001-BASE_AP_UNCHANGED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 15 | LAST-001-FULL_ONLY_CONCENTRATING | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 16 | LAST-001-UNIQUE_SLOT_NOT_HAND | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 17 | LAST-001-CANNOT_CANCEL | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 18 | LAST-001-NO_SECOND_ACTIVATION | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 19 | LAST-001-CANNOT_BASIC_ATTACK_WHILE_CONCENTRATING | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 20 | LAST-001-STALE_REJECTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 21 | LAST-001-DUPLICATE_COMMAND_REJECTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 22 | LAST-001-RNG_IMMUTABLE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 23 | LAST-002-NOT_EARLY_EFFECT | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 24 | LAST-003-DIRECT_REQUIRES_TARGET_INSTANCE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 25 | LAST-003-DISRUPTION-1-DOES_NOT_CANCEL | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 26 | LAST-003-DISRUPTION-1-NO_REFUND | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 27 | LAST-003-DISRUPTION-1-NO_CARD_ZONE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 28 | LAST-003-ONE_DELAY_USED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 29 | LAST-003-DISRUPTION-2-DOES_NOT_CANCEL | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 30 | LAST-003-DISRUPTION-2-NO_REFUND | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 31 | LAST-003-DISRUPTION-2-NO_CARD_ZONE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 32 | LAST-004-SECOND_DISRUPTION_WEAKENS | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 33 | LAST-003-DISRUPTION-3-DOES_NOT_CANCEL | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 34 | LAST-003-DISRUPTION-3-NO_REFUND | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 35 | LAST-003-DISRUPTION-3-NO_CARD_ZONE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 36 | LAST-004-NO_INFINITE_DELAY_OR_STACKING | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 37 | LAST-004-REJECT_REPLAYED_SOURCE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 38 | LAST-003-NO_RELEASE_IN_ROUND2 | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 39 | LAST-003-DELAY_PREVENTS_ROUND3_RELEASE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 40 | LAST-005-RELEASE_ONCE_AT_ROUND4 | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 41 | LAST-005-RELEASE_BEFORE_PLAYER_RESOURCES | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 42 | LAST-005-ACTOR_EXHAUSTED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 43 | LAST-005-BASE_AP_STILL_SIX | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 44 | LAST-005-ONCE_USED_PERSISTS | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 45 | LAST-005-EXHAUSTED_CANNOT_ATTACK | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 46 | LAST-005-EXHAUSTED_CANNOT_CAST | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 47 | LAST-005-EXHAUSTED_TARGETABLE_ALIVE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 48 | LAST-005-HP_UNCHANGED_M5_ONLY | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 49 | LAST-005-NO_CARD_INSTANCE_CREATED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 50 | LAST-005-NO_MP_PAYMENT_ON_RELEASE | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 51 | LAST-005-ACTOR_B_CAN_STILL_ACT | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 52 | LAST-REPLAY-SAME_SEED_FINAL | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 53 | LAST-REPLAY-SAME_SEED_EVENTS | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 54 | LAST-REPLAY-INITIAL_INPUT_UNTOUCHED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+| 55 | LAST-REPLAY-STALE_FAIL_CLOSED | test_m4_last_spell.gd | PASS / M4.3 Domain fixture |
+
+Seed 20261014; 25 commands; initial SHA256 a01369270c5d4807e2ca706883d34f15f1d3f2b7a6c6ec6712b5c6a50fd1e2d5; event SHA256 7b62efd51f31a176a309cf65c01c1512d544e5267109cb8f702f064fc86d68c3; final SHA256 2295c874442f8673dd74c6280df37b15f647574237e21756165e886e2ff162ea. Provisional values are NOT authorized balance canon.

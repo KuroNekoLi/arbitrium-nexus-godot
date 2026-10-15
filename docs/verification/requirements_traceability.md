@@ -261,3 +261,19 @@ Official Godot4.7.2 https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/
 | Replay and invalid commands | M42-SEEDED_REPLAY_IDENTICAL_STATE_HASH; M42-SEEDED_REPLAY_IDENTICAL_EVENT_HASH; M42-REPLAY_STALE_FAILS_CLOSED | PASS Seed 20261014, 12-command tape |
 
 M4.3/M4.4/M4.5 and full M4 gate remain NOT_VERIFIED; M5 hit/HP/status and UI not complete.
+
+
+## M4.3 — Last Spell Engine (2026-10-15 independent verified Domain)
+
+Tested SHA 12d651289ae85078d166fbc1bf68e83a991bb603, official successful [Godot4.7.2 CI #38658279319](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38658279319): **M4.3 55/55**, all predecessors M1–M4.2 **704/704**, total **759/759** named Domain tests, four legacy headless scripts exit0. Repair history and canonical Seed/hash proof in PH3_M4_3_ENGINEERING_NOTE.md.
+
+| Source requirement | Actual executed oracle IDs | Verified bounded outcome |
+|---|---|---|
+| LAST-001 slot, unlocked, once-per-battle, Full-only, actual M2 payment, no card zone | LAST-001-PRECONFIRM_QUOTE, LAST-001-SUBMIT_ACCEPTED, LAST-001-ONCE_USED_COMMITTED, LAST-001-NO_CARD_ZONE_MOVEMENT, LAST-001-AP_MP_ONCE | PASS independent slot and original ledger costs; no phantom SP |
+| LAST-002 delayed resolution, no instant M5 damage | LAST-001-UNIQUE_SLOT_NOT_HAND, LAST-002-NOT_EARLY_EFFECT, LAST-003-NO_RELEASE_IN_ROUND2 | PASS scheduled initial round3 and no early effect |
+| LAST-003 first destabilization delayed ONCE | LAST-003-ONE_DELAY_USED, LAST-003-DELAY_PREVENTS_ROUND3_RELEASE | PASS first threshold once, still Concentrating |
+| LAST-004 further instability weakens, not infinite delay or normal interruption | LAST-004-SECOND_DISRUPTION_WEAKENS, LAST-004-NO_INFINITE_DELAY_OR_STACKING, LAST-003-DISRUPTION-2-DOES_NOT_CANCEL | PASS provisional modifier, no normal MP refund |
+| LAST-005 successful release → EXHAUSTED, no BaseAP loss | LAST-005-RELEASE_ONCE_AT_ROUND4, LAST-005-ACTOR_EXHAUSTED, LAST-005-BASE_AP_STILL_SIX, LAST-005-EXHAUSTED_TARGETABLE_ALIVE | PASS headless Domain only; real M5 damage deferred |
+| Deterministic Replay and strict command IDs | LAST-REPLAY-SAME_SEED_FINAL, LAST-REPLAY-SAME_SEED_EVENTS, LAST-REPLAY-STALE_FAIL_CLOSED | PASS Seed20261014 / 25 commands |
+
+M4.4 CORE-02 forced HP0 invalidation and M4.5 final complete M4 acceptance remain NOT VERIFIED. These tests do not prove actual Last Spell damage or UI confirmation dialog.

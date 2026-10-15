@@ -1,6 +1,6 @@
 # Phase 3 M4.3 — Last Spell Engine Engineering Note
 
-Status: IMPLEMENTED_AWAITING_ACTUAL_CI. Do not certify success before actual completed official Godot 4.7.2 test logs.
+Status: M4_3_LAST_SPELL_DOMAIN_VERIFIED — actual independent Godot4.7.2 CI passed; complete M4 remains NOT VERIFIED.
 
 ## Binding specifications and prerequisite
 Authority: docs/combat/08_LAST_SPELL_EXHAUSTED.md, 20_PHASE12_PREIMPLEMENTATION_ADR_AND_OPEN_ITEMS.md, 21_PHASE2_SPEC_ACCEPTANCE_REPORT.md and 23_PHASE3_EXECUTION_PLAN.md. The latest previously verified source master b8fae6ae3af3310b2be0b386910dab5b8dc870ae and official successful M4.2 CI #38656317851: **704/704 prior Domain named assertions**, four prototype headless runners. User explicitly asks ONLY M4.3, not M4.4 or M4.5.
@@ -22,3 +22,15 @@ M4.4 still MUST handle caster HP0 before release by immediate forced invalidatio
 
 ## Actual CI proof to append
 Source SHA, official Godot version/run/job, seed and event/final state hashes, executed case count, 704/704 predecessor assertions, all script exit codes, corrections and limitations. Repair budget initial test + at most two corrective reruns for the same failing group; never remove approved tests.
+
+
+## Official executed gate / repair record (2026-10-15 Taipei)
+
+- Initial source SHA 0abcdcf34a782bc0efc1967d58caf1070461373d; initial [CI #38657944334](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38657944334) failed for TWO test errors: expected error code for concentrating BASIC_ATTACK did not match the unchanged M2 approved error ACTOR_UNAVAILABLE_OR_PHASE, and the runner reused the same command ID for round2 START_PLAYER_PHASE and OPEN_REACTION_WINDOW; actual M3 correctly rejected this duplicate.
+- First corrective commit 1c4ed7369f3503fb82999aae2dd740b55442ea0d changed only test IDs and the existing M2 rejection expectation; [CI #38658107613](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38658107613) executed **55** Last Spell cases, 54 passed and one further identical naming mismatch for Exhausted BASIC_ATTACK. No gameplay rules or approved assertions removed.
+- Second and final corrective commit **12d651289ae85078d166fbc1bf68e83a991bb603** aligned that Exhausted negative assertion with the approved M2 error. The official [Godot 4.7.2 CI #38658279319](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38658279319), job 116173158269 completed SUCCESS: official Godot 4.7.2.stable.official.ed1daf0bf ZIP SHA512 verified, editor import PASS, M4.3 **55/55** PASS, exact marker M4_3_LAST_SPELL_DOMAIN_VERIFIED; M4.2 **59/59**, M4.1 **47/47**, M3.5 **101/101**, M1–M3.4 **497/497**, grand total **759/759 named Domain assertions** PASS, four legacy prototype scripts exit0.
+- Real fixed-seed **20261014**, **25** accepted commands, initial SHA256 **a01369270c5d4807e2ca706883d34f15f1d3f2b7a6c6ec6712b5c6a50fd1e2d5**, event SHA256 **7b62efd51f31a176a309cf65c01c1512d544e5267109cb8f702f064fc86d68c3**, final state SHA256 **2295c874442f8673dd74c6280df37b15f647574237e21756165e886e2ff162ea**. Replaying the SAME command tape reproduces identical canonical event/state hashes; stale tape rejected.
+- Specific acceptance: isolated Last Spell slot, no CardInstance creation/move, existing M2 AP/MP/Overload actual debit once, unique once-used battle marker, Full Chant/confirmation restrictions, ordinary actions blocked while Concentrating, initial scheduled round3 release, first true Stability threshold prolongs to round4 ONCE, second threshold applies provisional 3/4 weakening without further delay, third threshold does not multiply penalty, DIRECT_CASTING_INSTANCE can affect Last Spell without ordinary CastingInterrupted/MP refund/Spell cancellation, release event before M2 AP renewal/draw, caster EXHAUSTED but HP remains positive and is still targetable, teammate B can act and shared BaseAP remains6, no actual M5 HP damage.
+- Authority boundary: First reset Stability10 and weakening 3/4 are **BALANCE_PROVISIONAL example values only**. Actual Last Spell effect is explicitly LastSpellEffectDeferredToM5. A player UI confirmation modal/animation is not built; Domain requires confirmed acknowledgement and exposes precommit cost/risk. M4.4 CORE-02 caster HP0 forced invalidation and M4.5 combined acceptance are NOT implemented and are deliberately not certified here. If caster HP0 at due boundary, existing resolver fails closed with LAST_SPELL_HP0_NEEDS_M4_4_INVALIDATION.
+
+**VERDICT: M4.3 Domain Verified (headless fixture scope). Do NOT label overall M4 Verified.**
