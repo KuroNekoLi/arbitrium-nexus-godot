@@ -21,26 +21,26 @@ func _init() -> void:
 		printerr("M55_EMPTY_GOLDEN_ENCOUNTER"); quit(1); return
 	var b: Dictionary = start["core"]["battle"]
 	check("M55-INT-01-INITIAL_ROUND_ONE",int(b["round"]) == 1 and b["phase"] == "PLAYER_PHASE")
-	check("M55-INT-02-ALL_THREE_ACTIVE",F.ACTORS.size() == 3 and
-		b["actors"]["A"]["status"] == "ACTIVE" and
-		b["actors"]["B"]["status"] == "ACTIVE" and
+	check("M55-INT-02-ALL_THREE_ACTIVE",F.ACTORS.size() == 3 and \
+		b["actors"]["A"]["status"] == "ACTIVE" and \
+		b["actors"]["B"]["status"] == "ACTIVE" and \
 		b["actors"]["C"]["status"] == "ACTIVE")
-	check("M55-INT-03-REAL_FULL_HP_BOSS",int(b["actors"]["Boss"]["hp"]) == 290 and
+	check("M55-INT-03-REAL_FULL_HP_BOSS",int(b["actors"]["Boss"]["hp"]) == 290 and \
 		int(b["actors"]["Boss"]["max_hp"]) == 290)
 	check("M55-INT-04-THREE_DISTINCT_DECK_ROLES",
-		F.LOADOUTS["A"] != F.LOADOUTS["B"] and
+		F.LOADOUTS["A"] != F.LOADOUTS["B"] and \
 		F.LOADOUTS["B"] != F.LOADOUTS["C"])
 	var intact: bool = true
 	for actor: String in F.ACTORS:
 		var zone: Dictionary = start["core"]["cards"]["actors"][actor]["zones"]
-		if zone["hand"].size() != 4 or zone["draw"].size() != 8 or
+		if zone["hand"].size() != 4 or zone["draw"].size() != 8 or \
 				start["core"]["cards"]["actors"][actor]["instances"].size() != 12:
 			intact = false
-	check("M55-INT-05-ALL_DECKS_12_UNIQUE_INSTANCES",intact and
+	check("M55-INT-05-ALL_DECKS_12_UNIQUE_INSTANCES",intact and \
 		Zones.validate_state(start["core"]["cards"]))
 	check("M55-INT-06-SHARED_AP6_INDEPENDENT_MP",
-		int(b["party_resources"]["current_ap"]) == 6 and
-		int(b["actors"]["A"]["mp"]) == 10 and
+		int(b["party_resources"]["current_ap"]) == 6 and \
+		int(b["actors"]["A"]["mp"]) == 10 and \
 		int(b["actors"]["C"]["mp"]) == 10)
 	var report: Dictionary = Driver.run(F.SEED)
 	if not report.get("ok",false):
@@ -64,12 +64,12 @@ func _init() -> void:
 	check("M55-INT-18-REAL_FULL_CHANT_RELEASED",int(c.get("CastingReleased",0)) >= 1)
 	check("M55-INT-19-LAST_SPELL_REAL_RELEASED",int(c.get("LastSpellReleased",0)) == 1)
 	check("M55-INT-20-LAST_SPELL_EXHAUSTED",int(c.get("ActorExhausted",0)) >= 1)
-	check("M55-INT-21-EXPLICIT_REACTION",int(c.get("ReactionsConfirmed",0)) >= 1 or
+	check("M55-INT-21-EXPLICIT_REACTION",int(c.get("ReactionsConfirmed",0)) >= 1 or \
 		int(c.get("ReactionsPassed",0)) >= 1 or int(c.get("ReactionPassed",0)) >= 1)
 	check("M55-INT-22-REAL_STATUS_GRANTED",int(c.get("StatusApplied",0)) >= 1)
 	check("M55-INT-23-REAL_STATUS_TICK",int(c.get("StatusTickStarted",0)) >= 1)
 	check("M55-INT-24-CHARGED_AND_DRAWN",
-		int(report["final"]["core"]["battle"]["paid_cost_command_ids"].size()) >= 3 and
+		int(report["final"]["core"]["battle"]["paid_cost_command_ids"].size()) >= 3 and \
 		int(c.get("CardDrawn",0)) >= 1)
 	check("M55-INT-25-NO_NEGATIVE_HP_OR_ZONE_DUPLICATION",
 		Zones.validate_state(report["final"]["core"]["cards"]))
@@ -80,13 +80,13 @@ func _init() -> void:
 	var replay: Dictionary = Driver.replay(report)
 	check("M55-INT-29-ENTIRE_TAPE_REPLAY_IDENTICAL",replay.get("ok",false))
 	check("M55-INT-30-CANONICAL_SHA256",
-		str(report["event_hash"]).length() == 64 and
-		str(report["final_hash"]).length() == 64 and
+		str(report["event_hash"]).length() == 64 and \
+		str(report["final_hash"]).length() == 64 and \
 		str(report["tape_hash"]).length() == 64)
 	check("M55-INT-31-DOMAIN_NEVER_USES_FRAME_CLOCK",
 		str(report["prng_version"]) == "park-miller-48271-v1")
 	check("M55-INT-32-CONTENT_EXPLICITLY_VERSIONED",
-		report["content_version"] == F.CONTENT_VERSION and
+		report["content_version"] == F.CONTENT_VERSION and \
 		report["config"]["m5_balance_authority"] == "BALANCE_PROVISIONAL")
 	print("M5_5_INTEGRATION_REPORT executed=",passed+failed,
 		" passed=",passed," failed=",failed)
