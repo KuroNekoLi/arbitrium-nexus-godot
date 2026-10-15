@@ -20,7 +20,8 @@ func _init() -> void:
 		printerr("M55_REPLAY_FULL_BATTLE_FAILED: ",a.get("error",""))
 		quit(1);return
 	var second: Dictionary = Driver.run(F.SEED)
-	var receipts: Dictionary = M5.replay(a["initial"],a["tape"],a["config"])
+	var actual_tape: Array[Dictionary] = Driver.typed_tape(a)
+	var receipts: Dictionary = M5.replay(a["initial"],actual_tape,a["config"])
 	var replay: Dictionary = Driver.replay(a)
 	check("M55-REP-01-REAL_BATTLE_TERMINAL",a["ok"] and \
 		["VICTORY","DEFEAT"].has(a["outcome"]))
@@ -43,13 +44,13 @@ func _init() -> void:
 	var original_hash: String = Model.state_hash(a["initial"])
 	check("M55-REP-10-REPLAY_PRESERVES_INITIAL",
 		Model.state_hash(a["initial"]) == original_hash)
-	var tampered: Array[Dictionary] = a["tape"].duplicate(true)
+	var tampered: Array[Dictionary] = actual_tape.duplicate(true)
 	tampered[0]["expected_event_seq"] = -1
 	var refused: Dictionary = M5.replay(a["initial"],tampered,a["config"])
 	check("M55-REP-11-STALE_TAPE_FAIL_CLOSED",not refused["accepted"] and \
 		refused["events"].is_empty() and \
 		Model.state_hash(refused["state"]) == original_hash)
-	var appended: Array[Dictionary] = a["tape"].duplicate(true)
+	var appended: Array[Dictionary] = actual_tape.duplicate(true)
 	appended.append({"type":"END_PLAYER_PHASE","command_id":"post-win-forged",
 		"expected_event_seq":int(a["final"]["event_seq"])})
 	var terminal: Dictionary = M5.replay(a["initial"],appended,a["config"])
@@ -62,7 +63,7 @@ func _init() -> void:
 	for _mode: String in ["ALWAYS_ASK","SMART","QUICK"]:
 		var presentation: Dictionary = a["config"].duplicate(true)
 		presentation["presentation_only_mode"] = _mode
-		var ui_replay: Dictionary = M5.replay(a["initial"],a["tape"],presentation)
+		var ui_replay: Dictionary = M5.replay(a["initial"],actual_tape,presentation)
 		check("M55-REP-13-PRESENTATION_"+_mode,
 			ui_replay["accepted"] and \
 			ui_replay["event_hash"] == a["event_hash"] and \
