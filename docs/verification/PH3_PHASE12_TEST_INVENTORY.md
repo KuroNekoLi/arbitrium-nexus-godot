@@ -1343,7 +1343,7 @@ Seed **20261014**; **1 actual M2-paid action**; initial SHA256 **dd1bbcb5cac91b6
 
 ## M5.5 — 157 actual named Full Battle / Replay / 100 Seed checks (2026-10-15)
 
-Official Godot 4.7.2 [branch CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295): **32/32 golden, 15/15 full replay, 110/110 seed/property, 1,081/1,081 predecessors + four legacy runner success**. **1,238/1,238 cumulative Domain**. Master post-merge CI must also pass. Every test remains `BALANCE_PROVISIONAL / FIXTURE_ONLY`.
+Official Godot 4.7.2 [branch CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295): **32/32 golden, 15/15 full replay, 110/110 seed/property, 1,081/1,081 predecessors + four legacy runner success**. **1,238/1,238 cumulative Domain**. Final master post-merge [CI #38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741) at tested code SHA `9c8b14b873047ca181a229cfaab5d2351541ceab` **completed/success**, same 157/157 M55 and 1,081/1,081 prior. M5 Domain **VERIFIED — HEADLESS BATTLE FIXTURE ONLY**, not playable. Every test remains `BALANCE_PROVISIONAL / FIXTURE_ONLY`.
 
 | # | Named case ID | Runner | Verified |
 |---:|---|---|---|
