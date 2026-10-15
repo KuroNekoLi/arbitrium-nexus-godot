@@ -36,7 +36,7 @@ UI **不能**自行扣 HP/AP/MP/RP、洗牌、刷新 hand、判斷敗勝、跳�
 | Playable Verified | 真人可以完成開場→數回合→勝/敗；Reaction、Casting、Boss、Last Spell 依規 | 不等於平衡已完成 |
 | Balance Accepted | 多策略、100+ seeds、真人 playtest 及公布配置版本 | Python 單獨跑過不能代替 Godot parity |
 
-**現況**：M1～M5.4 合計 **1,081/1,081** 命名 Domain assertion，Godot 4.7.2 Actions [#38676746490](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38676746490) success（以該 run 對應 SHA 為準）；M5.5 與完整 Lv40 Godot Demo **NOT VERIFIED**。
+**現況（M5.5 已驗證）**：M1～M5.4 **1,081/1,081** + M5.5 **157/157** = **1,238/1,238 命名 Domain assertions**，Godot 4.7.2 [功能分支 CI #38677695295](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38677695295) 與 [PR CI #38678188918](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678188918) Success；100 個固定 Seed 的完整三人 Boss 對局與每場 Replay 全部通過，4 Legacy 回歸成功；[master 合併程式碼 9c8b14b8](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/9c8b14b873047ca181a229cfaab5d2351541ceab)。Scope 限定 **M5 DOMAIN VERIFIED — HEADLESS BATTLE / FIXTURE_ONLY**；原生 Godot Lv40 Demo Content Parity、法術 Counter/Analyze、Scene+Controller、操作 UI、真人可玩性、平衡仍 **NOT VERIFIED**。最新 Master 同 Commit CI 結論見 [#38678649741](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38678649741)。
 
 ## 4. 開發與回報
 
