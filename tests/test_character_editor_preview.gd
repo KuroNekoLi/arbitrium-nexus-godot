@@ -18,7 +18,10 @@ func check(id: String, good: bool) -> void:
 		failed += 1
 		printerr("FAIL ",id)
 
-func _init() -> void:
+func _initialize() -> void:
+	call_deferred("run")
+
+func run() -> void:
 	for id: String in ["A","B","C"]:
 		var item: BattleCharacterAppearance = Registry.appearance_for(id)
 		check("EDITOR-APPEAR-"+id,item != null)
@@ -46,10 +49,10 @@ func _init() -> void:
 	actor.set("appearance",Registry.appearance_for("A"))
 	root.add_child(actor)
 	check("EDITOR-ACTOR-SPRITE",actor.get("body") != null and (actor.get("body") as AnimatedSprite2D).sprite_frames.get_frame_count("idle") == 3)
-	check("EDITOR-NO-SAVED-CHILDREN",(actor.get("body") as AnimatedSprite2D).owner == null)
+	check("EDITOR-NO-SAVED-CHILDREN",(actor.get("body") as AnimatedSprite2D).owner == null if actor.get("body") != null else false)
 	var original: AnimatedSprite2D = actor.get("body")
 	(actor.get("appearance") as Resource).emit_changed()
-	check("EDITOR-RESOURCE-CHANGE-LIVE",actor.get("body") == original and original.sprite_frames.get_frame_count("run") == 3)
+	check("EDITOR-RESOURCE-CHANGE-LIVE",actor.get("body") == original and original != null and original.sprite_frames.get_frame_count("run") == 3)
 	root.remove_child(actor)
 	check("EDITOR-SIGNAL-CLEANUP",not (actor.get("appearance") as Resource).changed.is_connected(Callable(actor,"_on_art_changed")))
 	actor.free()

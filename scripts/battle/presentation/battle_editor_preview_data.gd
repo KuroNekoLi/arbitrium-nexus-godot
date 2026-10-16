@@ -22,6 +22,11 @@ static func projection() -> Dictionary:
 			"target_ids":["A"],"hit_count":1}]}
 
 static func decorate_mock_hand(hud: Control) -> void:
+	# Editor resource changes must not accumulate duplicate mock cards.
+	for old: Node in hud.hand.get_children():
+		if str(old.name).begins_with("MOCK_ONLY_Card_"):
+			hud.hand.remove_child(old)
+			old.queue_free()
 	# Shares the production BattleCardFrame, not the runtime SimpleCards Card
 	# that can install input/tweens. Panels never set an owner or enter the tape.
 	var appearances: Array[String] = ["U01","U02","U03","U04"]
@@ -41,6 +46,8 @@ static func decorate_mock_hand(hud: Control) -> void:
 		CardFrame.build(frame,appearance,"1 AP",true,"")
 
 static func show(hud: Control, mode: String) -> void:
+	hud.last_preview.hide()
+	hud.hand.show()
 	# In the Godot EDITOR Control.tr() may resolve EditorTranslationServer
 	# instead of Project translations. Never apply '%' to untranslated keys.
 	# Display read-only labels with project catalogue strings explicitly.

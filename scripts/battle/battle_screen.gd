@@ -55,6 +55,10 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
+		for id: String in ["A","B","C"]:
+			var item: Resource = Appearances.appearance_for(id)
+			if item != null and not item.changed.is_connected(_on_editor_appearance_changed):
+				item.changed.connect(_on_editor_appearance_changed)
 		# The actual battle scene/actors/HUD render from editor-safe mock data.
 		# No Controller, M5 initial state, signals, combat tweens or tape.
 		resized.connect(_fit_design)
@@ -571,3 +575,18 @@ func _fit_design() -> void:
 	var factor: float = minf(size.x / 1280.0, size.y / 720.0)
 	design.scale = Vector2.ONE * factor
 	design.position = (size - Vector2(1280, 720) * factor) * 0.5
+
+func _on_editor_appearance_changed() -> void:
+	if Engine.is_editor_hint() and is_node_ready():
+		call_deferred("_refresh_editor_preview")
+
+func _refresh_editor_preview() -> void:
+	if Engine.is_editor_hint() and is_node_ready():
+		EditorPreview.show(hud,editor_preview_mode)
+
+func _exit_tree() -> void:
+	if Engine.is_editor_hint():
+		for id: String in ["A","B","C"]:
+			var item: Resource = Appearances.appearance_for(id)
+			if item != null and item.changed.is_connected(_on_editor_appearance_changed):
+				item.changed.disconnect(_on_editor_appearance_changed)

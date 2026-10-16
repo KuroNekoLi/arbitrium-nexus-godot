@@ -3,8 +3,14 @@ class_name BattleCharacterAppearance
 extends Resource
 ## Reversible presentation-only candidate. No combat data or card ownership.
 
-@export var atlas: Texture2D
-@export var cg: Texture2D
+@export var atlas: Texture2D:
+	set(value):
+		atlas = value
+		emit_changed()
+@export var cg: Texture2D:
+	set(value):
+		cg = value
+		emit_changed()
 @export var columns: PackedInt32Array = PackedInt32Array([0, 418, 836, 1254]):
 	set(value):
 		columns = value
@@ -13,7 +19,10 @@ extends Resource
 	set(value):
 		rows = value
 		emit_changed()
-@export var portrait_rect: Rect2 = Rect2(80, 130, 864, 940)
+@export var portrait_rect: Rect2 = Rect2(80, 130, 864, 940):
+	set(value):
+		portrait_rect = value
+		emit_changed()
 @export var foot_offset: Vector2 = Vector2.ZERO:
 	set(value):
 		foot_offset = value
