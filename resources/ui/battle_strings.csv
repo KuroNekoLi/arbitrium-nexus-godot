@@ -33,6 +33,7 @@ BATTLE_CONCENTRATING,Concentrating,詠唱中
 BATTLE_EXHAUSTED,Exhausted,力竭
 BATTLE_INCAPACITATED,Incapacitated,失能
 BATTLE_BASIC,Basic attack,普通攻擊
+BATTLE_BASIC_SELECTED,Target: %s · select another or click again to attack,目標：%s · 點選其他目標切換，或再點一次出手
 BATTLE_ANALYZE,Analyze,解析
 BATTLE_ITEM,Item,道具
 BATTLE_SWAP,Free swap,免費換牌

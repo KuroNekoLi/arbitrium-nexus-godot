@@ -46,12 +46,12 @@ func run() -> void:
 	check(not context.visible, "V35C-CANCEL-HIDES-SPELL-DETAILS")
 	check(not context.cost_badge.visible and screen.hud.confirm_button.disabled, "V35C-CANCEL-CLEARS")
 	check(screen.hud.get_node("EnemyStatus").target_portrait.visible, "V35C-PUBLISHED-TARGET-PORTRAIT")
+	var hp_before_basic: int = int(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"])
 	screen._command_requested("BASIC_ATTACK_RESOURCE_ONLY", {})
 	check(not context.visible, "V35C-BASIC-NOT-SPELL-DETAILS")
-	if not screen.legal_targets.is_empty():
-		screen.select_target(screen.legal_targets[0])
-		check(screen.hud.command_prompt.visible and not context.visible, "V35C-SEPARATE-COMMAND-PROMPT")
-		check(screen.hud.confirm_button.is_visible_in_tree(), "V35C-COMMAND-CONFIRM-AVAILABLE")
+	check(int(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"]) < hp_before_basic,
+		"V35C-SINGLE-ENEMY-BASIC-IMMEDIATE")
+	check(not screen.hud.command_prompt.visible, "V35C-BASIC-NO-CONFIRM-PROMPT")
 	screen.cancel_action()
 	check(not screen.hud.command_prompt.visible and not context.visible, "V35C-CANCEL-PROMPT")
 	screen.queue_free()

@@ -297,6 +297,9 @@ func _render_reaction(choices: Array) -> void:
 func set_targets(ids: Array) -> void:
 	_targets.set_targets(ids)
 
+func set_basic_target_choices(ids: Array, selected_id: String, labels: Dictionary) -> void:
+	_targets.set_basic_target_choices(ids, selected_id, labels)
+
 ## Contextual status only: idle phase HUD should not obscure the battlefield.
 ## The three roster items still expose all actor states and tooltips.
 func _selected_has_conditions(projection: Dictionary, actor: String) -> bool:

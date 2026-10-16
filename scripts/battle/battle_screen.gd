@@ -23,6 +23,7 @@ var selected_actor: String = "A"
 var pending_card: String = ""
 var pending_kind: String = ""
 var selected_target: String = ""
+var remembered_attack_target: String = ""
 var legal_targets: Array = []
 var pending_command: Dictionary = {}
 var keyboard_index: int = 0
@@ -107,7 +108,7 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 ## Same name fallbacks as the visible panels: EnemyStatus titles the Boss with
 ## BATTLE_TITLE and the party roster uses BATTLE_HERO_<id>.
 func log_actor_name(id: String) -> String:
-	var fallback: String = "BATTLE_TITLE" if id == "Boss" else "BATTLE_HERO_" + id
+	var fallback: String = "BATTLE_TITLE" if id == "Boss" else "BATTLE_HERO_" + id if id in ["A", "B", "C"] else id
 	return tr(str(view_model.get("actor_name_keys", {}).get(id, fallback)))
 
 func _log_rows(events: Array) -> Array:
@@ -231,6 +232,15 @@ func select_target(target: String) -> void:
 	if not legal_targets.has(target):
 		hud.feedback.text = _reason("INVALID_TARGET")
 		return
+	if pending_kind == "BASIC_ATTACK_RESOURCE_ONLY":
+		if selected_target == target:
+			_refresh_preview()
+			confirm_action()
+			return
+		selected_target = target
+		remembered_attack_target = target
+		_refresh_preview()
+		return
 	selected_target = target
 	_refresh_preview()
 
@@ -255,6 +265,9 @@ func _refresh_preview() -> void:
 		var index: int = hud.last_preview.target_ids.find(selected_target)
 		if index >= 0: hud.last_preview.target_selector.select(index)
 		hud.last_preview.error_label.text = "" if result["accepted"] else _reason(str(result["error"]))
+	elif pending_kind == "BASIC_ATTACK_RESOURCE_ONLY":
+		hud.set_basic_target_choices(legal_targets, selected_target, _basic_target_labels())
+		hud.feedback.text = tr("BATTLE_BASIC_SELECTED") % log_actor_name(selected_target) if result["accepted"] else _reason(str(result["error"]))
 	elif pending_kind != "CARD":
 		var key: String = "BATTLE_BASIC" if pending_kind == "BASIC_ATTACK_RESOURCE_ONLY" else "BATTLE_LAST" if pending_kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_SWAP"
 		hud.show_command_confirmation(tr(key), hud.details.text)
@@ -277,6 +290,7 @@ func cancel_action() -> void:
 		$Design/Arena.get_node(actor).visible = _last_actor_visibility[actor]
 	_last_actor_visibility.clear()
 	hud.set_targets([])
+	hud.set_basic_target_choices([], "", {})
 	hud.set_selected_card("")
 	hud.details.text = tr("BATTLE_SELECT")
 	hud.get_node("Context").clear_summary()
@@ -385,6 +399,7 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 		log_events.clear()
 		hud.get_node("BattleLogPanel").clear_rows()
 		controller.begin(_initial_state(),config)
+		remembered_attack_target = ""
 		cancel_action()
 		present(controller.snapshot())
 		return
@@ -406,19 +421,24 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 		selected_target = selected_actor
 		_refresh_preview()
 		return
-	if kind in ["BASIC_ATTACK_RESOURCE_ONLY","ACTIVATE_LAST_SPELL_M4"]:
+	if kind == "BASIC_ATTACK_RESOURCE_ONLY":
 		cancel_action()
 		pending_kind = kind
-		legal_targets = []
-		for target: String in snapshot["core"]["battle"]["actors"]:
-			var intent_fields: Dictionary = {"actor_id":selected_actor,"target_actor_id":target}
-			if kind == "ACTIVATE_LAST_SPELL_M4": intent_fields.merge({"confirmed":true,"casting_mode":"FULL"})
-			if Factory.preview(snapshot,Factory.build(snapshot,kind,intent_fields),config)["accepted"]:
+		for target: String in snapshot["core"]["battle"]["enemies"]:
+			var command: Dictionary = Factory.build(snapshot, kind,
+				{"actor_id":selected_actor,"target_actor_id":target})
+			if Factory.preview(snapshot,command,config)["accepted"]:
 				legal_targets.append(target)
+		if legal_targets.is_empty():
+			cancel_action()
+			hud.feedback.text = _reason("ACTOR_UNAVAILABLE" if view_model["actors"][selected_actor]["status"] != "ACTIVE" else "INSUFFICIENT_RESOURCES")
+			return
 		hud.set_targets(legal_targets)
-		hud.details.text = tr("BATTLE_LAST_WARNING" if kind == "ACTIVATE_LAST_SPELL_M4" else "BATTLE_BASIC")
-		_update_action_summary()
-		hud.feedback.text = tr("BATTLE_TARGET")
+		selected_target = remembered_attack_target if legal_targets.has(remembered_attack_target) else legal_targets[0]
+		remembered_attack_target = selected_target
+		_refresh_preview()
+		if legal_targets.size() == 1:
+			confirm_action()
 		return
 	var args: Dictionary = fields.duplicate(true)
 	if kind in ["QUEUE_REACTION","REMOVE_REACTION","REORDER_REACTIONS","CONFIRM_REACTIONS","PASS_REACTION"]:
@@ -459,6 +479,12 @@ func _reason(code: String) -> String:
 	if "TARGET" in code: return tr("BATTLE_ERROR_TARGET")
 	if "STALE" in code: return tr("BATTLE_ERROR_STALE")
 	return tr("BATTLE_ERROR_GENERIC")
+
+func _basic_target_labels() -> Dictionary:
+	var labels: Dictionary = {}
+	for target: String in legal_targets:
+		labels[target] = log_actor_name(target)
+	return labels
 
 func _input(event: InputEvent) -> void:
 	if snapshot.is_empty(): return
