@@ -44,7 +44,7 @@ jobs:
           timeout 120s "$GODOT_BIN" --headless --path . --editor --import --quit > evidence/import.log 2>&1 || { cat evidence/import.log; exit 1; }
           python3 tools/ci/assert_godot_logs.py evidence/import.log
           for name in test_spell_visual_foundation test_p4_integration test_p4_lv40_playable test_p4_v3_integration; do
-            timeout 160s "$GODOT_BIN" --headless --path . --script "res://tests/$name.gd" > "evidence/$name.log" 2>&1 || {
+            timeout 160s "$GODOT_BIN" --verbose --headless --path . --script "res://tests/$name.gd" > "evidence/$name.log" 2>&1 || {
               cat "evidence/$name.log"; exit 1;
             }
             python3 tools/ci/assert_godot_logs.py "evidence/$name.log"
