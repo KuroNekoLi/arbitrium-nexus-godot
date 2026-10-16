@@ -1,0 +1,19 @@
+# Explicit use: rg --ignore-file .codexignore ...
+# Native Codex automatic support is NOT assumed. Not a security boundary.
+.git/
+.godot/
+work/
+outputs/
+build/
+dist/
+export/
+exports/
+node_modules/
+__pycache__/
+*.import
+*.translation
+*.log
+docs/verification/**/evidence/
+docs/combat/archive/
+assets/legacy/
+addons/simple_cards/

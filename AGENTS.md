@@ -30,6 +30,14 @@ When asked to **"製作 XX 場景" / "生產 XX 圖片" / "新增角色或卡牌
 
 Read [UI Resource Scout / Asset Vault SOP](docs/ui/03_FREE_OPEN_SOURCE_RESOURCE_SCOUT.md) and [UI entrypoint](docs/ui/README.md). Preserve existing approved Combat Domain and every existing asset unless explicitly authorized to replace it.
 
+## Context-efficient exploration
+
+- Use `rg --hidden --ignore-file .codexignore --files` for broad discovery and `rg --hidden --ignore-file .codexignore -n PATTERN scripts scenes tests docs .codex` for scoped search. `--hidden` keeps `.codex/skills` visible; `.git/` remains excluded. This is an explicit ripgrep policy, not a verified native Codex setting or access-control boundary.
+- Read the authoritative spec index and current handoff first; then relevant modules and required Skill references. Read selected instructions completely. Do not dump all docs, logs, JSON tapes, images or addon sources into context.
+- Exclusions only affect broad discovery. For audits, failures, asset work or historical conflicts, explicitly inspect required excluded paths (`Get-Content PATH` or `rg --no-ignore -n PATTERN EXACT_PATH`). Never omit required evidence or tests because of this policy.
+- Keep raw logs on disk; report counts, failures and relevant excerpts. Do not print image base64, entire Command Tapes or unbounded output. This reduces irrelevant context, but does not guarantee cache hits, quota savings or billing reductions.
+- Keep current scripts, scenes, tests, combat authority, UI specs, Skills, manifests and handoffs discoverable. Preserve all Git tracking and test evidence.
+
 ## Entry points
 - [Approved A reconciliation audit](docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md)
 - [Original transfer provenance](docs/combat/UPSTREAM_TRANSFER_STATUS.md)
