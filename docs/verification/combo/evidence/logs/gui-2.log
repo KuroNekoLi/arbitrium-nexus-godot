@@ -1,0 +1,241 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 555.99 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1650
+
+PASS 1280x720-zh_TW-PNG-01-normal
+PASS 1280x720-zh_TW-CP2-31-select-A-real-mouse
+PASS 1280x720-zh_TW-CP2-03-partner-highlight
+PASS 1280x720-zh_TW-CP2-01-02-setup-free
+PASS 1280x720-zh_TW-PNG-02-setup
+PASS 1280x720-zh_TW-CP2-32-preserve-A-switch-B
+PASS 1280x720-zh_TW-CP2-33-finisher-highlight
+PASS 1280x720-zh_TW-CP2-05-original-card-name
+PASS 1280x720-zh_TW-PNG-03-finisher
+GUI_POINTER requested=(577.5, 307.0) actual=(933.0, 342.0) target=C root=(1280.0, 720.0)
+PASS 1280x720-zh_TW-CP2-34-existing-drag-arrow
+PASS 1280x720-zh_TW-PNG-04-drag
+FAIL 1280x720-zh_TW-CP2-35-confirmation
+PASS 1280x720-zh_TW-CP2-drop-no-payment
+PASS 1280x720-en-PNG-01-normal
+PASS 1280x720-en-CP2-31-select-A-real-mouse
+PASS 1280x720-en-CP2-03-partner-highlight
+PASS 1280x720-en-CP2-01-02-setup-free
+PASS 1280x720-en-PNG-02-setup
+PASS 1280x720-en-CP2-32-preserve-A-switch-B
+PASS 1280x720-en-CP2-33-finisher-highlight
+PASS 1280x720-en-CP2-05-original-card-name
+PASS 1280x720-en-PNG-03-finisher
+GUI_POINTER requested=(577.5, 307.0) actual=(577.0, 307.0) target=C root=(1280.0, 720.0)
+PASS 1280x720-en-CP2-34-existing-drag-arrow
+PASS 1280x720-en-PNG-04-drag
+PASS 1280x720-en-CP2-35-confirmation
+PASS 1280x720-en-CP2-drop-no-payment
+PASS 1280x720-en-CP2-26-separate-targets
+PASS 1280x720-en-CP2-both-choices-legal
+PASS 1280x720-en-CP2-42-safe-default-focus
+PASS 1280x720-en-PNG-05-comparison
+PASS 1280x720-en-CP2-44-modal-no-clickthrough
+PASS 1280x720-en-CP2-36-cancel-free
+PASS 1280x720-en-PNG-12-cancel
+PASS 1280x720-en-CP2-31-select-A-real-mouse
+PASS 1280x720-en-CP2-03-partner-highlight
+PASS 1280x720-en-CP2-01-02-setup-free
+PASS 1280x720-en-CP2-32-preserve-A-switch-B
+PASS 1280x720-en-CP2-33-finisher-highlight
+PASS 1280x720-en-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.0, 307.0) target=C root=(1280.0, 720.0)
+PASS 1280x720-en-CP2-34-existing-drag-arrow
+PASS 1280x720-en-CP2-35-confirmation
+PASS 1280x720-en-CP2-drop-no-payment
+PASS 1280x720-en-CP2-37-normal-only-B
+PASS 1280x720-en-CP2-normal-GUI-replay
+PASS 1280x720-en-CP2-31-select-A-real-mouse
+PASS 1280x720-en-CP2-03-partner-highlight
+PASS 1280x720-en-CP2-01-02-setup-free
+PASS 1280x720-en-CP2-32-preserve-A-switch-B
+PASS 1280x720-en-CP2-33-finisher-highlight
+PASS 1280x720-en-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(724.0, 286.0) target=C root=(1280.0, 720.0)
+PASS 1280x720-en-CP2-34-existing-drag-arrow
+FAIL 1280x720-en-CP2-35-confirmation
+PASS 1280x720-en-CP2-drop-no-payment
+SCRIPT ERROR: Invalid access of index '0' on a base object of type: 'Array'.
+   at: compare (res://scripts/battle/presentation/combo_preview.gd:18)
+   GDScript backtrace (most recent call first):
+       [0] compare (res://scripts/battle/presentation/combo_preview.gd:18)
+       [1] _update_combo_comparison (res://scripts/battle/battle_screen.gd:706)
+       [2] run (res://tests/test_combo_preparation_v2_gui.gd:143)
+       [3] begin_pair (res://tests/test_combo_preparation_v2_gui.gd:94)
+SCRIPT ERROR: Invalid access to property or key 'setup_definition' on a base object of type 'Dictionary'.
+   at: _update_combo_comparison (res://scripts/battle/battle_screen.gd:707)
+   GDScript backtrace (most recent call first):
+       [0] _update_combo_comparison (res://scripts/battle/battle_screen.gd:707)
+       [1] run (res://tests/test_combo_preparation_v2_gui.gd:143)
+       [2] begin_pair (res://tests/test_combo_preparation_v2_gui.gd:94)
+FAIL 1280x720-en-CP2-38-one-composite-command
+PASS 1280x720-en-CP2-combo-GUI-replay
+PASS 1280x720-en-PNG-06-cooperation-placeholder
+PASS 1280x720-en-CP2-31-select-A-real-mouse
+PASS 1280x720-en-CP2-03-partner-highlight
+PASS 1280x720-en-CP2-01-02-setup-free
+PASS 1280x720-en-CP2-32-preserve-A-switch-B
+PASS 1280x720-en-CP2-33-finisher-highlight
+PASS 1280x720-en-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(576.0, 304.0) target=C root=(1280.0, 720.0)
+PASS 1280x720-en-CP2-34-existing-drag-arrow
+PASS 1280x720-en-CP2-35-confirmation
+PASS 1280x720-en-CP2-drop-no-payment
+PASS 1280x720-en-CP2-MP-short-normal-still-available
+PASS 1280x720-en-PNG-08-MP-short
+PASS 1280x720-en-CP2-31-select-A-real-mouse
+PASS 1280x720-en-CP2-03-partner-highlight
+PASS 1280x720-en-CP2-01-02-setup-free
+PASS 1280x720-en-CP2-32-preserve-A-switch-B
+PASS 1280x720-en-CP2-33-finisher-highlight
+PASS 1280x720-en-CP2-05-original-card-name
+GUI_POINTER requested=(847.0, 292.5) actual=(860.0, 259.0) target=Boss root=(1280.0, 720.0)
+PASS 1280x720-en-CP2-34-existing-drag-arrow
+PASS 1280x720-en-CP2-35-confirmation
+PASS 1280x720-en-CP2-drop-no-payment
+PASS 1280x720-en-CP2-24-Boss-legal
+PASS 1280x720-en-PNG-04b-Boss-comparison
+PASS 1920x1080-zh_TW-PNG-01-normal
+PASS 1920x1080-zh_TW-CP2-31-select-A-real-mouse
+PASS 1920x1080-zh_TW-CP2-03-partner-highlight
+PASS 1920x1080-zh_TW-CP2-01-02-setup-free
+PASS 1920x1080-zh_TW-PNG-02-setup
+PASS 1920x1080-zh_TW-CP2-32-preserve-A-switch-B
+PASS 1920x1080-zh_TW-CP2-33-finisher-highlight
+PASS 1920x1080-zh_TW-CP2-05-original-card-name
+PASS 1920x1080-zh_TW-PNG-03-finisher
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-zh_TW-CP2-34-existing-drag-arrow
+PASS 1920x1080-zh_TW-PNG-04-drag
+PASS 1920x1080-zh_TW-CP2-35-confirmation
+PASS 1920x1080-zh_TW-CP2-drop-no-payment
+PASS 1920x1080-zh_TW-CP2-26-separate-targets
+PASS 1920x1080-zh_TW-CP2-both-choices-legal
+PASS 1920x1080-zh_TW-CP2-42-safe-default-focus
+PASS 1920x1080-zh_TW-PNG-05-comparison
+PASS 1920x1080-zh_TW-CP2-44-modal-no-clickthrough
+PASS 1920x1080-zh_TW-CP2-36-cancel-free
+PASS 1920x1080-zh_TW-PNG-12-cancel
+PASS 1920x1080-zh_TW-CP2-31-select-A-real-mouse
+PASS 1920x1080-zh_TW-CP2-03-partner-highlight
+PASS 1920x1080-zh_TW-CP2-01-02-setup-free
+PASS 1920x1080-zh_TW-CP2-32-preserve-A-switch-B
+PASS 1920x1080-zh_TW-CP2-33-finisher-highlight
+PASS 1920x1080-zh_TW-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-zh_TW-CP2-34-existing-drag-arrow
+PASS 1920x1080-zh_TW-CP2-35-confirmation
+PASS 1920x1080-zh_TW-CP2-drop-no-payment
+PASS 1920x1080-zh_TW-CP2-37-normal-only-B
+PASS 1920x1080-zh_TW-CP2-normal-GUI-replay
+PASS 1920x1080-zh_TW-CP2-31-select-A-real-mouse
+PASS 1920x1080-zh_TW-CP2-03-partner-highlight
+PASS 1920x1080-zh_TW-CP2-01-02-setup-free
+PASS 1920x1080-zh_TW-CP2-32-preserve-A-switch-B
+PASS 1920x1080-zh_TW-CP2-33-finisher-highlight
+PASS 1920x1080-zh_TW-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-zh_TW-CP2-34-existing-drag-arrow
+PASS 1920x1080-zh_TW-CP2-35-confirmation
+PASS 1920x1080-zh_TW-CP2-drop-no-payment
+PASS 1920x1080-zh_TW-CP2-38-one-composite-command
+PASS 1920x1080-zh_TW-CP2-combo-GUI-replay
+PASS 1920x1080-zh_TW-PNG-06-cooperation-placeholder
+PASS 1920x1080-zh_TW-CP2-31-select-A-real-mouse
+PASS 1920x1080-zh_TW-CP2-03-partner-highlight
+PASS 1920x1080-zh_TW-CP2-01-02-setup-free
+PASS 1920x1080-zh_TW-CP2-32-preserve-A-switch-B
+PASS 1920x1080-zh_TW-CP2-33-finisher-highlight
+PASS 1920x1080-zh_TW-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-zh_TW-CP2-34-existing-drag-arrow
+PASS 1920x1080-zh_TW-CP2-35-confirmation
+PASS 1920x1080-zh_TW-CP2-drop-no-payment
+PASS 1920x1080-zh_TW-CP2-MP-short-normal-still-available
+PASS 1920x1080-zh_TW-PNG-08-MP-short
+PASS 1920x1080-zh_TW-CP2-31-select-A-real-mouse
+PASS 1920x1080-zh_TW-CP2-03-partner-highlight
+PASS 1920x1080-zh_TW-CP2-01-02-setup-free
+PASS 1920x1080-zh_TW-CP2-32-preserve-A-switch-B
+PASS 1920x1080-zh_TW-CP2-33-finisher-highlight
+PASS 1920x1080-zh_TW-CP2-05-original-card-name
+GUI_POINTER requested=(847.0, 292.5) actual=(846.6666, 292.0) target=Boss root=(1280.0, 720.0)
+PASS 1920x1080-zh_TW-CP2-34-existing-drag-arrow
+PASS 1920x1080-zh_TW-CP2-35-confirmation
+PASS 1920x1080-zh_TW-CP2-drop-no-payment
+PASS 1920x1080-zh_TW-CP2-24-Boss-legal
+PASS 1920x1080-zh_TW-PNG-04b-Boss-comparison
+PASS 1920x1080-en-PNG-01-normal
+PASS 1920x1080-en-CP2-31-select-A-real-mouse
+PASS 1920x1080-en-CP2-03-partner-highlight
+PASS 1920x1080-en-CP2-01-02-setup-free
+PASS 1920x1080-en-PNG-02-setup
+PASS 1920x1080-en-CP2-32-preserve-A-switch-B
+PASS 1920x1080-en-CP2-33-finisher-highlight
+PASS 1920x1080-en-CP2-05-original-card-name
+PASS 1920x1080-en-PNG-03-finisher
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-en-CP2-34-existing-drag-arrow
+PASS 1920x1080-en-PNG-04-drag
+PASS 1920x1080-en-CP2-35-confirmation
+PASS 1920x1080-en-CP2-drop-no-payment
+PASS 1920x1080-en-CP2-26-separate-targets
+PASS 1920x1080-en-CP2-both-choices-legal
+PASS 1920x1080-en-CP2-42-safe-default-focus
+PASS 1920x1080-en-PNG-05-comparison
+PASS 1920x1080-en-CP2-44-modal-no-clickthrough
+PASS 1920x1080-en-CP2-36-cancel-free
+PASS 1920x1080-en-PNG-12-cancel
+PASS 1920x1080-en-CP2-31-select-A-real-mouse
+PASS 1920x1080-en-CP2-03-partner-highlight
+PASS 1920x1080-en-CP2-01-02-setup-free
+PASS 1920x1080-en-CP2-32-preserve-A-switch-B
+PASS 1920x1080-en-CP2-33-finisher-highlight
+PASS 1920x1080-en-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-en-CP2-34-existing-drag-arrow
+PASS 1920x1080-en-CP2-35-confirmation
+PASS 1920x1080-en-CP2-drop-no-payment
+PASS 1920x1080-en-CP2-37-normal-only-B
+PASS 1920x1080-en-CP2-normal-GUI-replay
+PASS 1920x1080-en-CP2-31-select-A-real-mouse
+PASS 1920x1080-en-CP2-03-partner-highlight
+PASS 1920x1080-en-CP2-01-02-setup-free
+PASS 1920x1080-en-CP2-32-preserve-A-switch-B
+PASS 1920x1080-en-CP2-33-finisher-highlight
+PASS 1920x1080-en-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-en-CP2-34-existing-drag-arrow
+PASS 1920x1080-en-CP2-35-confirmation
+PASS 1920x1080-en-CP2-drop-no-payment
+FAIL 1920x1080-en-CP2-38-one-composite-command
+PASS 1920x1080-en-CP2-combo-GUI-replay
+PASS 1920x1080-en-PNG-06-cooperation-placeholder
+PASS 1920x1080-en-CP2-31-select-A-real-mouse
+PASS 1920x1080-en-CP2-03-partner-highlight
+PASS 1920x1080-en-CP2-01-02-setup-free
+PASS 1920x1080-en-CP2-32-preserve-A-switch-B
+PASS 1920x1080-en-CP2-33-finisher-highlight
+PASS 1920x1080-en-CP2-05-original-card-name
+GUI_POINTER requested=(577.5, 307.0) actual=(577.3334, 306.6667) target=C root=(1280.0, 720.0)
+PASS 1920x1080-en-CP2-34-existing-drag-arrow
+PASS 1920x1080-en-CP2-35-confirmation
+PASS 1920x1080-en-CP2-drop-no-payment
+PASS 1920x1080-en-CP2-MP-short-normal-still-available
+PASS 1920x1080-en-PNG-08-MP-short
+PASS 1920x1080-en-CP2-31-select-A-real-mouse
+PASS 1920x1080-en-CP2-03-partner-highlight
+PASS 1920x1080-en-CP2-01-02-setup-free
+PASS 1920x1080-en-CP2-32-preserve-A-switch-B
+PASS 1920x1080-en-CP2-33-finisher-highlight
+PASS 1920x1080-en-CP2-05-original-card-name
+GUI_POINTER requested=(847.0, 292.5) actual=(846.6666, 292.0) target=Boss root=(1280.0, 720.0)
+PASS 1920x1080-en-CP2-34-existing-drag-arrow
+PASS 1920x1080-en-CP2-35-confirmation
+PASS 1920x1080-en-CP2-drop-no-payment
+PASS 1920x1080-en-CP2-24-Boss-legal
+PASS 1920x1080-en-PNG-04b-Boss-comparison
+COMBO_V2_GUI_REPORT executed=208 passed=204 failed=4

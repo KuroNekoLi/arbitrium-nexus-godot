@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS CP2-01-02-selection-no-state-or-RNG-change
+PASS CP2-03-partners-from-hand
+PASS CP2-04-preserve-setup
+PASS CP2-05-06-preserve-definition-instance
+PASS CP2-08-ineligible-finisher
+PASS CP2-09-cancel-pure
+PASS CP2-12-defense-commit
+PASS CP2-12-two-real-cards
+PASS CP2-13-14-real-payment-zero-extra
+PASS CP2-26-separate-friendly-targets-and-bonus
+PASS CP2-19-setup-then-finisher-events
+PASS CP2-15-duplicate-command
+PASS CP2-20-event-and-state-replay
+PASS CP2-domain-comparison-quotes
+PASS CP2-preview-pure-state-events-RNG
+PASS CP2-11-normal-only-B
+PASS CP2-10-17-18-28-atomic-invalid_target
+PASS CP2-10-17-18-28-atomic-stale
+PASS CP2-10-17-18-28-atomic-same_actor
+PASS CP2-10-17-18-28-atomic-same_card
+PASS CP2-10-17-18-28-atomic-missing_card
+PASS CP2-10-17-18-28-atomic-unknown_recipe
+PASS CP2-10-17-18-28-atomic-full_payload
+PASS CP2-10-17-18-28-atomic-effect_injection
+PASS CP2-10-17-18-28-atomic-empty_targets
+PASS CP2-10-17-18-28-atomic-many_anchors
+PASS CP2-17-18-29-30-low_ap
+PASS CP2-17-18-29-30-low_mp
+PASS CP2-17-18-29-30-incapacitated
+PASS CP2-exclude-unavailable-partner-incapacitated
+PASS CP2-17-18-29-30-exhausted
+PASS CP2-exclude-unavailable-partner-exhausted
+SCRIPT ERROR: Invalid access to property or key 'retired_from_field_by_actor' on a base object of type 'Dictionary'.
+   at: _initialize (res://tests/test_combo_preparation_v2.gd:81)
+   GDScript backtrace (most recent call first):
+       [0] _initialize (res://tests/test_combo_preparation_v2.gd:81)

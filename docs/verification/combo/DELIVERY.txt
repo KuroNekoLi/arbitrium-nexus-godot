@@ -1,0 +1,37 @@
+Branch: feature/combo-preparation-v2
+Base: 50bf7b19b2f9c3d66c1a8cd267bd20ef7f56b4cd
+Runtime code commit: ca62d116b7f928d8735cdf669732f40af11c66fd
+ADR commit: f4091d8
+Domain/controller commit: 1fc7728
+UI/placeholder commit: ca62d11
+Acceptance: deferred by user; no fourth Domain/GUI run
+CI: blocked externally before job start; see CI_STATUS.md
+
+Changed source files:
+.github/workflows/ci-combo-preparation-v2.yml
+docs/verification/combo/ADR_001_PREPARED_COMBO.md
+resources/ui/lv40_strings.csv
+scripts/battle/battle_screen.gd
+scripts/battle/combo_preparation_controller.gd
+scripts/battle/combo_preparation_controller.gd.uid
+scripts/battle/presentation/battle_animation_director.gd
+scripts/battle/presentation/battle_effects.gd
+scripts/battle/presentation/combo_preview.gd
+scripts/battle/presentation/combo_preview.gd.uid
+scripts/battle/ui/battle_card_view.gd
+scripts/battle/ui/battle_hud.gd
+scripts/battle/ui/components/card_targeting_arrow_overlay.gd
+scripts/battle/ui/components/card_targeting_arrow_overlay.gd.uid
+scripts/battle/ui/components/combo_confirmation_overlay.gd
+scripts/battle/ui/components/combo_confirmation_overlay.gd.uid
+scripts/battle/ui/components/hand_view.gd
+scripts/domain/m5/combo/prepared_combo_resolver.gd
+scripts/domain/m5/combo/prepared_combo_resolver.gd.uid
+scripts/domain/m5/lv40/lv40_domain_extension.gd
+scripts/ui/hero_roster_item.gd
+tests/fixtures/combo_preparation_v2_fixture.gd
+tests/fixtures/combo_preparation_v2_fixture.gd.uid
+tests/test_combo_preparation_v2.gd
+tests/test_combo_preparation_v2.gd.uid
+tests/test_combo_preparation_v2_gui.gd
+tests/test_combo_preparation_v2_gui.gd.uid
