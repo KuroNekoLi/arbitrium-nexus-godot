@@ -61,18 +61,6 @@ jobs:
           done < tools/ci/integration_suites.txt
           [[ "$actual" -eq 1128 ]] || { echo "Coverage drift: $actual != 1128"; exit 1; }
           echo "CI_INTEGRATION_REPORT suites=26 assertions=$actual failed=0"
-      - name: Four legacy smoke suites
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          for suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
-            log="$RUNNER_TEMP/integration-logs/$suite.log"
-            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1 || {
-              tail -n 100 "$log"; exit 1;
-            }
-            python3 tools/ci/assert_godot_logs.py "$log"
-          done
-          echo 'CI_INTEGRATION_LEGACY_SMOKE_PASS suites=4'
       - name: Upload integration logs
         if: always()
         uses: actions/upload-artifact@v4

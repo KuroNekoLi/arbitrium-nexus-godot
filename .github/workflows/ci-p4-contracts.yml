@@ -82,13 +82,6 @@ jobs:
             'test_p4_profile_metrics:P4_PROFILE_METRICS_REPORT:30'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          for suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
-            log="$RUNNER_TEMP/p4-logs/legacy-$suite.log"
-            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1 || {
-              tail -n 100 "$log"; exit 1;
-            }
-            python3 tools/ci/assert_godot_logs.py "$log"
-          done
           for spec in \
             'test_p4_v2_layout:V2_LAYOUT_REPORT:18' \
             'test_p4_v2_context_layout:V2_CONTEXT_REPORT:23' \
@@ -108,7 +101,7 @@ jobs:
             'test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
           done
-          echo 'CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0'
+          echo 'CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=0 failed=0'
           echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
       - name: Authorized V3.5 scoped input gate (not historical P4.4)
         if: github.ref == 'refs/heads/ui/v35-convergence-final-20261016' && github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'
