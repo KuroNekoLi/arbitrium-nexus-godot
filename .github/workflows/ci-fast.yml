@@ -39,13 +39,8 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Cache checksum-verified Godot binary
-        uses: actions/cache@v4
-        with:
-          path: .ci-cache/godot-4.7.2
-          key: godot-4.7.2-linux-x86_64-verified-v1
-      - name: Install Godot 4.7.2 (verify SHA-512)
-        run: bash tools/ci/install_godot.sh
+      - name: Setup cached Godot 4.7.2 and imported assets
+        uses: ./.github/actions/setup-godot-ci
       - name: Headless import, log-gate unit tests and representative battle/UI smoke
         # This branch's Fast batch reached its third execution at 77bd22a.
         # Preserve the failed Lv40 gate; additional reruns need owner approval.
@@ -113,13 +108,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Cache checksum-verified Godot binary
-        uses: actions/cache@v4
-        with:
-          path: .ci-cache/godot-4.7.2
-          key: godot-4.7.2-linux-x86_64-verified-v1
-      - name: Install Godot 4.7.2
-        run: bash tools/ci/install_godot.sh
+      - name: Setup cached Godot 4.7.2 and imported assets
+        uses: ./.github/actions/setup-godot-ci
       - name: Import and execute all formerly P4-auto-scoped contracts
         shell: bash
         run: |

@@ -1,0 +1,39 @@
+name: Setup cached Godot CI
+description: Verify Godot 4.7.2 and restore safe incremental import artifacts.
+runs:
+  using: composite
+  steps:
+    - name: Restore official Godot executable
+      id: binary-cache
+      uses: actions/cache@v4
+      with:
+        path: .ci-cache/godot-4.7.2
+        key: godot-4.7.2-linux-x86_64-verified-v1
+    - name: Verify or install official Godot
+      shell: bash
+      run: bash tools/ci/install_godot.sh
+    - name: Restore Godot asset import cache
+      id: import-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          .godot/imported/
+          .godot/uid_cache.bin
+        key: godot-import-ubuntu24-4.7.2-v1-${{ hashFiles('project.godot', 'addons/**', 'assets/**', 'resources/**', 'scenes/**') }}
+        restore-keys: |
+          godot-import-ubuntu24-4.7.2-v1-
+    - name: Disable unavailable editor VCS integration in CI checkout
+      shell: bash
+      run: python3 tools/ci/prepare_project.py project.godot
+    - name: Record cache results
+      shell: bash
+      env:
+        BINARY_CACHE_HIT: ${{ steps.binary-cache.outputs.cache-hit }}
+        IMPORT_CACHE_HIT: ${{ steps.import-cache.outputs.cache-hit }}
+      run: |
+        {
+          echo '### Godot CI cache'
+          echo "- Binary exact hit: ${BINARY_CACHE_HIT:-false}"
+          echo "- Imported assets exact hit: ${IMPORT_CACHE_HIT:-false}"
+          echo '- All jobs still run a fresh Godot editor import + strict log validation.'
+        } >> "$GITHUB_STEP_SUMMARY"

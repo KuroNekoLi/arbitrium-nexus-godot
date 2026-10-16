@@ -41,13 +41,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - name: Cache checksum-verified Godot binary
-        uses: actions/cache@v4
-        with:
-          path: .ci-cache/godot-4.7.2
-          key: godot-4.7.2-linux-x86_64-verified-v1
-      - name: Install Godot 4.7.2
-        run: bash tools/ci/install_godot.sh
+      - name: Setup cached Godot 4.7.2 and imported assets
+        uses: ./.github/actions/setup-godot-ci
       - name: Strict import and 1128 named M1-M5.5 assertions (no 100-seed stress)
         shell: bash
         run: |
