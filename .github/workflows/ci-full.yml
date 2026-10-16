@@ -15,6 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   full-m5-5:
-    # Reuse the canonical 1238/1238 + 100-seed + replay + 4 smoke suite.
+    # Reuse the canonical M1–M5 assertions, 100 seeded battles and replay.
+    # Retired eight-card compatibility smokes are intentionally absent.
     # No second 100-seed runner and no new/relaxed acceptance oracles.
     uses: ./.github/workflows/godot-m5-5-acceptance.yml

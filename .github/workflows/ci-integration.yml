@@ -1,7 +1,7 @@
 name: CI Integration - Domain Regression
 on:
   push:
-    branches: [master, 'ci/**', 'integration/**']
+    branches: [master, 'refactor/**', 'ci/**', 'integration/**']
     paths:
       - '.github/workflows/ci-integration.yml'
       - 'tools/ci/**'

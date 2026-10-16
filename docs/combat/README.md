@@ -36,5 +36,8 @@
 - **內容候選／平衡候選**：三人具體名字、能力值、31張卡的成本／倍率、3招終式、Boss HP 與技能等；允許以版本化 fixture 先開發、測試，**不可稱最終數值**。
 - **待決**：列於工程缺口表；不要自行變更玩法。歷史原始核准與報告保存於 [archive](archive/README.md)。
 
-## 與現有程式的界線
-Lv40 目前以每人12張獨立牌組運作。舊8張原型場景、牌組存檔讀取器、舊卡資源及舊人物硬編碼已從正式程式移除。現在用 [`resources/combat/rosters/lv40_party_v0_3.json`](../../resources/combat/rosters/lv40_party_v0_3.json) 定義目前三個戰鬥欄位的人物、Variant、12張牌、名稱Key、立繪、能力、被動與終式效果；角色可以替換，但仍須補足其卡牌合法性、雙語字串、素材和正式驗證。**新版圖形配牌編輯器與持久化存檔尚未完成；也尚不支援五人上場**。CI與真人可玩狀態必須查最新HEAD和實際結果，不能靠文件宣告。
+## 現行程式與舊系統界線
+- 正式執行入口：`res://scenes/battle/lv40_playable_battle.tscn`；唯一戰鬥狀態是 M1～M5 Domain 和 Lv40 內容。八卡原型及四個過渡用 smoke 殼與 G0 工作流程已退役。
+- 角色、能力、12張牌組與終式：`resources/combat/rosters/lv40_party_v0_3.json`。A/B/C 只是戰鬥槽位，**不等於固定姓名**；角色資料與技能、翻譯、美術及卡牌資格必須同步。新版圖形配牌編輯器、持久化存檔及五人上場尚未完成。
+- `scenes/ui/hero_roster_item.tscn` 是新 `PartyStatusPanel` 仍在引用的**現役 HUD 元件**，即使個別驗證名稱仍含 `legacy` 也不能一概刪除。
+- **已交付的清理不等於 CI 或實機通關**；回歸證據須逐次核對實際提交／Actions。規範索引見[程式對照](engineering/規則與程式對照表.md)，退役清單見[工程紀錄](engineering/舊系統退役與驗收紀錄.md)。

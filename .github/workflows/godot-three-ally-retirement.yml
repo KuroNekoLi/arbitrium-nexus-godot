@@ -53,11 +53,6 @@ jobs:
             'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32'; do
             bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/retirement"
           done
-          for suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
-            log="$RUNNER_TEMP/retirement/$suite.log"
-            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1
-            python3 tools/ci/assert_godot_logs.py "$log"
-          done
       - name: New approved rules, real M5 defeat and legacy replay
         if: inputs.stage == 'candidate'
         shell: bash

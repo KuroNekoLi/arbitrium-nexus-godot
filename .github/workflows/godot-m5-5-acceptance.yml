@@ -218,15 +218,6 @@ jobs:
           grep -q '^M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=14 passed=14 failed=0' "$RUNNER_TEMP/m5-5-logs/test_m2_invariants.log"
           grep -q '^M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=6 passed=6 failed=0' "$RUNNER_TEMP/m5-5-logs/test_m2_replay.log"
           grep -q '^M2_5_INTEGRATION_REPORT executed=40 passed=40 failed=0' "$RUNNER_TEMP/m5-5-logs/test_m2_integration.log"
-      - name: Legacy prototype regression smoke
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          for script in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
-            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$script.gd" > "$RUNNER_TEMP/m5-5-logs/legacy-$script.log" 2>&1 || {
-              cat "$RUNNER_TEMP/m5-5-logs/legacy-$script.log"; exit 1;
-            }
-          done
       - name: Phase 4 Scene smoke
         shell: bash
         run: |
