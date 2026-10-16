@@ -1,7 +1,7 @@
 name: CI Visual - Real Godot Battle Screenshots
 on:
   push:
-    branches: [master, 'ui/v2-layout-fidelity-20261015', 'integration/v2-reviewed-20261015', 'integration/v3-reviewed-20261015', 'integration/v34-reviewed-20261015']
+    branches: [master, 'refactor/**', 'ui/v2-layout-fidelity-20261015', 'integration/v2-reviewed-20261015', 'integration/v3-reviewed-20261015', 'integration/v34-reviewed-20261015']
     paths:
       - '.github/workflows/godot-v2-3-visual-capture.yml'
       - '.github/actions/setup-godot-ci/**'

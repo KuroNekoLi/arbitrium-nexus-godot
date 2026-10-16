@@ -1,7 +1,7 @@
 name: CI P4 UI Contracts - Headless
 on:
   push:
-    branches: [master, 'ci/**', 'integration/**', 'handoff/**', 'ui/**']
+    branches: [master, 'refactor/**', 'ci/**', 'integration/**', 'handoff/**', 'ui/**']
     paths:
       - '.github/workflows/ci-p4-contracts.yml'
       - '.github/actions/setup-godot-ci/**'
