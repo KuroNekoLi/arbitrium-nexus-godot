@@ -90,7 +90,7 @@ static func resolve(core: Dictionary, source_id: String, declared_target: String
 	if not core["battle"]["actors"].has(declared_target) or \
 			not core["battle"]["actors"].has(recipient):
 		return _error("M51_INVALID_DAMAGE_TARGET")
-	if bool(core["battle"].get("retired_from_field_by_actor",{}).get(declared_target,false)) or
+	if bool(core["battle"].get("retired_from_field_by_actor",{}).get(declared_target,false)) or \
 			bool(core["battle"].get("retired_from_field_by_actor",{}).get(recipient,false)):
 		return _error("M51_TARGET_RETIRED_FROM_FIELD")
 	if int(core["battle"]["actors"][recipient]["hp"]) <= 0:
