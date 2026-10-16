@@ -1,0 +1,97 @@
+name: POC - SimpleCards Targeting Arrow
+on:
+  push:
+    branches: ['poc/card-targeting-arrow-20261016']
+    paths:
+      - '.github/workflows/godot-card-targeting-arrow-poc.yml'
+      - 'scripts/battle/ui/**'
+      - 'scripts/battle/battle_screen.gd'
+      - 'tests/test_p4_target_arrow_contract.gd'
+      - 'tests/test_p4_target_arrow_gui.gd'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot-ci
+      - name: Strict import and UI contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/arrow"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/arrow/import.log" 2>&1 || { cat "$RUNNER_TEMP/arrow/import.log"; exit 1; }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/import.log"
+          for test in test_p4_target_arrow_contract test_p4_component_contract test_p4_hud test_p4_v2_layout; do
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$test.gd" > "$RUNNER_TEMP/arrow/$test.log" 2>&1 || { cat "$RUNNER_TEMP/arrow/$test.log"; exit 1; }
+            python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/$test.log"
+            grep '^.*REPORT executed=' "$RUNNER_TEMP/arrow/$test.log"
+            ! grep -E '^FAIL |SCRIPT ERROR' "$RUNNER_TEMP/arrow/$test.log"
+          done
+          python3 - "$RUNNER_TEMP/arrow/test_p4_target_arrow_contract.log" <<'PY'
+          import re,sys
+          text=open(sys.argv[1]).read()
+          m=re.search(r'^TARGET_ARROW_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',text,re.M)
+          assert m and int(m[1])>=22 and m[1]==m[2] and m[3]=='0'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arrow-contract-logs
+          path: ${{ runner.temp }}/arrow/
+          retention-days: 14
+  mouse:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot-ci
+      - name: Prepare Xvfb renderer and import
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/arrow"
+          if ! command -v xvfb-run >/dev/null || ! command -v xauth >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          fi
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/arrow/import.log" 2>&1
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/import.log"
+      - name: Real dragging, screenshot and original GUI regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          printf -v prefix 'arrow_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/test_p4_target_arrow_gui.gd -- \
+            "--capture-prefix=$prefix" > "$RUNNER_TEMP/arrow/arrow_gui.log" 2>&1 || { cat "$RUNNER_TEMP/arrow/arrow_gui.log"; exit 1; }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/arrow_gui.log"
+          grep '^TARGET_ARROW_GUI_REPORT' "$RUNNER_TEMP/arrow/arrow_gui.log"
+          python3 - "$RUNNER_TEMP/arrow/arrow_gui.log" <<'PY'
+          import re,sys
+          text=open(sys.argv[1]).read()
+          m=re.search(r'^TARGET_ARROW_GUI_REPORT executed=(\d+) passed=(\d+) failed=(\d+)$',text,re.M)
+          assert m and int(m[1])>=15 and m[1]==m[2] and m[3]=='0'
+          PY
+          test -s "outputs/p4_input_capture/$prefix/arrow_1280.png"
+          test -s "outputs/p4_input_capture/$prefix/arrow_1920.png"
+          timeout 180s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/test_p4_v25_gui_input.gd > "$RUNNER_TEMP/arrow/original_gui.log" 2>&1 || { cat "$RUNNER_TEMP/arrow/original_gui.log"; exit 1; }
+          grep -qx 'V25_GUI_REPORT executed=31 passed=31 failed=0' "$RUNNER_TEMP/arrow/original_gui.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/original_gui.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arrow-godot-gui-and-png
+          path: |
+            outputs/p4_input_capture/arrow_*/
+            ${{ runner.temp }}/arrow/
+          retention-days: 14
+
