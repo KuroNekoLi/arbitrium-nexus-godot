@@ -1,3 +1,4 @@
+@tool
 extends RefCounted
 ## Presentation-only factories. New controls inherit their parent's HUD theme.
 static func label(parent: Node, key: String, font_size: int = 16) -> Label:

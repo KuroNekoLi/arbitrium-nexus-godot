@@ -1,3 +1,4 @@
+@tool
 extends RefCounted
 ## Input-transparent, unmeasured ornament layer. Container layout and focus
 ## remain owned by the existing component, never by the source texture size.

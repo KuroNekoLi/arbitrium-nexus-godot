@@ -1,3 +1,4 @@
+@tool
 extends RefCounted
 ## V3.2 reusable card face, composed from true appearance, cost and i18n.
 ## This file knows NOTHING about CardInstanceID, zones, legality or transactions.

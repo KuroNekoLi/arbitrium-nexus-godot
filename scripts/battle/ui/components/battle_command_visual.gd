@@ -1,3 +1,4 @@
+@tool
 extends RefCounted
 ## V3.5.2 replaceable command presentation table. Visual identity ONLY:
 ## it never adds commands, changes command IDs/fields or implies a rule.

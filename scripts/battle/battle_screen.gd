@@ -1,3 +1,4 @@
+@tool
 extends Control
 ## Reversible scene-specific profile; Lv40 stays fail-closed until merged contracts.
 @export_enum("fixture", "lv40", "lv40_playable") var encounter_profile: String = "fixture"
@@ -13,6 +14,13 @@ const Effects = preload("res://scripts/battle/presentation/battle_effects.gd")
 const Bindings = preload("res://scripts/battle/ui/battle_input_bindings.gd")
 const LogFormatter = preload("res://scripts/battle/presentation/battle_log_formatter.gd")
 const LastView = preload("res://scripts/battle/presentation/last_spell_read_model.gd")
+const Appearances = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
+const EditorPreview = preload("res://scripts/battle/presentation/battle_editor_preview_data.gd")
+@export_enum("Battle", "Last Spell Ren", "Last Spell Akane", "Last Spell Tsumugi") var editor_preview_mode: String = "Battle":
+	set(value):
+		editor_preview_mode = value
+		if Engine.is_editor_hint() and is_node_ready():
+			EditorPreview.show(hud,editor_preview_mode)
 const LOG_EVENT_LIMIT: int = 64
 var log_events: Array = []
 var controller: Node
@@ -36,11 +44,21 @@ var _last_actor_visibility: Dictionary = {}
 @onready var hud: Control = $Design/HUD
 
 func _enter_tree() -> void:
+	if Engine.is_editor_hint():
+		# Never register gameplay input or reset the editor locale.
+		return
 	Bindings.install()
 	Translations.install()
 	TranslationServer.set_locale("zh_TW")
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		# The actual battle scene/actors/HUD render from editor-safe mock data.
+		# No Controller, M5 initial state, signals, combat tweens or tape.
+		resized.connect(_fit_design)
+		_fit_design()
+		EditorPreview.show(hud,editor_preview_mode)
+		return
 	# The inherited Lv40 scene must never silently start a legacy fixture.
 	# Formal activation requires a reviewed Domain+ReadModel+Localization merge.
 	if encounter_profile == "lv40":
@@ -362,7 +380,9 @@ func _open_last_preview() -> void:
 		presentation["appearance"] = load("res://resources/ui/appearances/" + appearance_id + ".tres")
 	var artwork_path: String = str(presentation["targeting"].get("artwork_path", ""))
 	if not artwork_path.is_empty(): presentation["spell_art"] = load(artwork_path)
-	var texture: Texture2D = hud.roster[selected_actor].portrait.texture
+	presentation["actor_id"] = selected_actor
+	var texture: Texture2D = Appearances.cg_for(selected_actor)
+	if texture == null: texture = hud.roster[selected_actor].portrait.texture
 	var character: String = str(Lv40Encounter.CHARACTERS.get(selected_actor, "")) if config.get("m5_lv40_enabled", false) else ""
 	var title: String = tr("last_spell." + character + ".name") if not character.is_empty() else tr("BATTLE_LAST")
 	_hand_before_last = hud.hand.visible
@@ -374,6 +394,8 @@ func _open_last_preview() -> void:
 	hud._sync_modal_focus()
 
 func _last_target_portrait(id: String) -> Texture2D:
+	var candidate: Texture2D = Appearances.portrait_for(id)
+	if candidate != null: return candidate
 	if hud.roster.has(id): return hud.roster[id].portrait.texture
 	var visual: Node2D = $Design/Arena.get_node_or_null(id)
 	if visual != null: return visual.body.sprite_frames.get_frame_texture("idle", 0)

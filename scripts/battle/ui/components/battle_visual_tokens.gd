@@ -1,3 +1,4 @@
+@tool
 extends RefCounted
 ## V3.1 presentation tokens. Values are candidates, not a new Domain schema.
 ## Keep one canonical Theme for general components; these style factories serve
