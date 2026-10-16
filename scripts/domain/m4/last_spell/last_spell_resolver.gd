@@ -110,6 +110,11 @@ static func settle(core: Dictionary, spell: Dictionary, round_index: int) -> Dic
 	var s: Dictionary = core.duplicate(true)
 	s["battle"]["casting_instances"].erase(str(spell["casting_id"]))
 	s["battle"]["actors"][actor]["status"] = "EXHAUSTED"
+	# Successful Last Spell retires this actor from the active battlefield.
+	# Keep the roster and once-per-battle records for deterministic replay.
+	if not s["battle"].has("retired_from_field_by_actor"):
+		s["battle"]["retired_from_field_by_actor"] = {}
+	s["battle"]["retired_from_field_by_actor"][actor] = true
 	# Lifetime Exhausted persists through HP0 and a legitimate Revive.
 	if not s["battle"].has("last_spell_resolved_by_actor"):
 		s["battle"]["last_spell_resolved_by_actor"] = {}
@@ -127,6 +132,6 @@ static func settle(core: Dictionary, spell: Dictionary, round_index: int) -> Dic
 			"modifier_numerator":int(spell["outcome_modifier_numerator"]),
 			"modifier_denominator":int(spell["outcome_modifier_denominator"])},
 		{"kind":"ActorExhausted","actor_id":actor,
-			"can_initiate_actions":false,"still_targetable":true}
+			"can_initiate_actions":false,"still_targetable":false,"retired_from_field":true}
 	]
 	return {"ok":true,"core":s,"timeline":records}

@@ -12,6 +12,8 @@ var cast_active: bool = false
 var barrier_active: bool = false
 var pulse: float = 0.0
 var base_tint: Color = Color.WHITE
+var downed: bool = false
+var retired: bool = false
 
 func _ready() -> void:
 	home = position
@@ -55,6 +57,7 @@ func _draw() -> void:
 	draw_arc(Vector2.ZERO, visual_height * 0.24, 0, TAU, 48, Color(accent, 0.6), 2)
 
 func play_attack(target_position: Vector2) -> void:
+	if downed or retired: return
 	if motion: motion.kill()
 	var home: Vector2 = position
 	if not boss_art: body.play("run")
@@ -66,13 +69,28 @@ func play_attack(target_position: Vector2) -> void:
 	if not boss_art: motion.tween_callback(body.play.bind("idle"))
 
 func play_hit() -> void:
+	if retired: return
 	body.modulate = Color(2, 1.3, 1.5)
 	create_tween().tween_property(body, "modulate", base_tint, 0.28)
 
 func project_conditions(status: String, casting: bool, barrier: bool) -> void:
-	cast_active = casting
-	barrier_active = barrier
-	base_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
+	retired = status == "EXHAUSTED"
+	downed = status == "INCAPACITATED"
+	visible = not retired
+	cast_active = casting and not retired and not downed
+	barrier_active = barrier and not retired
+	base_tint = Color("9497AD") if downed else Color.WHITE
+	if motion: motion.kill()
+	position = home
+	if downed:
+		body.stop()
+		body.frame = 0
+		body.rotation = -0.95
+		body.position = Vector2(-visual_height * 0.2,-visual_height * 0.19)
+	else:
+		body.rotation = 0.0
+		body.position = Vector2(0,-visual_height * 0.5)
+		if not body.is_playing(): body.play("idle")
 	body.modulate = base_tint
 	queue_redraw()
 

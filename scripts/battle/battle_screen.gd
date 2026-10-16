@@ -111,6 +111,12 @@ func present(state: Dictionary) -> void:
 		for cast: Dictionary in view_model["casts"].values():
 			if cast["caster_id"] == actor.actor_id: casting = true
 		actor.project_conditions(str(view_model["actors"][actor.actor_id]["status"]),casting,float(view_model["barriers"].get(actor.actor_id,0)) > 0)
+	# The retired actor keeps cards in Domain but cannot own the selected hand.
+	if str(view_model["actors"][selected_actor]["status"]) == "EXHAUSTED":
+		for eligible: String in snapshot["core"]["battle"]["allies"]:
+			if str(view_model["actors"][eligible]["status"]) == "ACTIVE":
+				selected_actor = eligible
+				break
 	var cards: Array = []
 	var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
 	for instance: String in own["zones"]["hand"]:
@@ -162,6 +168,7 @@ func _reaction_choices() -> Array:
 
 func select_actor(actor: String) -> void:
 	if not snapshot["core"]["battle"]["allies"].has(actor): return
+	if str(snapshot["core"]["battle"]["actors"][actor]["status"]) == "EXHAUSTED": return
 	selected_actor = actor
 	cancel_action()
 	present(snapshot)
