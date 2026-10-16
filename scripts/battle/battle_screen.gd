@@ -46,7 +46,7 @@ func _ready() -> void:
 		return
 	config = Lv40Encounter.config() if encounter_profile == "lv40_playable" else Encounter.config()
 	# V3.5 live-battle policy; legacy recorded replay fixtures remain versioned.
-	config["last_spell_retirement_v1"] = true
+	config["last_spell_retirement_v1"] = encounter_profile == "lv40_playable"
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)
