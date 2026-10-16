@@ -1,6 +1,7 @@
 extends RefCounted
 ## docs25/26/27 with docs29 candidate A. Every numeric value is provisional.
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
+const Roster = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 
 static func profile(kind: String, multiplier: int, hits: int = 1,
 		mode: String = "GUARANTEED", element: String = "NEUTRAL") -> Dictionary:
@@ -9,6 +10,9 @@ static func profile(kind: String, multiplier: int, hits: int = 1,
 		"element_id":element}
 
 static func config(version: String) -> Dictionary:
+	var roster: Dictionary = Roster.read()
+	if roster.is_empty():
+		return {}
 	var costs: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://resources/combat/rulesets/m2_2_provisional_costs.json"))
 	var economy: Dictionary = costs.duplicate(true)
@@ -32,21 +36,20 @@ static func config(version: String) -> Dictionary:
 			"denominator":2,"rounding":"FLOOR_FIXTURE"},
 		"m5_4_last_release_recoil":{},
 		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
-	var rows: Dictionary = {
-		"A":[1500,8,135,70,110,90,105,95,1000],
-		"B":[950,14,60,175,65,85,95,90,800],
-		"C":[1200,12,55,105,80,110,95,95,500],
-		"Boss":[2700,0,417,434,90,85,105,90,0]}
 	c["m5_actor_stats"] = {}
 	c["lv40_actor_definitions"] = {}
 	c["m5_element_resistance"] = {}
-	for actor: String in rows:
-		var r: Array = rows[actor]
-		c["m5_actor_stats"][actor] = {"patk":r[2],"matk":r[3],"pdef":r[4],"mdef":r[5],
-			"accuracy":r[6],"evasion":r[7],"crit_rate_bp":r[8],"crit_bonus_bp":5000}
-		c["lv40_actor_definitions"][actor] = {"max_hp":r[0],"max_mp":r[1],
-			"character_id":{"A":"ren","B":"akane","C":"tsumugi","Boss":"TEST_BOSS_ARCANE_SENTRY"}[actor],
-			"name_key":"actor."+actor.to_lower()+".name","level":40}
+	var party_ids: Array[String] = Roster.party_ids(roster)
+	var all_actors: Array[String] = party_ids.duplicate()
+	all_actors.append("Boss")
+	for actor: String in all_actors:
+		var r: Dictionary = roster["boss"] if actor == "Boss" else roster["actors"][actor]
+		c["m5_actor_stats"][actor] = {"patk":r["patk"],"matk":r["matk"],
+			"pdef":r["pdef"],"mdef":r["mdef"],
+			"accuracy":r["accuracy"],"evasion":r["evasion"],
+			"crit_rate_bp":r["crit_rate_bp"],"crit_bonus_bp":r["crit_bonus_bp"]}
+		c["lv40_actor_definitions"][actor] = {"max_hp":r["max_hp"],"max_mp":r["max_mp"],
+			"character_id":r["character_id"],"name_key":r["name_key"],"level":40}
 		c["m5_element_resistance"][actor] = {"NEUTRAL":10000,"FIRE":11500 if actor == "Boss" else 10000,
 			"ARCANE":9000 if actor == "Boss" else 10000}
 	c["m5_basic_attack_profile"] = profile("PHYSICAL",10000,1,"RANDOM_PERCENT")
@@ -98,20 +101,28 @@ static func config(version: String) -> Dictionary:
 		var p: Dictionary = profile(r[0],r[1],r[2],"GUARANTEED" if ["B06","B09"].has(skill) else "RANDOM_PERCENT")
 		p["crit_eligible"] = false
 		c["m5_enemy_profiles"][skill] = p
-	for actor: String in ["A","B","C"]:
-		var spell: String = {"A":"LS_REN_SWORD_V1","B":"LS_AKANE_MAGE_V1","C":"LS_TSUMUGI_HEAL_V1"}[actor]
-		c["last_spell_slots"][actor] = {"spell_id":spell,"unlocked":true,"planned_delay_rounds":2,"base_stability":10}
-		c["last_spell_cost_definitions"][spell] = {"card_id":spell,"ap_cost":3,"mp_cost":{"A":5,"B":9,"C":7}[actor]}
-		c["m5_spell_profiles"][spell] = profile("PHYSICAL" if actor == "A" else "MAGICAL",
-			65000 if actor == "A" else 68000,1,"RANDOM_PERCENT" if actor == "A" else "GUARANTEED","FIRE" if actor == "B" else "NEUTRAL")
+	for actor: String in party_ids:
+		var actor_data: Dictionary = roster["actors"][actor]
+		var spell: String = str(actor_data["last_spell_id"])
+		c["last_spell_slots"][actor] = {"spell_id":spell,"unlocked":true,
+			"planned_delay_rounds":2,"base_stability":10}
+		c["last_spell_cost_definitions"][spell] = {"card_id":spell,
+			"ap_cost":3,"mp_cost":actor_data["last_spell_mp_cost"]}
+		c["m5_spell_profiles"][spell] = profile("PHYSICAL" if spell == "LS_REN_SWORD_V1" else "MAGICAL",
+			65000 if spell == "LS_REN_SWORD_V1" else 68000,1,
+			"RANDOM_PERCENT" if spell == "LS_REN_SWORD_V1" else "GUARANTEED",
+			"FIRE" if spell == "LS_AKANE_MAGE_V1" else "NEUTRAL")
 	c["last_spell_targeting"] = {
 		"LS_REN_SWORD_V1":{"team":"ENEMY","scope":"SINGLE","description_key":"LAST_REN_DESCRIPTION","artwork_path":"res://assets/ui/v35/cmd_basic.svg"},
 		"LS_AKANE_MAGE_V1":{"team":"ENEMY","scope":"ALL","description_key":"LAST_AKANE_DESCRIPTION","appearance_id":"A06"},
 		"LS_TSUMUGI_HEAL_V1":{"team":"ALLY","scope":"ALL","description_key":"LAST_TSUMUGI_DESCRIPTION","artwork_path":"res://assets/ui/v35/status_barrier.svg"}}
-	c["actorDisplayNames"] = {"A":"朝霧蓮","B":"九條朱音","C":"白石紬"}
-	c["actor_name_keys"] = {"A":"actor.ren.name","B":"actor.akane.name","C":"actor.tsumugi.name"}
-	c["bossname"] = "秘紋守衛・零式"
-	c["boss_name_key"] = "actor.arcane_sentry.name"
+	c["actorDisplayNames"] = {}
+	c["actor_name_keys"] = {}
+	for actor: String in party_ids:
+		c["actorDisplayNames"][actor] = str(roster["actors"][actor].get("display_zh", actor))
+		c["actor_name_keys"][actor] = str(roster["actors"][actor]["name_key"])
+	c["bossname"] = str(roster["boss"]["display_zh"])
+	c["boss_name_key"] = str(roster["boss"]["name_key"])
 	c["intent_name_keys"] = {}
 	for index: int in range(1,12):
 		var skill: String = "B%02d" % index
