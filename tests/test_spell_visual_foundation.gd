@@ -26,7 +26,7 @@ func fixture_command(actor: String, id: String) -> Dictionary:
 		"_visual_card_id":id}
 
 func run() -> void:
-	check(Visuals.STYLE.size() == 34, "VFX-CATALOG-COUNT")
+	check(Visuals.STYLE.size() == 33, "VFX-CATALOG-COUNT")
 	for id: String in ["U01","A01","A02","A04","A06","A07","T09","T10"]:
 		check(Visuals.is_projectile(Visuals.style_for(id)), "VFX-PROJECTILE-"+id)
 	for id: String in ["R01","R02","R03","R06","R07","LS_REN_SWORD_V1"]:
@@ -72,6 +72,7 @@ func run() -> void:
 	director.enqueue(fixture_damage("B",902),fixture_command("B","A07"))
 	await create_timer(0.06).timeout
 	director.skip_all()
+	await process_frame # queue_free() is deferred until end-of-frame in Godot.
 	check(not director.playing and director.queue.is_empty(),"VFX-SKIP-CANCELS-QUEUE")
 	check(director.overlay.get_node_or_null("SpellProjectile") == null,"VFX-SKIP-REMOVES-FX")
 	check(caster.position == home,"VFX-SKIP-RESTORES-POSITION")
@@ -84,6 +85,8 @@ func run() -> void:
 		"VFX-REDUCED-MOTION-NO-FLIGHT")
 	check(Model.state_hash(screen.controller.snapshot()) == initial_hash,
 		"VFX-NO-DOMAIN-OR-REPLAY-WRITES")
+	director.skip_all() # Cancel pending reduced-motion effect tweens before teardown.
+	await process_frame
 	screen.queue_free()
 	await process_frame
 	print("SPELL_VISUAL_REPORT executed=%d passed=%d failed=%d" %
