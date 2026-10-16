@@ -31,8 +31,11 @@ extends Node2D
 	set(value):
 		shadow_width = clampf(value, 0.0, 1.0)
 		queue_redraw()
+const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
+var state_cg: Sprite2D
 var body: AnimatedSprite2D
 var motion: Tween
+var tint_tween: Tween
 var home: Vector2
 var cast_active: bool = false
 var barrier_active: bool = false
@@ -107,6 +110,7 @@ func _on_art_changed() -> void:
 	body.play("idle")
 	if downed: body.stop()
 	_align_frame()
+	_sync_state_cg()
 	queue_redraw()
 
 func _align_frame() -> void:
@@ -130,6 +134,29 @@ func _align_frame() -> void:
 	body.centered = false
 	body.position = Vector2(-frame_size.x * 0.5, -appearance.baseline_for(row, body.frame)) * body.scale + appearance.foot_offset
 
+func _sync_state_cg() -> void:
+	# Purely visual: no HP mutation, actor removal or target eligibility here.
+	if body == null:
+		return
+	var status: String = "INCAPACITATED" if downed else "ACTIVE"
+	var texture: Texture2D = AppearanceRegistry.field_cg_for_status(actor_id,status)
+	if texture == null:
+		if state_cg != null:
+			state_cg.visible = false
+		body.visible = true
+		return
+	if state_cg == null:
+		state_cg = Sprite2D.new()
+		state_cg.name = "CharacterStateCG"
+		add_child(state_cg)
+	state_cg.texture = texture
+	state_cg.centered = true
+	state_cg.position = Vector2(0,-visual_height * 0.5)
+	state_cg.scale = Vector2.ONE * (visual_height / maxf(1.0,float(texture.get_height())))
+	state_cg.modulate = base_tint
+	state_cg.visible = not retired
+	body.visible = false
+
 func _draw() -> void:
 	if cast_active:
 		draw_arc(Vector2(0,-visual_height*0.45),visual_height*0.38,pulse,pulse+TAU*0.85,48,Color("77bfff"),3)
@@ -143,7 +170,10 @@ func play_attack(target_position: Vector2) -> void:
 	if Engine.is_editor_hint() or body == null or downed or retired:
 		return
 	if motion: motion.kill()
-	var from: Vector2 = position
+	var from: Vector2 = home
+	position = home # A second receipt may interrupt an unfinished lunge.
+	if state_cg != null: state_cg.hide()
+	body.show()
 	if not boss_art: body.play("run")
 	motion = create_tween()
 	motion.tween_property(self,"position",from.lerp(target_position,0.65),0.18).set_trans(Tween.TRANS_QUAD)
@@ -151,11 +181,30 @@ func play_attack(target_position: Vector2) -> void:
 	motion.tween_interval(0.18)
 	motion.tween_property(self,"position",from,0.22).set_trans(Tween.TRANS_CUBIC)
 	if not boss_art: motion.tween_callback(body.play.bind("idle"))
+	motion.tween_callback(_sync_state_cg)
+
+## Stationary casting gesture; no scene movement or Domain state change.
+func play_spell_cast() -> void:
+	if Engine.is_editor_hint() or body == null or downed or retired:
+		return
+	if motion: motion.kill()
+	position = home
+	if not boss_art:
+		body.play("idle")
+	_align_frame()
+	_sync_state_cg()
+	_flash_tint(base_tint.lightened(0.33),0.31)
 
 func play_hit() -> void:
 	if Engine.is_editor_hint() or body == null or retired: return
-	body.modulate = Color(2,1.3,1.5)
-	create_tween().tween_property(body,"modulate",base_tint,0.28)
+	_flash_tint(Color(2,1.3,1.5),0.28)
+
+func _flash_tint(tint: Color, duration: float) -> void:
+	if tint_tween: tint_tween.kill()
+	var drawable: CanvasItem = state_cg if state_cg != null and state_cg.visible else body
+	drawable.modulate = tint
+	tint_tween = create_tween()
+	tint_tween.tween_property(drawable,"modulate",base_tint,duration)
 
 func _update_base_tint() -> void:
 	# base_tint remains the public resting colour used by skip/reset contracts.
@@ -172,6 +221,7 @@ func project_conditions(status: String, casting: bool, barrier: bool, field_reti
 	barrier_active = barrier and not retired
 	if changed_pose:
 		if motion: motion.kill()
+		if tint_tween: tint_tween.kill()
 		position = home
 		body.rotation = 0.0
 		if downed:
@@ -183,12 +233,14 @@ func project_conditions(status: String, casting: bool, barrier: bool, field_reti
 	condition_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
 	_update_base_tint()
 	body.modulate = base_tint
+	_sync_state_cg()
 	queue_redraw()
 
 func reset_motion() -> void:
 	if Engine.is_editor_hint() or body == null:
 		return
 	if motion: motion.kill()
+	if tint_tween: tint_tween.kill()
 	position = home
 	body.play("idle")
 	if downed:
@@ -196,6 +248,7 @@ func reset_motion() -> void:
 	_align_frame()
 	_update_base_tint()
 	body.modulate = base_tint
+	_sync_state_cg()
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -205,5 +258,6 @@ func _process(delta: float) -> void:
 
 func _exit_tree() -> void:
 	if motion: motion.kill()
+	if tint_tween: tint_tween.kill()
 	if appearance != null and appearance.changed.is_connected(_on_art_changed):
 		appearance.changed.disconnect(_on_art_changed)

@@ -8,6 +8,7 @@ const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
 const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
 const LastTargets = preload("res://scripts/domain/m5/lv40/last_spell_targeting.gd")
+const Prepared = preload("res://scripts/domain/m5/combo/prepared_combo_resolver.gd")
 
 static func deny(state: Dictionary, reason: String) -> Dictionary:
 	return {"accepted":false,"error":reason,"state":state.duplicate(true),"events":[],
@@ -44,6 +45,8 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
 	if not command.get("expected_event_seq",null) is int or int(command["expected_event_seq"]) != int(state["event_seq"]):
 		return deny(state,"STALE_STATE")
 	var kind: String = str(command.get("type",""))
+	if kind == "COMMIT_PREPARED_COMBO_V2":
+		return Prepared.resolve(state,command,config,apply)
 	var next: Dictionary = state.duplicate(true)
 	var output: Array = []
 	if kind == "PLAY_LV40_CARD":

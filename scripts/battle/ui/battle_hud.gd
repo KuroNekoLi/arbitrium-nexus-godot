@@ -9,12 +9,15 @@ const ContextScene = preload("res://scenes/battle/ui/action_context_panel.tscn")
 const LogScene = preload("res://scenes/battle/ui/battle_log_panel.tscn")
 const HandScene = preload("res://scenes/battle/ui/hand_view.tscn")
 const TargetsScene = preload("res://scenes/battle/ui/target_hit_regions.tscn")
+const ArrowOverlay = preload("res://scripts/battle/ui/components/card_targeting_arrow_overlay.gd")
 const ReactionScene = preload("res://scenes/battle/ui/reaction_queue.tscn")
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 
 signal actor_requested(actor: String)
 signal card_requested(instance: String)
 signal card_released(instance: String, pointer: Vector2)
+signal card_drag_started(instance: String)
+signal card_chant_held(instance: String, full: bool)
 signal command_requested(kind: String, fields: Dictionary)
 signal target_requested(actor: String)
 signal confirm_requested()
@@ -54,6 +57,7 @@ var _commands: Control
 var _enemy: Control
 var _context: Control
 var _log: Control
+var targeting_arrow: Control
 var _targets: Control
 var _modal_shield: Control
 var _modal_active: bool = false
@@ -65,6 +69,8 @@ var command_prompt_description: Label
 var command_prompt_column: VBoxContainer
 var preferences_panel: PanelContainer
 var last_preview: Control
+var combo_preview: PanelContainer
+var preparation_indicator: Label
 
 func _ready() -> void:
 	theme = preload("res://resources/ui/battle_theme.tres")
@@ -155,6 +161,13 @@ func _build() -> void:
 	command_prompt_description = UI.label(command_prompt_column, "", 16)
 	command_prompt_description.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	command_prompt.hide()
+	preparation_indicator = UI.label(self,"",16)
+	preparation_indicator.position = Vector2(300,385)
+	preparation_indicator.size = Vector2(665,32)
+	preparation_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preparation_indicator.add_theme_color_override("font_color",Color("e1beff"))
+	combo_preview = preload("res://scripts/battle/ui/components/combo_confirmation_overlay.gd").new()
+	add_child(combo_preview)
 	_context.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
 	_context.confirm_requested.connect(func() -> void: confirm_requested.emit())
 	_context.cancel_requested.connect(func() -> void: cancel_requested.emit())
@@ -162,13 +175,24 @@ func _build() -> void:
 	hand = _place(HandScene, Rect2(290, 470, 686, 240))
 	card_views = hand.card_views
 	hand.card_requested.connect(func(instance: String) -> void: card_requested.emit(instance))
-	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void: card_released.emit(instance, pointer))
+	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void:
+		end_targeting_arrow()
+		card_released.emit(instance, pointer))
+	hand.card_drag_started.connect(func(instance: String) -> void: card_drag_started.emit(instance))
 	hand.chant_held.connect(func(instance: String, full: bool) -> void:
+		card_chant_held.emit(instance,full)
 		command_requested.emit("HOLD_CHANT", {"instance_id": instance, "full": full}))
 
 	_targets = _place(TargetsScene, Rect2(0, 0, 1280, 720))
 	target_buttons = _targets.target_buttons
 	_targets.target_requested.connect(func(actor: String) -> void: target_requested.emit(actor))
+	# Visual-only aim path. No input interception and no Domain access.
+	targeting_arrow = ArrowOverlay.new()
+	targeting_arrow.name = "CardTargetingArrow"
+	targeting_arrow.position = Vector2.ZERO
+	targeting_arrow.size = Vector2(1280,720)
+	targeting_arrow.z_index = 75
+	add_child(targeting_arrow)
 
 	reaction_panel = _place(ReactionScene, Rect2(300, 154, 665, 305)) as PanelContainer
 	reaction_panel.z_index = 100
@@ -204,6 +228,7 @@ func _build() -> void:
 		command_requested.emit("ACTIVATE_LAST_PREVIEW", {"target_id": target}))
 	last_preview.cancel_requested.connect(func() -> void: cancel_requested.emit())
 	last_preview.target_changed.connect(func(id: String) -> void: target_requested.emit(id))
+	move_child(combo_preview,get_child_count()-1)
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection
@@ -242,7 +267,7 @@ func _restore_background_focus() -> void:
 
 ## GUI modal isolation is presentation-only; it never confirms or passes a window.
 func _sync_modal_focus() -> void:
-	var active: bool = result_panel.visible or reaction_panel.visible or command_prompt.visible or last_preview.visible
+	var active: bool = result_panel.visible or reaction_panel.visible or command_prompt.visible or last_preview.visible or combo_preview.visible
 	_modal_shield.visible = active
 	if active:
 		if not _modal_active:
@@ -250,8 +275,8 @@ func _sync_modal_focus() -> void:
 		# SimpleCards also refreshes hover from geometry outside native GUI picking.
 		# NONE prevents its focus-on-hover from escaping into a covered hand.
 		for child: Node in get_children():
-			if child not in [reaction_panel,result_panel,command_prompt,last_preview,_modal_shield]: _suspend_focus(child)
-		var panel: Control = result_panel if result_panel.visible else reaction_panel if reaction_panel.visible else last_preview if last_preview.visible else command_prompt
+			if child not in [reaction_panel,result_panel,command_prompt,last_preview,combo_preview,_modal_shield]: _suspend_focus(child)
+		var panel: Control = result_panel if result_panel.visible else reaction_panel if reaction_panel.visible else combo_preview if combo_preview.visible else last_preview if last_preview.visible else command_prompt
 		var buttons: Array[Control] = []
 		_focus_buttons(panel,buttons)
 		for i: int in buttons.size():
@@ -295,6 +320,26 @@ func _arrange_hand() -> void:
 func _render_reaction(choices: Array) -> void:
 	# Legacy compatibility adapter; the ReactionQueue owns draft rows.
 	reaction_panel.render_window(vm["reaction"], choices,vm.get("actor_name_keys",{}))
+
+func begin_targeting_arrow(instance: String, targets: Array) -> void:
+	var source: Vector2 = Vector2.ZERO
+	var found: bool = false
+	for card: Control in card_views:
+		if str(card.instance_id) == instance:
+			# Anchor to the slot in the fan, not the moving dragged card.
+			source = hand.get_global_transform() * (card.home + Vector2(card.size.x * 0.5, card.size.y * 0.22))
+			found = true
+			break
+	if found:
+		targeting_arrow.begin_aim(source,targets,target_buttons)
+
+func update_targeting_arrow(targets: Array) -> void:
+	if targeting_arrow.is_aiming:
+		targeting_arrow.update_legal_targets(targets)
+
+func end_targeting_arrow() -> void:
+	if targeting_arrow != null:
+		targeting_arrow.end_aim()
 
 func set_targets(ids: Array) -> void:
 	_targets.set_targets(ids)

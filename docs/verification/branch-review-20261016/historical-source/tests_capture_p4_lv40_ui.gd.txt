@@ -1,0 +1,59 @@
+extends SceneTree
+## New Lv40-only GUI capture. Not a replacement for P4.4 input/capture Gate.
+const Lv40 = preload("res://scenes/battle/lv40_battle.tscn")
+var failed: bool = false
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _fatal(reason: String) -> void:
+	failed = true
+	push_error("P4_LV40_CAPTURE_BLOCKED "+reason)
+
+func _run() -> void:
+	if DisplayServer.get_name() == "headless":
+		_fatal("GUI_REQUIRED")
+		quit(1)
+		return
+	var run_id: String = ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--run-id="): run_id = arg.trim_prefix("--run-id=")
+		else: _fatal("UNKNOWN_ARGUMENT:"+arg)
+	if run_id.is_empty() or run_id.length() > 60 or run_id.contains("/") or run_id.contains("\\") or run_id.contains("."):
+		_fatal("INVALID_RUN_ID")
+	if failed:
+		quit(1)
+		return
+	var folder: String = "res://outputs/p4_lv40_ui/"+run_id
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(folder)):
+		_fatal("RUN_EXISTS")
+		quit(1)
+		return
+	var screen: Control = Lv40.instantiate()
+	root.add_child(screen)
+	await process_frame
+	# Do not capture a fixture or an empty HUD and call it Lv40.
+	if screen.snapshot.is_empty() or screen.controller == null or not screen.config.get("m5_lv40_enabled",false):
+		_fatal("BLOCKED_CONTRACT_DOMAIN_READMODEL_LOCALIZATION_NOT_INTEGRATED")
+		screen.queue_free()
+		quit(1)
+		return
+	if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder)) != OK:
+		_fatal("OUTPUT_DIRECTORY_FAILED")
+		screen.queue_free()
+		quit(1)
+		return
+	for dims: Vector2i in [Vector2i(1280,720),Vector2i(1920,1080)]:
+		root.size = dims
+		for i: int in 3: await process_frame
+		var photo: Image = root.get_texture().get_image()
+		var path: String = folder+"/lv40_"+str(dims.x)+"x"+str(dims.y)+".png"
+		if photo == null or photo.get_width() != dims.x or photo.get_height() != dims.y:
+			_fatal("IMAGE_DIMENSIONS:"+str(dims))
+			break
+		if FileAccess.file_exists(path) or photo.save_png(path) != OK:
+			_fatal("PNG_WRITE_FAILED:"+str(dims))
+			break
+	screen.queue_free()
+	print("P4_LV40_CAPTURE_REPORT status=", "FAIL" if failed else "CAPTURED_REQUIRES_HUMAN_REVIEW",
+		" output=",folder)
+	quit(1 if failed else 0)

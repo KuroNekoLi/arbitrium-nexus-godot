@@ -1,0 +1,267 @@
+[
+  {
+    "path": "1280x720-en-01-normal.png",
+    "bytes": 1642802,
+    "sha256": "4d85174c05e6f61014f60606fb3682f950bd502fab0cde55822668089bbab2e5"
+  },
+  {
+    "path": "1280x720-en-02-setup.png",
+    "bytes": 1571131,
+    "sha256": "e423ae34fcae24db7722425ac9fe003de1215003c7ee120d9129b546e4d2a189"
+  },
+  {
+    "path": "1280x720-en-03-finisher.png",
+    "bytes": 1651084,
+    "sha256": "8ff09da465affee12359dd07e6ddd1b1eeea2795e71a746ab5330bfa094ee6d0"
+  },
+  {
+    "path": "1280x720-en-04-drag.png",
+    "bytes": 1644762,
+    "sha256": "db038bf1d3b84c29588d28968fd779795a07b98a1a6b23d2575986518ca8d379"
+  },
+  {
+    "path": "1280x720-en-04b-Boss-comparison.png",
+    "bytes": 1184553,
+    "sha256": "7aad3be91671fe751882d6a45b2f8e469d4c97065596bf32583d2671cd562a04"
+  },
+  {
+    "path": "1280x720-en-05-comparison.png",
+    "bytes": 1144244,
+    "sha256": "3d9c564ec8c0b0b233d2133777f5c894ff1f2e1ef12d0709c5cbe99fff99adc5"
+  },
+  {
+    "path": "1280x720-en-06-cooperation-placeholder.png",
+    "bytes": 1154031,
+    "sha256": "4d74d380be8ea72815ad9c671855a1a6359ed330305fea85fce2740c8988eda4"
+  },
+  {
+    "path": "1280x720-en-08-MP-short.png",
+    "bytes": 1190348,
+    "sha256": "e83b77c9ca801d1dcfd3d045c2b90929c723994473ffe767f475c07a669f839f"
+  },
+  {
+    "path": "1280x720-en-12-cancel.png",
+    "bytes": 1651938,
+    "sha256": "10caafc48a3d338a462b50ef78c3700ea4c105d21fed33f0a6e31e4e719219cc"
+  },
+  {
+    "path": "1280x720-zh_TW-01-normal.png",
+    "bytes": 1656410,
+    "sha256": "ad0e465368d4c8e289b9ab55a9f58ed80eb7ea384902d78044384915279199bc"
+  },
+  {
+    "path": "1280x720-zh_TW-02-setup.png",
+    "bytes": 1584608,
+    "sha256": "6cf47b88b619fb76aa6e7b523b1e369abc8c02a2c93e8d197f7a2660b640e8f0"
+  },
+  {
+    "path": "1280x720-zh_TW-03-finisher.png",
+    "bytes": 1659430,
+    "sha256": "2384a7a37307845aa19375af6edf8b6a78e6794d65c6d1e060359d4088069d0a"
+  },
+  {
+    "path": "1280x720-zh_TW-04-drag.png",
+    "bytes": 1654628,
+    "sha256": "c504689f863ca670283bc017dec2292196d12311f359676c18bc288e868744a9"
+  },
+  {
+    "path": "1280x720-zh_TW-04b-Boss-comparison.png",
+    "bytes": 1211345,
+    "sha256": "a92f2e392c747320cb18be2a861e0b3e3cabb33e32ec703afeeb339f4eed41b4"
+  },
+  {
+    "path": "1280x720-zh_TW-05-comparison.png",
+    "bytes": 1181095,
+    "sha256": "c26735ecdd6cebf2102663a91690c93f2a6f12092fbb20f03d15381f322fb52a"
+  },
+  {
+    "path": "1280x720-zh_TW-06-cooperation-placeholder.png",
+    "bytes": 1491747,
+    "sha256": "2de6278a973911c6232a379a32dfa19a248e2db2e252b98e6240e3f38ed02d9b"
+  },
+  {
+    "path": "1280x720-zh_TW-08-MP-short.png",
+    "bytes": 1196399,
+    "sha256": "ce2c352db41873f770986ce3316f1af3ba00434a74fd4cb903a9763cdb0e2e5f"
+  },
+  {
+    "path": "1280x720-zh_TW-12-cancel.png",
+    "bytes": 1660271,
+    "sha256": "dcf01750dd716764629e863fc454153f5799b7386f50f7676964dd4f4f557bb6"
+  },
+  {
+    "path": "1920x1080-en-01-normal.png",
+    "bytes": 3283896,
+    "sha256": "8a00c6f90a9f8818f9ec050bd02848cbb37ff246fde23994b38b12418f9ba33d"
+  },
+  {
+    "path": "1920x1080-en-02-setup.png",
+    "bytes": 3148667,
+    "sha256": "3dd69525d5b8153b6cb39c21780689d7336890a3fc08f3f666882767398eed61"
+  },
+  {
+    "path": "1920x1080-en-03-finisher.png",
+    "bytes": 3301222,
+    "sha256": "ed01500e66eadd1a15242aae6a5994a3ff63b1f3deef2a8522b4b494940ca178"
+  },
+  {
+    "path": "1920x1080-en-04-drag.png",
+    "bytes": 3284635,
+    "sha256": "50eff424a264451141a6433cda6eba459d81036f40ef29e73d7f7e183ea5065b"
+  },
+  {
+    "path": "1920x1080-en-04b-Boss-comparison.png",
+    "bytes": 2343445,
+    "sha256": "e6e81f52382d9211c1091478ac03a69b90d24701fd9b2abd6f4d4f6b1400a852"
+  },
+  {
+    "path": "1920x1080-en-05-comparison.png",
+    "bytes": 2263414,
+    "sha256": "42a7f43288dedfbf923d9f4aceed06c84201269dcb495d742759f5d2803a0267"
+  },
+  {
+    "path": "1920x1080-en-06-cooperation-placeholder.png",
+    "bytes": 2275727,
+    "sha256": "25bb8b89fd9ef8804407b59bcd8bcaa73a489aecf0052c15f410eec475ae7c73"
+  },
+  {
+    "path": "1920x1080-en-08-MP-short.png",
+    "bytes": 2354412,
+    "sha256": "a3fe882d8c1fd62ac59da9b407e403494d56b05a05964059f5f37ac7e0b6f739"
+  },
+  {
+    "path": "1920x1080-en-12-cancel.png",
+    "bytes": 3302364,
+    "sha256": "14519ded0587b16e8f2dc6f8771f7cbd94b01956daa159037e8ab347ae6993ee"
+  },
+  {
+    "path": "1920x1080-zh_TW-01-normal.png",
+    "bytes": 3303815,
+    "sha256": "ceade68f27db2c2bc2d3825f9b4874a453ffc88c85d2f1f30dbe31d133bc644c"
+  },
+  {
+    "path": "1920x1080-zh_TW-02-setup.png",
+    "bytes": 3166255,
+    "sha256": "c86288e6a12835d9ebd484c82cf177a4c113e119e84a2dddbba16622b5f449b4"
+  },
+  {
+    "path": "1920x1080-zh_TW-03-finisher.png",
+    "bytes": 3310622,
+    "sha256": "66e4a93820cf00ecec04670bd664e7e57d1e3402d90934efdeacf25dabfda71a"
+  },
+  {
+    "path": "1920x1080-zh_TW-04-drag.png",
+    "bytes": 3293264,
+    "sha256": "44780d24b8d6d21dc32abb7cf20252f746cb42a32e8447b8846d6723730f232f"
+  },
+  {
+    "path": "1920x1080-zh_TW-04b-Boss-comparison.png",
+    "bytes": 2382817,
+    "sha256": "ec1efba06589293ab81110d2c3e72d75b78ae6cb20037fcc4fc8f1294371256f"
+  },
+  {
+    "path": "1920x1080-zh_TW-05-comparison.png",
+    "bytes": 2326463,
+    "sha256": "9e4b7fbd35e26d0b32cc1a6257c1cd5732d4b0870ad2db2ad16807f4fd609293"
+  },
+  {
+    "path": "1920x1080-zh_TW-06-cooperation-placeholder.png",
+    "bytes": 2967247,
+    "sha256": "8bf58e0ffe810cd1a99cf04feb034939ccc3b161bb522679da559027669c9c6b"
+  },
+  {
+    "path": "1920x1080-zh_TW-08-MP-short.png",
+    "bytes": 2352049,
+    "sha256": "a8568e656734c3f331a6abf3ab3699c711bcddf7b0760405ab715c3799681dbe"
+  },
+  {
+    "path": "1920x1080-zh_TW-12-cancel.png",
+    "bytes": 3311753,
+    "sha256": "767e01a9143d9783be7b8a25639d1a93c6ca614e551b398d15006a86c4f7904e"
+  },
+  {
+    "path": "logs/baseline-lv40.log",
+    "bytes": 4433,
+    "sha256": "d69b5281acd0ba6f0f191845e0d821cd71ee5897683ae7618510edb1b67cee09"
+  },
+  {
+    "path": "logs/ci-static-1-annotation.txt",
+    "bytes": 231,
+    "sha256": "e267b2baa8ce07e292989edc8a83d5e321d3d837f43062ebfba450e11d509746"
+  },
+  {
+    "path": "logs/domain-1.log",
+    "bytes": 1587,
+    "sha256": "8d97d7ba7343e68c13f4c51252e6ac085c1bd30c801d4228ac918a75b2492f5f"
+  },
+  {
+    "path": "logs/domain-2.log",
+    "bytes": 3735,
+    "sha256": "028154dc2e047b8b764921b6c31140fea4ba72eae7553f41c93cf5ecbf648824"
+  },
+  {
+    "path": "logs/domain-3.log",
+    "bytes": 3823,
+    "sha256": "169cbaa7c71d23e8cd65444e9b8ce3a0522b2a12c16e0e406f60e361af86d2b6"
+  },
+  {
+    "path": "logs/gui-1.log",
+    "bytes": 9172,
+    "sha256": "3f2682c569f03bb423b57a71edc300b1645bf09a45f4cb04403b4b43f8d98322"
+  },
+  {
+    "path": "logs/gui-2.log",
+    "bytes": 11624,
+    "sha256": "2004522cae596418dea283186745b1bb388dd297abc67eb6641f2031a58a627b"
+  },
+  {
+    "path": "logs/gui-3.log",
+    "bytes": 13376,
+    "sha256": "b1338656333d3ac8431b452737e3350074fd39509492c12d6f28acdffd6dec87"
+  },
+  {
+    "path": "logs/import-1.log",
+    "bytes": 4143,
+    "sha256": "ff4ff1ea596a9f1df249372b3bfe3c647a862ec430fdbf6184d7c2dffcac19bd"
+  },
+  {
+    "path": "logs/playable-1.log",
+    "bytes": 870,
+    "sha256": "fcb7a6f0e46e8667bd36b6c6ec4db2538f8862ff2ab9a212198a9a4dc53ec4bd"
+  },
+  {
+    "path": "logs/test_lv40_domain-regression.log",
+    "bytes": 4433,
+    "sha256": "d69b5281acd0ba6f0f191845e0d821cd71ee5897683ae7618510edb1b67cee09"
+  },
+  {
+    "path": "logs/test_lv40_edges-regression.log",
+    "bytes": 1294,
+    "sha256": "b2eac5cef41757376ecc3f90bcf6cb4f0a8ae6fd8eba5416c626f56036a91dc3"
+  },
+  {
+    "path": "logs/test_m5_boss_combo-regression.log",
+    "bytes": 2010,
+    "sha256": "9add45ae1a67bd560b0a356c13a2b0d2131d27c056467114e7644fa191df9d1c"
+  },
+  {
+    "path": "logs/test_m5_replay-regression.log",
+    "bytes": 1038,
+    "sha256": "b624402a2584856b47f79cc542bf296b9f0032266b9acb0056335b31cf54e6b0"
+  },
+  {
+    "path": "logs/test_p4_localization-regression.log",
+    "bytes": 7969,
+    "sha256": "ce517e0295154defed2508b472b7cd27d2bc318b644bff89499034cd1c03ffcb"
+  },
+  {
+    "path": "logs/test_p4_v24_hand-regression.log",
+    "bytes": 1104,
+    "sha256": "ef1889808b684fc732c040ce26589dd3ad2129c44752a26dd7b011986b8701af"
+  },
+  {
+    "path": "logs/test_p4_v35_party-regression.log",
+    "bytes": 2092,
+    "sha256": "04e6c0801dee62257d8cdd2b398b30a299763b141df3788f14db5c527830a0d0"
+  }
+]
