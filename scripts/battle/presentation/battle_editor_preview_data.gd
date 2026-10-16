@@ -41,23 +41,63 @@ static func decorate_mock_hand(hud: Control) -> void:
 		CardFrame.build(frame,appearance,"1 AP",true,"")
 
 static func show(hud: Control, mode: String) -> void:
-	hud.render(projection(),"A",[],[])
+	# In the Godot EDITOR Control.tr() may resolve EditorTranslationServer
+	# instead of Project translations. Never apply '%' to untranslated keys.
+	# Display read-only labels with project catalogue strings explicitly.
+	var labels: Dictionary = preload("res://scripts/battle/presentation/battle_translations.gd").validate_catalogues().get("catalogues",{}).get("zh_TW",{})
+	hud.header.text = "玩家階段   ·   回合 1"
+	hud.resources.text = "AP 6  ·  RP 0"
+	hud._top.ap_value.text = "6 AP"
+	hud._top.rp_value.text = "RP 0"
+	hud.end_button.text = "結束回合"
+	hud.feedback.text = "EDITOR MOCK_ONLY — 不會建立戰鬥／付款／重播"
+	for id: String in ["A","B","C"]:
+		var hero: Button = hud.roster[id]
+		var index: int = ["A","B","C"].find(id)
+		var tint: Color = [Color("efc675"),Color("75d6ff"),Color("df9cff")][index]
+		hero.configure(id,str(labels.get("BATTLE_HERO_"+id,"角色 "+id)),
+			Appearances.portrait_for(id),tint)
+		hero.hp_label.text = "HP 120 / 120"
+		hero.mana_label.text = "MP 14 / 20"
+		hero.hp_bar.max_value = 120
+		hero.hp_bar.value = 120
+		hero.mana_bar.max_value = 20
+		hero.mana_bar.value = 14
+		hero.set_selected(id=="A")
+		hero.get_node("Layout/Stats/Subtitle").text = "可行動"
+	var enemy: PanelContainer = hud._enemy
+	enemy.boss_title.text = str(labels.get("BATTLE_TITLE","Boss"))
+	enemy.boss_stats.text = "HP 2100 / 2700"
+	enemy.hp_bar.max_value = 2700
+	enemy.hp_bar.value = 2100
+	enemy.break_stats.text = "Break 16 / 22"
+	enemy.break_bar.max_value = 22
+	enemy.break_bar.value = 16
+	enemy.intent.text = "敵人公開意圖（預覽資料）"
+	enemy.intent_panel.show()
+	hud._conditions_panel.hide()
+	hud._context.hide()
+	hud.reaction_panel.hide()
+	hud.result_panel.hide()
 	decorate_mock_hand(hud)
 	if mode == "Battle":
 		return
-	var actor: String = "A" if mode == "Last Spell Ren" else "B" if mode == "Last Spell Akane" else "C"
-	var team: String = "ALLY" if actor == "C" else "ENEMY"
-	var scope: String = "SINGLE" if actor == "A" else "ALL"
-	var id_set: Array = ["A","B","C"] if team == "ALLY" else ["Boss"]
-	var targets: Array = []
-	for id: String in id_set:
-		targets.append({"id":id,"name":hud.tr("BATTLE_HERO_"+id) if id != "Boss" else hud.tr("BATTLE_TITLE"),
-			"portrait":Appearances.portrait_for(id),"legal":true,
-			"rect":Rect2(Vector2(380,320),Vector2(130,160))})
+	# Reuse the REAL LastSpellPreview Control, without invoking its runtime
+	# target/quote legality or cost formatter in the editor.
+	var actor: String = "A" if mode=="Last Spell Ren" else "B" if mode=="Last Spell Akane" else "C"
 	hud.hand.hide()
-	hud.last_preview.present(hud.tr("BATTLE_LAST"),{
-		"ok":true,"quote":{"ap_cost":3,"mp_cost":5},"slot":{"planned_delay_rounds":1}},
-		Appearances.portrait_for(actor),targets,"",{
-		"actor_id":actor,"targeting":{"team":team,"scope":scope,
-			"description_key":"BATTLE_LAST_WARNING"},
-		"selected_id":str(id_set[0])})
+	var preview: Control = hud.last_preview
+	preview.artwork.texture = Appearances.cg_for(actor)
+	preview.title.text = str(labels.get("BATTLE_LAST","終極法術"))
+	preview.scope_label.text = "敵方單體" if actor=="A" else "敵方全體" if actor=="B" else "我方全體"
+	preview.description.text = "EDITOR MOCK_ONLY：目標預覽，不提交 Domain Command"
+	preview.costs.text = ""
+	preview.ap_value.text = "3 AP"
+	preview.mp_value.text = "5 MP"
+	preview.timing.text = "下一玩家階段"
+	preview.activate_button.disabled = true
+	preview.cancel_button.disabled = true
+	preview.summary_title.text = preview.title.text
+	preview.summary_description.text = preview.description.text
+	preview.summary_target.text = preview.scope_label.text
+	preview.show()
