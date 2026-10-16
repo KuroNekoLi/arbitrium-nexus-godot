@@ -1,4 +1,4 @@
-# CI test matrix — P2, P3 and P4 (2026-10-16)
+# CI test matrix — P2 through P5 (2026-10-16)
 
 ## Goal and verification boundary
 Keep **every** existing headless P4 assertion, but avoid running 25 P4 suites on every ordinary code push. As of P4, the separate early-prototype legacy gates run in nightly Full instead of being duplicated in UI and Integration jobs. The 1149-contract P4 gate is moved unchanged from `ci-fast.yml` into `ci-p4-contracts.yml`; existing exception/authorization conditions for historical V3.5 GUI input tests remain intact. Strict import and log-error gates remain mandatory. This is a workflow scheduling refactor, **not** a reduced coverage claim.
@@ -9,7 +9,7 @@ Keep **every** existing headless P4 assertion, but avoid running 25 P4 suites on
 | `CI P4 UI Contracts` | Battle/UI/asset/test/config changes, nightly, or manual | Complete 25-suite headless P4 contracts (1149 checks); no legacy prototype suites |
 | `CI Integration` | Domain / combat logic changes or manual | 26 named domain suites (1128 assertions); no legacy prototype suites |
 | `CI Full` | **Daily 02:00 Asia/Taipei**, manually, or after Release published; **never automatically on push** | 100 seeded battles, complete acceptance regression, and 4 legacy prototype smoke suites |
-| `Godot V2.3 Real HUD Render Captures` | Existing UI paths or manual | Actual rendered PNG; distinct from headless P4 tests |
+| `CI Visual - Real Godot Battle Screenshots` | Relevant UI/actor/scene/resource changes, PR, or manual | Xvfb/Mesa real rendering, 9 HUD + 3 Boss PNGs, manifests and verified image dimensions |
 
 ## Execution cost measured before the split
 From master runs at `2c31fe9`: Fast total ~170 seconds (two parallel jobs), Integration ~88 seconds, Full ~331 seconds. The P4 contract job took ~170 seconds, while Fast smoke itself took ~96 seconds. The full 100-seed test measured ~226 seconds. These are observed CI run durations, not projections for the refactored flow.
@@ -50,3 +50,15 @@ The tests target the legacy prototype (`scenes/main.tscn`, older `scripts/domain
 **Tradeoff:** an edit confined to the legacy prototype itself will not receive legacy behavior validation during an ordinary push. Use `CI Full` manually for such changes or wait for the nightly gate. No source test file is deleted; strict error handling on remaining tests is unchanged.
 
 Further candidate optimizations (not implemented here) should benchmark the ~64-second feedback-edge animation waits and representative visual capture, without weakening those assertions.
+
+## P5 — Real-render screenshots, cache and artifact contract
+
+`.github/workflows/godot-v2-3-visual-capture.yml` remains the **single active true-render snapshot workflow on master**, now titled `CI Visual - Real Godot Battle Screenshots` in Actions. Its `v23_` and `v31_` filenames are historical labels; both scripts instantiate the current `scenes/battle/battle_screen.tscn`. The older V3.1 workflow remains historical/branch-scoped and is not enabled on master.
+
+- Path filters include battle UI, actor scenes, presentation scripts, character atlases/assets, themes, screenshot scripts, and CI dependencies. Documentation-only Push does not invoke rendering. Manual dispatch and PRs are supported.
+- Verified Godot 4.7.2 binary and incremental import are restored from the shared setup Action, followed by a fresh strict Godot editor import. Rendering uses **Xvfb / Mesa compatibility**, never `--headless`.
+- `tools/ci/validate_visual_snapshots.py` checks **every one of the 9 HUD and 3 Boss PNG files** and both manifest case lists, PNG chunk CRC, decompression, dimensions, locale/hand-size/fixture metadata, Godot/display metadata, and JPG thumbnail signatures. All are placed in artifact `battle-visual-snapshots` together with renderer logs.
+- An Actions Job Summary links the artifact. The former base64 image dump has been removed from long CI logs, not the actual captured images.
+- Restricted historical V26 GUI tests are unchanged and not made runnable as ordinary Push/PR tests. The screenshot scripts only observe the actual Godot-rendered viewport or mock-only Boss **projection**, without changing Domain state or driving GUI clicks.
+- **Limits:** These screenshots verify visual output existence and integrity, **not** a pixel-diff Golden Image baseline, multi-enemy targeting, Last Spell target selection, or manual visual approval. Those require their own fixtures and oracles.
+- Deliberately left unchanged: P4 Feedback Edges timing, current 25/1149 headless contracts, Fast/Integration/Full rules, and all combat mechanics.

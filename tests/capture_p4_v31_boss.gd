@@ -81,7 +81,10 @@ func run() -> void:
 	var f: FileAccess = FileAccess.open(folder.path_join("v31_boss_projection_fixture_manifest.json"), FileAccess.WRITE)
 	check(f != null, "V31-BREAK-MANIFEST")
 	if f != null:
-		f.store_string(JSON.stringify({"fixture":"MOCK_ONLY / projection layout", "cases":captures}, "\t"))
+		f.store_string(JSON.stringify({"fixture":"MOCK_ONLY / projection layout",
+			"display_server": DisplayServer.get_name(),
+			"godot": str(Engine.get_version_info().get("string", "")),
+			"cases": captures}, "\t"))
 		f.close()
 	screen.queue_free()
 	await process_frame

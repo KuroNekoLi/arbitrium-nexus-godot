@@ -5,6 +5,7 @@
 - `ci-p4-contracts.yml`: full 25-suite / 1149-assertion P4 headless UI contract gate for UI/scene/assets/test changes; runs nightly and manually for cross-domain coverage. Legacy prototype suites are no longer duplicated here.
 - `ci-integration.yml`: 26 named M1–M5.5 domain suites, 1128 assertions; early prototype legacy smoke suites were removed from this daily gate in P4.
 - `ci-full.yml`: scheduled (02:00 Asia/Taipei), manual, and release-published full gate invoking `godot-m5-5-acceptance.yml`, including **100 seeded battles and the four legacy prototype smoke suites**. It does not trigger on Push or PR.
+- `godot-v2-3-visual-capture.yml` (`CI Visual - Real Godot Battle Screenshots`) now uses the same verified Godot/import cache and verifies 12 genuine viewport PNGs + manifests before exporting artifact `battle-visual-snapshots`.
 - Earlier phase workflows remain callable; they are not rewritten or silently deleted.
 
 ## Shared setup
@@ -22,4 +23,4 @@ Cache keys encode Linux runner, Godot version, and asset/scene/import dependenci
 - Existing 100-seed tests, expected counts, and negative failure probes are not changed.
 
 ## Future extension
-For active real-render capture workflows, reuse the same composite setup action and retain Xvfb / genuine viewport screenshot assertions. Do not replace real Godot screenshots with generated images. Legacy workflows are intentionally left intact unless they become active maintenance targets.
+Active real-render capture now reuses the composite action and Xvfb/Mesa. Its real PNGs and manifests are checked and uploaded (no image generation or pixel-diff claim). Historical workflows remain untouched.
