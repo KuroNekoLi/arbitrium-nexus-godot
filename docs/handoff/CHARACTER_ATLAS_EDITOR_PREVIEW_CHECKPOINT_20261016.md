@@ -62,3 +62,17 @@ CG 以各自 Atlas 為參考，要求保留身份、單一人物、直式透明�
 ## 工程說明
 
 獨立 Actor Node 如 Compose 中三個帶各自 state 的 View：美術 Resource 提供外觀，Presentation Adapter 提供已結算狀態。編輯器 PreviewData 相當於 @Preview 的 fake UI state，但不進入正式 reducer。陰影、Tween、光效只能呈現事件，不能決定傷害。保持這個邊界才可安全調整構圖且不改 Replay。
+
+
+## 後續接手實作 — 2026-10-16（覆蓋上方的原始「尚未實作」描述）
+
+**工作分支仍為 `ui/last-spell-target-scope-20261016`，未合併 master。**
+
+- **IMPLEMENTED — Provisional art integration**：新增 `BattleCharacterAppearance @tool Resource`、三個 `.tres`、唯讀 A→Ren / B→Akane / C→Tsumugi Registry；原始 PNG 六張沿用不加工、不重新生成。三名 Scene Actor Slot 保持獨立位置與可編輯屬性；Atlas 按欄 `0,418,836,1254`、列 `0,418,800,1254` 非等高切分。Boss 仍用既有 Placeholder。
+- **IMPLEMENTED — Reversible editor projection**：`@tool BattleScreen` 於 `Engine.is_editor_hint()` 路徑不建立 Controller、不建立 BattleState、不提交 Command、不產生 Tween；直接使用**實際 HUD Component Nodes** 與可重用 `BattleCardFrame` 渲染專用 `MOCK_ONLY` 資料。Inspector 可選 Battle / Last Spell Ren / Akane / Tsumugi。Resource.changed 使外觀與預覽同步更新；動態子節點無 owner，離場 Signal 會清理。
+- **IMPLEMENTED — HUD references**：Party／敵方公開目標頭像來源統一到 Registry 的獨立 CG 裁切；Last Spell 專用 Cut-In 使用每位角色完整獨立 CG，而非舊 3 人合圖。原始 Scope UI 29/29 合法性、不可逆提交、AoE/Replay 語義沒有更動。
+- **IMPLEMENTED — Legacy relocation**：四張舊圖片（Nova、Kleya、Yora 三張 Atlas 及舊合併 Portrait）已由原 Blob SHA 搬到 `assets/legacy/characters/` 與 `assets/legacy/portraits/`；舊 `scripts/main.gd` 的 preloads 更新。六張 AI 生成候選與四個 Legacy 路徑已紀錄至 Manifest/CREDITS。Linux 不可用的 GitPlugin project autoload 設定已移除，仍可使用 Git CLI。
+- **QA PROVEN / NOT VERIFIED**：新 `test_character_editor_preview.gd` 與獨立 Workflow 第 1 次 Editor Import 受到本機 GitPlugin 與 editor locale formatter 影響；第 2 次只剩 editor formatter；**第 3 次嚴格 Editor Import PASS**、32 項前置檢查中前 31 項 PASS，但新測試錯將 Sprite `_ready` 檢查放在 `SceneTree._init`，使 Actor 動態 child 尚不存在，後續中止；已改 `_initialize` 延遲 run 並避免 Nil crash，但**同群組 3 次額度已用盡，不聲稱 35/35 PASS，不擅自再跑**。來源 CI：[Run1](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836200204)、[Run2](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836444604)、[Run3](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836688296)。
+- **BLOCKED — 高保真視覺證據**：沒有在此執行環境中使用真實 GUI Godot Editor 確認 F6 Live Preview、Atlas 各格流暢度或 1280／1920 像素對照；沒有新原生編輯器截圖。角色 CG 仍為待使用者核准的 AI 生成 **候選**，不宣稱 Canon Art。相同原生 Last Spell 29/29 第四次經額外授權成功的歷史證據保持原樣，**本次完全未重跑**。
+
+不得用 Editor Import PASS 代替 Editor on-screen visual approval，也不得因 UI 測試 quota 已用盡重新命名同一套測試規避限制；若需重新取得正式 35/35 需另外取得使用者明確允許的新執行額度。後續請依 [Engineering Note](../verification/ui/CHARACTER_EDITOR_INTEGRATION_ENGINEERING_NOTE_20261016.md) 審查改動，僅合併已被驗證的範圍。

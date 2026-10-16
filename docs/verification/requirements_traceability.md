@@ -473,3 +473,15 @@ See [review and outstanding branches](../handoff/P4_APPROVED_MERGES_AND_PENDING_
 | P45 static scene evidence | 獨立場景檢查、非原GUI runner | capture_lv40_playable_scene.gd；GTX1650、1280繁中/1920英文PNG、主控目視 | STATIC_RENDER_OBSERVED，非真人/完整GUI/效能驗收 |
 
 正式Master收據：f16227c1e67457de53b3547a73462416c32349ef；Actions38726127054（1238 Domain/100seeds/4Legacy）、38726127041（HUD/正向32/writer46）、38726127002（Legacy）均completed/success。GUI14/16及真人/P4.6不升級；詳ALL_BRANCHES_FINAL_MERGE_REPORT。
+
+## Character appearance / Editor Live Preview — 2026-10-16
+
+| Requirement | Actual evidence | Verification |
+|---|---|---|
+| Last Spell team/single/all targeting (LST-UI01–05, LST-DOM01) | Existing branch native scope batch4 **29/29** and 4 valid PNGs | **SCOPED_NATIVE_VERIFIED**, no rerun; original User Visual Acceptance still pending |
+| 3 independent Lv40 appearance resources + registry | 6 PNGs/3 `.tres`, A→Ren/B→Akane/C→Tsumugi, nonuniform atlas regions | **IMPLEMENTED**, editor import and 31 initial QA assertions passed; dedicated suite 35/35 **NOT VERIFIED** |
+| Editable actor slots, independent CG/portraits, mock-only editor HUD | `@tool BattleActor/BattleScreen`, real HUD nodes, Registry, no Editor Controller/Domain, character Signal cleanup designed | **IMPLEMENTED_NOT_FULLY_VERIFIED** (strict editor import passed on prior source; native Editor GUI screenshot not executed) |
+| Original sprite/portrait relocation | old binary blobs moved under `assets/legacy/`, legacy prototype preload paths updated; current battle resources unaffected | **IMPLEMENTED_PENDING_FAST_CI** until final integration run |
+| Final actor art and high-fidelity scene | Six candidate images are AI generated; no final visual user approval | **VISUAL_NOT_VERIFIED / USER_APPROVAL_PENDING** |
+
+Original Last Spell group, old P4.4 GUI group and separate character appearance suite have exhausted their respective authorized attempt budgets. Do not rerun without explicit owner authorization. See [Checkpoint](../handoff/CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md).
