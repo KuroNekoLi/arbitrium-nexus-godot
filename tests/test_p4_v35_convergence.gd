@@ -47,6 +47,9 @@ func run() -> void:
 	check(not context.cost_badge.visible and screen.hud.confirm_button.disabled, "V35C-CANCEL-CLEARS")
 	check(screen.hud.get_node("EnemyStatus").target_portrait.visible, "V35C-PUBLISHED-TARGET-PORTRAIT")
 	var hp_before_basic: int = int(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"])
+	# This suite verifies the immediate Domain receipt and presentation queue,
+	# not audio playback; stopping a long OGG clip at process exit leaks resources.
+	screen.director.overlay.audio_enabled = false
 	screen._command_requested("BASIC_ATTACK_RESOURCE_ONLY", {})
 	check(not context.visible, "V35C-BASIC-NOT-SPELL-DETAILS")
 	check(int(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"]) < hp_before_basic,
