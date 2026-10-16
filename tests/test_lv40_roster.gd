@@ -39,6 +39,13 @@ func _run() -> void:
 			"ROSTER-NO-HARDCODED-CHARACTERS-"+actor)
 		check(str(content["actor_name_keys"][actor]) == str(data["actors"][actor]["name_key"]),
 			"ROSTER-I18N-KEY-"+actor)
+	for actor: String in ids:
+		var spell: String = str(data["actors"][actor]["last_spell_id"])
+		check(content["last_spell_effects"].has(spell) and
+			content["last_spell_effects"][spell] == data["actors"][actor]["last_spell_effect"],
+			"ROSTER-LAST-EFFECT-"+actor)
+		check(content["last_spell_name_keys"][actor] == data["actors"][actor]["last_spell_name_key"],
+			"ROSTER-LAST-NAME-"+actor)
 	var state: Dictionary = Encounter.initial(20261014)
 	check(not state.is_empty(), "ROSTER-INITIAL-BATTLE")
 	if not state.is_empty():

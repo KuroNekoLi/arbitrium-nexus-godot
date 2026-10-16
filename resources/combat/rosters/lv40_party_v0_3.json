@@ -56,6 +56,10 @@
         "scope": "SINGLE",
         "description_key": "LAST_REN_DESCRIPTION",
         "artwork_path": "res://assets/ui/v35/cmd_basic.svg"
+      },
+      "last_spell_effect": {
+        "kind": "DAMAGE",
+        "break_on_hit": 24
       }
     },
     "B": {
@@ -102,6 +106,14 @@
         "scope": "ALL",
         "description_key": "LAST_AKANE_DESCRIPTION",
         "appearance_id": "A06"
+      },
+      "last_spell_effect": {
+        "kind": "DAMAGE"
+      },
+      "full_chant_passive": {
+        "id": "AKANE_P01",
+        "kind": "FULL_CHANT_HP_MULTIPLIER",
+        "multiplier_bp": 11000
       }
     },
     "C": {
@@ -153,6 +165,11 @@
         "scope": "ALL",
         "description_key": "LAST_TSUMUGI_DESCRIPTION",
         "artwork_path": "res://assets/ui/v35/status_barrier.svg"
+      },
+      "last_spell_effect": {
+        "kind": "HEAL_BARRIER",
+        "heal_max_hp_bp": 3500,
+        "barrier_amount": 260
       }
     }
   },

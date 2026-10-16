@@ -38,6 +38,8 @@ static func config(version: String) -> Dictionary:
 		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
 	c["lv40_actor_passives"] = {}
 	c["last_spell_name_keys"] = {}
+	c["last_spell_effects"] = {}
+	c["lv40_full_chant_passives"] = {}
 	c["m5_actor_stats"] = {}
 	c["lv40_actor_definitions"] = {}
 	c["m5_element_resistance"] = {}
@@ -46,6 +48,9 @@ static func config(version: String) -> Dictionary:
 		var passive: Dictionary = roster["actors"][actor].get("passive", {})
 		if not passive.is_empty():
 			c["lv40_actor_passives"][actor] = passive.duplicate(true)
+		var full_passive: Dictionary = roster["actors"][actor].get("full_chant_passive", {})
+		if not full_passive.is_empty():
+			c["lv40_full_chant_passives"][actor] = full_passive.duplicate(true)
 	var all_actors: Array[String] = party_ids.duplicate()
 	all_actors.append("Boss")
 	for actor: String in all_actors:
@@ -121,6 +126,7 @@ static func config(version: String) -> Dictionary:
 		var actor_data: Dictionary = roster["actors"][actor]
 		var spell: String = str(actor_data["last_spell_id"])
 		c["last_spell_name_keys"][actor] = str(actor_data["last_spell_name_key"])
+		c["last_spell_effects"][spell] = actor_data["last_spell_effect"].duplicate(true)
 		c["last_spell_targeting"][spell] = actor_data["last_spell_targeting"].duplicate(true)
 		c["last_spell_slots"][actor] = {"spell_id":spell,"unlocked":true,
 			"planned_delay_rounds":2,"base_stability":10}

@@ -38,7 +38,18 @@ static func read(path: String = PATH) -> Dictionary:
 		if int(actor["max_hp"]) < 1 or not actor.get("loadout", null) is Array or actor["loadout"].size() != DECK_SIZE:
 			push_error("Invalid 12-SP loadout for slot: " + slot)
 			return {}
-		if not actor.get("last_spell_profile", null) is Dictionary or not actor.get("last_spell_targeting", null) is Dictionary:
+		if not actor.get("last_spell_profile", null) is Dictionary or not actor.get("last_spell_targeting", null) is Dictionary or not actor.get("last_spell_effect", null) is Dictionary:
+			return {}
+		var effect: Dictionary = actor["last_spell_effect"]
+		if not ["DAMAGE", "HEAL_BARRIER"].has(str(effect.get("kind",""))):
+			return {}
+		if str(effect.get("kind","")) == "HEAL_BARRIER":
+			if int(effect.get("heal_max_hp_bp", 0)) <= 0 or int(effect.get("barrier_amount", -1)) < 0:
+				return {}
+		var full_passive: Variant = actor.get("full_chant_passive", {})
+		if not full_passive is Dictionary:
+			return {}
+		if not full_passive.is_empty() and (str(full_passive.get("kind", "")) != "FULL_CHANT_HP_MULTIPLIER" or str(full_passive.get("id", "")).is_empty() or int(full_passive.get("multiplier_bp", 0)) < 0):
 			return {}
 		for card: Variant in actor["loadout"]:
 			if not card is String or str(card).is_empty():
