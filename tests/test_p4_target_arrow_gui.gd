@@ -101,7 +101,13 @@ func run() -> void:
 	check(Model.state_hash(screen.snapshot) == hash,"1280-DOMAIN-UNCHANGED")
 	screen.cancel_action()
 	root.size = Vector2i(1920,1080)
-	await create_timer(0.25).timeout
+	# Root viewport size does not guarantee the X11 window itself was resized.
+	# In the 1280x720 default test window, physical mouse x=1270 was clipped
+	# before it could reach a Boss hit rect in a 1920x1080 screen.
+	DisplayServer.window_set_size(Vector2i(1920,1080))
+	await create_timer(0.3).timeout
+	print("TARGET_ARROW_WINDOW_DIAG reported=%s root=%s visible=%s" % [
+		DisplayServer.window_get_size(),root.size,root.get_visible_rect().size])
 	await try_drag(screen,"1920")
 	check(Model.state_hash(screen.snapshot) == hash,"1920-DOMAIN-UNCHANGED")
 	screen.queue_free()
