@@ -12,6 +12,9 @@ on:
       - 'scripts/domain/m5/status/hp_lifecycle_bridge.gd'
       - 'scripts/domain/m5/integration/m5_domain_resolver.gd'
       - 'scripts/domain/m5/lv40/lv40_card_resolver.gd'
+      - 'scripts/domain/m5/damage/damage_pipeline_resolver.gd'
+      - 'scripts/domain/m5/lv40/lv40_cast_effect.gd'
+      - 'scripts/domain/m5/boss/boss_ai_policy.gd'
   workflow_dispatch:
 permissions:
   contents: read
