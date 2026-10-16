@@ -31,6 +31,8 @@ extends Node2D
 	set(value):
 		shadow_width = clampf(value, 0.0, 1.0)
 		queue_redraw()
+const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
+var state_cg: Sprite2D
 var body: AnimatedSprite2D
 var motion: Tween
 var home: Vector2
@@ -107,6 +109,7 @@ func _on_art_changed() -> void:
 	body.play("idle")
 	if downed: body.stop()
 	_align_frame()
+	_sync_state_cg()
 	queue_redraw()
 
 func _align_frame() -> void:
@@ -129,6 +132,29 @@ func _align_frame() -> void:
 	var frame_size: Vector2 = body.sprite_frames.get_frame_texture(body.animation, body.frame).get_size()
 	body.centered = false
 	body.position = Vector2(-frame_size.x * 0.5, -appearance.baseline_for(row, body.frame)) * body.scale + appearance.foot_offset
+
+func _sync_state_cg() -> void:
+	# Purely visual: no HP mutation, actor removal or target eligibility here.
+	if body == null:
+		return
+	var status: String = "INCAPACITATED" if downed else "ACTIVE"
+	var texture: Texture2D = AppearanceRegistry.field_cg_for_status(actor_id,status)
+	if texture == null:
+		if state_cg != null:
+			state_cg.visible = false
+		body.visible = true
+		return
+	if state_cg == null:
+		state_cg = Sprite2D.new()
+		state_cg.name = "CharacterStateCG"
+		add_child(state_cg)
+	state_cg.texture = texture
+	state_cg.centered = true
+	state_cg.position = Vector2(0,-visual_height * 0.5)
+	state_cg.scale = Vector2.ONE * (visual_height / maxf(1.0,float(texture.get_height())))
+	state_cg.modulate = base_tint
+	state_cg.visible = not retired
+	body.visible = false
 
 func _draw() -> void:
 	if cast_active:
@@ -155,7 +181,9 @@ func play_attack(target_position: Vector2) -> void:
 func play_hit() -> void:
 	if Engine.is_editor_hint() or body == null or retired: return
 	body.modulate = Color(2,1.3,1.5)
-	create_tween().tween_property(body,"modulate",base_tint,0.28)
+	var drawable: CanvasItem = state_cg if state_cg != null and state_cg.visible else body
+	drawable.modulate = Color(2,1.3,1.5)
+	create_tween().tween_property(drawable,"modulate",base_tint,0.28)
 
 func _update_base_tint() -> void:
 	# base_tint remains the public resting colour used by skip/reset contracts.
@@ -183,6 +211,7 @@ func project_conditions(status: String, casting: bool, barrier: bool, field_reti
 	condition_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
 	_update_base_tint()
 	body.modulate = base_tint
+	_sync_state_cg()
 	queue_redraw()
 
 func reset_motion() -> void:
@@ -196,6 +225,7 @@ func reset_motion() -> void:
 	_align_frame()
 	_update_base_tint()
 	body.modulate = base_tint
+	_sync_state_cg()
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return

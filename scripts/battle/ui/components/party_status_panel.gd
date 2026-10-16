@@ -21,7 +21,7 @@ func _ready() -> void:
 		view.custom_minimum_size = Vector2(260, 100)
 		add_child(view)
 		view.get_node("Layout/Stats").add_theme_constant_override("separation", 0)
-		var portrait: Texture2D = AppearanceRegistry.portrait_for(actor)
+		var portrait: Texture2D = AppearanceRegistry.portrait_for_status(actor,"ACTIVE")
 		view.configure(actor, tr(str(roster_data["actors"][actor]["name_key"])), portrait, [Color("efc675"), Color("75d6ff"), Color("df9cff")][i % 3])
 		view.hero_selected.connect(func(id: String) -> void: actor_requested.emit(id))
 		roster[actor] = view
@@ -54,7 +54,9 @@ func render_party(projection: Dictionary, selected_actor: String) -> String:
 	for id: String in roster:
 		var status_key: String = "BATTLE_" + str(projection["actors"][id]["status"])
 		var name_key: String = str(projection.get("actor_name_keys",{}).get(id,"BATTLE_HERO_"+id))
-		roster[id].configure(id, tr(name_key), roster[id].portrait.texture, roster[id].accent)
+		roster[id].configure(id, tr(name_key),
+			AppearanceRegistry.portrait_for_status(id,str(projection["actors"][id]["status"])),
+			roster[id].accent)
 		roster[id].update_projection(projection["actors"][id], tr(status_key))
 		roster[id].set_selected(id == selected_actor)
 		var badges: Array = status_badges_for(projection, id, translate)
