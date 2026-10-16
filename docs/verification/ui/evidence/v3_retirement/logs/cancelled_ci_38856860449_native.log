@@ -1,0 +1,26 @@
+﻿2026-10-16T05:40:03.8221778Z ##[group]Run set -Eeuo pipefail
+2026-10-16T05:40:03.8222120Z [36;1mset -Eeuo pipefail[0m
+2026-10-16T05:40:03.8222361Z [36;1msudo apt-get update -qq[0m
+2026-10-16T05:40:03.8222663Z [36;1msudo apt-get install -y xvfb xauth libgl1-mesa-dri[0m
+2026-10-16T05:40:03.8223005Z [36;1mprefix="retirement_ci_${GITHUB_RUN_ID}"[0m
+2026-10-16T05:40:03.8223353Z [36;1mtimeout 160s xvfb-run -a -s '-screen 0 1920x1080x24' \[0m
+2026-10-16T05:40:03.8223752Z [36;1m  env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \[0m
+2026-10-16T05:40:03.8224214Z [36;1m  "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \[0m
+2026-10-16T05:40:03.8224922Z [36;1m  --script res://tests/capture_p4_last_spell_retirement.gd -- "--capture-prefix=$prefix" > "$RUNNER_TEMP/retirement/native.log" 2>&1[0m
+2026-10-16T05:40:03.8225662Z [36;1mgrep -Fxq 'RETIREMENT_RENDER_REPORT executed=29 passed=29 failed=0' "$RUNNER_TEMP/retirement/native.log"[0m
+2026-10-16T05:40:03.8226243Z [36;1mpython3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/native.log"[0m
+2026-10-16T05:40:03.8301598Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T05:40:03.8301922Z env:
+2026-10-16T05:40:03.8302408Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T05:40:03.8302927Z ##[endgroup]
+2026-10-16T05:40:09.9380011Z Reading package lists...
+2026-10-16T05:40:10.0850955Z Building dependency tree...
+2026-10-16T05:40:10.0857151Z Reading state information...
+2026-10-16T05:40:10.2145990Z xvfb is already the newest version (2:21.1.12-1ubuntu1.8).
+2026-10-16T05:40:10.2146901Z xauth is already the newest version (1:1.1.2-1build1).
+2026-10-16T05:40:10.2147580Z xauth set to manually installed.
+2026-10-16T05:40:10.2148077Z libgl1-mesa-dri is already the newest version (25.2.8-0ubuntu0.24.04.4).
+2026-10-16T05:40:10.2148555Z libgl1-mesa-dri set to manually installed.
+2026-10-16T05:40:10.2149001Z 0 upgraded, 0 newly installed, 0 to remove and 44 not upgraded.
+2026-10-16T05:40:19.8325339Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/native.log", "errors": [], "warnings": ["line 2: WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver."], "summaries": 1}], "errors": 0}
+2026-10-16T05:40:19.8441325Z ##[error]The operation was canceled.

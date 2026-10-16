@@ -1,0 +1,42 @@
+﻿2026-10-16T05:39:39.1113955Z ##[group]Run set -Eeuo pipefail
+2026-10-16T05:39:39.1114200Z [36;1mset -Eeuo pipefail[0m
+2026-10-16T05:39:39.1114492Z [36;1mfor spec in \[0m
+2026-10-16T05:39:39.1114658Z [36;1m  'test_lv40_content:LV40_CONTENT_REPORT:37' \[0m
+2026-10-16T05:39:39.1114867Z [36;1m  'test_lv40_roster:CURRENT_ROSTER_REPORT:31' \[0m
+2026-10-16T05:39:39.1115069Z [36;1m  'test_lv40_domain:LV40_DOMAIN_REPORT:83' \[0m
+2026-10-16T05:39:39.1115261Z [36;1m  'test_lv40_edges:LV40_EDGES_REPORT:37' \[0m
+2026-10-16T05:39:39.1115469Z [36;1m  'test_p4_last_spell_retirement:RETIREMENT_REPORT:29' \[0m
+2026-10-16T05:39:39.1115703Z [36;1m  'test_p4_component_contract:V1_COMPONENT_REPORT:24' \[0m
+2026-10-16T05:39:39.1115901Z [36;1m  'test_p4_hud:P4_2_REPORT:36' \[0m
+2026-10-16T05:39:39.1116104Z [36;1m  'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32'; do[0m
+2026-10-16T05:39:39.1116347Z [36;1m  bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/retirement"[0m
+2026-10-16T05:39:39.1116784Z [36;1mdone[0m
+2026-10-16T05:39:39.1117061Z [36;1mfor suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do[0m
+2026-10-16T05:39:39.1117333Z [36;1m  log="$RUNNER_TEMP/retirement/$suite.log"[0m
+2026-10-16T05:39:39.1117627Z [36;1m  timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1[0m
+2026-10-16T05:39:39.1117913Z [36;1m  python3 tools/ci/assert_godot_logs.py "$log"[0m
+2026-10-16T05:39:39.1118091Z [36;1mdone[0m
+2026-10-16T05:39:39.1171985Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T05:39:39.1172190Z env:
+2026-10-16T05:39:39.1172481Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T05:39:39.1172801Z ##[endgroup]
+2026-10-16T05:39:39.6049447Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_lv40_content.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:39.6096894Z LV40_CONTENT_REPORT executed=37 passed=37 failed=0
+2026-10-16T05:39:40.0861305Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_lv40_roster.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:40.0905836Z CURRENT_ROSTER_REPORT executed=31 passed=31 failed=0
+2026-10-16T05:39:41.4841060Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_lv40_domain.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:41.4885550Z LV40_DOMAIN_REPORT executed=83 passed=83 failed=0
+2026-10-16T05:39:42.3190551Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_lv40_edges.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:42.3232984Z LV40_EDGES_REPORT executed=37 passed=37 failed=0
+2026-10-16T05:39:43.4391296Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_p4_last_spell_retirement.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:43.4438052Z RETIREMENT_REPORT executed=29 passed=29 failed=0
+2026-10-16T05:39:44.5605532Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_p4_component_contract.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:44.5649648Z V1_COMPONENT_REPORT executed=24 passed=24 failed=0
+2026-10-16T05:39:45.9610467Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_p4_hud.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:39:45.9657693Z P4_2_REPORT executed=36 passed=36 failed=0
+2026-10-16T05:40:01.6385269Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_p4_lv40_playable.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:40:01.6434161Z P4_LV40_PLAYABLE_REPORT executed=32 passed=32 failed=0
+2026-10-16T05:40:02.1298345Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_battle_state.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:40:02.5020914Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_deck_builder.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:40:02.8690755Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_combat_ui.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:40:03.2368928Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_turn_flow.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}

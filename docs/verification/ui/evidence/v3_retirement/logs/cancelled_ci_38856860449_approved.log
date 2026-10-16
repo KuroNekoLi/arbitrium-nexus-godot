@@ -1,0 +1,8 @@
+﻿2026-10-16T05:40:03.2440989Z ##[group]Run bash tools/ci/run_suite.sh 'test_retirement_approved_rules:RETIREMENT_APPROVED_REPORT:26' "$RUNNER_TEMP/retirement"
+2026-10-16T05:40:03.2441553Z [36;1mbash tools/ci/run_suite.sh 'test_retirement_approved_rules:RETIREMENT_APPROVED_REPORT:26' "$RUNNER_TEMP/retirement"[0m
+2026-10-16T05:40:03.2498881Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T05:40:03.2499077Z env:
+2026-10-16T05:40:03.2499364Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T05:40:03.2499695Z ##[endgroup]
+2026-10-16T05:40:03.8129849Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_retirement_approved_rules.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:40:03.8174723Z RETIREMENT_APPROVED_REPORT executed=26 passed=26 failed=0

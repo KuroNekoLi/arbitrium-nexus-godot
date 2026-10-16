@@ -43,3 +43,7 @@ Domain map像Kotlin不可變State的場上成員集合，和HP生命狀態分開
 初次候選10698d6的CI [38856012734](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38856012734) 在完整回歸執行中因master更新而取消，不算PASS；新RET26／native29尚未啟動，不消耗其第三次執行。保留已啟動Domain runner的執行次數，最終candidate只跑scoped suites，完整1238／100seeds留給master第三次。
 
 重新正常merge master `45d23de13eb583fa7db8964ddc4b68b4f5dc2f93`：保留JSON roster、data-driven Last Spell effects／被動、最新角色外觀來源、12SP煙霧測試與中文規格歸檔。三個衝突逐項解決：Spec Index保留新入口加RET核准連結；Encounter保留Roster API並升v3；CastEffect保留資料化效果，在效果後執行retirement。master移除8卡舊引擎是另一工作線已提交變更，本輪沒有將其復原或覆蓋。
+
+第二次CI [38856860449](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38856860449) 在取消前已完成RET26、來源29、HUD36、Component24、Playable32、Lv40Content37/Domain83/Edges37/Roster31及4個12SP smoke；原生步驟啟動中，保守算一次。不能將cancelled workflow當整體成功，亦不能重設已完成runner次數。此時master另推`61fea52d94e6abc283f21f0033fb8be30c76f458`，加入獨立卡牌資格資料、RoleTag/Character檢查與未實作卡的開場拒絕；已普通merge保留。Roster測試從31增36是該工作線新增5項斷言，不是本輪放寬預期。
+
+新RET／capture已達3次，最新合併runtime的第四次需使用者追加授權；來源29/HUD/Component/Playable的最後一次留給最新candidate，master僅跑完整Domain最後一次並重用同源scoped收據。未取得授權前不啟動第四次RET／capture。

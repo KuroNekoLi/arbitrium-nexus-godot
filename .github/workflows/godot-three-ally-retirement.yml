@@ -38,12 +38,13 @@ jobs:
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/seeds.log"
           echo 'RETIREMENT_DOMAIN_REPORT assertions=1238 seeds=100 failed=0'
       - name: Source retirement and actual scene contracts
+        if: inputs.stage == 'candidate'
         shell: bash
         run: |
           set -Eeuo pipefail
           for spec in \
             'test_lv40_content:LV40_CONTENT_REPORT:37' \
-            'test_lv40_roster:CURRENT_ROSTER_REPORT:31' \
+            'test_lv40_roster:CURRENT_ROSTER_REPORT:36' \
             'test_lv40_domain:LV40_DOMAIN_REPORT:83' \
             'test_lv40_edges:LV40_EDGES_REPORT:37' \
             'test_p4_last_spell_retirement:RETIREMENT_REPORT:29' \
@@ -63,7 +64,7 @@ jobs:
         run: bash tools/ci/run_suite.sh 'test_retirement_approved_rules:RETIREMENT_APPROVED_REPORT:26' "$RUNNER_TEMP/retirement"
       - name: Record scoped master evidence reuse
         if: inputs.stage == 'master'
-        run: echo 'RET-01..05 candidate receipt reused only when runtime sources are identical. Original group exhausted after local1/local2/candidateCI3; not rerun.'
+        run: echo 'Scoped candidate receipts reused only when runtime sources are identical; master runs full 1238 regression and 100 seeds without duplicating scoped groups.'
       - name: Candidate native render and real Controller defeat tape
         if: inputs.stage == 'candidate'
         shell: bash
