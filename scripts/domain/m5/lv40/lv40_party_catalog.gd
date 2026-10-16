@@ -28,7 +28,7 @@ static func read(path: String = PATH) -> Dictionary:
 		var actor: Variant = actors[slot]
 		if not actor is Dictionary:
 			return {}
-		for key: String in ["character_id", "variant_id", "name_key", "appearance_path", "last_spell_id"]:
+		for key: String in ["character_id", "variant_id", "name_key", "appearance_path", "last_spell_id", "last_spell_name_key"]:
 			if str(actor.get(key, "")).is_empty():
 				push_error("Roster actor missing " + key + ": " + slot)
 				return {}
@@ -37,6 +37,8 @@ static func read(path: String = PATH) -> Dictionary:
 				return {}
 		if int(actor["max_hp"]) < 1 or not actor.get("loadout", null) is Array or actor["loadout"].size() != DECK_SIZE:
 			push_error("Invalid 12-SP loadout for slot: " + slot)
+			return {}
+		if not actor.get("last_spell_profile", null) is Dictionary or not actor.get("last_spell_targeting", null) is Dictionary:
 			return {}
 		for card: Variant in actor["loadout"]:
 			if not card is String or str(card).is_empty():

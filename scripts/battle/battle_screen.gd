@@ -399,8 +399,8 @@ func _open_last_preview() -> void:
 	presentation["actor_id"] = selected_actor
 	var texture: Texture2D = Appearances.cg_for(selected_actor)
 	if texture == null: texture = hud.roster[selected_actor].portrait.texture
-	var character: String = str(config.get("lv40_actor_definitions", {}).get(selected_actor, {}).get("character_id", "")) if config.get("m5_lv40_enabled", false) else ""
-	var title: String = tr("last_spell." + character + ".name") if not character.is_empty() else tr("BATTLE_LAST")
+	var name_key: String = str(config.get("last_spell_name_keys", {}).get(selected_actor, "BATTLE_LAST"))
+	var title: String = tr(name_key)
 	_hand_before_last = hud.hand.visible
 	hud.hand.hide()
 	hud.last_preview.present(title, inspected, texture, targets, _reason(str(inspected.get("error", ""))), presentation)

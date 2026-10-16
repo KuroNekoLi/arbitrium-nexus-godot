@@ -37,6 +37,7 @@ static func config(version: String) -> Dictionary:
 		"m5_4_last_release_recoil":{},
 		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
 	c["lv40_actor_passives"] = {}
+	c["last_spell_name_keys"] = {}
 	c["m5_actor_stats"] = {}
 	c["lv40_actor_definitions"] = {}
 	c["m5_element_resistance"] = {}
@@ -115,21 +116,20 @@ static func config(version: String) -> Dictionary:
 		var p: Dictionary = profile(r[0],r[1],r[2],"GUARANTEED" if ["B06","B09"].has(skill) else "RANDOM_PERCENT")
 		p["crit_eligible"] = false
 		c["m5_enemy_profiles"][skill] = p
+	c["last_spell_targeting"] = {}
 	for actor: String in party_ids:
 		var actor_data: Dictionary = roster["actors"][actor]
 		var spell: String = str(actor_data["last_spell_id"])
+		c["last_spell_name_keys"][actor] = str(actor_data["last_spell_name_key"])
+		c["last_spell_targeting"][spell] = actor_data["last_spell_targeting"].duplicate(true)
 		c["last_spell_slots"][actor] = {"spell_id":spell,"unlocked":true,
 			"planned_delay_rounds":2,"base_stability":10}
-		c["last_spell_cost_definitions"][spell] = {"card_id":spell,
-			"ap_cost":3,"mp_cost":int(actor_data["last_spell_mp_cost"])}
-		c["m5_spell_profiles"][spell] = profile("PHYSICAL" if spell == "LS_REN_SWORD_V1" else "MAGICAL",
-			65000 if spell == "LS_REN_SWORD_V1" else 68000,1,
-			"RANDOM_PERCENT" if spell == "LS_REN_SWORD_V1" else "GUARANTEED",
-			"FIRE" if spell == "LS_AKANE_MAGE_V1" else "NEUTRAL")
-	c["last_spell_targeting"] = {
-		"LS_REN_SWORD_V1":{"team":"ENEMY","scope":"SINGLE","description_key":"LAST_REN_DESCRIPTION","artwork_path":"res://assets/ui/v35/cmd_basic.svg"},
-		"LS_AKANE_MAGE_V1":{"team":"ENEMY","scope":"ALL","description_key":"LAST_AKANE_DESCRIPTION","appearance_id":"A06"},
-		"LS_TSUMUGI_HEAL_V1":{"team":"ALLY","scope":"ALL","description_key":"LAST_TSUMUGI_DESCRIPTION","artwork_path":"res://assets/ui/v35/status_barrier.svg"}}
+		c["last_spell_cost_definitions"][spell] = {"card_id":spell,"ap_cost":3,
+			"mp_cost":int(actor_data["last_spell_mp_cost"])}
+		var spell_profile: Dictionary = actor_data["last_spell_profile"]
+		c["m5_spell_profiles"][spell] = profile(str(spell_profile["damage_kind"]),
+			int(spell_profile["multiplier_bp"]),1,str(spell_profile["hit_mode"]),
+			str(spell_profile["element"]))
 	c["actorDisplayNames"] = {}
 	c["actor_name_keys"] = {}
 	for actor: String in party_ids:

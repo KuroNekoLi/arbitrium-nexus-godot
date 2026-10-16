@@ -43,6 +43,19 @@
         "id": "REN_P01",
         "kind": "BREAK_FIRST_HIT",
         "amount": 2
+      },
+      "last_spell_name_key": "last_spell.ren.name",
+      "last_spell_profile": {
+        "damage_kind": "PHYSICAL",
+        "multiplier_bp": 65000,
+        "hit_mode": "RANDOM_PERCENT",
+        "element": "NEUTRAL"
+      },
+      "last_spell_targeting": {
+        "team": "ENEMY",
+        "scope": "SINGLE",
+        "description_key": "LAST_REN_DESCRIPTION",
+        "artwork_path": "res://assets/ui/v35/cmd_basic.svg"
       }
     },
     "B": {
@@ -76,7 +89,20 @@
         "A05",
         "A06",
         "A07"
-      ]
+      ],
+      "last_spell_name_key": "last_spell.akane.name",
+      "last_spell_profile": {
+        "damage_kind": "MAGICAL",
+        "multiplier_bp": 68000,
+        "hit_mode": "GUARANTEED",
+        "element": "FIRE"
+      },
+      "last_spell_targeting": {
+        "team": "ENEMY",
+        "scope": "ALL",
+        "description_key": "LAST_AKANE_DESCRIPTION",
+        "appearance_id": "A06"
+      }
     },
     "C": {
       "character_id": "tsumugi",
@@ -114,6 +140,19 @@
         "id": "TSUMUGI_P01",
         "kind": "HEAL_FIRST_SP",
         "amount": 60
+      },
+      "last_spell_name_key": "last_spell.tsumugi.name",
+      "last_spell_profile": {
+        "damage_kind": "MAGICAL",
+        "multiplier_bp": 68000,
+        "hit_mode": "GUARANTEED",
+        "element": "NEUTRAL"
+      },
+      "last_spell_targeting": {
+        "team": "ALLY",
+        "scope": "ALL",
+        "description_key": "LAST_TSUMUGI_DESCRIPTION",
+        "artwork_path": "res://assets/ui/v35/status_barrier.svg"
       }
     }
   },
