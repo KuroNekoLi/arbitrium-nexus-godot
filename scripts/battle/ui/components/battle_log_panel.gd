@@ -1,3 +1,4 @@
+@tool
 extends PanelContainer
 ## Reusable read-only battle log, independent from card/action preview.
 ## V3.5.4: rows rendered from real DomainEvents (seq chip + category rail).

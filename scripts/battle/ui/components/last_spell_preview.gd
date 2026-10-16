@@ -1,3 +1,4 @@
+@tool
 extends Control
 ## Read-only Last Spell cut-in. Activation is an intent, never a resource write.
 signal activation_requested(target_id: String)
@@ -6,6 +7,7 @@ signal target_changed(target_id: String)
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 const Visual = preload("res://scripts/battle/ui/components/battle_command_visual.gd")
 const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
+const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 const TargetCard = preload("res://scripts/battle/ui/components/last_spell_target_card.gd")
 const TargetMarker = preload("res://scripts/battle/ui/components/last_spell_target_marker.gd")
 var artwork: TextureRect
@@ -181,7 +183,10 @@ func present(spell_name: String, quote: Dictionary, texture: Texture2D, targets:
 	rune.modulate = Color(accent, 0.6)
 	title.text = spell_name
 	title.add_theme_color_override("font_color", accent.lightened(0.3))
-	artwork.texture = texture
+	# CG is distinct from the target/party portrait crop. Legacy texture stays fallback.
+	var actor_id: String = str(presentation.get("actor_id", ""))
+	var cg: Texture2D = AppearanceRegistry.cg_for(actor_id)
+	artwork.texture = cg if cg != null else texture
 	var appearance: Resource = presentation.get("appearance")
 	spell_art.texture = presentation.get("spell_art", appearance.artwork if appearance != null else preload("res://assets/ui/v35/cmd_last.svg"))
 	description.text = tr(str(targeting.get("description_key", "BATTLE_LAST_WARNING")))

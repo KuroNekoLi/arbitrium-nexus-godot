@@ -1,3 +1,4 @@
+@tool
 extends Button
 ## A portrait target choice, not an actor switch or a gameplay state owner.
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")

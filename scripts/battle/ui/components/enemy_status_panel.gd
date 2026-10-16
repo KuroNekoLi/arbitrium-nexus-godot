@@ -1,3 +1,4 @@
+@tool
 extends PanelContainer
 ## V3.3: a composed, read-only Boss status with distinct HP/Break and public Intent.
 ## Rendered threat styling is ornamental; NEVER deduce danger, targets or legality.
@@ -23,7 +24,7 @@ var intent_icon: TextureRect
 var hit_chip: Label
 var target_badges: HBoxContainer
 var target_portrait: TextureRect
-const PORTRAITS: Texture2D = preload("res://assets/portraits/party_portraits.png")
+const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 
 func _make_chip(parent: Node, name: String, accent: Color) -> Label:
 	var chip := Label.new()
@@ -221,10 +222,7 @@ func render_enemy(projection: Dictionary) -> void:
 		var targets: Array = announced.get("target_ids", [])
 		# The portrait identifies a published target, not a predicted next victim.
 		if targets.size() == 1 and targets[0] in ["A", "B", "C"]:
-			var atlas := AtlasTexture.new()
-			atlas.atlas = PORTRAITS
-			atlas.region = Rect2(["A", "B", "C"].find(targets[0]) * 724, 0, 724, 724)
-			target_portrait.texture = atlas
+			target_portrait.texture = AppearanceRegistry.portrait_for(str(targets[0]))
 			target_portrait.show()
 		var names: PackedStringArray = []
 		for target: String in announced.get("target_ids", []):

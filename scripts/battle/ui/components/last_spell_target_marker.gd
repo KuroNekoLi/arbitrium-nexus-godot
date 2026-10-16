@@ -1,3 +1,4 @@
+@tool
 extends Button
 ## Pure presentation and selection over an existing actor slot.
 var accent: Color = Color("#6FD6FF")

@@ -1,3 +1,4 @@
+@tool
 extends PanelContainer
 ## V3.5.2: icon + subtitle command rows. Command IDs, event kinds and fields are
 ## unchanged from V3.4; Last Spell / End Phase receive the strongest treatment.

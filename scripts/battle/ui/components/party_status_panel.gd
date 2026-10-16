@@ -1,6 +1,7 @@
+@tool
 extends VBoxContainer
 const Roster = preload("res://scenes/ui/hero_roster_item.tscn")
-const Portraits: Texture2D = preload("res://assets/portraits/party_portraits.png")
+const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 const ICON_BARRIER: Texture2D = preload("res://assets/ui/v35/status_barrier.svg")
 const ICON_GUARD: Texture2D = preload("res://assets/ui/v35/status_guard.svg")
 const ICON_CASTING: Texture2D = preload("res://assets/ui/v35/status_casting.svg")
@@ -17,9 +18,7 @@ func _ready() -> void:
 		view.custom_minimum_size = Vector2(260, 100)
 		add_child(view)
 		view.get_node("Layout/Stats").add_theme_constant_override("separation", 0)
-		var portrait := AtlasTexture.new()
-		portrait.atlas = Portraits
-		portrait.region = Rect2(i * 724, 0, 724, 724)
+		var portrait: Texture2D = AppearanceRegistry.portrait_for(actor)
 		view.configure(actor, tr("BATTLE_HERO_" + actor), portrait, [Color("efc675"), Color("75d6ff"), Color("df9cff")][i])
 		view.hero_selected.connect(func(id: String) -> void: actor_requested.emit(id))
 		roster[actor] = view

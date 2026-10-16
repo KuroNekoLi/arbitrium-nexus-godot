@@ -1,3 +1,4 @@
+@tool
 extends PanelContainer
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 signal command_requested(kind: String, fields: Dictionary)

@@ -1,3 +1,4 @@
+@tool
 extends Control
 ## V1 composition facade. Keep all public signals/fields for BattleScreen + P4 tests.
 const HeaderScene = preload("res://scenes/battle/ui/team_phase_header.tscn")

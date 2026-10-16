@@ -1,3 +1,4 @@
+@tool
 extends Control
 ## Display-only hand fan; owns hover/selection appearance but never Domain state.
 const CardView = preload("res://scripts/battle/ui/battle_card_view.gd")

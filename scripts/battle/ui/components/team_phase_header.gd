@@ -1,3 +1,4 @@
+@tool
 extends Control
 ## V2: three independent islands keep the world visible between AP, phase and tools.
 ## The root remains TopBar (height 64) to preserve P42 and facade contracts.

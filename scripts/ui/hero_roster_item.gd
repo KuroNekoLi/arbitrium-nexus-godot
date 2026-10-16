@@ -1,3 +1,4 @@
+@tool
 class_name HeroRosterItem
 extends Button
 
@@ -26,7 +27,8 @@ func _ready() -> void:
 	# This reusable component also lives in the legacy scene, which does not
 	# initialize BattleScreen's catalogues. Installation is idempotent and
 	# does not change the user's locale or any combat state.
-	BattleTranslations.install()
+	if not Engine.is_editor_hint():
+		BattleTranslations.install()
 	pressed.connect(_on_pressed)
 	var frame := NinePatchRect.new()
 	frame.name = "FantasyBorder"

@@ -1,3 +1,4 @@
+@tool
 extends Control
 signal target_requested(actor: String)
 var target_buttons: Dictionary = {}

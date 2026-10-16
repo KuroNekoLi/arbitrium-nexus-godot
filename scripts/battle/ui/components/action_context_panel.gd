@@ -1,3 +1,4 @@
+@tool
 extends PanelContainer
 ## V2.2 action details: preview/settings scroll; Confirm and Cancel stay fixed.
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
