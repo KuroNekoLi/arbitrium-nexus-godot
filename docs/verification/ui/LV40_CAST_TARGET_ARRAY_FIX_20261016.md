@@ -12,4 +12,6 @@
 
 Godot `4.7.2.stable.official.ed1daf0bf`，Compatibility renderer。修正後本機 headless import exit 0、log gate 0 errors；`test_lv40_domain.gd` 83/83 PASS、exit 0、log gate 0 errors，包含 `DEMO-12-FULL-DELAYED`、`DEMO-12-LAST-TWO-ROUNDS` 與 `DEMO-12-LAST-HEAL-EXHAUSTED`。原始日誌在 `evidence/v3_retirement/logs/cast_target_import_20261016.log` 與 `cast_target_lv40_domain_20261016.log`。原始真人 GUI 報錯是使用者提供的堆疊；本次未執行真人 GUI 回歸，也未重跑先前受限的 RET26／原生截圖群組。舊測試曾在另一版本通過，故這次的 83/83 只能證明目前 headless 路徑，不能取代使用者本機重新操作確認。
 
+另在使用者目前開啟的舊主工作樹 `aaa62a8`，套用相同兩處修正後執行同一 runner 一次：83/83 PASS、exit 0、strict log gate 0 errors；`DEMO-12-LAST-TWO-ROUNDS` 和 `DEMO-12-LAST-HEAL-EXHAUSTED` 都通過。原始日誌另存為 `evidence/v3_retirement/logs/cast_target_primary_20261016.log`。這確認本機舊版腳本不再於已涵蓋的延後施放路徑產生同一型別錯誤，但未涵蓋真人滑鼠流程。
+
 保留主工作樹的其他未提交修改；正式修正提交到 GitHub master 後，該工作樹仍須在安全處理本機修改後同步其他新版內容。回退可普通 revert 此小改動，不涉及狀態遷移。
