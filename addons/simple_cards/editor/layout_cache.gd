@@ -58,9 +58,16 @@ func load_cache() -> void:
 
 
 func save_cache() -> void:
+	var content := JSON.stringify(_sorted_layouts(), "\t")
+	# Startup sync runs whenever the editor loads this panel. Avoid touching a
+	# tracked cache file when its contents have not changed.
+	if FileAccess.file_exists(CACHE_PATH) and FileAccess.get_file_as_string(CACHE_PATH) == content:
+		_generate_layout_ids_file()
+		return
+
 	var file = FileAccess.open(CACHE_PATH, FileAccess.WRITE)
 	if file:
-		file.store_string(JSON.stringify(_sorted_layouts(), "\t"))
+		file.store_string(content)
 	
 	_generate_layout_ids_file()
 
