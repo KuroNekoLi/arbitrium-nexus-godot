@@ -1,0 +1,9 @@
+2026-10-16T02:27:15.4470000Z Evaluating p4-contracts.if
+2026-10-16T02:27:15.4470000Z Evaluating: (success() && (((github.ref != 'refs/heads/ui/v35-convergence-final-20261016') || (github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'))))
+2026-10-16T02:27:15.4470000Z Expanded: (true && (('refs/heads/ui/last-spell-target-scope-20261016' != 'refs/heads/ui/v35-convergence-final-20261016') || (github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4')))
+2026-10-16T02:27:15.4470000Z Result: true
+2026-10-16T02:27:15.4480000Z Requested labels: ubuntu-24.04
+2026-10-16T02:27:15.4480000Z Job defined at: KuroNekoLi/arbitrium-nexus-godot/.github/workflows/ci-p4-contracts.yml@refs/heads/ui/last-spell-target-scope-20261016
+2026-10-16T02:27:15.4480000Z Waiting for a runner to pick up this job...
+2026-10-16T02:27:15.8300000Z Job is about to start running on the hosted runner: GitHub Actions 1000001542
+2026-10-16T02:27:15.8300000Z Job is waiting for a hosted runner to come online.

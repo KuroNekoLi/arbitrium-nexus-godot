@@ -38,6 +38,7 @@ var cast_active: bool = false
 var barrier_active: bool = false
 var pulse: float = 0.0
 var base_tint: Color = Color.WHITE
+var condition_tint: Color = Color.WHITE
 
 func _enter_tree() -> void:
 	home = position
@@ -99,7 +100,8 @@ func _on_art_changed() -> void:
 	body.sprite_frames = frames
 	var size: Vector2 = frames.get_frame_texture("idle",0).get_size()
 	body.scale = Vector2.ONE * (visual_height / maxf(1.0,size.y))
-	body.modulate = _effective_tint()
+	_update_base_tint()
+	body.modulate = base_tint
 	body.play("idle")
 	_align_frame()
 	queue_redraw()
@@ -145,18 +147,20 @@ func play_attack(target_position: Vector2) -> void:
 func play_hit() -> void:
 	if Engine.is_editor_hint() or body == null: return
 	body.modulate = Color(2,1.3,1.5)
-	create_tween().tween_property(body,"modulate",_effective_tint(),0.28)
+	create_tween().tween_property(body,"modulate",base_tint,0.28)
 
-func _effective_tint() -> Color:
-	return (appearance.tint if appearance != null and not boss_art else Color.WHITE) * base_tint
+func _update_base_tint() -> void:
+	# base_tint remains the public resting colour used by skip/reset contracts.
+	base_tint = (appearance.tint if appearance != null and not boss_art else Color.WHITE) * condition_tint
 
 func project_conditions(status: String, casting: bool, barrier: bool) -> void:
 	if Engine.is_editor_hint() or body == null:
 		return
 	cast_active = casting
 	barrier_active = barrier
-	base_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
-	body.modulate = _effective_tint()
+	condition_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
+	_update_base_tint()
+	body.modulate = base_tint
 	queue_redraw()
 
 func reset_motion() -> void:
@@ -165,7 +169,8 @@ func reset_motion() -> void:
 	if motion: motion.kill()
 	position = home
 	body.play("idle")
-	body.modulate = _effective_tint()
+	_update_base_tint()
+	body.modulate = base_tint
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return

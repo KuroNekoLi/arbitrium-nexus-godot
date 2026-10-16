@@ -50,3 +50,9 @@ Resource 類似 Compose 可替換的 UI model；三個 Actor 是各自可配置�
 ## CI／合併狀態
 
 此文件首次提交時：等待候選 CI，尚未 merge master。後續正式收據會記錄確切 SHA、Run URL 與最終結果。Commit 的 `[skip ci]` 用於避免 Push 重複消耗測試批次；實際 CI 使用明確 workflow dispatch，不降低 assertion／log gate。
+
+### 首次候選 CI
+
+`e493fd9511ba0df70bbce39cee1d6a827134f658`：Fast [38840493491](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38840493491) SUCCESS；Editor 39/39 [38840497344](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38840497344) SUCCESS（本輪 Editor 第3次，已用滿）。P4 [38840495516](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38840495516) FAIL，feedback_edges 78/80；後續 convergence 尚未執行，所以沒有消耗該群組本輪第3次。
+
+根因：B/C `.tres` 有非白色 tint，新增 tint 合成使 `body.modulate` 正確包含外觀色，但公開 `base_tint` 仍只代表狀態色，違反原有 skip/reset 契約。修正為 condition_tint 儲存狀態，base_tint 快取實際合成後的 resting colour。保留全部原 assertions，沒有把測試改成忽略 tint。此修正只改呈現，沒有 Domain／Replay 變更。

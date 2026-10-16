@@ -1,0 +1,26 @@
+﻿2026-10-16T02:29:40.0594838Z ##[group]Run actions/upload-artifact@v4
+2026-10-16T02:29:40.0595155Z with:
+2026-10-16T02:29:40.0595372Z   name: ci-p4-contract-logs
+2026-10-16T02:29:40.0595664Z   path: /home/runner/work/_temp/p4-logs/
+2026-10-16T02:29:40.0595954Z   retention-days: 7
+2026-10-16T02:29:40.0596192Z   if-no-files-found: warn
+2026-10-16T02:29:40.0596444Z   compression-level: 6
+2026-10-16T02:29:40.0596673Z   overwrite: false
+2026-10-16T02:29:40.0596899Z   include-hidden-files: false
+2026-10-16T02:29:40.0597139Z env:
+2026-10-16T02:29:40.0597648Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:29:40.0598233Z ##[endgroup]
+2026-10-16T02:29:40.2550852Z (node:2273) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:29:40.2552782Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:29:40.2751803Z With the provided path, there will be 5 files uploaded
+2026-10-16T02:29:40.2771675Z Artifact name is valid!
+2026-10-16T02:29:40.2791486Z Root directory input is valid!
+2026-10-16T02:29:40.4860656Z Beginning upload of artifact content to blob storage
+2026-10-16T02:29:40.5435754Z (node:2273) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:29:40.5777793Z Uploaded bytes 8070
+2026-10-16T02:29:40.5995839Z Finished uploading artifact content to blob storage!
+2026-10-16T02:29:40.5997431Z SHA256 digest of uploaded artifact zip is 5f661ca372d1c208a107e6c601089498f8d6d0c33b7166048894dac562ddeda9
+2026-10-16T02:29:40.6000048Z Finalizing artifact upload
+2026-10-16T02:29:40.7994726Z Artifact ci-p4-contract-logs.zip successfully finalized. Artifact ID 12021276857
+2026-10-16T02:29:40.7996285Z Artifact ci-p4-contract-logs has been successfully uploaded! Final size is 8070 bytes. Artifact ID is 12021276857
+2026-10-16T02:29:40.8002959Z Artifact download URL: https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38840495516/artifacts/12021276857
