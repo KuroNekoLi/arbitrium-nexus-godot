@@ -1,0 +1,207 @@
+[
+  {
+    "ref": "feature/combo-preparation-v2",
+    "head": "b38f87e2f259b6a3227c955215bace0cc3fccf6c",
+    "changed_source": 18,
+    "missing_in_master": [
+      ".github/workflows/ci-combo-preparation-v2.yml",
+      "scripts/battle/combo_preparation_controller.gd",
+      "scripts/battle/presentation/combo_preview.gd",
+      "scripts/battle/ui/components/card_targeting_arrow_overlay.gd",
+      "scripts/battle/ui/components/combo_confirmation_overlay.gd",
+      "scripts/domain/m5/combo/prepared_combo_resolver.gd",
+      "tests/fixtures/combo_preparation_v2_fixture.gd",
+      "tests/test_combo_preparation_v2.gd",
+      "tests/test_combo_preparation_v2_gui.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-balance-research-chat-20261015",
+    "head": "0413572a8a484d9cecd3598407a2f9a3f5d228f4",
+    "changed_source": 55,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-card-localization-chat-20261015",
+    "head": "f568bf6c377ab457a98be31f1414e27b75888b0f",
+    "changed_source": 55,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-dispatch-index-20261015",
+    "head": "9423f6745dd3e076b0104c58562ffab441a33d08",
+    "changed_source": 55,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-encounter-ui-chat-20261015",
+    "head": "2034bb4294e0a7e0c780f48bf7db4f7c02a17d95",
+    "changed_source": 55,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-lv40-chat-20261015",
+    "head": "8c24c5680dac778430c682fa21865b2353222f79",
+    "changed_source": 62,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-performance-qa-chat-20261015",
+    "head": "e5912d0f7778117e29182d452e6c89114c6a6e22",
+    "changed_source": 58,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "handoff/p4-readmodel-chat-20261015",
+    "head": "8b1814b8dbd4e49836a95f1a78e544de066d76bb",
+    "changed_source": 55,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "integration/p4-reviewed-20261015",
+    "head": "af7530e0a39048eddd5e50d8adf19d9c532425e0",
+    "changed_source": 84,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/capture_p4_lv40_ui.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "origin/feature/spell-projectile-visuals-20261016",
+    "head": "eb68b703867656ae777d2ce4b77a59888045b67a",
+    "changed_source": 8,
+    "missing_in_master": [
+      ".github/workflows/godot-spell-projectile-visuals.yml",
+      "scripts/battle/presentation/spell_animation_catalog.gd",
+      "tests/capture_spell_projectile_vfx.gd",
+      "tests/test_spell_visual_foundation.gd"
+    ]
+  },
+  {
+    "ref": "origin/handoff/p4-balance-research-chat-20261015",
+    "head": "0efaea66ae68243127757b5175efa54b91d53a21",
+    "changed_source": 57,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "origin/handoff/p4-card-localization-chat-20261015",
+    "head": "7274fff42df37a948188baa51f9feef27fce51bb",
+    "changed_source": 57,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "origin/handoff/p4-encounter-ui-chat-20261015",
+    "head": "4053c2ad9c087a0a8005806afa3adc54c4cc583e",
+    "changed_source": 57,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/capture_p4_lv40_ui.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "origin/handoff/p4-readmodel-chat-20261015",
+    "head": "31d364b73832b1382f456cfb197f6dea06bbf7e4",
+    "changed_source": 58,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "origin/integration/p4-reviewed-20261015",
+    "head": "2cdcd01d65f59e21f2d50490176dd0f11dc9209a",
+    "changed_source": 84,
+    "missing_in_master": [
+      "resources/combat/lv40/pending_integration.patch",
+      "tests/capture_p4_feedback.gd",
+      "tests/capture_p4_lv40_ui.gd",
+      "tests/test_lv40_balance.gd"
+    ]
+  },
+  {
+    "ref": "origin/phase3/m5-3-boss-break-exposed-combo",
+    "head": "1615d3407456eaaafee47fc1a34f235e30bf0286",
+    "changed_source": 6,
+    "missing_in_master": []
+  },
+  {
+    "ref": "origin/phase3/m5-4-outcome-core01",
+    "head": "df3e39cbea18c2ef0bc6b151fc6bdb9de4584e87",
+    "changed_source": 9,
+    "missing_in_master": []
+  },
+  {
+    "ref": "origin/phase3/m5-5-full-battle-replay",
+    "head": "2b47e42bb19f77d56af15f1bc72e0a4102f6a7bf",
+    "changed_source": 6,
+    "missing_in_master": []
+  },
+  {
+    "ref": "origin/poc/card-targeting-arrow-20261016",
+    "head": "9f73140143c6415d0e713a3d1a8a3bf1ea99fbb4",
+    "changed_source": 9,
+    "missing_in_master": [
+      ".github/workflows/godot-card-targeting-arrow-poc.yml",
+      "scripts/battle/ui/components/card_targeting_arrow_overlay.gd",
+      "tests/test_p4_target_arrow_contract.gd",
+      "tests/test_p4_target_arrow_gui.gd",
+      "tests/test_p4_target_arrow_hand_regression.gd"
+    ]
+  },
+  {
+    "ref": "origin/ui/character-state-cg-20261016",
+    "head": "cead45a73735e7ce0547886d0974aa3508decfd2",
+    "changed_source": 5,
+    "missing_in_master": [
+      ".github/workflows/godot-character-state-cg.yml",
+      "tests/test_p4_character_state_cg.gd"
+    ]
+  },
+  {
+    "ref": "origin/ui/hud-visual-refactor-20261015",
+    "head": "c45ccdc7005882894b45388b2cd46eb3bf0d4bf4",
+    "changed_source": 11,
+    "missing_in_master": []
+  }
+]

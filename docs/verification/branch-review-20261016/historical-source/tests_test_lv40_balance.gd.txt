@@ -1,0 +1,116 @@
+extends SceneTree
+## P4.6 research oracles. No Lv40 execution without --lv40-api-ready.
+const Policy = preload("res://tools/balance/lv40_godot_policy.gd")
+const Model = preload("res://scripts/domain/m1/combat_model.gd")
+var passed: int = 0
+var failed: int = 0
+var cases: Array = []
+
+func check(id: String, condition: bool) -> void:
+	cases.append({"id":id,"passed":condition})
+	if condition:
+		passed += 1
+	else:
+		failed += 1
+		push_error(id)
+
+func _initialize() -> void:
+	call_deferred("_run")
+
+func _run() -> void:
+	check("P46-POLICY-01-four-distinct-profiles", Policy.STRATEGIES.size() == 4 and
+		Policy.profile("BALANCED") != Policy.profile("AGGRESSIVE") and
+		Policy.profile("DEFENSIVE") != Policy.profile("CAST_SUPPORT"))
+	check("P46-SEED-01-paired-fixed-seeds", Policy.fixed_seeds() == range(1,101))
+	check("P46-CAP-01-finite", Policy.MAX_COMMANDS > 0 and Policy.MAX_EVENTS > 0 and
+		Policy.MAX_ROUNDS == 24 and Policy.MAX_PROBES > 0)
+	for strategy: String in Policy.STRATEGIES:
+		check("P46-RP-01-"+strategy, int(Policy.profile(strategy)["reserve_ap"]) >= 1)
+	check("P46-UNKNOWN-01-fail-closed", Policy.profile("unknown").is_empty())
+	check("P46-HASH-01-canonical-key-order", Model.state_hash({"b":2,"a":1}) ==
+		Model.state_hash({"a":1,"b":2}))
+	check("P46-REPLAY-02-incomplete-fails", not Policy.replay({})["ok"])
+	check("P46-STATS-01-no-empty-median", Policy.percentile([],0.5) == null)
+	check("P46-STATS-02-failure-not-success", Policy.wilson95(0,100)[1] < 0.04)
+	check("P46-METRIC-01-absent-not-zero", Policy.empty_metrics()["overheal"] == null)
+	var metrics: Dictionary = Policy.empty_metrics()
+	Policy.collect_events(metrics,[{"kind":"HPHealed","details":{
+		"before":900,"after":1000,"amount":100,"actor_id":"A"}}])
+	check("P46-METRIC-02-effective-heal", metrics["heal"] == 100)
+	check("P46-METRIC-03-no-fabricated-overheal", metrics["overheal"] == null)
+	var full: Dictionary = Policy.empty_metrics()
+	Policy.collect_events(full,[{"kind":"HPHealed","details":{
+		"amount":100,"requested_amount":150,"actor_id":"A"}}])
+	check("P46-METRIC-04-explicit-overheal", full["overheal"] == 50)
+	var wrapped: Dictionary = Policy.empty_metrics()
+	Policy.collect_events(wrapped,[{"kind":"SPCostReservedOnly","details":{
+		"core_event":{"event":{"kind":"SPCostReservedOnly","details":{
+			"actor_id":"B","ap_paid":2,"mp_cost":5}}}}}])
+	check("P46-METRIC-05-wrapper-no-double-count", wrapped["ap_spent"] == 2 and
+		wrapped["mp_spent"] == 5 and wrapped["ap_by_actor"]["B"] == 2)
+	Policy.collect_events(wrapped,[{"kind":"BasicAttackResourceCommitted","details":{
+		"actor_id":"A","ap_paid":1,"mp_restored":2}}])
+	check("P46-METRIC-06-basic-real-payment", wrapped["ap_spent"] == 3 and wrapped["mp_spent"] == 5)
+	Policy.collect_events(wrapped,[{"kind":"DamageTrace","details":{
+		"recipient_id":"Boss","barrier_absorbed":180}},
+		{"kind":"DamageTrace","details":{"recipient_id":"A","barrier_absorbed":80}}])
+	check("P46-METRIC-07-party-barrier-only", wrapped["barrier_absorb"] == 80 and wrapped["boss_barrier_absorb"] == 180)
+	check("P46-OUTPUT-01-scope", not Policy.allowed_output("res://tests/foreign"))
+	check("P46-OUTPUT-02-scope", Policy.allowed_output("res://outputs/lv40_balance_attempt1"))
+	check("P46-OUTPUT-03-traversal", not Policy.allowed_output("res://outputs/lv40_balance/../../tests/x"))
+	var args: PackedStringArray = OS.get_cmdline_user_args()
+	var research: Dictionary = {"status":"NOT_EXECUTED_WAITING_MAIN_API_READY","games":0}
+	if args.has("--lv40-api-ready"):
+		var prefix: String = "res://outputs/lv40_balance_attempt1"
+		for arg: String in args:
+			if arg.begins_with("--output="):
+				prefix = arg.trim_prefix("--output=")
+		var api: Dictionary = Policy.load_encounter()
+		check("P46-API-01-real-lv40-required", api["ok"])
+		if api["ok"]:
+			var encounter: Script = api["script"]
+			var initial: Dictionary = encounter.call("initial",1)
+			var config: Dictionary = encounter.call("config")
+			check("P46-API-02-initial-nonempty", not initial.is_empty())
+			if initial.is_empty():
+				print(JSON.stringify({"passed":passed,"failed":failed,"cases":cases,"research":"NOT_IMPLEMENTED:INITIAL"}))
+				quit(1)
+				return
+			var ctx: Dictionary = Policy.context(1,"BALANCED",initial,config)
+			var before: String = Model.state_hash(initial)
+			var illegal: Dictionary = Policy.command(ctx,"PLAY_LV40_CARD",{
+				"actor_id":"A","target_actor_id":"Boss","card_instance_id":"absent",
+				"casting_mode":"CHANTLESS","combo_mode":"NORMAL"})
+			var rejected: Dictionary = Policy.probe(ctx,illegal)
+			check("P46-ATOMIC-01-illegal-no-tape", not rejected.get("accepted",true) and
+				ctx["tape"].is_empty() and ctx["error"].is_empty() and
+				Model.state_hash(initial) == before)
+			var stale: Dictionary = Policy.command(ctx,"END_PLAYER_PHASE")
+			stale["expected_event_seq"] = -1
+			var stale_result: Dictionary = Policy.probe(ctx,stale)
+			check("P46-ATOMIC-02-stale-no-tape", not stale_result.get("accepted",true) and
+				ctx["tape"].is_empty() and ctx["error"].is_empty())
+			var capped: Dictionary = Policy.context(1,"BALANCED",initial,config)
+			capped["probes"] = Policy.MAX_PROBES
+			Policy.probe(capped,Policy.command(capped,"END_PLAYER_PHASE"))
+			check("P46-CAP-02-probe-cap-atomic", capped["timeout"] == "PROBE_CAP" and
+				capped["tape"].is_empty() and Model.state_hash(capped["state"]) == before)
+			var denied: Dictionary = Policy.context(1,"BALANCED",initial,config)
+			check("P46-ATOMIC-03-rejected-commit-no-tape", not Policy.commit(denied,illegal) and
+				denied["tape"].is_empty() and Model.state_hash(denied["state"]) == before)
+			var empty_replay: Dictionary = {"initial":initial,"config":config,"final":initial,
+				"initial_hash":before,"config_hash":Model.state_hash(config),"state_hash":before,
+				"tape":[],"tape_hash":Model.event_hash([]),"steps":[],"events":[],
+				"event_hash":Model.event_hash([]),"full_event_hash":Model.event_hash(initial["events"])}
+			check("P46-REPLAY-03-empty-prefix", Policy.replay(empty_replay)["ok"])
+			empty_replay["tape_hash"] = "tampered"
+			check("P46-REPLAY-04-tampered-tape", not Policy.replay(empty_replay)["ok"])
+			research = Policy.run_matrix(prefix)
+			check("P46-MATRIX-01-400-records", int(research.get("games",0)) == 400)
+			check("P46-REPLAY-01-every-game", int(research.get("replay_failures",-1)) == 0)
+			check("P46-ERROR-01-no-silent-errors", int(research.get("errors",-1)) == 0)
+			check("P46-OUTPUT-04-written", research.get("written",false))
+	var summary: Dictionary = {"suite":"P4.6-LV40-BALANCE-RESEARCH","passed":passed,
+		"failed":failed,"cases":cases,"research":research,"balance":"BALANCE_PROVISIONAL"}
+	print(JSON.stringify(summary))
+	quit(1 if failed > 0 else 0)

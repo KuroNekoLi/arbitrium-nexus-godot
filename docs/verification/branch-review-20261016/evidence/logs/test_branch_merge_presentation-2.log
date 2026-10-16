@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS REVIEW-release-events-not-mutated
+PASS REVIEW-real-release-schema-enriched
+PASS REVIEW-two-release-jobs
+PASS REVIEW-independent-release-styles
+PASS REVIEW-empty-receipt
+PASS REVIEW-composite-display-keeps-two-jobs
+PASS REVIEW-display-preserves-separate-targets
+PASS REVIEW-display-preserves-card-styles
+PASS REVIEW-no-gameplay-command-submitted
+PASS REVIEW-state-CG-active
+PASS REVIEW-cast-flash-visible-CG
+PASS REVIEW-skip-clears-tint
+PASS REVIEW-hit-flash-visible-CG
+PASS REVIEW-attack-frames-not-hidden
+PASS REVIEW-attack-restores-idle-CG
+BRANCH_PRESENTATION_REPORT executed=15 passed=15 failed=0
