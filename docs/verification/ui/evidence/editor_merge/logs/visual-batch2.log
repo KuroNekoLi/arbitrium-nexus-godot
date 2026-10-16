@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 555.99 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1650
+
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=1656613","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/idle_1280_zh_TW.png","stage":"verified"}
+PASS idle_1280_zh_TW
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=1642814","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/idle_1280_en.png","stage":"verified"}
+PASS idle_1280_en
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=3304840","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/idle_1920_zh_TW.png","stage":"verified"}
+PASS idle_1920_zh_TW
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=3284367","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/idle_1920_en.png","stage":"verified"}
+PASS idle_1920_en
+PASS CUTIN-A
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=1370724","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/last_A.png","stage":"verified"}
+PASS last_A
+PASS CUTIN-B
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=1390478","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/last_B.png","stage":"verified"}
+PASS last_B
+PASS CUTIN-C
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=1387638","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/last_C.png","stage":"verified"}
+PASS last_C
+PASS REAL-M5-BASIC
+CHARACTER_CAPTURE {"detail":"PNG exists, signature and decoded dimensions verified; bytes=1664090","error":0,"error_name":"OK","ok":true,"path":"C:/Users/user05/.codex/worktrees/v35-final/referenced-chatgpt-conversation-this-is-an/outputs/p4_input_capture/character_merge_41432/real_event_log.png","stage":"verified"}
+PASS real_event_log
+PASS SKIP-DRAINS-WAITS
+PASS LIVE-WINDUP-BEFORE-EXIT
+PASS EXIT-DRAINS-WAITS
+CHARACTER_VISUAL_REPORT executed=15 passed=15 failed=0

@@ -1,7 +1,8 @@
 name: Godot Character Editor Preview - New QA Contract
 on:
-  # Three permitted attempts exhausted: no automatic fourth attempt.
-  # Manual execution requires the owner to explicitly approve new quota.
+  # Remains manual to preserve test attempt accounting.
+  # Owner approved a new <=3-attempt batch on 2026-10-16; local attempts 1/2
+  # passed (35/35 then 39/39); the next manual run is attempt 3.
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,7 +31,7 @@ jobs:
           }
           grep -n -B2 -A4 -E 'SCRIPT ERROR|^ERROR:' "$RUNNER_TEMP/character-preview/import.log" || true
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/character-preview/import.log"
-      - name: New character appearance and editor isolation suite (35 assertions)
+      - name: Character appearance and editor isolation suite (39 assertions)
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -39,7 +40,7 @@ jobs:
             cat "$log"; exit 1;
           }
           cat "$log"
-          grep -Fxq 'CHARACTER_EDITOR_PREVIEW_REPORT executed=35 passed=35 failed=0' "$log"
+          grep -Fxq 'CHARACTER_EDITOR_PREVIEW_REPORT executed=39 passed=39 failed=0' "$log"
           python3 tools/ci/assert_godot_logs.py "$log"
       - name: Preserve historical GUI test quota
         run: echo 'No Last Spell 29-case or old GUI test was rerun; this is a NEW asset/editor group.'

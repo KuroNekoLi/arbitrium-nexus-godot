@@ -8,7 +8,7 @@ const ActorScene = preload("res://scenes/battle/actors/battle_actor.tscn")
 
 var passed: int = 0
 var failed: int = 0
-const EXPECTED: int = 35
+const EXPECTED: int = 39
 
 func check(id: String, good: bool) -> void:
 	if good:
@@ -55,6 +55,15 @@ func run() -> void:
 	check("EDITOR-RESOURCE-CHANGE-LIVE",actor.get("body") == original and original != null and original.sprite_frames.get_frame_count("run") == 3)
 	root.remove_child(actor)
 	check("EDITOR-SIGNAL-CLEANUP",not (actor.get("appearance") as Resource).changed.is_connected(Callable(actor,"_on_art_changed")))
+	root.add_child(actor)
+	check("EDITOR-SIGNAL-REENTRY",(actor.get("appearance") as Resource).changed.is_connected(Callable(actor,"_on_art_changed")))
+	var body: AnimatedSprite2D = actor.get("body")
+	check("EDITOR-IDLE-FOOT-ANCHOR",is_equal_approx(body.position.y, -Registry.appearance_for("A").baseline_for(0,0)*body.scale.y))
+	body.play("strike")
+	body.frame = 2
+	check("EDITOR-STRIKE-FOOT-ANCHOR",is_equal_approx(body.position.y, -Registry.appearance_for("A").baseline_for(2,2)*body.scale.y))
+	root.remove_child(actor)
+	check("EDITOR-REENTRY-CLEANUP",not (actor.get("appearance") as Resource).changed.is_connected(Callable(actor,"_on_art_changed")))
 	actor.free()
 	print("CHARACTER_EDITOR_PREVIEW_REPORT executed=%d passed=%d failed=%d" % [passed+failed,passed,failed])
 	quit(0 if failed == 0 and passed == EXPECTED else 1)

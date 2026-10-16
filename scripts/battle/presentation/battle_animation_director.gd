@@ -12,6 +12,7 @@ var seen: Dictionary = {}
 var presented_cues: Array[Dictionary] = []
 var generation: int = 0
 var reduced_motion: bool = false
+var pending_timers: Array[SceneTreeTimer] = []
 
 func enqueue(events: Array, command: Dictionary) -> void:
 	var fresh: Array = []
@@ -63,7 +64,10 @@ func _play_next() -> void:
 		if not reduced_motion and not magic: attacker.play_attack(target.position)
 		overlay.sound(magic)
 		if not reduced_motion:
-			await get_tree().create_timer(0.19).timeout
+			var windup: SceneTreeTimer = get_tree().create_timer(0.19)
+			pending_timers.append(windup)
+			await windup.timeout
+			pending_timers.erase(windup)
 			if not is_inside_tree() or current_generation != generation: return
 	for event: Dictionary in item["events"]:
 		if event["kind"] != "DamageTrace": continue
@@ -87,7 +91,10 @@ func _play_next() -> void:
 		tween.tween_property(number,"modulate:a",0.0,0.6)
 		tween.chain().tween_callback(number.queue_free)
 	if has_damage and not reduced_motion:
-		await get_tree().create_timer(0.4).timeout
+		var recovery: SceneTreeTimer = get_tree().create_timer(0.4)
+		pending_timers.append(recovery)
+		await recovery.timeout
+		pending_timers.erase(recovery)
 		if not is_inside_tree() or current_generation != generation: return
 	_play_next()
 
@@ -112,9 +119,19 @@ func play_card(artwork: Texture2D, origin: Vector2, target: Vector2) -> void:
 func _exit_tree() -> void:
 	queue.clear()
 	generation += 1
+	_cancel_waits()
+	playing = false
+
+func _cancel_waits() -> void:
+	# SceneTreeTimers outlive a freed scene. Wake suspended continuations only
+	# after generation changes so they return without further visual work.
+	for timer: SceneTreeTimer in pending_timers.duplicate():
+		timer.timeout.emit()
+	pending_timers.clear()
 
 func skip_all() -> void:
 	generation += 1
+	_cancel_waits()
 	queue.clear()
 	playing = false
 	for actor: Node2D in arena.get_children(): actor.reset_motion()

@@ -56,13 +56,15 @@ static func show(hud: Control, mode: String) -> void:
 	hud.resources.text = "AP 6  ·  RP 0"
 	hud._top.ap_value.text = "6 AP"
 	hud._top.rp_value.text = "RP 0"
+	hud._top.render_resource_values(projection()["resources"])
 	hud.end_button.text = "結束回合"
 	hud.feedback.text = "EDITOR MOCK_ONLY — 不會建立戰鬥／付款／重播"
 	for id: String in ["A","B","C"]:
 		var hero: Button = hud.roster[id]
 		var index: int = ["A","B","C"].find(id)
 		var tint: Color = [Color("efc675"),Color("75d6ff"),Color("df9cff")][index]
-		hero.configure(id,str(labels.get("BATTLE_HERO_"+id,"角色 "+id)),
+		var name_key: String = {"A":"actor.ren.name", "B":"actor.akane.name", "C":"actor.tsumugi.name"}[id]
+		hero.configure(id,str(labels.get(name_key,"角色 "+id)),
 			Appearances.portrait_for(id),tint)
 		hero.hp_label.text = "HP 120 / 120"
 		hero.mana_label.text = "MP 14 / 20"
@@ -87,6 +89,7 @@ static func show(hud: Control, mode: String) -> void:
 	hud.reaction_panel.hide()
 	hud.result_panel.hide()
 	decorate_mock_hand(hud)
+	_translate_preview(hud, labels)
 	if mode == "Battle":
 		return
 	# Reuse the REAL LastSpellPreview Control, without invoking its runtime
@@ -108,3 +111,16 @@ static func show(hud: Control, mode: String) -> void:
 	preview.summary_description.text = preview.description.text
 	preview.summary_target.text = preview.scope_label.text
 	preview.show()
+	_translate_preview(preview, labels)
+
+static func _translate_preview(node: Node, labels: Dictionary) -> void:
+	# EditorTranslationServer is separate from game translations. Resolve only
+	# exact catalogue keys in this disposable view; never mutate source assets.
+	if node is Label or node is Button:
+		var text: String = node.get("text")
+		if labels.has(text):
+			node.set("text", labels[text])
+	if node is Control and labels.has(node.tooltip_text):
+		node.tooltip_text = str(labels[node.tooltip_text])
+	for child: Node in node.get_children():
+		_translate_preview(child, labels)

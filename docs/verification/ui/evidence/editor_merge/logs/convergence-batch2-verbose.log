@@ -1,0 +1,210 @@
+WorkerThreadPool: 10 threads, 3 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+Loading resource: res://tests/test_p4_v35_convergence.gd remapped: res://tests/test_p4_v35_convergence.gd
+Loading resource: res://scenes/battle/battle_screen.tscn remapped: res://scenes/battle/battle_screen.tscn
+Loading resource: res://scripts/battle/battle_screen.gd remapped: res://scripts/battle/battle_screen.gd
+Loading resource: res://assets/ui/v35/intent_skill.svg remapped: res://assets/ui/v35/intent_skill.svg
+Loading resource: res://.godot/imported/intent_skill.svg-d15f6cc1d2b2183298755fe4294de428.ctex remapped: res://.godot/imported/intent_skill.svg-d15f6cc1d2b2183298755fe4294de428.ctex
+Completed load for: 'res://assets/ui/v35/intent_skill.svg' remapped 'res://assets/ui/v35/intent_skill.svg' at thread -1
+Loading resource: res://addons/kenney_particle_pack/magic_01.png remapped: res://addons/kenney_particle_pack/magic_01.png
+Loading resource: res://.godot/imported/magic_01.png-a69c8d058708f3d13cf8f3da47f94f9d.ctex remapped: res://.godot/imported/magic_01.png-a69c8d058708f3d13cf8f3da47f94f9d.ctex
+Completed load for: 'res://addons/kenney_particle_pack/magic_01.png' remapped 'res://addons/kenney_particle_pack/magic_01.png' at thread -1
+Loading resource: res://addons/kenney_particle_pack/slash_01.png remapped: res://addons/kenney_particle_pack/slash_01.png
+Loading resource: res://.godot/imported/slash_01.png-098bfddda61a4d34c5ea683c970e6b5b.ctex remapped: res://.godot/imported/slash_01.png-098bfddda61a4d34c5ea683c970e6b5b.ctex
+Completed load for: 'res://addons/kenney_particle_pack/slash_01.png' remapped 'res://addons/kenney_particle_pack/slash_01.png' at thread -1
+Loading resource: res://addons/kenney_ui_audio/click2.wav remapped: res://addons/kenney_ui_audio/click2.wav
+Loading resource: res://.godot/imported/click2.wav-e4d4f6fc85d10146603686d4a7b23a41.sample remapped: res://.godot/imported/click2.wav-e4d4f6fc85d10146603686d4a7b23a41.sample
+Completed load for: 'res://addons/kenney_ui_audio/click2.wav' remapped 'res://addons/kenney_ui_audio/click2.wav' at thread -1
+Loading resource: res://addons/kenney_rpg_audio/knifeSlice.ogg remapped: res://addons/kenney_rpg_audio/knifeSlice.ogg
+Loading resource: res://.godot/imported/knifeSlice.ogg-64eccdad57912518b66fa7e746381021.oggvorbisstr remapped: res://.godot/imported/knifeSlice.ogg-64eccdad57912518b66fa7e746381021.oggvorbisstr
+Completed load for: 'res://addons/kenney_rpg_audio/knifeSlice.ogg' remapped 'res://addons/kenney_rpg_audio/knifeSlice.ogg' at thread -1
+Loading resource: res://resources/ui/characters/ren.tres remapped: res://resources/ui/characters/ren.tres
+Loading resource: res://scripts/battle/presentation/character_appearance.gd remapped: res://scripts/battle/presentation/character_appearance.gd
+Completed load for: 'res://scripts/battle/presentation/character_appearance.gd' remapped 'res://scripts/battle/presentation/character_appearance.gd' at thread -1
+Loading resource: res://assets/characters/ren/atlas.png remapped: res://assets/characters/ren/atlas.png
+Loading resource: res://.godot/imported/atlas.png-6c88636542f8062e549b31a4330ba5cf.ctex remapped: res://.godot/imported/atlas.png-6c88636542f8062e549b31a4330ba5cf.ctex
+Completed load for: 'res://assets/characters/ren/atlas.png' remapped 'res://assets/characters/ren/atlas.png' at thread -1
+Loading resource: res://assets/characters/ren/cg.png remapped: res://assets/characters/ren/cg.png
+Loading resource: res://.godot/imported/cg.png-5199ed50fda94fd3ee0cf9a703dd7cd2.ctex remapped: res://.godot/imported/cg.png-5199ed50fda94fd3ee0cf9a703dd7cd2.ctex
+Completed load for: 'res://assets/characters/ren/cg.png' remapped 'res://assets/characters/ren/cg.png' at thread -1
+Completed load for: 'res://resources/ui/characters/ren.tres' remapped 'res://resources/ui/characters/ren.tres' at thread -1
+Loading resource: res://resources/ui/characters/akane.tres remapped: res://resources/ui/characters/akane.tres
+Loading resource: res://assets/characters/akane/atlas.png remapped: res://assets/characters/akane/atlas.png
+Loading resource: res://.godot/imported/atlas.png-e9629501f0f68589c50f1c18e301ad0d.ctex remapped: res://.godot/imported/atlas.png-e9629501f0f68589c50f1c18e301ad0d.ctex
+Completed load for: 'res://assets/characters/akane/atlas.png' remapped 'res://assets/characters/akane/atlas.png' at thread -1
+Loading resource: res://assets/characters/akane/cg.png remapped: res://assets/characters/akane/cg.png
+Loading resource: res://.godot/imported/cg.png-8ae9b8fb3bf2b6ecf87c951528a6a05b.ctex remapped: res://.godot/imported/cg.png-8ae9b8fb3bf2b6ecf87c951528a6a05b.ctex
+Completed load for: 'res://assets/characters/akane/cg.png' remapped 'res://assets/characters/akane/cg.png' at thread -1
+Completed load for: 'res://resources/ui/characters/akane.tres' remapped 'res://resources/ui/characters/akane.tres' at thread -1
+Loading resource: res://resources/ui/characters/tsumugi.tres remapped: res://resources/ui/characters/tsumugi.tres
+Loading resource: res://assets/characters/tsumugi/atlas.png remapped: res://assets/characters/tsumugi/atlas.png
+Loading resource: res://.godot/imported/atlas.png-81cc5d9a530a8248bc536f34bac2cb79.ctex remapped: res://.godot/imported/atlas.png-81cc5d9a530a8248bc536f34bac2cb79.ctex
+Completed load for: 'res://assets/characters/tsumugi/atlas.png' remapped 'res://assets/characters/tsumugi/atlas.png' at thread -1
+Loading resource: res://assets/characters/tsumugi/cg.png remapped: res://assets/characters/tsumugi/cg.png
+Loading resource: res://.godot/imported/cg.png-6ecefc53aa096a2d3d528cdf86365b60.ctex remapped: res://.godot/imported/cg.png-6ecefc53aa096a2d3d528cdf86365b60.ctex
+Completed load for: 'res://assets/characters/tsumugi/cg.png' remapped 'res://assets/characters/tsumugi/cg.png' at thread -1
+Completed load for: 'res://resources/ui/characters/tsumugi.tres' remapped 'res://resources/ui/characters/tsumugi.tres' at thread -1
+Loading resource: res://assets/ui/v35/cmd_basic.svg remapped: res://assets/ui/v35/cmd_basic.svg
+Loading resource: res://.godot/imported/cmd_basic.svg-3ce2087c7c5afcb310a4249f89e656bb.ctex remapped: res://.godot/imported/cmd_basic.svg-3ce2087c7c5afcb310a4249f89e656bb.ctex
+Completed load for: 'res://assets/ui/v35/cmd_basic.svg' remapped 'res://assets/ui/v35/cmd_basic.svg' at thread -1
+Loading resource: res://assets/ui/v35/cmd_analyze.svg remapped: res://assets/ui/v35/cmd_analyze.svg
+Loading resource: res://.godot/imported/cmd_analyze.svg-8d28b4c0adc3ec0a9a6e685c3d9bbb05.ctex remapped: res://.godot/imported/cmd_analyze.svg-8d28b4c0adc3ec0a9a6e685c3d9bbb05.ctex
+Completed load for: 'res://assets/ui/v35/cmd_analyze.svg' remapped 'res://assets/ui/v35/cmd_analyze.svg' at thread -1
+Loading resource: res://assets/ui/v35/cmd_item.svg remapped: res://assets/ui/v35/cmd_item.svg
+Loading resource: res://.godot/imported/cmd_item.svg-c3344b7970d64bfea004321227ece09e.ctex remapped: res://.godot/imported/cmd_item.svg-c3344b7970d64bfea004321227ece09e.ctex
+Completed load for: 'res://assets/ui/v35/cmd_item.svg' remapped 'res://assets/ui/v35/cmd_item.svg' at thread -1
+Loading resource: res://assets/ui/v35/cmd_swap.svg remapped: res://assets/ui/v35/cmd_swap.svg
+Loading resource: res://.godot/imported/cmd_swap.svg-8ca1f796de0b4cc4953829814491e43d.ctex remapped: res://.godot/imported/cmd_swap.svg-8ca1f796de0b4cc4953829814491e43d.ctex
+Completed load for: 'res://assets/ui/v35/cmd_swap.svg' remapped 'res://assets/ui/v35/cmd_swap.svg' at thread -1
+Loading resource: res://assets/ui/v35/cmd_last.svg remapped: res://assets/ui/v35/cmd_last.svg
+Loading resource: res://.godot/imported/cmd_last.svg-481ac8966b0b9ff76887706ed4690205.ctex remapped: res://.godot/imported/cmd_last.svg-481ac8966b0b9ff76887706ed4690205.ctex
+Completed load for: 'res://assets/ui/v35/cmd_last.svg' remapped 'res://assets/ui/v35/cmd_last.svg' at thread -1
+Loading resource: res://assets/ui/v35/cmd_end.svg remapped: res://assets/ui/v35/cmd_end.svg
+Loading resource: res://.godot/imported/cmd_end.svg-d6a24d971d50ce5c2db698f3819ad490.ctex remapped: res://.godot/imported/cmd_end.svg-d6a24d971d50ce5c2db698f3819ad490.ctex
+Completed load for: 'res://assets/ui/v35/cmd_end.svg' remapped 'res://assets/ui/v35/cmd_end.svg' at thread -1
+Loading resource: res://scenes/battle/ui/team_phase_header.tscn remapped: res://scenes/battle/ui/team_phase_header.tscn
+Loading resource: res://scripts/battle/ui/components/team_phase_header.gd remapped: res://scripts/battle/ui/components/team_phase_header.gd
+Loading resource: res://assets/ui/v35/ap_core.svg remapped: res://assets/ui/v35/ap_core.svg
+Loading resource: res://.godot/imported/ap_core.svg-61542bfa1f2ddad7a80dd95d95b44b06.ctex remapped: res://.godot/imported/ap_core.svg-61542bfa1f2ddad7a80dd95d95b44b06.ctex
+Completed load for: 'res://assets/ui/v35/ap_core.svg' remapped 'res://assets/ui/v35/ap_core.svg' at thread -1
+Loading resource: res://assets/ui/v35/ap_crystal.svg remapped: res://assets/ui/v35/ap_crystal.svg
+Loading resource: res://.godot/imported/ap_crystal.svg-ab283c9528c9d578aff1ed4d6d9bf797.ctex remapped: res://.godot/imported/ap_crystal.svg-ab283c9528c9d578aff1ed4d6d9bf797.ctex
+Completed load for: 'res://assets/ui/v35/ap_crystal.svg' remapped 'res://assets/ui/v35/ap_crystal.svg' at thread -1
+Loading resource: res://addons/kenney_fantasy_ui_borders/panel-border-000.png remapped: res://addons/kenney_fantasy_ui_borders/panel-border-000.png
+Loading resource: res://.godot/imported/panel-border-000.png-0de7d9a550115d46aa252bd08e90c876.ctex remapped: res://.godot/imported/panel-border-000.png-0de7d9a550115d46aa252bd08e90c876.ctex
+Completed load for: 'res://addons/kenney_fantasy_ui_borders/panel-border-000.png' remapped 'res://addons/kenney_fantasy_ui_borders/panel-border-000.png' at thread -1
+Loading resource: res://assets/ui/v35/arcane_panel.svg remapped: res://assets/ui/v35/arcane_panel.svg
+Loading resource: res://.godot/imported/arcane_panel.svg-655b919b0a91da9f50c82394fd39f6df.ctex remapped: res://.godot/imported/arcane_panel.svg-655b919b0a91da9f50c82394fd39f6df.ctex
+Completed load for: 'res://assets/ui/v35/arcane_panel.svg' remapped 'res://assets/ui/v35/arcane_panel.svg' at thread -1
+Completed load for: 'res://scripts/battle/ui/components/team_phase_header.gd' remapped 'res://scripts/battle/ui/components/team_phase_header.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/team_phase_header.tscn' remapped 'res://scenes/battle/ui/team_phase_header.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/party_status_panel.tscn remapped: res://scenes/battle/ui/party_status_panel.tscn
+Loading resource: res://scripts/battle/ui/components/party_status_panel.gd remapped: res://scripts/battle/ui/components/party_status_panel.gd
+Loading resource: res://scenes/ui/hero_roster_item.tscn remapped: res://scenes/ui/hero_roster_item.tscn
+Loading resource: res://scripts/ui/hero_roster_item.gd remapped: res://scripts/ui/hero_roster_item.gd
+Completed load for: 'res://scripts/ui/hero_roster_item.gd' remapped 'res://scripts/ui/hero_roster_item.gd' at thread -1
+Completed load for: 'res://scenes/ui/hero_roster_item.tscn' remapped 'res://scenes/ui/hero_roster_item.tscn' at thread -1
+Loading resource: res://assets/ui/v35/status_barrier.svg remapped: res://assets/ui/v35/status_barrier.svg
+Loading resource: res://.godot/imported/status_barrier.svg-6e5afd4e428dcc078832f095bddabe76.ctex remapped: res://.godot/imported/status_barrier.svg-6e5afd4e428dcc078832f095bddabe76.ctex
+Completed load for: 'res://assets/ui/v35/status_barrier.svg' remapped 'res://assets/ui/v35/status_barrier.svg' at thread -1
+Loading resource: res://assets/ui/v35/status_guard.svg remapped: res://assets/ui/v35/status_guard.svg
+Loading resource: res://.godot/imported/status_guard.svg-d2faa7dc0ff076e870254bd10d66653f.ctex remapped: res://.godot/imported/status_guard.svg-d2faa7dc0ff076e870254bd10d66653f.ctex
+Completed load for: 'res://assets/ui/v35/status_guard.svg' remapped 'res://assets/ui/v35/status_guard.svg' at thread -1
+Loading resource: res://assets/ui/v35/status_casting.svg remapped: res://assets/ui/v35/status_casting.svg
+Loading resource: res://.godot/imported/status_casting.svg-2274c61eec0a7e9ad63ca29d0f94a03c.ctex remapped: res://.godot/imported/status_casting.svg-2274c61eec0a7e9ad63ca29d0f94a03c.ctex
+Completed load for: 'res://assets/ui/v35/status_casting.svg' remapped 'res://assets/ui/v35/status_casting.svg' at thread -1
+Loading resource: res://assets/ui/v35/status_exhausted.svg remapped: res://assets/ui/v35/status_exhausted.svg
+Loading resource: res://.godot/imported/status_exhausted.svg-1ff6442592fd01d14712dd3b2a827c64.ctex remapped: res://.godot/imported/status_exhausted.svg-1ff6442592fd01d14712dd3b2a827c64.ctex
+Completed load for: 'res://assets/ui/v35/status_exhausted.svg' remapped 'res://assets/ui/v35/status_exhausted.svg' at thread -1
+Loading resource: res://assets/ui/v35/status_incapacitated.svg remapped: res://assets/ui/v35/status_incapacitated.svg
+Loading resource: res://.godot/imported/status_incapacitated.svg-dceff3740e2cdb6f6c0d89e4e6ca2a80.ctex remapped: res://.godot/imported/status_incapacitated.svg-dceff3740e2cdb6f6c0d89e4e6ca2a80.ctex
+Completed load for: 'res://assets/ui/v35/status_incapacitated.svg' remapped 'res://assets/ui/v35/status_incapacitated.svg' at thread -1
+Completed load for: 'res://scripts/battle/ui/components/party_status_panel.gd' remapped 'res://scripts/battle/ui/components/party_status_panel.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/party_status_panel.tscn' remapped 'res://scenes/battle/ui/party_status_panel.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/command_menu.tscn remapped: res://scenes/battle/ui/command_menu.tscn
+Loading resource: res://scripts/battle/ui/components/command_menu.gd remapped: res://scripts/battle/ui/components/command_menu.gd
+Completed load for: 'res://scripts/battle/ui/components/command_menu.gd' remapped 'res://scripts/battle/ui/components/command_menu.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/command_menu.tscn' remapped 'res://scenes/battle/ui/command_menu.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/enemy_status_panel.tscn remapped: res://scenes/battle/ui/enemy_status_panel.tscn
+Loading resource: res://scripts/battle/ui/components/enemy_status_panel.gd remapped: res://scripts/battle/ui/components/enemy_status_panel.gd
+Completed load for: 'res://scripts/battle/ui/components/enemy_status_panel.gd' remapped 'res://scripts/battle/ui/components/enemy_status_panel.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/enemy_status_panel.tscn' remapped 'res://scenes/battle/ui/enemy_status_panel.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/action_context_panel.tscn remapped: res://scenes/battle/ui/action_context_panel.tscn
+Loading resource: res://scripts/battle/ui/components/action_context_panel.gd remapped: res://scripts/battle/ui/components/action_context_panel.gd
+Completed load for: 'res://scripts/battle/ui/components/action_context_panel.gd' remapped 'res://scripts/battle/ui/components/action_context_panel.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/action_context_panel.tscn' remapped 'res://scenes/battle/ui/action_context_panel.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/battle_log_panel.tscn remapped: res://scenes/battle/ui/battle_log_panel.tscn
+Loading resource: res://scripts/battle/ui/components/battle_log_panel.gd remapped: res://scripts/battle/ui/components/battle_log_panel.gd
+Completed load for: 'res://scripts/battle/ui/components/battle_log_panel.gd' remapped 'res://scripts/battle/ui/components/battle_log_panel.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/battle_log_panel.tscn' remapped 'res://scenes/battle/ui/battle_log_panel.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/hand_view.tscn remapped: res://scenes/battle/ui/hand_view.tscn
+Loading resource: res://scripts/battle/ui/components/hand_view.gd remapped: res://scripts/battle/ui/components/hand_view.gd
+Completed load for: 'res://scripts/battle/ui/components/hand_view.gd' remapped 'res://scripts/battle/ui/components/hand_view.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/hand_view.tscn' remapped 'res://scenes/battle/ui/hand_view.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/target_hit_regions.tscn remapped: res://scenes/battle/ui/target_hit_regions.tscn
+Loading resource: res://scripts/battle/ui/components/target_hit_regions.gd remapped: res://scripts/battle/ui/components/target_hit_regions.gd
+Completed load for: 'res://scripts/battle/ui/components/target_hit_regions.gd' remapped 'res://scripts/battle/ui/components/target_hit_regions.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/target_hit_regions.tscn' remapped 'res://scenes/battle/ui/target_hit_regions.tscn' at thread -1
+Loading resource: res://scenes/battle/ui/reaction_queue.tscn remapped: res://scenes/battle/ui/reaction_queue.tscn
+Loading resource: res://scripts/battle/ui/components/reaction_queue.gd remapped: res://scripts/battle/ui/components/reaction_queue.gd
+Completed load for: 'res://scripts/battle/ui/components/reaction_queue.gd' remapped 'res://scripts/battle/ui/components/reaction_queue.gd' at thread -1
+Completed load for: 'res://scenes/battle/ui/reaction_queue.tscn' remapped 'res://scenes/battle/ui/reaction_queue.tscn' at thread -1
+Loading resource: res://resources/ui/battle_theme.tres remapped: res://resources/ui/battle_theme.tres
+Loading resource: res://assets/fonts/NotoSansTC.ttf remapped: res://assets/fonts/NotoSansTC.ttf
+Loading resource: res://.godot/imported/NotoSansTC.ttf-b38842344b42c74c8b6e8314eaab7970.fontdata remapped: res://.godot/imported/NotoSansTC.ttf-b38842344b42c74c8b6e8314eaab7970.fontdata
+Completed load for: 'res://assets/fonts/NotoSansTC.ttf' remapped 'res://assets/fonts/NotoSansTC.ttf' at thread -1
+Completed load for: 'res://resources/ui/battle_theme.tres' remapped 'res://resources/ui/battle_theme.tres' at thread -1
+Completed load for: 'res://scripts/battle/battle_screen.gd' remapped 'res://scripts/battle/battle_screen.gd' at thread -1
+Loading resource: res://assets/battlefield_bg.png remapped: res://assets/battlefield_bg.png
+Loading resource: res://.godot/imported/battlefield_bg.png-0b0e21a8c0ae0acc1433c7a6a54c96bb.ctex remapped: res://.godot/imported/battlefield_bg.png-0b0e21a8c0ae0acc1433c7a6a54c96bb.ctex
+Completed load for: 'res://assets/battlefield_bg.png' remapped 'res://assets/battlefield_bg.png' at thread -1
+Loading resource: res://scenes/battle/actors/battle_actor.tscn remapped: res://scenes/battle/actors/battle_actor.tscn
+Loading resource: res://scripts/battle/presentation/battle_actor.gd remapped: res://scripts/battle/presentation/battle_actor.gd
+Completed load for: 'res://scripts/battle/presentation/battle_actor.gd' remapped 'res://scripts/battle/presentation/battle_actor.gd' at thread -1
+Completed load for: 'res://scenes/battle/actors/battle_actor.tscn' remapped 'res://scenes/battle/actors/battle_actor.tscn' at thread -1
+Loading resource: res://assets/nexus_party_splash.png remapped: res://assets/nexus_party_splash.png
+Loading resource: res://.godot/imported/nexus_party_splash.png-45fb07608c1abd00596e55c2eeb9fafc.ctex remapped: res://.godot/imported/nexus_party_splash.png-45fb07608c1abd00596e55c2eeb9fafc.ctex
+Completed load for: 'res://assets/nexus_party_splash.png' remapped 'res://assets/nexus_party_splash.png' at thread -1
+Completed load for: 'res://scenes/battle/battle_screen.tscn' remapped 'res://scenes/battle/battle_screen.tscn' at thread -1
+Completed load for: 'res://tests/test_p4_v35_convergence.gd' remapped 'res://tests/test_p4_v35_convergence.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loaded system CA certificates
+Loading resource: res://resources/ui/appearances/setup.tres remapped: res://resources/ui/appearances/setup.tres
+Loading resource: res://scripts/battle/presentation/card_appearance.gd remapped: res://scripts/battle/presentation/card_appearance.gd
+Completed load for: 'res://scripts/battle/presentation/card_appearance.gd' remapped 'res://scripts/battle/presentation/card_appearance.gd' at thread -1
+Loading resource: res://assets/card_art_atlas.png remapped: res://assets/card_art_atlas.png
+Loading resource: res://.godot/imported/card_art_atlas.png-15cab60d1d503adeb3fa7f0e62ef72a8.ctex remapped: res://.godot/imported/card_art_atlas.png-15cab60d1d503adeb3fa7f0e62ef72a8.ctex
+Completed load for: 'res://assets/card_art_atlas.png' remapped 'res://assets/card_art_atlas.png' at thread -1
+Completed load for: 'res://resources/ui/appearances/setup.tres' remapped 'res://resources/ui/appearances/setup.tres' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+PASS V35C-IDLE-DESIGNED
+PASS V35C-IDLE-NO-SPELL-DETAILS
+PASS V35C-NO-BATTLE-UTILITY-BUTTONS
+PASS V35C-BOSS-TOP-RIGHT
+PASS V35C-ORNAMENT-NONBLOCKING-Commands
+PASS V35C-ORNAMENT-NONBLOCKING-EnemyStatus
+PASS V35C-ORNAMENT-NONBLOCKING-Context
+PASS V35C-ORNAMENT-NONBLOCKING-BattleLogPanel
+PASS V35C-CLICK-SHOWS-SPELL-DETAILS
+PASS V35C-DETAILS-NO-CONFIRM-FOOTER
+PASS V35C-ACTUAL-ARTWORK
+PASS V35C-ACTUAL-TITLE
+PASS V35C-COST-MATCHES-HAND
+PASS V35C-STICKY-FOOTER
+PASS V35C-NO-TARGET-NO-CONFIRM
+PASS V35C-REAL-TARGET
+PASS V35C-LEGAL-CONFIRM
+PASS V35C-PREVIEW-NO-DOMAIN-WRITE
+PASS V35C-CANCEL-HIDES-SPELL-DETAILS
+PASS V35C-CANCEL-CLEARS
+PASS V35C-PUBLISHED-TARGET-PORTRAIT
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+Loading resource: res://addons/simple_cards/card/card_layout/default_card_layout.tscn remapped: res://addons/simple_cards/card/card_layout/default_card_layout.tscn
+Completed load for: 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' remapped 'res://addons/simple_cards/card/card_layout/default_card_layout.tscn' at thread -1
+PASS V35C-BASIC-NOT-SPELL-DETAILS
+PASS V35C-SINGLE-ENEMY-BASIC-IMMEDIATE
+PASS V35C-BASIC-NO-CONFIRM-PROMPT
+PASS V35C-CANCEL-PROMPT
+V35_CONVERGENCE_REPORT executed=25 passed=25 failed=0
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"

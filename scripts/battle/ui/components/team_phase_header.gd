@@ -117,13 +117,16 @@ func _ready() -> void:
 func render_phase(projection: Dictionary) -> void:
 	header.text = tr("BATTLE_PHASE_" + projection["phase"]) + "   ·   " + tr("BATTLE_ROUND") % projection["round"]
 	resources.text = tr("BATTLE_RESOURCES") % [projection["resources"]["current_ap"], projection["resources"]["rp"]]
-	var value: int = int(projection["resources"]["current_ap"])
+	render_resource_values(projection["resources"])
+
+func render_resource_values(values: Dictionary) -> void:
+	var value: int = int(values["current_ap"])
 	ap_value.text = "%d AP" % value
-	rp_value.text = "RP %d" % int(projection["resources"]["rp"])
+	rp_value.text = "RP %d" % int(values["rp"])
 	for old: Node in crystal_row.get_children():
 		crystal_row.remove_child(old)
 		old.queue_free()
-	var slots: int = mini(12, maxi(value, int(projection["resources"].get("base_ap", value))))
+	var slots: int = mini(12, maxi(value, int(values.get("base_ap", value))))
 	for index: int in slots:
 		var gem := TextureRect.new()
 		gem.texture = CRYSTAL

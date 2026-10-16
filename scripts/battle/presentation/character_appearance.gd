@@ -27,6 +27,10 @@ extends Resource
 	set(value):
 		foot_offset = value
 		emit_changed()
+@export var frame_baselines: PackedFloat32Array = PackedFloat32Array():
+	set(value):
+		frame_baselines = value
+		emit_changed()
 @export var tint: Color = Color.WHITE:
 	set(value):
 		tint = value
@@ -55,6 +59,13 @@ func sprite_texture(row: int, column: int) -> Texture2D:
 	frame.atlas = atlas
 	frame.region = region
 	return frame
+
+func baseline_for(row: int, column: int) -> float:
+	var region: Rect2 = region_for(row, column)
+	var index: int = row * 3 + column
+	if index >= 0 and index < frame_baselines.size():
+		return clampf(frame_baselines[index], 0.0, region.size.y)
+	return region.size.y
 
 func portrait_texture() -> Texture2D:
 	if cg == null:

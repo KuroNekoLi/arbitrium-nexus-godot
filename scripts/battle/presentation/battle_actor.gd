@@ -3,8 +3,14 @@ extends Node2D
 ## Presentation-only actor. Resource/Inspector changes work in the editor.
 ## Existing animation API stays stable for AnimationDirector and P4 tests.
 @export var actor_id: String = ""
-@export var atlas: Texture2D  # Boss/legacy fallback, not the Lv40 party.
-@export var boss_art: bool = false
+@export var atlas: Texture2D:  # Boss/legacy fallback, not the Lv40 party.
+	set(value):
+		atlas = value
+		_on_art_changed()
+@export var boss_art: bool = false:
+	set(value):
+		boss_art = value
+		_on_art_changed()
 @export var appearance: BattleCharacterAppearance:
 	set(value):
 		if appearance != null and appearance.changed.is_connected(_on_art_changed):
@@ -17,7 +23,10 @@ extends Node2D
 	set(value):
 		visual_height = maxf(1.0, value)
 		_on_art_changed()
-@export var accent: Color = Color("79d9ff")
+@export var accent: Color = Color("79d9ff"):
+	set(value):
+		accent = value
+		queue_redraw()
 @export var shadow_width: float = 0.19:
 	set(value):
 		shadow_width = clampf(value, 0.0, 1.0)
@@ -29,6 +38,13 @@ var cast_active: bool = false
 var barrier_active: bool = false
 var pulse: float = 0.0
 var base_tint: Color = Color.WHITE
+
+func _enter_tree() -> void:
+	home = position
+	if appearance != null and not appearance.changed.is_connected(_on_art_changed):
+		appearance.changed.connect(_on_art_changed)
+	if is_node_ready():
+		_on_art_changed()
 
 func _ready() -> void:
 	home = position
@@ -45,6 +61,8 @@ func _on_art_changed() -> void:
 	if body == null or not is_instance_valid(body):
 		body = AnimatedSprite2D.new()
 		body.name = "ActorFramesPreview"
+		body.frame_changed.connect(_align_frame)
+		body.animation_changed.connect(_align_frame)
 		add_child(body) # no owner: editor does not save transient children
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
@@ -81,11 +99,26 @@ func _on_art_changed() -> void:
 	body.sprite_frames = frames
 	var size: Vector2 = frames.get_frame_texture("idle",0).get_size()
 	body.scale = Vector2.ONE * (visual_height / maxf(1.0,size.y))
-	var offset: Vector2 = appearance.foot_offset if appearance != null and not boss_art else Vector2.ZERO
-	body.position = Vector2(0,-visual_height*0.5) + offset
-	body.modulate = (appearance.tint if appearance != null and not boss_art else Color.WHITE)*base_tint
+	body.modulate = _effective_tint()
 	body.play("idle")
+	_align_frame()
 	queue_redraw()
+
+func _align_frame() -> void:
+	if body == null or body.sprite_frames == null:
+		return
+	if appearance == null or boss_art:
+		body.centered = true
+		body.position = Vector2(0, -visual_height * 0.5)
+		return
+	var row: int = ["idle", "run", "strike"].find(str(body.animation))
+	if row < 0 or body.frame >= body.sprite_frames.get_frame_count(body.animation):
+		return
+	# The atlas has unequal row heights; anchor every frame to its own feet,
+	# without resizing actors or moving their authoritative visual slots.
+	var frame_size: Vector2 = body.sprite_frames.get_frame_texture(body.animation, body.frame).get_size()
+	body.centered = false
+	body.position = Vector2(-frame_size.x * 0.5, -appearance.baseline_for(row, body.frame)) * body.scale + appearance.foot_offset
 
 func _draw() -> void:
 	if cast_active:
@@ -112,7 +145,10 @@ func play_attack(target_position: Vector2) -> void:
 func play_hit() -> void:
 	if Engine.is_editor_hint() or body == null: return
 	body.modulate = Color(2,1.3,1.5)
-	create_tween().tween_property(body,"modulate",base_tint,0.28)
+	create_tween().tween_property(body,"modulate",_effective_tint(),0.28)
+
+func _effective_tint() -> Color:
+	return (appearance.tint if appearance != null and not boss_art else Color.WHITE) * base_tint
 
 func project_conditions(status: String, casting: bool, barrier: bool) -> void:
 	if Engine.is_editor_hint() or body == null:
@@ -120,7 +156,7 @@ func project_conditions(status: String, casting: bool, barrier: bool) -> void:
 	cast_active = casting
 	barrier_active = barrier
 	base_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
-	body.modulate = base_tint
+	body.modulate = _effective_tint()
 	queue_redraw()
 
 func reset_motion() -> void:
@@ -129,7 +165,7 @@ func reset_motion() -> void:
 	if motion: motion.kill()
 	position = home
 	body.play("idle")
-	body.modulate = base_tint
+	body.modulate = _effective_tint()
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
