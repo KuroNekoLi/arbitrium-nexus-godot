@@ -38,6 +38,7 @@ static func config(version: String) -> Dictionary:
 		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
 	c["lv40_actor_passives"] = {}
 	c["last_spell_name_keys"] = {}
+	c["lv40_boss_target_character_id"] = str(roster["boss"].get("preferred_target_character_id",""))
 	c["last_spell_effects"] = {}
 	c["lv40_full_chant_passives"] = {}
 	c["m5_actor_stats"] = {}

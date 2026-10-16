@@ -23,7 +23,18 @@ static func _live(core: Dictionary) -> Array:
 			result.append(actor)
 	return result
 
-static func _single(core: Dictionary, skill: String) -> String:
+static func _preferred(core: Dictionary, config: Dictionary) -> String:
+	var live: Array = _live(core)
+	if live.is_empty():
+		return ""
+	var preferred_character: String = str(config.get("lv40_boss_target_character_id",""))
+	for actor: String in live:
+		var identity: String = str(core["battle"]["actors"][actor].get("meta",{}).get("character_id",""))
+		if not preferred_character.is_empty() and identity == preferred_character:
+			return actor
+	return str(live[0])
+
+static func _single(core: Dictionary, skill: String, config: Dictionary) -> String:
 	var live: Array = _live(core)
 	if live.is_empty():
 		return ""
@@ -39,18 +50,16 @@ static func _single(core: Dictionary, skill: String) -> String:
 		for actor: String in live:
 			if not Effects.casting_id(core,actor).is_empty():
 				return actor
-		for actor: String in ["B","A","C"]:
-			if live.has(actor):
-				return actor
-	return "A" if live.has("A") else str(live[0])
+		return _preferred(core,config)
+	return str(live[0])
 
 static func intent(core: Dictionary, skill: String, config: Dictionary) -> Dictionary:
 	var round_id: int = int(core["battle"]["round"])
 	var aoe: bool = ["B04","B09"].has(skill)
 	var attack: bool = config["m5_enemy_profiles"].has(skill)
-	var targets: Array = _live(core) if aoe else [_single(core,skill)]
+	var targets: Array = _live(core) if aoe else [_single(core,skill,config)]
 	if skill == "B06":
-		targets = core["battle"]["lv40"]["pending_cast"].get("target_ids",["B"]).duplicate()
+		targets = core["battle"]["lv40"]["pending_cast"].get("target_ids",[_preferred(core,config)]).duplicate()
 	elif not attack:
 		targets = ["Boss"]
 	var pending: Dictionary = core["battle"]["lv40"]["pending_cast"]
@@ -70,7 +79,7 @@ static func intent(core: Dictionary, skill: String, config: Dictionary) -> Dicti
 		"expected_execute_phase":"EnemyPhase"+str(round_id),
 		"conditional_branches":["CAST_INTERRUPTED_TO_B10","INVALID_TARGET_TO_FIZZLE"],
 		"charge_release_skill":"B06" if skill == "B05" else ("B09" if skill == "B08" else ""),
-		"charge_target_ids":["B"] if skill == "B05" else (_live(core) if skill == "B08" else [])}
+		"charge_target_ids":[_preferred(core,config)] if skill == "B05" else (_live(core) if skill == "B08" else [])}
 
 ## Called only after the committed action has settled; phase thresholds never
 ## replace an already public action or an already started casting release.
@@ -108,7 +117,7 @@ static func before_end(core: Dictionary, published: Dictionary, config: Dictiona
 		var previous: String = str(public["skill_id"])
 		public = intent(next,"B11",config)
 		public["replaced_skill_id"] = previous
-		public["target_ids"] = published["target_ids"].slice(0,1) if previous != "B04" else [_single(next,"B11")]
+		public["target_ids"] = published["target_ids"].slice(0,1) if previous != "B04" else [_single(next,"B11",config)]
 		public["fixed_target_ids"] = public["target_ids"].duplicate()
 	return {"core":next,"intent":public}
 
@@ -157,7 +166,7 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 		fsm["pending_cast"] = {"casting_id":"boss-cast:"+command_id,"caster_id":"Boss",
 			"mode":"FULL","state":"CASTING","release_skill":release,"current_stability":stability,
 			"base_stability":stability,"focus_ward":0,"disruption_events":[],
-			"target_ids":["B"] if skill == "B05" else _live(next),
+			"target_ids":[_preferred(next,config)] if skill == "B05" else _live(next),
 			"due_round":int(next["battle"]["round"])+1,"interrupted":false}
 		fsm["core_open"] = true
 		records.append({"kind":"BossCastingStarted","casting_id":fsm["pending_cast"]["casting_id"],

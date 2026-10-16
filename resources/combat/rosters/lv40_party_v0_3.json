@@ -187,6 +187,7 @@
     "accuracy": 105,
     "evasion": 90,
     "crit_rate_bp": 0,
-    "crit_bonus_bp": 5000
+    "crit_bonus_bp": 5000,
+    "preferred_target_character_id": "akane"
   }
 }
