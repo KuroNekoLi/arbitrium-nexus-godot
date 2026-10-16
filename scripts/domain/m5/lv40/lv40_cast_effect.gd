@@ -46,7 +46,11 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 			"card_instance_id":cast["card_instance_id"],"cost_repaid":false,"planned_round":round_id})
 	var numerator: int = int(cast.get("outcome_modifier_numerator",1))
 	var denominator: int = int(cast.get("outcome_modifier_denominator",1))
-	var recipients: Array[String] = LastTargets.recipients(next, actor, target, config) if is_last else [target]
+	var recipients: Array[String] = []
+	if is_last:
+		recipients = LastTargets.recipients(next, actor, target, config)
+	else:
+		recipients.append(target)
 	if spell == "LS_TSUMUGI_HEAL_V1":
 		for ally: String in recipients:
 			if int(next["battle"]["actors"][ally]["hp"]) <= 0:
