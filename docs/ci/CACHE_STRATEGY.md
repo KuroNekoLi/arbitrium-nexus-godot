@@ -1,7 +1,8 @@
 # Godot GitHub Actions caching (2026-10-16)
 
 ## What is used
-- `ci-fast.yml`: headless smoke and P4 presentation contracts, two independent jobs.
+- `ci-fast.yml`: representative headless smoke (single job, normally each relevant push). 
+- `ci-p4-contracts.yml`: full 25-suite / 1149-assertion P4 headless UI contract gate for UI/scene/assets/test changes; runs nightly and manually for cross-domain coverage.
 - `ci-integration.yml`: named M1–M5.5 domain regression and legacy smoke.
 - `ci-full.yml`: scheduled / release / core-change full gate invoking `godot-m5-5-acceptance.yml`, including **100 seeded battles**.
 - Earlier phase workflows remain callable; they are not rewritten or silently deleted.
@@ -21,4 +22,4 @@ Cache keys encode Linux runner, Godot version, and asset/scene/import dependenci
 - Existing 100-seed tests, expected counts, and negative failure probes are not changed.
 
 ## Future extension
-For active visual-capture workflows, reuse the same composite setup action and retain Xvfb / genuine viewport screenshot assertions. Do not replace real Godot screenshots with generated images. Legacy workflows are intentionally left intact unless they become active maintenance targets.
+For active real-render capture workflows, reuse the same composite setup action and retain Xvfb / genuine viewport screenshot assertions. Do not replace real Godot screenshots with generated images. Legacy workflows are intentionally left intact unless they become active maintenance targets.
