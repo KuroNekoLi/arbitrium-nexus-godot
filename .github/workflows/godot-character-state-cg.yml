@@ -1,296 +1,36 @@
 name: Godot Three-Hero Character State CG
 on:
   push:
-    branches: ['ui/character-state-cg-20261016', 'master']
+    branches: ['ui/character-state-cg-20261016', master]
     paths:
       - '.github/workflows/godot-character-state-cg.yml'
       - 'tests/test_p4_character_state_cg.gd'
       - 'scripts/battle/presentation/character_appearance_registry.gd'
-      - 'assets/characters/**/cg_states.webp'
-      - 'resources/ui/battle_theme.tres'
-      - 'tests/capture_p4_v23_layout.gd'
-      - 'tests/capture_p4_v31_boss.gd'
-      - 'scripts/battle/ui/**'
       - 'scripts/battle/presentation/battle_actor.gd'
-      - 'scripts/ui/hero_roster_item.gd'
-      - 'tests/capture_p4_last_spell_retirement.gd'
-      - 'scenes/battle/ui/**'
+      - 'scripts/battle/ui/components/party_status_panel.gd'
+      - 'assets/characters/**/cg_states.webp'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  v23-screenshots:
+  state-cg:
     runs-on: ubuntu-24.04
-    timeout-minutes: 18
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Install SHA512 verified Godot 4.7.2
+      - uses: ./.github/actions/setup-godot-ci
+      - name: Fresh import and strict 39-case character-state contract
         shell: bash
         run: |
           set -Eeuo pipefail
-          mkdir -p "$RUNNER_TEMP/godot" "$RUNNER_TEMP/v23"
-          root="https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable"
-          zip="Godot_v4.7.2-stable_linux.x86_64.zip"
-          curl -fLsS --retry 3 "$root/$zip" -o "$RUNNER_TEMP/godot/$zip"
-          curl -fLsS --retry 3 "$root/SHA512-SUMS.txt" -o "$RUNNER_TEMP/godot/SHA512-SUMS.txt"
-          cd "$RUNNER_TEMP/godot"
-          grep -F "$zip" SHA512-SUMS.txt > selected.sha512
-          test "$(wc -l < selected.sha512)" -eq 1
-          sha512sum -c selected.sha512
-          unzip -q "$zip" -d extracted
-          bin="$(find "$RUNNER_TEMP/godot/extracted" -type f -name 'Godot_v4.7.2-stable_linux.x86_64' -print -quit)"
-          test -n "$bin"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
-      - name: Prepare Xvfb and import Godot assets
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          if ! command -v xvfb-run >/dev/null || ! command -v Xvfb >/dev/null || ! command -v xauth >/dev/null; then
-            sudo apt-get update -qq
-            sudo apt-get install -y xvfb xauth libgl1-mesa-dri
-          fi
-          "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/v23/import.log" 2>&1
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/import.log"
-      - name: Verify independent normal and KO artwork for all three heroes
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          timeout 160s "$GODOT_BIN" --headless --path . --script res://tests/test_p4_character_state_cg.gd > "$RUNNER_TEMP/v23/cg.log" 2>&1 || { cat "$RUNNER_TEMP/v23/cg.log"; exit 1; }
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/cg.log"
-          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v23/cg.log"
-          grep 'STATE_CG_REPORT' "$RUNNER_TEMP/v23/cg.log"
-          python3 - "$RUNNER_TEMP/v23/cg.log" <<'PY'
-          import re,sys
-          content=open(sys.argv[1]).read()
-          match=re.search(r'^STATE_CG_REPORT executed=(\d+) passed=(\d+) failed=(\d+)
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'v23_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          echo "V23_CAPTURE_PREFIX=$prefix" >> "$GITHUB_ENV"
-          timeout 180s xvfb-run -a -s "-screen 0 1920x1080x24" \
-            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/capture_p4_v23_layout.gd -- \
-            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/render.log" 2>&1 || {
-              cat "$RUNNER_TEMP/v23/render.log"; exit 1;
-            }
-          grep -E '^(V23_CAPTURE_REPORT |PASS V23-|FAIL V23-)' "$RUNNER_TEMP/v23/render.log"
-          grep -qx 'V23_CAPTURE_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/v23/render.log"
-          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v23/render.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/render.log"
-          base="outputs/p4_input_capture/$prefix"
-          test -s "$base/v23_capture_manifest.json"
-          test -s "$base/v23_idle_1280_zh.png"
-          test -s "$base/v23_idle_1920_en.png"
-          test -s "$base/v23_selected_1280_zh.png"
-          echo "V23_EVIDENCE_DIR=$base" >> "$GITHUB_ENV"
-      - name: Render Break-bar projection-only fixtures (not gameplay state)
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'v31_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
-            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/capture_p4_v31_boss.gd -- \
-            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/boss.log" 2>&1 || {
-              cat "$RUNNER_TEMP/v23/boss.log"; exit 1;
-            }
-          grep -E '^(V31_BOSS_RENDER_REPORT |PASS V31-|FAIL V31-)' "$RUNNER_TEMP/v23/boss.log"
-          grep -qx 'V31_BOSS_RENDER_REPORT executed=20 passed=20 failed=0' "$RUNNER_TEMP/v23/boss.log"
-          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v23/boss.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/boss.log"
-          base="outputs/p4_input_capture/$prefix"
-          test -s "$base/v31_boss_break_1280_zh.png"
-          test -s "$base/v31_boss_locked_1280_zh.png"
-          test -s "$base/v31_boss_break_1920_en.png"
-          test -s "$base/v31_boss_projection_fixture_manifest.json"
-          echo "V31_BOSS_DIR=$base" >> "$GITHUB_ENV"
-      - name: Review-only Boss Break screenshot preview
-        if: success()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          test -s "$V31_BOSS_DIR/v31_boss_break_thumb.jpg"
-          echo 'V31_BREAK_IMAGE_BASE64_BEGIN'
-          base64 -w 0 "$V31_BOSS_DIR/v31_boss_break_thumb.jpg"
-          echo
-          echo 'V31_BREAK_IMAGE_BASE64_END'
-      - name: Render review-only JPEG preview in logs
-        if: success()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          test -s "$V23_EVIDENCE_DIR/v23_idle_1280_zh_thumb.jpg"
-          echo 'V23_IMAGE_BASE64_BEGIN'
-          base64 -w 0 "$V23_EVIDENCE_DIR/v23_idle_1280_zh_thumb.jpg"
-          echo
-          echo 'V23_IMAGE_BASE64_END'
-      - name: Capture genuine incapacitated and retired ally portraits
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          timeout 160s xvfb-run -a -s "-screen 0 1920x1080x24" \
-            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/capture_p4_last_spell_retirement.gd -- \
-            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/retirement.log" 2>&1 || {
-              cat "$RUNNER_TEMP/v23/retirement.log"; exit 1;
-            }
-          grep 'RETIREMENT_RENDER_REPORT executed=29 passed=29 failed=0' "$RUNNER_TEMP/v23/retirement.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/retirement.log"
-          base="outputs/p4_input_capture/$prefix"
-          test -s "$base/retirement_manifest.json"
-          for id in ret_ko_1280_zh ret_ko_1920_en ret_exhausted_1280_zh ret_exhausted_1920_en; do
-            test -s "$base/$id.png"
-          done
-      - name: Share actual Godot KO and exhausted thumbnails
-        if: success()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          base="outputs/p4_input_capture/$prefix"
-          for scenario in ret_ko_1280_zh ret_exhausted_1280_zh; do
-            test -s "$base/${scenario}_thumb.jpg"
-            echo "Retirement thumbnail available in artifact: $base/${scenario}_thumb.jpg"
-          done
-      - name: Preserve runner logs
+          mkdir -p "$RUNNER_TEMP/state-cg"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/state-cg/import.log" 2>&1
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/state-cg/import.log"
+          bash tools/ci/run_suite.sh 'test_p4_character_state_cg:STATE_CG_REPORT:39' "$RUNNER_TEMP/state-cg"
+          echo 'Character state contract only. Canonical Visual workflows retain screenshot gates; no Combo GUI/Domain rerun.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
         if: always()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v base 'outputs/p4_input_capture/v23_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          mkdir -p "$base/runner_logs"
-          cp -f "$RUNNER_TEMP/v23/"*.log "$base/runner_logs/" 2>/dev/null || true
-      - name: Upload V3.1 real PNGs, projection-only fixtures and raw logs
-        if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: v31-real-render-screenshots
-          path: |
-            outputs/p4_input_capture/v23_*/
-            outputs/p4_input_capture/v31_*/
-            outputs/p4_input_capture/ret_*/
+          name: character-state-cg-headless
+          path: ${{ runner.temp }}/state-cg/
           retention-days: 14
-
-,content,re.M)
-          assert match and int(match[1])>=35 and match[1]==match[2] and match[3]=="0"
-          PY
-      - name: Render genuine viewport and validate nine PNG cases
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'v23_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          echo "V23_CAPTURE_PREFIX=$prefix" >> "$GITHUB_ENV"
-          timeout 180s xvfb-run -a -s "-screen 0 1920x1080x24" \
-            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/capture_p4_v23_layout.gd -- \
-            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/render.log" 2>&1 || {
-              cat "$RUNNER_TEMP/v23/render.log"; exit 1;
-            }
-          grep -E '^(V23_CAPTURE_REPORT |PASS V23-|FAIL V23-)' "$RUNNER_TEMP/v23/render.log"
-          grep -qx 'V23_CAPTURE_REPORT executed=30 passed=30 failed=0' "$RUNNER_TEMP/v23/render.log"
-          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v23/render.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/render.log"
-          base="outputs/p4_input_capture/$prefix"
-          test -s "$base/v23_capture_manifest.json"
-          test -s "$base/v23_idle_1280_zh.png"
-          test -s "$base/v23_idle_1920_en.png"
-          test -s "$base/v23_selected_1280_zh.png"
-          echo "V23_EVIDENCE_DIR=$base" >> "$GITHUB_ENV"
-      - name: Render Break-bar projection-only fixtures (not gameplay state)
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'v31_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          timeout 150s xvfb-run -a -s "-screen 0 1920x1080x24" \
-            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/capture_p4_v31_boss.gd -- \
-            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/boss.log" 2>&1 || {
-              cat "$RUNNER_TEMP/v23/boss.log"; exit 1;
-            }
-          grep -E '^(V31_BOSS_RENDER_REPORT |PASS V31-|FAIL V31-)' "$RUNNER_TEMP/v23/boss.log"
-          grep -qx 'V31_BOSS_RENDER_REPORT executed=20 passed=20 failed=0' "$RUNNER_TEMP/v23/boss.log"
-          ! grep -E 'SCRIPT ERROR|^FAIL ' "$RUNNER_TEMP/v23/boss.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/boss.log"
-          base="outputs/p4_input_capture/$prefix"
-          test -s "$base/v31_boss_break_1280_zh.png"
-          test -s "$base/v31_boss_locked_1280_zh.png"
-          test -s "$base/v31_boss_break_1920_en.png"
-          test -s "$base/v31_boss_projection_fixture_manifest.json"
-          echo "V31_BOSS_DIR=$base" >> "$GITHUB_ENV"
-      - name: Review-only Boss Break screenshot preview
-        if: success()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          test -s "$V31_BOSS_DIR/v31_boss_break_thumb.jpg"
-          echo 'V31_BREAK_IMAGE_BASE64_BEGIN'
-          base64 -w 0 "$V31_BOSS_DIR/v31_boss_break_thumb.jpg"
-          echo
-          echo 'V31_BREAK_IMAGE_BASE64_END'
-      - name: Render review-only JPEG preview in logs
-        if: success()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          test -s "$V23_EVIDENCE_DIR/v23_idle_1280_zh_thumb.jpg"
-          echo 'V23_IMAGE_BASE64_BEGIN'
-          base64 -w 0 "$V23_EVIDENCE_DIR/v23_idle_1280_zh_thumb.jpg"
-          echo
-          echo 'V23_IMAGE_BASE64_END'
-      - name: Capture genuine incapacitated and retired ally portraits
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          timeout 160s xvfb-run -a -s "-screen 0 1920x1080x24" \
-            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/capture_p4_last_spell_retirement.gd -- \
-            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/retirement.log" 2>&1 || {
-              cat "$RUNNER_TEMP/v23/retirement.log"; exit 1;
-            }
-          grep 'RETIREMENT_RENDER_REPORT executed=29 passed=29 failed=0' "$RUNNER_TEMP/v23/retirement.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/retirement.log"
-          base="outputs/p4_input_capture/$prefix"
-          test -s "$base/retirement_manifest.json"
-          for id in ret_ko_1280_zh ret_ko_1920_en ret_exhausted_1280_zh ret_exhausted_1920_en; do
-            test -s "$base/$id.png"
-          done
-      - name: Share actual Godot KO and exhausted thumbnails
-        if: success()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          base="outputs/p4_input_capture/$prefix"
-          for scenario in ret_ko_1280_zh ret_exhausted_1280_zh; do
-            test -s "$base/${scenario}_thumb.jpg"
-            echo "Retirement thumbnail available in artifact: $base/${scenario}_thumb.jpg"
-          done
-      - name: Preserve runner logs
-        if: always()
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          printf -v base 'outputs/p4_input_capture/v23_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          mkdir -p "$base/runner_logs"
-          cp -f "$RUNNER_TEMP/v23/"*.log "$base/runner_logs/" 2>/dev/null || true
-      - name: Upload V3.1 real PNGs, projection-only fixtures and raw logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: v31-real-render-screenshots
-          path: |
-            outputs/p4_input_capture/v23_*/
-            outputs/p4_input_capture/v31_*/
-            outputs/p4_input_capture/ret_*/
-          retention-days: 14
-

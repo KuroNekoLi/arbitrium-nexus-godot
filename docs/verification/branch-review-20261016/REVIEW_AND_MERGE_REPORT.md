@@ -47,6 +47,7 @@
 | BR-05 / P2 | static CG 隱藏攻擊動畫；前一段 lunge 未完時接下一段，return 起點可能偏離 home | 攻擊期間切回既有 frame animation，完畢恢復 CG；新攻擊以 home 為起點；兩段連續攻擊 fixture 驗證 |
 | BR-06 / P2 | 新增三份 state atlas 沒有 asset manifest，易被誤當正式美術採用 | 補 SHA256／原分支 commit／PROVENANCE_PENDING／REUSED_PLACEHOLDER；未下載或生成新圖，待其他 AI 正式素材 |
 | BR-07 / P1 | 機械合併早期 P4/M5 會恢復退休角色受擊／固定人物槽位／舊 UI workflow | 保留現行核准 tree，history-only merge 保存來源；merge tree 不變及 ancestry 檢查 |
+| BR-08 / P1 | 角色 CG workflow 含截斷 Python regex、重複 shell/run 欄位及重複 capture 區段，GitHub 拒絕載入 | 保存原始 YAML，修為獨立嚴格39項 state-CG headless gate；原 capture scripts／canonical Visual gates 保留；43份 workflow 全部通過 YAML parse／duplicate-key 檢查 |
 
 ## 本輪驗證與未執行
 
@@ -58,6 +59,7 @@ Godot `4.7.2.stable.official.ed1daf0bf`。最終程式修正 commit `a5e007e`；
 - `TARGET_ARROW_REPORT`：26/26。
 - 合計126；strict Godot log gate：0 errors。兩次 fresh import 無錯誤。
 - CI 工具 unit tests：41/41。第一輪 Windows cp950 導致2項 decode error；設 `PYTHONUTF8=1` 後第二輪通過，沒有弱化 assertion。
+- 新增／既有43份 workflow：strict YAML parse／duplicate-key 檢查全過；PyYAML 僅安裝於工作區外掛工具暫存目錄，沒有新增遊戲或 CI runtime 依賴。
 - **未執行**：Combo Domain／GUI 第四輪、其他真人輸入／完整 Boss 戰、全體連攜、多搭檔／多 Recipe、新畫面 golden image 核准、GPU／平衡研究。原本 Domain136/142、GUI258/260 是保留紀錄，不能改成 PASS。
 
 所有 raw logs 及 source SHA 固定於本目錄。新增 `ci-reviewed-presentation.yml` 僅執行上述126項 presentation；不包含暫緩的 Combo 測試。遠端 CI／master 更新狀態見 `MERGE_RECEIPT.md`。未刪除任何來源分支，沒有 force push，也沒有替其他工作區提交未完成內容。
