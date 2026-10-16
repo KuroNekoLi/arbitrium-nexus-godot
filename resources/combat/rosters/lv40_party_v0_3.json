@@ -38,7 +38,12 @@
         "R06",
         "R07",
         "R08"
-      ]
+      ],
+      "passive": {
+        "id": "REN_P01",
+        "kind": "BREAK_FIRST_HIT",
+        "amount": 2
+      }
     },
     "B": {
       "character_id": "akane",
@@ -104,7 +109,12 @@
         "T06",
         "T09",
         "T10"
-      ]
+      ],
+      "passive": {
+        "id": "TSUMUGI_P01",
+        "kind": "HEAL_FIRST_SP",
+        "amount": 60
+      }
     }
   },
   "boss": {

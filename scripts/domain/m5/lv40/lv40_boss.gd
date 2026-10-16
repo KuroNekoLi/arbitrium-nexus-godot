@@ -12,7 +12,7 @@ static func initialize(core: Dictionary, config: Dictionary) -> Dictionary:
 	next["battle"]["lv40"] = {"version":config["m5_lv40_content_version"],
 		"boss_phase":1,"cycle_index":0,"phase2_barrier_used":false,
 		"pending_cast":{},"core_open":false,"barrier_expiry":{},
-		"ren_passive_round":0,"tsumugi_passive_round":0,"spell_power":{},
+		"break_passive_rounds":{},"healing_passive_rounds":{},"spell_power":{},
 		"defense_combo":{},"scorch":{}}
 	return publish(next,config)
 

@@ -36,10 +36,15 @@ static func config(version: String) -> Dictionary:
 			"denominator":2,"rounding":"FLOOR_FIXTURE"},
 		"m5_4_last_release_recoil":{},
 		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
+	c["lv40_actor_passives"] = {}
 	c["m5_actor_stats"] = {}
 	c["lv40_actor_definitions"] = {}
 	c["m5_element_resistance"] = {}
 	var party_ids: Array[String] = Roster.party_ids(roster)
+	for actor: String in party_ids:
+		var passive: Dictionary = roster["actors"][actor].get("passive", {})
+		if not passive.is_empty():
+			c["lv40_actor_passives"][actor] = passive.duplicate(true)
 	var all_actors: Array[String] = party_ids.duplicate()
 	all_actors.append("Boss")
 	for actor: String in all_actors:
