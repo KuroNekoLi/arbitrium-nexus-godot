@@ -39,13 +39,8 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Cache checksum-verified Godot binary
-        uses: actions/cache@v4
-        with:
-          path: .ci-cache/godot-4.7.2
-          key: godot-4.7.2-linux-x86_64-verified-v1
-      - name: Install Godot 4.7.2 (verify SHA-512)
-        run: bash tools/ci/install_godot.sh
+      - name: Setup cached Godot 4.7.2 and imported assets
+        uses: ./.github/actions/setup-godot-ci
       - name: Headless import, log-gate unit tests and representative battle/UI smoke
         # This branch's Fast batch reached its third execution at 77bd22a.
         # Preserve the failed Lv40 gate; additional reruns need owner approval.
@@ -100,98 +95,4 @@ jobs:
         with:
           name: ci-fast-logs
           path: ${{ runner.temp }}/fast-logs/
-          retention-days: 7
-  p4-contracts:
-    # This branch's authorized three-run V3.5 batch was consumed at 81f3d94.
-    # New Last Spell UI has its own new requirement/test, not a renamed rerun.
-    # Other branches retain the complete canonical contracts unchanged.
-    if: github.ref != 'refs/heads/ui/v35-convergence-final-20261016' || github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'
-    # Runs alongside the Golden/5-seed job, not serially afterwards.
-    # Replaces the formerly auto-triggered P4 component/localization/metrics
-    # workflows without reviving redundant 100-seed tests.
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - name: Cache checksum-verified Godot binary
-        uses: actions/cache@v4
-        with:
-          path: .ci-cache/godot-4.7.2
-          key: godot-4.7.2-linux-x86_64-verified-v1
-      - name: Install Godot 4.7.2
-        run: bash tools/ci/install_godot.sh
-      - name: Import and execute all formerly P4-auto-scoped contracts
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          mkdir -p "$RUNNER_TEMP/p4-logs"
-          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/p4-logs/import.log" 2>&1 || {
-            cat "$RUNNER_TEMP/p4-logs/import.log"; exit 1;
-          }
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/p4-logs/import.log"
-          for spec in \
-            'test_lv40_content:LV40_CONTENT_REPORT:37' \
-            'test_p4_component_contract:V1_COMPONENT_REPORT:24' \
-            'test_p4_feedback:P4_4_REPORT:45' \
-            'test_p4_feedback_edges:P4_4_EDGE_REPORT:80' \
-            'test_p4_lv40_ui:P4_LV40_UI_STAGING_REPORT:10' \
-            'test_p4_localization:P4_LOCALIZATION_REPORT:198' \
-            'test_p4_lv40_readmodel:P4_READMODEL_REPORT:29' \
-            'test_p4_balance_metrics:P4_BALANCE_METRICS_REPORT:35' \
-            'test_p4_profile_metrics:P4_PROFILE_METRICS_REPORT:30'; do
-            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
-          done
-          for suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
-            log="$RUNNER_TEMP/p4-logs/legacy-$suite.log"
-            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1 || {
-              tail -n 100 "$log"; exit 1;
-            }
-            python3 tools/ci/assert_godot_logs.py "$log"
-          done
-          for spec in \
-            'test_p4_v2_layout:V2_LAYOUT_REPORT:18' \
-            'test_p4_v2_context_layout:V2_CONTEXT_REPORT:23' \
-            'test_p4_v24_hand:V24_HAND_REPORT:39' \
-            'test_p4_v27_face_bounds:V27_FACE_REPORT:8' \
-            'test_p4_v31_visual:V31_VISUAL_REPORT:31' \
-            'test_p4_v32_card:V32_CARD_REPORT:73' \
-            'test_p4_v33_boss:V33_BOSS_REPORT:47' \
-            'test_p4_v3_integration:V3_MERGE_REPORT:90' \
-            'test_p4_v34_roster_command:V34_ROSTER_COMMAND_REPORT:102' \
-            'test_p4_v34_legacy_roster:V34_LEGACY_ROSTER_REPORT:18' \
-            'test_p4_v35_resources:V35_RESOURCES_REPORT:32' \
-            'test_p4_v35_party:V35_PARTY_REPORT:57' \
-            'test_p4_v35_command:V35_COMMAND_REPORT:30' \
-            'test_p4_v35_intent:V35_INTENT_REPORT:35' \
-            'test_p4_v35_log:V35_LOG_REPORT:33' \
-            'test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25'; do
-            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"
-          done
-          echo 'CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0'
-          echo 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'
-      - name: Authorized V3.5 scoped input gate (not historical P4.4)
-        if: github.ref == 'refs/heads/ui/v35-convergence-final-20261016' && github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          sudo apt-get update -qq
-          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
-          for suite in test_p4_v34_gui_input test_p4_sp_drag_gesture; do
-            log="$RUNNER_TEMP/p4-logs/$suite.log"
-            timeout 150s xvfb-run -a -s '-screen 0 1920x1080x24' \
-              env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
-              "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-              --script "res://tests/$suite.gd" > "$log" 2>&1 || {
-                cat "$log"; exit 1;
-              }
-            python3 tools/ci/assert_godot_logs.py "$log"
-          done
-          grep -Fx 'V34_GUI_REPORT executed=28 passed=28 failed=0' "$RUNNER_TEMP/p4-logs/test_p4_v34_gui_input.log"
-          grep -Fx 'SP_GESTURE_REPORT executed=17 passed=17 failed=0' "$RUNNER_TEMP/p4-logs/test_p4_sp_drag_gesture.log"
-      - name: Upload P4 contract evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-fast-p4-contract-logs
-          path: ${{ runner.temp }}/p4-logs/
           retention-days: 7

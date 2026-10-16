@@ -18,24 +18,8 @@ jobs:
           mkdir -p "$RUNNER_TEMP/m5-5-logs"
           python3 -m unittest discover -s tests/ci -p 'test_*.py' -v > "$RUNNER_TEMP/m5-5-logs/ci-log-gate-tests.log" 2>&1
           cat "$RUNNER_TEMP/m5-5-logs/ci-log-gate-tests.log"
-      - name: Install SHA512 verified official Godot 4.7.2
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          mkdir -p "$RUNNER_TEMP/godot" "$RUNNER_TEMP/m5-5-logs"
-          release="https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable"
-          zip="Godot_v4.7.2-stable_linux.x86_64.zip"
-          curl -fLsS --retry 3 "$release/$zip" -o "$RUNNER_TEMP/godot/$zip"
-          curl -fLsS --retry 3 "$release/SHA512-SUMS.txt" -o "$RUNNER_TEMP/godot/SHA512-SUMS.txt"
-          cd "$RUNNER_TEMP/godot"
-          grep -F "$zip" SHA512-SUMS.txt > selected.sha512
-          test "$(wc -l < selected.sha512)" -eq 1
-          sha512sum -c selected.sha512
-          unzip -q "$zip" -d extracted
-          bin="$(find "$RUNNER_TEMP/godot/extracted" -type f -name 'Godot_v4.7.2-stable_linux.x86_64' -print -quit)"
-          test -n "$bin"
-          chmod +x "$bin"
-          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - name: Setup cached Godot 4.7.2 and imported assets
+        uses: ./.github/actions/setup-godot-ci
       - name: Verify version and import project
         shell: bash
         run: |

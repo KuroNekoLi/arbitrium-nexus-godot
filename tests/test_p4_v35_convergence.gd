@@ -54,7 +54,18 @@ func run() -> void:
 	check(not screen.hud.command_prompt.visible, "V35C-BASIC-NO-CONFIRM-PROMPT")
 	screen.cancel_action()
 	check(not screen.hud.command_prompt.visible and not context.visible, "V35C-CANCEL-PROMPT")
+	# BASIC_ATTACK starts asynchronous presentation cues (SceneTreeTimers/Tweens).
+	# Quitting immediately can leave active presentation resources at engine exit.
+	# Drain animation first, then clear transient effects without changing Domain.
+	var deadline_ms: int = Time.get_ticks_msec() + 3000
+	while screen.director.playing and Time.get_ticks_msec() < deadline_ms:
+		await process_frame
+	if screen.director.playing:
+		push_error("V35C-PRESENTATION-TIMEOUT: animation did not settle")
+		failed += 1
+	screen.director.skip_all()
 	screen.queue_free()
+	await process_frame
 	await process_frame
 	print("V35_CONVERGENCE_REPORT executed=%d passed=%d failed=%d" % [executed, executed - failed, failed])
 	quit(0 if failed == 0 else 1)
