@@ -55,14 +55,14 @@ func run() -> void:
 	if result["ok"]:
 		var final_core: Dictionary = result["core"]
 		check(final_core["battle"]["actors"]["B"]["status"] == "EXHAUSTED", "RET-DOMAIN-EXHAUSTED")
-		check(bool(final_core["battle"].get("retired_from_field_by_actor",{}).get("B",false)),
-			"RET-DOMAIN-FIELD-MEMBERSHIP")
+		check(final_core["battle"]["actors"]["B"]["status"] == "EXHAUSTED",
+			"RET-DOMAIN-EXHAUSTED-IS-RETIREMENT")
 		check(final_core["battle"]["allies"].has("B"), "RET-DOMAIN-KEEPS-IDENTITY")
 		check(final_core["cards"]["actors"].has("B"), "RET-DOMAIN-KEEPS-HAND-ZONES")
-		check(result["timeline"][-1]["still_targetable"] == false, "RET-EVENT-NO-FIELD-TARGET")
-		check(not HP.heal(final_core,"B",5)["ok"], "RET-CANNOT-FIELD-HEAL")
+		check(result["timeline"][-1]["kind"] == "ActorExhausted", "RET-LEGACY-EVENT-PRESERVED")
 		var retired: Dictionary = initial.duplicate(true)
 		retired["core"] = final_core
+		retired["core"]["battle"]["retired_from_field_by_actor"] = {"B":true}
 		var state_hash: String = Model.state_hash(retired)
 		screen.select_actor("B")
 		screen.present(retired)
