@@ -81,4 +81,4 @@ func support_pulse(point: Vector2, style: String) -> void:
 func clear_effects() -> void:
 	for child: Node in get_children():
 		if child is AudioStreamPlayer: child.stop()
-		else: child.queue_free()
+		else: child.free() # Skip is immediate; cancelling effects must not leave tween-owned sprites.
