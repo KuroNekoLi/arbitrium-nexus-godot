@@ -10,6 +10,7 @@ on:
       - 'scripts/battle/presentation/battle_effects.gd'
       - 'scripts/battle/presentation/spell_animation_catalog.gd'
       - 'tests/test_spell_visual_foundation.gd'
+      - 'tests/capture_spell_projectile_vfx.gd'
   workflow_dispatch:
 permissions:
   contents: read
@@ -52,10 +53,31 @@ jobs:
           done
           grep -qE '^SPELL_VISUAL_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' evidence/test_spell_visual_foundation.log
           ! grep -q '^FAIL ' evidence/test_spell_visual_foundation.log
+      - name: Capture real Godot fireball in-flight
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if ! command -v xvfb-run >/dev/null || ! command -v xauth >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          fi
+          printf -v prefix 'spell_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          timeout 150s xvfb-run -a -s "-screen 0 1280x720x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/capture_spell_projectile_vfx.gd -- \
+            "--capture-prefix=$prefix" > evidence/spell_render.log 2>&1 || { cat evidence/spell_render.log; exit 1; }
+          python3 tools/ci/assert_godot_logs.py evidence/spell_render.log
+          grep -qx 'SPELL_RENDER_REPORT executed=8 passed=8 failed=0' evidence/spell_render.log
+          base="outputs/p4_input_capture/$prefix"
+          test -s "$base/akane_fireball_in_flight.png"
+          test -s "$base/akane_fireball_thumb.jpg"
       - name: Publish Godot logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: spell-visual-verification-logs
-          path: evidence/
+          path: |
+            evidence/
+            outputs/p4_input_capture/spell_*/
           retention-days: 14
