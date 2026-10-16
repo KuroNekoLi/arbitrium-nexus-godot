@@ -2,9 +2,9 @@
 [ext_resource type="Script" path="res://scripts/battle/battle_screen.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/battlefield_bg.png" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/battle/actors/battle_actor.tscn" id="3"]
-[ext_resource type="Texture2D" path="res://assets/nova_atlas.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/kleya_atlas.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/yora_atlas.png" id="6"]
+[ext_resource type="Resource" path="res://resources/ui/characters/ren.tres" id="9"]
+[ext_resource type="Resource" path="res://resources/ui/characters/akane.tres" id="10"]
+[ext_resource type="Resource" path="res://resources/ui/characters/tsumugi.tres" id="11"]
 [ext_resource type="Texture2D" path="res://assets/nexus_party_splash.png" id="7"]
 [ext_resource type="Script" path="res://scripts/battle/ui/battle_hud.gd" id="8"]
 [node name="BattleScreen" type="Control"]
@@ -31,18 +31,18 @@ y_sort_enabled = true
 [node name="C" parent="Design/Arena" instance=ExtResource("3")]
 position = Vector2(549, 388)
 actor_id = "C"
-atlas = ExtResource("6")
+appearance = ExtResource("11")
 visual_height = 163.0
 accent = Color(0.83, 0.66, 1, 1)
 [node name="B" parent="Design/Arena" instance=ExtResource("3")]
 position = Vector2(497, 421)
 actor_id = "B"
-atlas = ExtResource("5")
+appearance = ExtResource("10")
 visual_height = 180.0
 [node name="A" parent="Design/Arena" instance=ExtResource("3")]
 position = Vector2(438, 458)
 actor_id = "A"
-atlas = ExtResource("4")
+appearance = ExtResource("9")
 visual_height = 200.0
 accent = Color(1, 0.76, 0.41, 1)
 [node name="Boss" parent="Design/Arena" instance=ExtResource("3")]
