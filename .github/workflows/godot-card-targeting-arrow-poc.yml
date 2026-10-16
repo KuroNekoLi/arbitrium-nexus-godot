@@ -8,6 +8,7 @@ on:
       - 'scripts/battle/battle_screen.gd'
       - 'tests/test_p4_target_arrow_contract.gd'
       - 'tests/test_p4_target_arrow_gui.gd'
+      - 'tests/test_p4_target_arrow_hand_regression.gd'
   workflow_dispatch:
 permissions:
   contents: read
@@ -60,7 +61,7 @@ jobs:
           fi
           timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/arrow/import.log" 2>&1
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/import.log"
-      - name: Real dragging, screenshot and original GUI regression
+      - name: Real dragging, screenshot and eight-card input regression
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -83,9 +84,9 @@ jobs:
           timeout 180s xvfb-run -a -s "-screen 0 1920x1080x24" \
             env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
             "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
-            --script res://tests/test_p4_v25_gui_input.gd > "$RUNNER_TEMP/arrow/original_gui.log" 2>&1 || { cat "$RUNNER_TEMP/arrow/original_gui.log"; exit 1; }
-          grep -qx 'V25_GUI_REPORT executed=31 passed=31 failed=0' "$RUNNER_TEMP/arrow/original_gui.log"
-          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/original_gui.log"
+            --script res://tests/test_p4_target_arrow_hand_regression.gd > "$RUNNER_TEMP/arrow/hand_regression.log" 2>&1 || { cat "$RUNNER_TEMP/arrow/hand_regression.log"; exit 1; }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/arrow/hand_regression.log"
+          grep -qx 'TARGET_ARROW_HAND_REPORT executed=23 passed=23 failed=0' "$RUNNER_TEMP/arrow/hand_regression.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,4 +95,5 @@ jobs:
             outputs/p4_input_capture/arrow_*/
             ${{ runner.temp }}/arrow/
           retention-days: 14
+
 
