@@ -54,3 +54,7 @@ Noto Sans TC: Copyright 2014-2021 Adobe. SIL Open Font License 1.1; see assets/f
 CGF https://github.com/db0/godot-card-game-framework (AGPL-3.0 with upstream addendum) was researched as an interaction reference only. No CGF source or assets are bundled. Existing SimpleCards remains the interaction dependency.
 
 SimpleCards 2.13 by twdoor, MIT: https://github.com/twdoor/simple-cards-v-2 . Full upstream notice restored at addons/simple_cards/LICENSE; inherited local fixes are retained.
+
+## Character appearance candidates — 2026-10-16
+
+Six transparent PNGs (Ren / Akane / Tsumugi, one 3×3 action atlas and one independent portrait CG per character) were generated with a project-authorized image-generation tool on 2026-10-16. Original file SHA-256 values and dimensions are recorded in `assets/asset_manifest.csv` and `docs/handoff/CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md`. The tool did not disclose its generation model. These are **replaceable AI-generated character design candidates**, not bundled Kenney assets or public-domain CC0 artwork. User approval of final canonical character appearance and actual visual QA is still pending. Original legacy art assets remain available for compatibility until every original caller is safely migrated.
