@@ -51,6 +51,7 @@ class SnapshotPolicyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "engine"):
             require_renderer({"display_server": "x11", "godot": "4.6.0.stable"}, "HUD")
         require_renderer({"display_server": "x11", "godot": "4.7.2.stable"}, "HUD")
+        require_renderer({"display_server": "x11", "godot": "4.7.2-stable (official)"}, "HUD")
 
     def test_missing_outputs_fail_closed(self):
         with tempfile.TemporaryDirectory() as folder:

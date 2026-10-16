@@ -2,6 +2,7 @@
 """Validate real-window Godot PNGs/metadata without extra Python dependencies."""
 import argparse
 import json
+import re
 from pathlib import Path
 import struct
 import zlib
@@ -72,7 +73,8 @@ def require_renderer(metadata, label):
     server = str(metadata.get("display_server", "")).strip().lower()
     engine = str(metadata.get("godot", ""))
     require(server not in {"", "headless"}, f"{label}: capture must use windowed Godot")
-    require(engine.startswith("4.7.2."), f"{label}: unexpected engine {engine!r}")
+    require(re.match(r"^4\.7\.2(?:[.-]|$)", engine) is not None,
+            f"{label}: unexpected engine {engine!r}")
 
 
 def verify_manifest(directory, name, expected, label, boss=False):
