@@ -8,6 +8,7 @@ const Writer = preload("res://scripts/qa/screenshot_writer.gd")
 const Encounter = preload("res://scripts/domain/m5/lv40/lv40_encounter.gd")
 const M5 = preload("res://scripts/domain/m5/integration/m5_domain_resolver.gd")
 const Factory = preload("res://scripts/battle/battle_command_factory.gd")
+const Appearances = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 var writer = Writer.new()
 var capture_prefix: String = ""
 var passed: int = 0
@@ -49,6 +50,21 @@ func _shot(screen: Control, state: Dictionary, label: String,
 	var record: Button = screen.hud.roster["B"]
 	check(actor.visible == not should_retire, "RET-VIS-CG-" + label)
 	check(record.retirement_mark.visible == should_retire, "RET-VIS-ROSTER-" + label)
+	if should_retire:
+		check(actor.state_cg == null or not actor.state_cg.visible,
+			"RET-VIS-RETIRED-CG-HIDDEN-" + label)
+	else:
+		var expected_field: Texture2D = Appearances.field_cg_for_status("B", "INCAPACITATED")
+		var expected_portrait: Texture2D = Appearances.portrait_for_status("B", "INCAPACITATED")
+		check(actor.state_cg != null and actor.state_cg.visible and
+			actor.state_cg.texture is AtlasTexture and expected_field is AtlasTexture and
+			(actor.state_cg.texture as AtlasTexture).atlas == (expected_field as AtlasTexture).atlas and
+			(actor.state_cg.texture as AtlasTexture).region == (expected_field as AtlasTexture).region,
+			"RET-VIS-INCAPACITATED-FIELD-CG-" + label)
+		check(record.portrait.texture is AtlasTexture and expected_portrait is AtlasTexture and
+			(record.portrait.texture as AtlasTexture).atlas == (expected_portrait as AtlasTexture).atlas and
+			(record.portrait.texture as AtlasTexture).region == (expected_portrait as AtlasTexture).region,
+			"RET-VIS-INCAPACITATED-PORTRAIT-" + label)
 	var picture: Image = root.get_texture().get_image()
 	check(picture != null and not picture.is_empty() and picture.get_size() == size,
 		"RET-VIS-PIXELS-" + label)
@@ -87,6 +103,27 @@ func run() -> void:
 	var screen: Control = Scene.instantiate()
 	root.add_child(screen)
 	await create_timer(0.45).timeout
+	var identity_ok: bool = true
+	var normal_cg_atlases: Array[Texture2D] = []
+	for actor_id: String in ["A", "B", "C"]:
+		var actor: Node2D = screen.get_node("Design/Arena/" + actor_id)
+		var expected_cg: Texture2D = Appearances.field_cg_for_status(actor_id, "ACTIVE")
+		var expected_portrait: Texture2D = Appearances.portrait_for_status(actor_id, "ACTIVE")
+		var cg_matches: bool = actor.state_cg != null and actor.state_cg.visible and \
+			actor.state_cg.texture is AtlasTexture and expected_cg is AtlasTexture and \
+			(actor.state_cg.texture as AtlasTexture).atlas == (expected_cg as AtlasTexture).atlas and \
+			(actor.state_cg.texture as AtlasTexture).region == (expected_cg as AtlasTexture).region
+		var portrait_matches: bool = screen.hud.roster[actor_id].portrait.texture is AtlasTexture and \
+			expected_portrait is AtlasTexture and \
+			(screen.hud.roster[actor_id].portrait.texture as AtlasTexture).atlas == (expected_portrait as AtlasTexture).atlas and \
+			(screen.hud.roster[actor_id].portrait.texture as AtlasTexture).region == (expected_portrait as AtlasTexture).region
+		identity_ok = identity_ok and cg_matches and portrait_matches
+		if expected_cg is AtlasTexture:
+			normal_cg_atlases.append((expected_cg as AtlasTexture).atlas)
+	check(identity_ok, "RET-VIS-ACTIVE-CG-AND-PORTRAITS-FROM-ROSTER")
+	check(normal_cg_atlases.size() == 3 and normal_cg_atlases[0] != normal_cg_atlases[1] and
+		normal_cg_atlases[1] != normal_cg_atlases[2] and normal_cg_atlases[0] != normal_cg_atlases[2],
+		"RET-VIS-THREE-ROSTER-IDENTITIES-DISTINCT")
 	await _shot(screen,down,"ret_ko_1280_zh",Vector2i(1280,720),"zh_TW",false)
 	await _shot(screen,down,"ret_ko_1920_en",Vector2i(1920,1080),"en",false)
 	await _shot(screen,retired,"ret_exhausted_1280_zh",Vector2i(1280,720),"zh_TW",true)

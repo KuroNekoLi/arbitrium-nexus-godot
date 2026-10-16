@@ -9,6 +9,7 @@ const ATTACK: Color = Color("#FF668D")
 const ALLY: Color = Color("#72DBCB")
 const NEUTRAL: Color = Color("#A4BBF9")
 
+signal target_hovered(actor: String)
 var is_aiming: bool = false
 var source_global: Vector2 = Vector2.ZERO
 var legal_ids: Array = []
@@ -44,6 +45,8 @@ func update_legal_targets(targets: Array) -> void:
 	_update_pointer(get_global_mouse_position())
 
 func end_aim() -> void:
+	if not hovered_target.is_empty():
+		target_hovered.emit("")
 	is_aiming = false
 	hovered_target = ""
 	legal_ids.clear()
@@ -66,7 +69,10 @@ func _process(_delta: float) -> void:
 		_update_pointer(get_global_mouse_position())
 
 func _update_pointer(point: Vector2) -> void:
-	hovered_target = target_at(point)
+	var next_target: String = target_at(point)
+	if next_target != hovered_target:
+		hovered_target = next_target
+		target_hovered.emit(hovered_target)
 	if not hovered_target.is_empty():
 		var target: Control = target_buttons[hovered_target]
 		end_global = target.get_global_rect().get_center()

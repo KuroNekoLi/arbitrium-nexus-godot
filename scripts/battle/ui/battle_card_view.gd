@@ -87,6 +87,9 @@ func _card_ready() -> void:
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
 	drag_started.connect(func(_card: Card) -> void:
 		z_index = 90
+		# Keep the card Control alive for SimpleCards input/release bookkeeping,
+		# but hide its entire face while the targeting arrow is being aimed.
+		face.hide()
 		drag_requested.emit(instance_id))
 	drag_ended.connect(func(_card: Card) -> void:
 		release_requested.emit(instance_id,_release_pointer if _has_release_pointer else get_global_mouse_position())
@@ -132,6 +135,7 @@ func _restore_home() -> void:
 	if not is_inside_tree(): return
 	# The addon restores an unowned card to zero rotation after drag_ended.
 	# Apply our presentation-only arc pose after its release handler completes.
+	face.show()
 	tween_position(home,0.18)
 	tween_rotation(rad_to_deg(home_rotation),0.18)
 	tween_scale(home_scale,0.18)

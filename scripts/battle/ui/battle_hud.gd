@@ -193,6 +193,7 @@ func _build() -> void:
 	targeting_arrow.size = Vector2(1280,720)
 	targeting_arrow.z_index = 75
 	add_child(targeting_arrow)
+	targeting_arrow.target_hovered.connect(_targets.set_hovered_target)
 
 	reaction_panel = _place(ReactionScene, Rect2(300, 154, 665, 305)) as PanelContainer
 	reaction_panel.z_index = 100

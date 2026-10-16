@@ -63,8 +63,22 @@ func run() -> void:
 		var target: Vector2 = screen.hud.target_buttons["Boss"].get_global_rect().get_center()
 		await move_pointer(target)
 		await create_timer(0.07).timeout
+		check(not card.face.visible, "SPG-AIM-ARROW-WITHOUT-CARD-FACE-" + str(full))
+		check(screen.hud.targeting_arrow.hovered_target == "Boss" and
+			screen.hud._targets.hovered_target == "Boss" and
+			screen.hud.target_buttons["Boss"].text == "◆",
+			"SPG-AIM-RETICLE-ON-ARROW-TARGET-" + str(full))
+		if not full:
+			await RenderingServer.frame_post_draw
+			var evidence_dir: String = ProjectSettings.globalize_path("res://outputs/p4_input_capture")
+			DirAccess.make_dir_recursive_absolute(evidence_dir)
+			var aimed_image: Image = root.get_texture().get_image()
+			check(aimed_image != null and not aimed_image.is_empty() and
+				aimed_image.save_png(evidence_dir.path_join("drag_arrow_target_reticle_20261017.png")) == OK,
+				"SPG-AIM-RENDERED-EVIDENCE-SAVED")
 		await mouse_button(target, false)
 		await create_timer(0.1).timeout
+		check(not is_instance_valid(card) or card.face.visible, "SPG-RELEASE-RESTORES-OR-CONSUMES-CARD-" + str(full))
 		var tape: Array = screen.controller.tape()
 		check(tape.size() == 1, "SPG-RELEASE-ONE-COMMAND-" + str(full))
 		if tape.size() == 1:
@@ -86,7 +100,9 @@ func run() -> void:
 	await move_pointer(outside)
 	await create_timer(0.07).timeout
 	await mouse_button(outside, false)
+	await create_timer(0.1).timeout
 	check(Model.state_hash(screen.snapshot) == invalid_before and screen.controller.tape().is_empty(), "SPG-INVALID-ATOMIC")
+	check(invalid_card.face.visible, "SPG-INVALID-RELEASE-RESTORES-CARD")
 	check(not invalid_card.full_chant_held and screen.hud.mode.selected == 0, "SPG-INVALID-RESET")
 	check(screen.hud.confirm_button.disabled, "SPG-INVALID-NO-STALE-CONFIRM")
 	screen.queue_free()
