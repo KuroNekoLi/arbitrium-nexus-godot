@@ -5,7 +5,7 @@ Date: 2026-10-16. Repository: KuroNekoLi/arbitrium-nexus-godot. This stage exten
 ## Evidence available at implementation time
 
 - P5 real-render CI [Run 38844029056](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38844029056): validated **12 real PNGs**, 9 HUD + 3 Boss fixtures, with headless import and Xvfb/Mesa GL rendering; cache hit and artifact `battle-visual-snapshots` confirmed.
-- `docs/verification/ui/V35_BASELINE.md` explicitly says V3.5 **NEEDS_REVISION**, not approved. The target reference JPG is a design reference, not the same pixels as Godot output. The other historical screenshots are test receipts, not signed-off Golden Images.
+- [Current runtime visual review](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md) records the latest V3.5 rendering and interaction results. The target reference JPG is a design reference, not the same pixels as Godot output. The other historical screenshots are test receipts, not signed-off Golden Images.
 - No approved `tests/visual_baselines/images/` existed. Initial baseline manifest is deliberately **pending**, never auto-populated from the latest CI.
 
 ## Automated pipeline

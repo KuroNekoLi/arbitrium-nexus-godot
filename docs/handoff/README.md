@@ -4,7 +4,6 @@
 
 ## 仍需保留
 
-- [角色 Atlas／Editor Preview 檢查點](CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md)：程式已合併，角色候選美術仍待使用者核准；文件中記載的未完成狀態與測試執行限制仍有效。
 - [Codex Context Policy](CODEX_CONTEXT_POLICY_20261016.md)：供 `AGENTS.md` 指定的探索與檔案讀取方式使用。
 
 ## 現行工作入口

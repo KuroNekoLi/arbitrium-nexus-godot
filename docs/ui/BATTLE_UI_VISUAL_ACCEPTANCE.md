@@ -1,5 +1,19 @@
 # Battle UI Visual Acceptance — V0 test matrix / gate
 
+## Current runtime reacceptance — 2026-10-17
+
+Reviewed on `master@481cf8bfdd2baa0326829dfc6d4b2a7c5702b219` with Godot `4.7.2.stable.official.ed1daf0bf` in a disposable Windows checkout. Current Lv40 HUD/hand/roster/command/Last Spell surfaces are still used by the playable battle, so V2/V3/V3.5 component behavior was rechecked as one current-runtime scope; historical stage snapshots are not separate acceptance gates.
+
+- Current P4 UI contract suites: **25 suites, 1,149/1,149 assertions PASS**.
+- Real-render capture: **63/63 checks PASS**, 18 captures across 1280/1920, zh_TW/en, hand sizes and Lv40/Last Spell previews. This verifies rendering and bounds, not final art approval.
+- Current playable-battle integration: `test_p4_integration` **31/31**, `test_p4_lv40_playable` **32/32**, character state CG **39/39**, spell/character presentation **46/46**, targeting contract **26/26**.
+- Real GUI: V3.4 roster/command input **28/28 PASS**. The old V2.5 runner stops after its first 20 passing mouse/keyboard checks because it looks up preference controls at obsolete node paths; no conclusion is claimed for its remaining assertions.
+- Current SP drag gesture: **23/25 PASS**. `SPG-AIM-RETICLE-ON-ARROW-TARGET` fails for both preview modes. The arrow appears without a card face, but the target highlight/marker requirement is not satisfied.
+- P4.3 GUI input capture: **13/16 PASS**; actual addon drag, legal-target drop, and keyboard-confirm-payment cases fail. Thus the complete input flow is not accepted.
+- Visual comparison still shows overlap among active battlefield portraits and differences from the pinned target in command layout/frame styling. Final high-fidelity visual approval remains pending; do not label V2/V3 visual exit or V3.5 final review accepted.
+
+Raw local logs and rendered PNGs for this run were kept outside the repository under `%TEMP%\arbitrium-qa-481cf8b-logs` and `%TEMP%\arbitrium-qa-481cf8b-evidence\outputs\p4_input_capture\v35_481cf8b`. These paths are execution evidence for this machine, not portable CI artifacts.
+
 > **STATUS: TEST PLAN ONLY — ZERO NEW EXECUTION CLAIMS**（2026-10-15）。
 > V0 文件契約對應：`BATTLE_UI_DESIGN_SYSTEM.md`、`BATTLE_UI_COMPONENT_CONTRACT.md`、`06_VISUAL_REFACTOR_OWNERSHIP_PLAN.md`。
 > Baseline: `ui/hud-visual-refactor-20261015` originally from `master@5103e40a4b95da82f2561b29c2604e9514fd398b`。開始執行前重查 source HEAD/最新 master 和 WIP 差異；不得依舊 README 宣告新版遊戲規則。

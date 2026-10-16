@@ -8,34 +8,7 @@
 
 2026-10-16 Last Spell 範圍 UI：LST-UI01～05／LST-DOM01／LST-COMPAT01 與新群組 22/22→26/26→26/28→使用者明確追加一次29/29 見 [Last Scope Note](ui/LAST_SPELL_TARGET_SCOPE_ENGINEERING_NOTE_20261016.md)。SCOPED_NATIVE_VERIFIED；既有完整回歸／CI未重跑，非使用者高保真驗收完成。
 
-2026-10-16 V3.5續作：SP拖放／長按、符卡詳情純資訊、右上工具移除與Last cut-in的最新USER_APPROVED來源及實際收據，見 [V35 Current Review](ui/V35_FINAL_REVIEW_REPORT.md)。81f3d94完整Domain／100seeds CI成功；77bd22a導致Lv40三項相容失敗；1861663修復後新Last native25/25 CI成功，但原Lv4032未追加複驗、最新截圖待授權，整體NEEDS_REVISION。保留P4.4 14/16與全部失敗，不升級最終視覺驗收。
-
-## V3.5 quota checkpoint 2026-10-15
-
-V3.5.0 pinned references 1d64ccd；這是早期施工快照，已由後續整合與 [V3.5 current review](ui/V35_FINAL_REVIEW_REPORT.md) 取代。V3.5 的高保真視覺核准仍未完成；以該 current review 和現行缺口表為準。
-
-## V3.4 Review 2026-10-15
-
-來源53fdbdfec6f5fcdbfb9ae66087cd8c81ea84ac7f；基準master2ce71a2。Hero HP/MP、六Command皮膚保留API；修正legacy沒有catalogue造成格式錯誤，新增獨立元件18條。
-V34首輪102/102，但legacy stderr有ERROR而正確紅燈；修正後VERIFIED（技術/headless/靜態畫面）。正式Master89871c9：Fast38751653887／Full38751653715／Render38751653611全success；V34 102/102、legacy18/18、P4 19組937+4Legacy；1238 Domain/100Seeds保持，歷史GUI不重跑。
-完整失敗與最終收據見[V3.4審查報告](ui/V3_4_REVIEW_AND_MERGE_REPORT.md)。
-
-## V3.1–V3.3 Review 2026-10-15
-
-來源85d5c64b396145beca43153d66c644ab2497a269；基準master a355d0b。
-保留V2穩定wrap/modal；新增Frame成本實際寬度、idle StyleBox還原、Boss Locked/Exposed分行；Domain無差異。
-V31/V32/V33與V3 merge90納入canonical Fast，17組817assertions；canonical Render 12PNG；Full保持1238/100Seeds/4Legacy。
-狀態VERIFIED（技術/headless/靜態畫面）；Master2ce71a2：Fast38750028130／Full38750028321／Render38750027917全success。GUI_NOT_VERIFIED（原P43/P44/V25/V26皆不重跑）。完整帳本及最終收據見[整合報告](ui/V3_REVIEW_AND_MERGE_REPORT.md)。
-
-## V2 Review 2026-10-15
-
-正式收據：V2來源822b1ce已由d9e6e2a merge；最終程式d1a971a9c4800e04196ba648416f900148ea122d已在master，Master Fast38743758109／Render38743758086／Full38743758255均success。V27 8/8、13組P4契約576、1238 Domain/100seeds保持；V26第三次47/47只在d9e6e2a staged驗證，Master沒有第4次。下表CI_PENDING保留為施工時快照，最終狀態以本收據及V2_REVIEW_AND_MERGE_REPORT為準。
-
-| Requirement | Source | Implementation / evidence | Status |
-|---|---|---|---|
-| V2 layout/hand/context | V2 notes / user V2 review | 822b1ce reviewed with master adb7582；layout18/context23/hand39本地PASS | CI_PENDING |
-| V26 missing UX / modal safety | UI02 / UIUX / user V2 request | HUD input shield/tree order/WeakRef focus suspend+restore；新V26首輪44/47、次輪40/47，最後CI待執行 | IMPLEMENTED_NOT_VERIFIED |
-| No Domain drift | CombatImplementationContract §2 | scripts/domain無差異；1238/100seeds保留Full Gate；原P44及V25 NOT_RERUN | CI_PENDING |
+歷史 V2/V3/V3.5 施工階段及其 quota 快照已移除；目前仍在正式 Lv40 遊戲流程的 UI 由 [現行 UI 畫面／互動驗收紀錄](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md) 統一列管。該紀錄不把舊 SHA、歷史 GUI 執行次數或過期節點路徑當成目前通過證據。
 
 
 > 日期：2026-10-14；程式基準 `c9678782b818f825b85561313bd142130c330fdf`；本表依 GitHub **靜態程式檢視**。除 G0.1、M1 scaffold 與 M2.1 **資源子契約**的已驗證案例之外，完整 **Phase1/2 gameplay** 仍多數 `NOT_EXECUTED`，不把文件指定的 Test ID 等同已跑 PASS。Spec 詳情參見 `../combat/00`～`24`。此表優先盤點工程關鍵不變量；完整逐一展開規格檔 13 的全部 test IDs，列為 M1 RTM 擴充義務。
@@ -469,43 +442,4 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 
 本分支／合併審查已完成；現行仍待驗收項目及其狀態請看 [戰鬥待辦表](../combat/engineering/待實作與待驗證功能.md) 和 [UI 視覺驗收清單](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md)。歷史測試次數限制保留在對應專項紀錄中，不因刪除已結案的交接文件而解除。
 
-## All branches integration continuation — 2026-10-15
-
-| Requirement | Source | Implementation/evidence | Status |
-|---|---|---|---|
-| G0 semantic branch classification | Historical branch review | Reviewed refs via merge-base/cherry/blob/semantic diff | STATIC_AUDIT_COMPLETE，非runtime保證 |
-| G4 new positive Lv40 integration | All Branches Review §6 / UI02 | lv40_playable_battle.tscn / config-aware BattleScreen / Controller / test_p4_lv40_playable32/32首輪 | HEADLESS_PARTIALLY_VERIFIED，等待CI；原staging10保持 |
-| SW scoped screenshot writer | All Branches Review §6 | scripts/qa/screenshot_writer.gd / test_screenshot_writer；首輪45/46 FAIL，已修普通檔阻擋，待CI | IMPLEMENTED_NOT_VERIFIED；原GUI14/16未重跑 |
-| P45 static scene evidence | 獨立場景檢查、非原GUI runner | capture_lv40_playable_scene.gd；GTX1650、1280繁中/1920英文PNG、主控目視 | STATIC_RENDER_OBSERVED，非真人/完整GUI/效能驗收 |
-
-正式Master收據（歷史快照）：f16227c1e67457de53b3547a73462416c32349ef；Actions38726127054（1238 Domain/100seeds/4Legacy）、38726127041（HUD/正向32/writer46）、38726127002（Legacy）均completed/success。GUI14/16及真人/P4.6不升級；後續以現行缺口表為準。
-
-## Character appearance / Editor Live Preview — 2026-10-16
-
-| Requirement | Actual evidence | Verification |
-|---|---|---|
-| Last Spell team/single/all targeting (LST-UI01–05, LST-DOM01) | Existing branch native scope batch4 **29/29** and 4 valid PNGs | **SCOPED_NATIVE_VERIFIED**, no rerun; original User Visual Acceptance still pending |
-| 3 independent Lv40 appearance resources + registry | 6 PNGs/3 `.tres`, A→Ren/B→Akane/C→Tsumugi, nonuniform atlas regions | **IMPLEMENTED**, editor import and 31 initial QA assertions passed; dedicated suite 35/35 **NOT VERIFIED** |
-| Editable actor slots, independent CG/portraits, mock-only editor HUD | `@tool BattleActor/BattleScreen`, real HUD nodes, Registry, no Editor Controller/Domain, character Signal cleanup designed | **IMPLEMENTED_NOT_FULLY_VERIFIED** (strict editor import passed on prior source; native Editor GUI screenshot not executed) |
-| Original sprite/portrait relocation | old binary blobs moved under `assets/legacy/`, legacy prototype preload paths updated; current battle resources unaffected | **IMPLEMENTED_PENDING_FAST_CI** until final integration run |
-| Final actor art and high-fidelity scene | Six candidate images are AI generated; no final visual user approval | **VISUAL_NOT_VERIFIED / USER_APPROVAL_PENDING** |
-
-Original Last Spell group, old P4.4 GUI group and separate character appearance suite have exhausted their respective authorized attempt budgets. Do not rerun without explicit owner authorization. See [Checkpoint](../handoff/CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md).
-
-### Current CI regression caveat — 2026-10-16
-- [Fast #38837390317](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38837390317) **FAILED** on Last Spell Release GDScript typed-array runtime bug and P4 V35 Resource leak/error. Conditional typed-array fix committed subsequently without rerun; status remains **NOT_VERIFIED**.
-- Appearance group [#38836688296](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836688296) third attempt Editor Import succeeded, initial 31 assertions passed then fixture initialization nil failed; subsequent deferred-run test change not rerun (quota exhausted). **35/35 NOT VERIFIED**.
-
-### Authorized completion / master merge — 2026-10-16
-
-以上 caveat 為保留的歷史快照；本輪使用者明確追加驗證權限後已修復並合併 master `bc057c5b419ee43bec25e5fb179e9f4dbe3f8312`。
-
-| Requirement | New evidence | Status |
-|---|---|---|
-| Independent Lv40 actors / atlas / CG | appearance39/39 CI38840497344；native character15/15；actual Editor PNG | SCOPED_VERIFIED |
-| Editor preview isolation / live appearance / re-entry | no Controller/snapshot in actual editor；Resource changed / re-entry / foot anchor assertions | SCOPED_VERIFIED；不是OS F6按鍵測試 |
-| Legacy relocation / playable runtime / scope | Master Fast38843036070成功；P4候選1149＋Legacy4成功；native Last scope29/29 | SCOPED_VERIFIED |
-| M1–M5.5 regression | Master Integration38843037835：1128/1128；本機100 seeds runner110/110 | 1238/1238；100完整battle/replay PASS |
-| Final visual identity / high-fidelity user acceptance | generated candidate art、Boss placeholder、3-frame actions | USER_APPROVAL_PENDING |
-
-合併完成；候選角色美術仍待使用者最終核准。當時的原始 Actions 與截圖證據留在 GitHub run artifacts；未修改原測試斷言或清除歷史 P4.4 GUI 14/16。
+現役 UI、角色 CG、Last Spell 預覽與 P4 的最新驗收狀態，統一維護於 [Battle UI Visual Acceptance](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md) 和 [P4 UI Acceptance Status](ui/P4_DELIVERY_STATUS.md)。本文件其餘內容為歷史追溯資料，不作目前驗收判定。

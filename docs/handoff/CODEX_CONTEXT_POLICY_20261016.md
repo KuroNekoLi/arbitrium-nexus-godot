@@ -14,4 +14,4 @@
 
 驗證方式：比較 `rg --hidden --files -g !.git/` 與 `rg --hidden --ignore-file .codexignore --files`。首次驗證發現 ripgrep 預設跳過隱藏的 `.codex/skills`，已在指令加上 `--hidden` 修正，不刪除必要 Skills。確認必要檔案可見、排除項不可見。沒有重跑受限 Godot 測試。本批不是遊戲視覺驗收。
 
-其餘施工交接：同目錄 `CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md`，包含六張已生成 PNG、SHA256、Last Spell 29/29 證據、尚未實作的角色接線／Editor Preview 與檔案清單。停留工作分支，不擅自合併 master。
+角色圖與法術／失能 CG 的現役 runtime 狀態，改依 `docs/ui/BATTLE_UI_VISUAL_ACCEPTANCE.md` 查核；Editor-only Atlas Preview checkpoint 已結案並移除。
