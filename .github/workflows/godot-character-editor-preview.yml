@@ -1,0 +1,56 @@
+name: Godot Character Editor Preview - New QA Contract
+on:
+  push:
+    branches: ['ui/last-spell-target-scope-20261016']
+    paths:
+      - '.github/workflows/godot-character-editor-preview.yml'
+      - 'scripts/battle/**'
+      - 'scripts/ui/hero_roster_item.gd'
+      - 'scenes/battle/**'
+      - 'resources/ui/characters/**'
+      - 'tests/test_character_editor_preview.gd'
+      - 'assets/characters/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  appearance-editor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: .ci-cache/godot-4.7.2
+          key: godot-4.7.2-linux-x86_64-verified-v1
+      - name: Install Godot 4.7.2 verified
+        run: bash tools/ci/install_godot.sh
+      - name: Strict Godot editor import
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/character-preview"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/character-preview/import.log" 2>&1 || {
+            cat "$RUNNER_TEMP/character-preview/import.log"; exit 1;
+          }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/character-preview/import.log"
+      - name: New character appearance and editor isolation suite (35 assertions)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          log="$RUNNER_TEMP/character-preview/test_character_editor_preview.log"
+          timeout 150s "$GODOT_BIN" --headless --path . --script res://tests/test_character_editor_preview.gd > "$log" 2>&1 || {
+            cat "$log"; exit 1;
+          }
+          cat "$log"
+          grep -Fxq 'CHARACTER_EDITOR_PREVIEW_REPORT executed=35 passed=35 failed=0' "$log"
+          python3 tools/ci/assert_godot_logs.py "$log"
+      - name: Preserve historical GUI test quota
+        run: echo 'No Last Spell 29-case or old GUI test was rerun; this is a NEW asset/editor group.'
+      - name: Upload raw evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: character-editor-preview-qa
+          path: ${{ runner.temp }}/character-preview/
+          retention-days: 14
