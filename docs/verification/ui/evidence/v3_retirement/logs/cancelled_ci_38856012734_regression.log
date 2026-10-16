@@ -1,0 +1,67 @@
+﻿2026-10-16T05:30:10.0084995Z ##[group]Run set -Eeuo pipefail
+2026-10-16T05:30:10.0085380Z [36;1mset -Eeuo pipefail[0m
+2026-10-16T05:30:10.0085672Z [36;1mwhile IFS= read -r spec; do[0m
+2026-10-16T05:30:10.0086026Z [36;1m  [[ -z "$spec" || "$spec" == \#* ]] && continue[0m
+2026-10-16T05:30:10.0086467Z [36;1m  bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/retirement"[0m
+2026-10-16T05:30:10.0086896Z [36;1mdone < tools/ci/integration_suites.txt[0m
+2026-10-16T05:30:10.0087536Z [36;1mtimeout 900s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_100_seeds.gd > "$RUNNER_TEMP/retirement/seeds.log" 2>&1[0m
+2026-10-16T05:30:10.0088404Z [36;1mgrep -Eq '^M5_5_100_SEEDS_REPORT executed=110 passed=110 failed=0 runs=100 ' "$RUNNER_TEMP/retirement/seeds.log"[0m
+2026-10-16T05:30:10.0089078Z [36;1mpython3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/seeds.log"[0m
+2026-10-16T05:30:10.0089628Z [36;1mecho 'RETIREMENT_DOMAIN_REPORT assertions=1238 seeds=100 failed=0'[0m
+2026-10-16T05:30:10.0156723Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T05:30:10.0157133Z env:
+2026-10-16T05:30:10.0157685Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T05:30:10.0158289Z ##[endgroup]
+2026-10-16T05:30:10.3165238Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_combat_m1.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:10.3224191Z M1_TEST_REPORT executed=30 passed=30 failed=0 skipped=0
+2026-10-16T05:30:10.7097427Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_resources.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:10.7154237Z M2_1_TEST_REPORT executed=38 passed=38 failed=0 skipped=0
+2026-10-16T05:30:11.1097366Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_costs.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:11.1157864Z M2_2_TEST_REPORT executed=43 passed=43 failed=0 skipped=0
+2026-10-16T05:30:11.5039090Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_cards.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:11.5095955Z M2_3_TEST_REPORT executed=46 passed=46 failed=0 seed=20261014
+2026-10-16T05:30:11.8970069Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_free_swap.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:11.9025198Z M2_4_TEST_REPORT executed=32 passed=32 failed=0 seed=20261014
+2026-10-16T05:30:12.2901606Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_invariants.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:12.2958418Z M2_5_RESOURCE_ONLY_INVARIANTS_REPORT executed=14 passed=14 failed=0 skipped=0 card_instance_and_swap=BLOCKED_M2_3_M2_4
+2026-10-16T05:30:12.6830939Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_replay.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:12.6886720Z M2_5_RESOURCE_ONLY_REPLAY_REPORT executed=6 passed=6 failed=0 skipped=0 card_instance_and_swap=BLOCKED_M2_3_M2_4
+2026-10-16T05:30:13.2635402Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m2_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:13.2696752Z M2_5_INTEGRATION_REPORT executed=40 passed=40 failed=0
+2026-10-16T05:30:14.2151947Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m3_phase.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:14.2210484Z M3_1_TEST_REPORT executed=61 passed=61 failed=0
+2026-10-16T05:30:14.9850909Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m3_reaction_window.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:14.9908458Z M3_2_TEST_REPORT executed=50 passed=50 failed=0
+2026-10-16T05:30:15.7594621Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m3_guard_protect.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:15.7652734Z M3_3_TEST_REPORT executed=54 passed=54 failed=0
+2026-10-16T05:30:16.4333238Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m3_ui_modes.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:16.4388501Z M3_4_TEST_REPORT executed=83 passed=83 failed=0
+2026-10-16T05:30:17.4783446Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m3_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:17.4830160Z M3_5_INTEGRATION_REPORT executed=61 passed=61 failed=0
+2026-10-16T05:30:22.2409278Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m3_replay.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:22.2465525Z M3_5_REPLAY_REPORT executed=40 passed=40 failed=0
+2026-10-16T05:30:22.9133127Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m4_dual_cast.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:22.9187936Z M4_1_TEST_REPORT executed=47 passed=47 failed=0
+2026-10-16T05:30:23.6774983Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m4_disruption.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:23.6827934Z M4_2_TEST_REPORT executed=59 passed=59 failed=0
+2026-10-16T05:30:24.5345108Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m4_last_spell.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:24.5398104Z M4_3_TEST_REPORT executed=55 passed=55 failed=0
+2026-10-16T05:30:25.4858380Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m4_incapacitation.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:25.4914822Z M4_4_TEST_REPORT executed=59 passed=59 failed=0
+2026-10-16T05:30:26.3457478Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m4_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:26.3515153Z M4_5_INTEGRATION_REPORT executed=41 passed=41 failed=0
+2026-10-16T05:30:29.4366389Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m4_replay.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:29.4424318Z M4_5_REPLAY_REPORT executed=38 passed=38 failed=0
+2026-10-16T05:30:30.2042179Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m5_damage.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:30.2103109Z M5_1_TEST_REPORT executed=44 passed=44 failed=0
+2026-10-16T05:30:31.1567129Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m5_status.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:31.1625924Z M5_2_TEST_REPORT executed=48 passed=48 failed=0
+2026-10-16T05:30:32.0163148Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m5_boss_combo.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:32.0212850Z M5_3_TEST_REPORT executed=44 passed=44 failed=0
+2026-10-16T05:30:32.9682495Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m5_outcome.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:32.9740298Z M5_4_TEST_REPORT executed=48 passed=48 failed=0
+2026-10-16T05:30:35.3144771Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m5_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:35.3213326Z M5_5_INTEGRATION_REPORT executed=32 passed=32 failed=0
+2026-10-16T05:30:42.1260414Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/retirement/test_m5_replay.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T05:30:42.1341116Z M5_5_REPLAY_REPORT executed=15 passed=15 failed=0
+2026-10-16T05:33:06.1948936Z ##[error]The operation was canceled.

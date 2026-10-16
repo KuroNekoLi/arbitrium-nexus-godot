@@ -16,6 +16,7 @@ work/simple-cards-v-2/
 # docs/handoff backfills; commit curated PNGs explicitly under outputs/ instead.
 outputs/p4_input_capture/
 outputs/visual_regression/
+outputs/retirement_review/
 outputs/**/logs/
 
 # OS noise.
