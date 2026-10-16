@@ -95,3 +95,5 @@ CP2_AP,Insufficient AP,AP 不足
 CP2_NO_OPPORTUNITY,Setup does not create the required opportunity now.,Setup 目前無法建立所需連攜機會。
 CP2_SHARED_TARGET,This recipe requires the same target for both SP.,此配方要求兩張 SP 指向同一目標。
 CP2_SUCCESS,Combo executed,連攜發動成功
+CP2_SELECTED,Combo setup selected,已選為連攜起手
+CP2_UNAVAILABLE,Combo unavailable,無法連攜

@@ -26,7 +26,20 @@ var combat_status: String = "ACTIVE"
 var retired: bool = false
 var retirement_mark: Label
 var combo_strength: int = 0
-var combo_mark: Label
+## Presentation-only combo partner state: "", IDLE, ELIGIBLE, SELECTED, UNAVAILABLE.
+## Callers derive it from the preparation controller; never from Domain mutation.
+var combo_state: String = ""
+var combo_mark: TextureRect
+const COMBO_PARTNER_TEXTURES: Dictionary = {
+	"IDLE": preload("res://assets/ui/combo/combo_partner_idle.png"),
+	"ELIGIBLE": preload("res://assets/ui/combo/combo_partner_eligible.png"),
+	"SELECTED": preload("res://assets/ui/combo/combo_partner_selected.png"),
+	"UNAVAILABLE": preload("res://assets/ui/combo/combo_partner_unavailable.png"),
+}
+const COMBO_TOOLTIP_KEYS: Dictionary = {
+	"IDLE": "CP2_POTENTIAL", "ELIGIBLE": "CP2_PARTNER",
+	"SELECTED": "CP2_SELECTED", "UNAVAILABLE": "CP2_UNAVAILABLE",
+}
 
 func _ready() -> void:
 	# This reusable component also lives in the legacy scene, which does not
@@ -74,20 +87,47 @@ func _ready() -> void:
 	retirement_mark.position = Vector2(22, 18)
 	portrait.get_parent().add_child(retirement_mark)
 	retirement_mark.hide()
-	combo_mark = Label.new()
+	# PortraitFrame is a Container; a zero-minimum holder receives the full
+	# rect so the 64px candidate texture can sit in the top-right corner
+	# without enlarging the portrait or covering bottom status badges.
+	var combo_layer := Control.new()
+	combo_layer.name = "ComboOverlay"
+	combo_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.get_parent().add_child(combo_layer)
+	combo_mark = TextureRect.new()
 	combo_mark.name = "ComboPartnerIndicator"
-	combo_mark.text = "◇"
-	combo_mark.position = Vector2(60,0)
+	combo_mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	combo_mark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	combo_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	combo_mark.add_theme_font_size_override("font_size",22)
-	portrait.get_parent().add_child(combo_mark)
+	combo_mark.anchor_left = 1.0
+	combo_mark.anchor_right = 1.0
+	combo_mark.offset_left = -28
+	combo_mark.offset_right = 2
+	combo_mark.offset_top = -4
+	combo_mark.offset_bottom = 26
+	combo_layer.add_child(combo_mark)
 	combo_mark.hide()
 
+## Legacy strength API: 2 → ELIGIBLE, 1 → IDLE, 0 → hidden.
 func set_combo_indicator(strength: int) -> void:
-	combo_strength = strength if combat_status == "ACTIVE" and not retired else 0
-	combo_mark.visible = combo_strength > 0
-	combo_mark.modulate = Color("e7baff") if combo_strength > 1 else Color("78668c")
-	combo_mark.tooltip_text = tr("CP2_PARTNER" if combo_strength > 1 else "CP2_POTENTIAL")
+	set_combo_state("ELIGIBLE" if strength > 1 else "IDLE" if strength == 1 else "")
+
+func set_combo_state(state: String) -> void:
+	# Retired actors keep the retirement mark as the single visible authority.
+	if retired or not COMBO_PARTNER_TEXTURES.has(state):
+		state = ""
+	elif combat_status != "ACTIVE" and state != "":
+		# Incapacitated/Exhausted can never finish; never claim eligibility.
+		state = "UNAVAILABLE"
+	combo_state = state
+	combo_strength = 2 if state in ["ELIGIBLE", "SELECTED"] else 1 if state == "IDLE" else 0
+	combo_mark.visible = not state.is_empty()
+	if state.is_empty():
+		combo_mark.texture = null
+		combo_mark.tooltip_text = ""
+	else:
+		combo_mark.texture = COMBO_PARTNER_TEXTURES[state]
+		combo_mark.tooltip_text = tr(COMBO_TOOLTIP_KEYS[state])
 	_apply_style()
 
 func _make_resource_bar(container: VBoxContainer, label: String, fill_color: Color) -> ProgressBar:

@@ -21,7 +21,28 @@ var home_scale: Vector2 = Vector2.ONE
 var hover_tween: Tween
 var selected_visual: bool = false
 var combo_eligible: bool = false
+## Presentation-only overlay state: "", ELIGIBLE, SELECTED, UNAVAILABLE.
+var combo_state: String = ""
+var combo_reduced_motion: bool = false
+var combo_layer: Control
+var combo_frame: TextureRect
 var combo_badge: Label
+var combo_pulse: Tween
+const COMBO_FRAME_TEXTURES: Dictionary = {
+	"ELIGIBLE": preload("res://assets/ui/combo/combo_card_eligible.png"),
+	"SELECTED": preload("res://assets/ui/combo/combo_card_selected.png"),
+	"UNAVAILABLE": preload("res://assets/ui/combo/combo_card_unavailable.png"),
+}
+## Localized non-colour cue; the glyph shape also differs per state.
+const COMBO_BADGE: Dictionary = {
+	"ELIGIBLE": ["◇ ", "CP2_ELIGIBLE", "caa0f2"],
+	"SELECTED": ["◆ ", "CP2_SELECTED", "ffe2a1"],
+	"UNAVAILABLE": ["", "CP2_UNAVAILABLE", "a99bb8"],
+}
+const COMBO_ALPHA_LOW: float = 0.35
+const COMBO_ALPHA_HIGH: float = 0.55
+const COMBO_ALPHA_STATIC: float = 0.45
+const COMBO_PULSE_PERIOD: float = 1.5
 var _release_pointer: Vector2
 var _has_release_pointer: bool = false
 var _hover_visual: bool = false
@@ -50,14 +71,7 @@ func _card_ready() -> void:
 	add_child(face)
 	# Independent native Controls. Source data is never baked into card artwork.
 	Frame.build(face, appearance, cost_text, legal, unavailable_reason)
-	combo_badge = Label.new()
-	combo_badge.text = "◇ " + tr("CP2_ELIGIBLE")
-	combo_badge.position = Vector2(8,190)
-	combo_badge.add_theme_font_size_override("font_size",13)
-	combo_badge.add_theme_color_override("font_color",Color("ffe2a1"))
-	combo_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	face.add_child(combo_badge)
-	combo_badge.visible = combo_eligible
+	_build_combo_overlay(style)
 	chant_hint = Label.new()
 	chant_hint.name = "HoldChantHint"
 	chant_hint.text = tr("BATTLE_FULL")
@@ -128,10 +142,84 @@ func set_selected_visual(active: bool) -> void:
 	selected_visual = active
 	_apply_visual_state()
 
+## Legacy boolean API retained for existing callers/tests.
 func set_combo_eligible(active: bool) -> void:
-	combo_eligible = active
-	if combo_badge != null: combo_badge.visible = active
+	set_combo_state("ELIGIBLE" if active else "", combo_reduced_motion)
+
+func _build_combo_overlay(style: StyleBoxFlat) -> void:
+	# The face is a PanelContainer: the holder receives its content rect, and
+	# the frame is pushed back out by the content margins to the card edge.
+	# The candidate PNG is 2x (328x436) with a 12px safe border => 6px here,
+	# inside the 9/7px content margin, so name, cost and artwork stay clear.
+	combo_layer = Control.new()
+	combo_layer.name = "ComboFrameLayer"
+	combo_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	face.add_child(combo_layer)
+	combo_frame = TextureRect.new()
+	combo_frame.name = "ComboFrameOverlay"
+	combo_frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	combo_frame.stretch_mode = TextureRect.STRETCH_SCALE
+	combo_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	combo_frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	combo_frame.offset_left = -style.content_margin_left
+	combo_frame.offset_top = -style.content_margin_top
+	combo_frame.offset_right = style.content_margin_right
+	combo_frame.offset_bottom = style.content_margin_bottom
+	combo_layer.add_child(combo_frame)
+	combo_badge = Label.new()
+	combo_badge.name = "ComboStateBadge"
+	combo_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	combo_badge.add_theme_font_size_override("font_size", 12)
+	combo_badge.add_theme_color_override("font_outline_color", Color("#091321"))
+	combo_badge.add_theme_constant_override("outline_size", 4)
+	var pill := StyleBoxFlat.new()
+	pill.bg_color = Color(0.05, 0.03, 0.11, 0.88)
+	pill.set_corner_radius_all(7)
+	pill.content_margin_left = 6
+	pill.content_margin_right = 6
+	pill.content_margin_top = 1
+	pill.content_margin_bottom = 1
+	combo_badge.add_theme_stylebox_override("normal", pill)
+	# Sits above the card's top edge: never over the name, cost or artwork.
+	combo_badge.anchor_left = 0.5
+	combo_badge.anchor_right = 0.5
+	combo_badge.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	combo_badge.offset_top = -style.content_margin_top - 22
+	combo_badge.offset_bottom = -style.content_margin_top - 4
+	combo_layer.add_child(combo_badge)
+	_apply_combo_state()
+
+func set_combo_state(state: String, reduced: bool = false) -> void:
+	if not COMBO_FRAME_TEXTURES.has(state): state = ""
+	var changed: bool = state != combo_state or reduced != combo_reduced_motion
+	combo_state = state
+	combo_reduced_motion = reduced
+	combo_eligible = state in ["ELIGIBLE", "SELECTED"]
+	if changed: _apply_combo_state()
 	_apply_visual_state()
+
+func _apply_combo_state() -> void:
+	if combo_frame == null: return
+	if combo_pulse: combo_pulse.kill()
+	combo_pulse = null
+	var visible_state: bool = not combo_state.is_empty()
+	combo_frame.visible = visible_state
+	combo_badge.visible = visible_state
+	if not visible_state:
+		combo_frame.texture = null
+		return
+	combo_frame.texture = COMBO_FRAME_TEXTURES[combo_state]
+	var badge: Array = COMBO_BADGE[combo_state]
+	combo_badge.text = str(badge[0]) + tr(str(badge[1]))
+	combo_badge.add_theme_color_override("font_color", Color(str(badge[2])))
+	# Reduced motion and UNAVAILABLE: fixed alpha, no scale/shake/offset.
+	if combo_reduced_motion or combo_state == "UNAVAILABLE":
+		combo_frame.modulate.a = COMBO_ALPHA_STATIC
+		return
+	combo_frame.modulate.a = COMBO_ALPHA_LOW
+	combo_pulse = create_tween().set_loops().set_trans(Tween.TRANS_SINE)
+	combo_pulse.tween_property(combo_frame, "modulate:a", COMBO_ALPHA_HIGH, COMBO_PULSE_PERIOD * 0.5)
+	combo_pulse.tween_property(combo_frame, "modulate:a", COMBO_ALPHA_LOW, COMBO_PULSE_PERIOD * 0.5)
 
 func _hover(active: bool) -> void:
 	_hover_visual = active
@@ -155,14 +243,13 @@ func _apply_visual_state() -> void:
 	_style.border_color = Color("ffe8a3") if selected_visual else Color("9beafc") if prominent else _idle_style.border_color
 	_style.shadow_color = Color(0.56, 0.83, 1.0, 0.56) if selected_visual else Color(0.33, 0.70, 0.92, 0.42) if prominent else _idle_style.shadow_color
 	_style.shadow_size = 9 if prominent else _idle_style.shadow_size
-	if combo_eligible:
-		_style.border_color = Color("ffe2a1") if selected_visual else Color("caa0f2")
-		_style.shadow_color = Color(0.65,0.35,0.94,0.5)
-		_style.shadow_size = 12 if selected_visual else 7
+	# Combo state is carried by the texture overlay; the native border keeps
+	# the hover/focus/selection ring so combo visuals never override it.
 	hover_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
 	hover_tween.tween_property(face, "position:y", lift, 0.14)
 	hover_tween.tween_property(face, "scale", magnify, 0.14)
 
 func _exit_tree() -> void:
 	if hover_tween: hover_tween.kill()
+	if combo_pulse: combo_pulse.kill()
 	super._exit_tree()

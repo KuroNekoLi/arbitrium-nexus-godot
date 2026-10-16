@@ -1,0 +1,203 @@
+{
+  "project": "Arbitrium Nexus",
+  "asset_scope": "Combo UI ornament only",
+  "creation_date": "2026-10-16",
+  "origin": "Original assets constructed programmatically by OpenAI ChatGPT (Python Pillow), informed by image concept sketch; not extracted from concept sheet",
+  "service": "ChatGPT / Python Pillow",
+  "author": "OpenAI ChatGPT (assistant-assisted generation)",
+  "rights_note": "Generated/original ornamental graphics; no third-party artwork incorporated. OpenAI output use is subject to applicable OpenAI Terms and any relevant law; commercial use and redistribution are not an independently certified legal guarantee.",
+  "approval": "CANDIDATE — replaceable, not a final art direction approval",
+  "files": [
+    {
+      "file": "combo_partner_idle.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "e27135a6f6e0cebac49ad4f5dbff9914befe067f6c60beaa4cf9fbf807f108ac",
+      "description": "Arcane diamond selector; color + glyph shape; transparent canvas"
+    },
+    {
+      "file": "combo_partner_eligible.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "cadeedc4fa530e54389e3ab370a4ee61f2353f020fdd5e8ddbee6674c960f426",
+      "description": "Arcane diamond selector; color + glyph shape; transparent canvas"
+    },
+    {
+      "file": "combo_partner_selected.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "f9e79a187f0689aa4ff56406f68b52b78fb78a34b4dd1cbd3c0e0d9b1ed20ed8",
+      "description": "Arcane diamond selector; color + glyph shape; transparent canvas"
+    },
+    {
+      "file": "combo_partner_unavailable.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "0308802a968fdfe8a73540f68eaa0f946246d4dff27572b676e1022136650323",
+      "description": "Arcane diamond selector; color + glyph shape; transparent canvas"
+    },
+    {
+      "file": "combo_card_eligible.png",
+      "dimensions": [
+        328,
+        436
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "95d898d3599a26a10c953d7bb3d4be059602fcf9473cc3f114079ced11062938",
+      "description": "Fully transparent center, perimeter-only ornamental frame",
+      "safe_border_px": 12
+    },
+    {
+      "file": "combo_card_selected.png",
+      "dimensions": [
+        328,
+        436
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "bf224e74d3ceb110e3d4dbbe84237d399448fa0712d7e3533992ae17eb441ed0",
+      "description": "Fully transparent center, perimeter-only ornamental frame",
+      "safe_border_px": 12
+    },
+    {
+      "file": "combo_card_unavailable.png",
+      "dimensions": [
+        328,
+        436
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "8f1e3dcd496600e5f18ad49a980dbcef3a318d9f53a78e1bcdbbf928fdc3372a",
+      "description": "Fully transparent center, perimeter-only ornamental frame",
+      "safe_border_px": 12
+    },
+    {
+      "file": "combo_cutin_background.png",
+      "dimensions": [
+        1180,
+        460
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "4fb9136db3abebf0f760ccc2e095d235423fae39b4545235982c020c2cdba37d",
+      "description": "semi-transparent atmospheric surface with open character wells"
+    },
+    {
+      "file": "combo_cutin_frame.png",
+      "dimensions": [
+        1180,
+        460
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "33b366fdaf354821e21c395655d220c45e8a98fa95be3a4bab638c57a6d750b2",
+      "description": "Metal corner ornaments and presentation dividers; no text"
+    },
+    {
+      "file": "combo_cutin_energy.png",
+      "dimensions": [
+        1180,
+        460
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "dbc5ccd89830b57384d80cf882ef052cf8772c35df71890e9653da4c61b17f08",
+      "description": "Isolated violet magic connectors and tiny sparkles; characters absent"
+    },
+    {
+      "file": "combo_offense_impact_sheet.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "cdc985fc2817b12d386342e030a8af663bdb5a7b89dfc6798fc8be6addb20187",
+      "description": "16-frame original procedural magical effect, no text, transparent cells",
+      "frames": 16,
+      "frame_size": [
+        256,
+        256
+      ],
+      "columns": 4,
+      "rows": 4,
+      "fps": 12,
+      "sequence": {
+        "start": [
+          0,
+          3
+        ],
+        "impact": [
+          4,
+          11
+        ],
+        "fade": [
+          12,
+          15
+        ]
+      }
+    },
+    {
+      "file": "combo_defense_barrier_sheet.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "format": "PNG",
+      "mode": "RGBA",
+      "colorspace": "sRGB",
+      "sha256": "0581dca2cadb17155cae535b5f2abb4e31d45a79c0b89b27d5d5ff39cb521a9a",
+      "description": "16-frame original procedural magical effect, no text, transparent cells",
+      "frames": 16,
+      "frame_size": [
+        256,
+        256
+      ],
+      "columns": 4,
+      "rows": 4,
+      "fps": 12,
+      "sequence": {
+        "start": [
+          0,
+          3
+        ],
+        "impact": [
+          4,
+          11
+        ],
+        "fade": [
+          12,
+          15
+        ]
+      }
+    }
+  ]
+}
