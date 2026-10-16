@@ -75,8 +75,9 @@ func _update_pointer(point: Vector2) -> void:
 	queue_redraw()
 
 func _local_geometry() -> PackedVector2Array:
-	var from_point: Vector2 = to_local(source_global)
-	var target_point: Vector2 = to_local(end_global)
+	var inverse: Transform2D = get_global_transform().affine_inverse()
+	var from_point: Vector2 = inverse * source_global
+	var target_point: Vector2 = inverse * end_global
 	var offset: Vector2 = target_point - from_point
 	var lift: float = minf(130.0, maxf(42.0, absf(offset.y) * 0.45))
 	var control_a: Vector2 = from_point + Vector2(offset.x * 0.12, -lift)
