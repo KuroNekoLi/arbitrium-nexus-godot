@@ -23,7 +23,8 @@ func _physical(point: Vector2) -> Vector2:
 
 func move_mouse(point: Vector2) -> void:
 	var p: Vector2 = _physical(point)
-	root.warp_mouse(p)
+	# Viewport.warp_mouse expects canvas coordinates, unlike injected InputEvent pixels.
+	root.warp_mouse(point)
 	var event := InputEventMouseMotion.new()
 	event.position = p
 	event.global_position = p
