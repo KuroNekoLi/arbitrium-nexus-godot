@@ -41,7 +41,7 @@ class VisualRegressionTests(unittest.TestCase):
         self.assertEqual({}, manifest["images"])
 
     def test_visual_workflow_is_report_first_never_auto_promotes(self):
-        source = (ROOT / ".github/workflows/godot-v2-3-visual-capture.yml").read_text()
+        source = (ROOT / ".github/workflows/godot-v2-3-visual-capture.yml").read_text(encoding="utf-8")
         self.assertIn("python3 tools/ci/compare_visual_snapshots.py", source)
         self.assertIn("tests/visual_baselines/approved.json", source)
         self.assertIn("visual-regression-evidence", source)

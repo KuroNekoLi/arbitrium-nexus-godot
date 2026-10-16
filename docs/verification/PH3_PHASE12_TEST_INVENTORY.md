@@ -1,6 +1,6 @@
 # Phase 1–2 / Phase 3 — 全量 Test ID 追溯清單（G0.2 + M1 + M2.1）
 
-> Repo: `KuroNekoLi/arbitrium-nexus-godot`；建立日期：2026-10-14。來源：[`docs/combat/13_TEST_MATRIX_ACCEPTANCE.md`](../combat/13_TEST_MATRIX_ACCEPTANCE.md)。**此表完整列出該規格中的 128 個具名測試案例**，外加新 M1 30 個具名測試與 M2.1 38 個具名資源測試。狀態以實際 CI 執行證據為準；`SPECIFIED` 不代表測試已執行。
+> Repo: `KuroNekoLi/arbitrium-nexus-godot`；建立日期：2026-10-14。來源：[封存的 `13_TEST_MATRIX_ACCEPTANCE.md`](../combat/archive/legacy-2026-10-16/13_TEST_MATRIX_ACCEPTANCE.md)。**此表完整列出該規格中的 128 個具名測試案例**，外加新 M1 30 個具名測試與 M2.1 38 個具名資源測試。狀態以實際 CI 執行證據為準；`SPECIFIED` 不代表測試已執行。
 
 ## 1. 核查結論與判定
 
@@ -300,7 +300,7 @@ Source-of-truth 128 test IDs above remain unchanged. This new section adds **20 
 
 - `tests/test_m2_invariants.gd`: 14/14 PASS — `M2_5_RESOURCE_INITIAL_VALID`, `M2_5_OVERLOAD_RESOURCE_INVARIANT`, `M2_5_COST_INPUT_PURE`, `M2_5_DUPLICATE_COST_ATOMIC`, `M2_5_INSUFFICIENT_MP_ATOMIC`, `M2_5_REFUND_DEBT_SEPARATE`, `M2_5_REFUND_NO_REPEAT`, `M2_5_REDUCE_DEBT_NOT_AP`, `M2_5_RP_FROM_REMAINING`, `M2_5_RP_DOES_NOT_CARRY`, `M2_5_AP_DEBT_REPAID_BEFORE_REFRESH`, `M2_5_AP_UNCAPPED_RP_CAPPED`, `M2_5_PROVISIONAL_ZERO_AP_PHASE`, `M2_5_STALE_COMMAND_ATOMIC`.
 - `tests/test_m2_replay.gd`: 6/6 PASS — `M2_5_CROSS_RESOLVER_REPLAY_EQUAL`, `M2_5_REPLAY_EVENTS_MONOTONIC`, `M2_5_REPLAY_RNG_UNCHANGED`, `M2_5_REPLAY_AP_RP_DEBT`, `M2_5_REPLAY_DISTINCT_TAPE_HASH`, `M2_5_REPLAY_FAILURE_ATOMIC`.
-- Evidence: Godot `4.7.2.stable.official.ed1daf0bf`; seed `20261014`; tested SHA `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`; [Actions run 38576033292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033292). All 20 executed cases passed, **but the full-domain gate failed with exit 2** because M2.3 and M2.4 source/test files were absent. See `PH3_M2_5_ACCEPTANCE_REPORT.md`. The 20 new cases do not cover card identity/zone invariant or swap event ordering.
+- Historical evidence: Godot `4.7.2.stable.official.ed1daf0bf`; seed `20261014`; tested SHA `71b753c5b0eba58bb9b21043e8be95e2d49ac44a`; [Actions run 38576033292](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38576033292). All 20 executed cases passed, **but the full-domain gate failed with exit 2** because M2.3 and M2.4 source/test files were absent. This inventory is historical; current suites are listed in `tools/ci/integration_suites.txt`.
 
 ### M2.3 executed card-oracle supplement (2026-10-14)
 
@@ -1117,7 +1117,7 @@ Official successful [Godot 4.7.2 CI #38665591370](https://github.com/KuroNekoLi/
 | 78 | M45-REP-35-NO_REAL_BOSS_HP_DAMAGE | test_m4_replay.gd | PASS |
 | 79 | M45-REP-36-BOTH_HP0_ACTORS_ACCOUNTED | test_m4_replay.gd | PASS |
 
-Seed20261014; 34 accepted commands; Initial SHA256 38f22585ad007413001f460772cbe2400c0b10e6601d6e03a4f3820490e49bdd; Event SHA256 82dfac4a2ea16cf30382a095d0881d74c5d90995eb01fad6f45fc61297d71a25; Final SHA256 c99b758c59c044c6c9fea8dae5306eac877c1a6b9381e8529578468d3f9ce7f6. Repairs and exclusions: PH3_M4_5_ACCEPTANCE_REPORT.md.
+Seed20261014; 34 accepted commands; Initial SHA256 38f22585ad007413001f460772cbe2400c0b10e6601d6e03a4f3820490e49bdd; Event SHA256 82dfac4a2ea16cf30382a095d0881d74c5d90995eb01fad6f45fc61297d71a25; Final SHA256 c99b758c59c044c6c9fea8dae5306eac877c1a6b9381e8529578468d3f9ce7f6. The completed acceptance receipt was removed; this inventory retains the historical tape hashes.
 
 
 ### M5.1 real HP Damage — 44 observed official Godot cases (2026-10-15)
@@ -1505,4 +1505,4 @@ Official Godot 4.7.2 [branch CI #38677695295](https://github.com/KuroNekoLi/arbi
 | 156 | `M55-100-09-FALLBACK_GENUINELY_USED` | `test_m5_100_seeds.gd` | PASS |
 | 157 | `M55-100-10-FINITE_ALL_ENCOUNTERS` | `test_m5_100_seeds.gd` | PASS |
 
-100 fixed seeds **20261014..20261113** with **5,244 actual accepted commands**, **0 rejected**, **100 terminal victories / 0 defeats**, distinct 100 tapes, max **6 rounds** and **282 events** per encounter. Golden `seed=20261014`, **49** commands, **5** rounds, VICTORY, initial SHA256 `578d669dbcc361c3c2b73b41ca5ed63927d68d0b2c7265084b48baa971d77dc1`, tape SHA256 `37606af69b4bb1578c500e022265427f38ad01cf40945493e668e0fd2e590eb0`, event SHA256 `588cb04d22911bd9d4b1a4d006eb5aa41fe2b7fa90a02a4fe879086e2928dfb1`, final SHA256 `c510227726170562d623b3737226439f3dffa0e4cea1ee9dfc4150117671acdd`. [Full acceptance report](PH3_M5_5_ACCEPTANCE_REPORT.md). This is Domain Headless Scope only. Spell Counter and Analyze remain content-blocked/deferred, all-positive-HP EXHAUSTED edge remains undecided, HUD/2.5D/Android human playable unverified.
+100 fixed seeds **20261014..20261113** with **5,244 actual accepted commands**, **0 rejected**, **100 terminal victories / 0 defeats**, distinct 100 tapes, max **6 rounds** and **282 events** per encounter. Golden `seed=20261014`, **49** commands, **5** rounds, VICTORY, initial SHA256 `578d669dbcc361c3c2b73b41ca5ed63927d68d0b2c7265084b48baa971d77dc1`, tape SHA256 `37606af69b4bb1578c500e022265427f38ad01cf40945493e668e0fd2e590eb0`, event SHA256 `588cb04d22911bd9d4b1a4d006eb5aa41fe2b7fa90a02a4fe879086e2928dfb1`, final SHA256 `c510227726170562d623b3737226439f3dffa0e4cea1ee9dfc4150117671acdd`. The completed acceptance receipt was removed; this historical inventory remains a record of Domain Headless Scope only. Spell Counter and Analyze remain content-blocked/deferred, all-positive-HP EXHAUSTED edge remains undecided, HUD/2.5D/Android human playable unverified.

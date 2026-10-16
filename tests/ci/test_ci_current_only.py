@@ -13,6 +13,24 @@ RETIRED_TESTS = ("test_battle_state", "test_deck_builder", "test_combat_ui", "te
 
 
 class CurrentCombatOnlyTests(unittest.TestCase):
+    def test_superseded_phase_and_duplicate_headless_workflows_stay_removed(self):
+        removed = (
+            "godot-m1-domain", "godot-m2-cards", "godot-m2-domain",
+            "godot-m2-free-swap", "godot-m2-resources", "godot-m3-1-phase",
+            "godot-m3-2-reactions", "godot-m3-3-guard-protect",
+            "godot-m3-4-ui-modes", "godot-m3-5-integration",
+            "godot-m4-1-dual-cast", "godot-m4-2-disruption",
+            "godot-m4-3-last-spell", "godot-m4-4-invalidation",
+            "godot-m4-5-acceptance", "godot-m5-1-damage",
+            "godot-m5-2-status", "godot-m5-3-boss-combo",
+            "godot-m5-4-outcome", "godot-p4-reviewed-headless",
+            "godot-p4-reviewed-presentation", "godot-v2-4-hand-headless",
+            "godot-v3-1-visual", "godot-v3-2-card",
+            "godot-v3-3-boss-intent", "godot-v3-4-roster-command",
+        )
+        for name in removed:
+            self.assertFalse((WORKFLOWS / (name + ".yml")).exists(), name)
+
     def test_eight_card_compatibility_shims_are_deleted(self):
         for name in RETIRED_TESTS:
             self.assertFalse((ROOT / "tests" / (name + ".gd")).exists(), name)

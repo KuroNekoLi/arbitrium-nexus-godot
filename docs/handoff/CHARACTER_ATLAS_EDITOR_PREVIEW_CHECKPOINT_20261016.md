@@ -86,5 +86,5 @@ CG 以各自 Atlas 為參考，要求保留身份、單一人物、直式透明�
 
 ## 已接手完成並合併 — 2026-10-16
 
-上方 NOT READY 是歷史交接狀態。使用者明確追加授權後完成審查修復、原生Editor／runtime截圖與適用CI，已合併／Push master `bc057c5b419ee43bec25e5fb179e9f4dbe3f8312`。Master Fast／Domain SUCCESS；P4 1149／Editor39亦有成功候選CI。正式收據、精確scope、已知限制及測試排程例外見 [CHARACTER_EDITOR_FINAL_MERGE_REPORT_20261016.md](CHARACTER_EDITOR_FINAL_MERGE_REPORT_20261016.md)。候選角色美術仍待使用者最終核准。
+上方 NOT READY 是歷史交接狀態。使用者明確追加授權後完成審查修復、原生 Editor／runtime 截圖與適用 CI，並已合併／Push master `bc057c5b419ee43bec25e5fb179e9f4dbe3f8312`。Master Fast／Domain SUCCESS；P4 1149／Editor39 亦有成功候選 CI。完成的 merge receipt 已移除；候選角色美術仍待使用者最終核准，這項未完成狀態保留。
 

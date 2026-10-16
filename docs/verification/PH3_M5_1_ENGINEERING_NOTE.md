@@ -4,7 +4,7 @@
 
 ## Source and prerequisite
 
-Combat authority: docs/combat/11, 16, 19, 20, 21, 23 plus docs/verification/PH3_M5_EXECUTION_PLAN.md and PH3_M4_HANDOFF.md. Predecessor completed CI https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38665990612 with 897/897 named M1–M4.5 Domain assertions and 4 prototype runners; prior HEAD da6731a6314ca9681c956eb850b1bbe1bf7d1216, M5 plan-only HEAD 0229c0eca3050257aa4c68288e3279d3e44249d7.
+Combat authority: current `docs/combat/` rules and engineering contracts, plus `docs/verification/PH3_M5_EXECUTION_PLAN.md`. Historical predecessor CI receipts were removed after completion; current test entrypoints are in `docs/ci/CI_TEST_MATRIX.md` and `tools/ci/integration_suites.txt`.
 
 ## Added modules and integration
 

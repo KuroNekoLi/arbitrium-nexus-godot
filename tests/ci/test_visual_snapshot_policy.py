@@ -61,7 +61,7 @@ class SnapshotPolicyTests(unittest.TestCase):
                 validate(Path(folder), "bad", "1")
 
     def test_workflow_keeps_real_renderer_and_historical_quota(self):
-        y = (ROOT / ".github/workflows/godot-v2-3-visual-capture.yml").read_text()
+        y = (ROOT / ".github/workflows/godot-v2-3-visual-capture.yml").read_text(encoding="utf-8")
         self.assertIn("uses: ./.github/actions/setup-godot-ci", y)
         self.assertNotIn("curl -fLsS", y)
         self.assertIn("xvfb-run", y)

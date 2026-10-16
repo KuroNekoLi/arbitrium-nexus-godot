@@ -1,5 +1,7 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+> Historical RTM snapshot — not a current status source. This Phase 1–5 traceability snapshot contains superseded implementation statuses. Use `docs/combat/README.md`, `docs/combat/engineering/規則與程式對照表.md`, `docs/combat/engineering/待實作與待驗證功能.md`, and `docs/ci/CI_TEST_MATRIX.md` for current rules, code ownership, open work, and test entrypoints. Completed acceptance receipts and handoffs have been removed; old run links below remain historical evidence only.
+
 2026-10-16 Lv40 Full Chant／Last Spell 目標清單型別修復：使用者實機堆疊 → `lv40_cast_effect.gd` 兩處逐項加入 typed array → `test_lv40_domain.gd` DEMO-12、83/83 與 strict import；證據與限制見 [Casting Array Fix Note](ui/LV40_CAST_TARGET_ARRAY_FIX_20261016.md)。不將 headless PASS 當真人 GUI 驗收。
 
 2026-10-16 RET-01～05：使用者核准耗竭真正退場、敵存活且無存活在場我方判DEFEAT；新版Lv40配置v3、效果後退場、非法目標原子拒絕、舊配置Replay隔離。來源見 [核准紀錄](../combat/LAST_SPELL_RETIREMENT_APPROVED_20261016.md)，本輪證據及測試次數見 [整合Note](ui/V3_RETIREMENT_INTEGRATION_NOTE_20261016.md)。本條不升級歷史GUI或美術驗收。
@@ -10,7 +12,7 @@
 
 ## V3.5 quota checkpoint 2026-10-15
 
-V3.5.0 pinned references 1d64ccd；AP部分已實作，new32/32、HUD36/Layout18/Integration31及修正後靜態9PNG30/30本地通過。V3.5.1角色卡與.2–.5未完成；CI_PENDING／NEEDS_REVISION，不宣告High-Fidelity VERIFIED。剩29%按使用者規則交接，詳docs/handoff/V35_QUOTA_HANDOFF.md；master/V2未修改。
+V3.5.0 pinned references 1d64ccd；這是早期施工快照，已由後續整合與 [V3.5 current review](ui/V35_FINAL_REVIEW_REPORT.md) 取代。V3.5 的高保真視覺核准仍未完成；以該 current review 和現行缺口表為準。
 
 ## V3.4 Review 2026-10-15
 
@@ -135,7 +137,7 @@ M1 30/30, M2.1 38/38, M2.2 43/43, partial M2.5 resource invariants 14/14 and par
 | PRE3-R12 DELEGATED_DEFAULT; `20 §3 C` | M4 casting lifecycle future | Casting zone resolution after spell/interrupt | DEFERRED_TO_M4 |
 
 New tests: `tests/test_m2_invariants.gd` and `tests/test_m2_replay.gd`. Test script exit0 on passing partial coverage; the new `.github/workflows/godot-m2-domain.yml` intentionally exits2 on missing dependencies to prevent **M2 DOMAIN VERIFIED** being misreported.
-Replay evidence: seed 20261014, event `28de6c96641655057122a210a73f9c3fa77890c0c20eded0417d5e62ebb7ce85`, final state `7389a7975f13b209982a3ba83dd4fd7ceeeb0c4947bda77f3712f4b8da70d9a9`. See `PH3_M2_5_ACCEPTANCE_REPORT.md` for full tape, initial hash, first parse-failure and second execution.
+Replay evidence: seed 20261014, event `28de6c96641655057122a210a73f9c3fa77890c0c20eded0417d5e62ebb7ce85`, final state `7389a7975f13b209982a3ba83dd4fd7ceeeb0c4947bda77f3712f4b8da70d9a9`. This historical receipt was removed after the gate completed; current execution entrypoints are in `docs/ci/CI_TEST_MATRIX.md`.
 
 ## M2.3 — Independent 12-SP cards and zones verification (2026-10-14)
 
@@ -181,7 +183,7 @@ Authoritative [CI #38586164025](https://github.com/KuroNekoLi/arbitrium-nexus-go
 | G0-R27 | m2/persistence/deck_profile_v2.gd | M2.3 46 acceptance assertions | 12-card V2 storage VERIFIED; legacy UI migration deferred |
 | G0-R14–24/R26 | Future M3/M4/M5 gameplay | No full gameplay assertions | NOT_IMPLEMENTED / NOT_EXECUTED |
 
-Do NOT use the presence of the CI marker M2_DOMAIN_VERIFIED as evidence of M3/M4/M5 gameplay implementation. Detailed execution and replay hashes: [PH3_M2_5_ACCEPTANCE_REPORT.md](PH3_M2_5_ACCEPTANCE_REPORT.md).
+Do NOT use the presence of the historical CI marker M2_DOMAIN_VERIFIED as evidence of later gameplay implementation. Current implementation status is in `docs/combat/engineering/待實作與待驗證功能.md`.
 
 
 ## M3.1 Battle Phase Engine — independently verified (2026-10-14)
@@ -261,9 +263,9 @@ Source SHA e638626a3c9fe44c2c4d172d04e1b409a9af08e0. Official Godot 4.7.2 [full 
 | CORE-04 P1-D05 Smart/Always Ask/Quick strict consent/no time based advancement | tests/test_m3_replay.gd M35-REPLAY-THREE_MODES_FINAL_STATE_EQUAL, M35-REPLAY-NO_WALL_CLOCK_IN_STATE | PASS pure Domain output; legacy UI not migrated |
 | P2-D16/CardZone invariant fixed seeded Replay | M35-REPLAY-EXACT_EVENT_HASH, M35-REPLAY-CARD_CONSERVATION, M35-REPLAY-DUPLICATE_ID_REJECTED | PASS 47 command tape and canonical event/final-state SHA256 |
 | CORE-03 no player movement added | P2-VIS-02-NO_MOVE_COMMAND | PASS fail-closed unsupported MOVE |
-| M4/M5 and Presentation boundaries | Report PH3_M3_5_ACCEPTANCE_REPORT.md | Headless Domain PASS; live magic/damage/UI still deferred |
+| M4/M5 and Presentation boundaries | Historical M3.5 headless suites; see current CI matrix | Headless Domain PASS; live magic/damage/UI still deferred at that historical SHA |
 
-**VERDICT: M3 DOMAIN VERIFIED — HEADLESS FIXTURE SCOPE (M3.1–M3.5)**. Do not call the Godot app PLAYABLE VERIFIED, casting VERIFIED, hit/damage VERIFIED or old countdown removed. See acceptance report for full SHA256 replay proof and exact remaining dependencies.
+**Historical verdict: M3 DOMAIN VERIFIED — HEADLESS FIXTURE SCOPE (M3.1–M3.5)**. Do not treat this milestone snapshot as current playable status. Current test entrypoints and scope are in `docs/ci/CI_TEST_MATRIX.md`.
 
 
 ## M4.1 Dual Casting independent gate — 2026-10-15
@@ -346,7 +348,7 @@ Source tested SHA **8030ce5fe8fed346a4612013f5d77cef2913e3d2**, official [Godot4
 | Same Seed / Command Tape / ContentConfig / UI modes | M45-REP-02-FINAL_STATE_EQUAL, M45-REP-04-REPEATED_SAME_SEED_EVENTS, M45-REP-25-SMART_NO_DOMAIN_MUTATION, M45-REP-27-ALL_UI_MODES_EQUAL_EVENTS | PASS 34 commands |
 | Negative authorization and atomicity | M45-REP-29-STALE_TAPE_FAILS_CLOSED, M45-REP-31-DUPLICATE_COMMAND_REJECTED, M45-REP-32-HIT_AUTHORIZATION_NOT_SKIPPED, M45-INT-41-NO_PUBLIC_KILL_COMMAND | PASS |
 
-Only M4 Domain is verified. Full M5 hit/HP/damage/Status/Boss Break and presentation require independent implementation. See PH3_M4_5_ACCEPTANCE_REPORT.md and PH3_M4_HANDOFF.md.
+Historical M4-only snapshot: full M5 hit/HP/damage/Status/Boss Break and presentation were still pending at that SHA. Current implementation and acceptance status are maintained in `docs/combat/engineering/待實作與待驗證功能.md`.
 
 
 ## M5.1 actual Hit/Crit/Damage traceability — VERIFIED 2026-10-15
@@ -436,7 +438,7 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | All-party positive-HP but EXHAUSTED edge | M54-46/47 predecessor | **CORE_RULE_EDGE_PENDING**, not silently defeated |
 | Presentation/2.5D bilingual playable human verification | none | **NOT VERIFIED**; next Presentation Spike + actual real-player playtest |
 
-**Limit:** seeded-shuffled duplicate SP instances reflect fixture content, not all possible retail skills/Boss patterns. Neither all 100 fixture victories nor 1,238 Domain assertions certify real-game balance or PLAYABLE VERIFIED. See [PH3_M5_5_ACCEPTANCE_REPORT.md](PH3_M5_5_ACCEPTANCE_REPORT.md) and [PH3_M5_HANDOFF.md](PH3_M5_HANDOFF.md) for actual hashes, commands, architecture and future work.
+**Limit:** seeded-shuffled duplicate SP instances reflect fixture content, not all possible retail skills/Boss patterns. Neither all 100 fixture victories nor 1,238 Domain assertions certify real-game balance or PLAYABLE VERIFIED. This is a historical scope snapshot; see the current combat gap list and CI matrix for present status.
 
 ## Phase 4 Presentation（2026-10-15，本輪範圍）
 
@@ -465,18 +467,18 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 | Level40 Stage UI | `f40686cd` | `P4_LV40_UI_STAGING_REPORT 10/10` asserts no live snapshot/controller | **INTENTIONALLY_BLOCKED; NOT PLAYABLE** |
 | Real GUI input / balance / human QA | source branch checkpoint | GUI capture 14/16 on third; no authorized fourth | **NOT VERIFIED** |
 
-See [review and outstanding branches](../handoff/P4_APPROVED_MERGES_AND_PENDING_REVIEW_20261015.md) for exact remaining gaps and test-budget boundaries. This is a supplemental status entry; earlier historical Phase4 milestones are retained for traceability.
+本分支／合併審查已完成；現行仍待驗收項目及其狀態請看 [戰鬥待辦表](../combat/engineering/待實作與待驗證功能.md) 和 [UI 視覺驗收清單](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md)。歷史測試次數限制保留在對應專項紀錄中，不因刪除已結案的交接文件而解除。
 
 ## All branches integration continuation — 2026-10-15
 
 | Requirement | Source | Implementation/evidence | Status |
 |---|---|---|---|
-| G0 semantic branch classification | All Branches Review §5 | docs/handoff/BRANCH_SEMANTIC_AUDIT_20261015.md；17 refs、merge-base/cherry/blob/有效替代diff | STATIC_AUDIT_COMPLETE，非runtime保證 |
+| G0 semantic branch classification | Historical branch review | Reviewed refs via merge-base/cherry/blob/semantic diff | STATIC_AUDIT_COMPLETE，非runtime保證 |
 | G4 new positive Lv40 integration | All Branches Review §6 / UI02 | lv40_playable_battle.tscn / config-aware BattleScreen / Controller / test_p4_lv40_playable32/32首輪 | HEADLESS_PARTIALLY_VERIFIED，等待CI；原staging10保持 |
 | SW scoped screenshot writer | All Branches Review §6 | scripts/qa/screenshot_writer.gd / test_screenshot_writer；首輪45/46 FAIL，已修普通檔阻擋，待CI | IMPLEMENTED_NOT_VERIFIED；原GUI14/16未重跑 |
 | P45 static scene evidence | 獨立場景檢查、非原GUI runner | capture_lv40_playable_scene.gd；GTX1650、1280繁中/1920英文PNG、主控目視 | STATIC_RENDER_OBSERVED，非真人/完整GUI/效能驗收 |
 
-正式Master收據：f16227c1e67457de53b3547a73462416c32349ef；Actions38726127054（1238 Domain/100seeds/4Legacy）、38726127041（HUD/正向32/writer46）、38726127002（Legacy）均completed/success。GUI14/16及真人/P4.6不升級；詳ALL_BRANCHES_FINAL_MERGE_REPORT。
+正式Master收據（歷史快照）：f16227c1e67457de53b3547a73462416c32349ef；Actions38726127054（1238 Domain/100seeds/4Legacy）、38726127041（HUD/正向32/writer46）、38726127002（Legacy）均completed/success。GUI14/16及真人/P4.6不升級；後續以現行缺口表為準。
 
 ## Character appearance / Editor Live Preview — 2026-10-16
 
@@ -506,4 +508,4 @@ Original Last Spell group, old P4.4 GUI group and separate character appearance 
 | M1–M5.5 regression | Master Integration38843037835：1128/1128；本機100 seeds runner110/110 | 1238/1238；100完整battle/replay PASS |
 | Final visual identity / high-fidelity user acceptance | generated candidate art、Boss placeholder、3-frame actions | USER_APPROVAL_PENDING |
 
-完整SHA／Run URL、失敗與修復、raw logs、截圖、runner重疊造成的次數例外見 [Final Merge Receipt](../handoff/CHARACTER_EDITOR_FINAL_MERGE_REPORT_20261016.md)。沒有修改原測試斷言或清除歷史P4.4 GUI14/16。
+合併完成；候選角色美術仍待使用者最終核准。當時的原始 Actions 與截圖證據留在 GitHub run artifacts；未修改原測試斷言或清除歷史 P4.4 GUI 14/16。

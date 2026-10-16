@@ -5,7 +5,7 @@
 
 受測source f16227c1e67457de53b3547a73462416c32349ef。主控file-only首輪46執行/45PASS/1FAIL，SW-16發現Windows recursive mkdir在namespace為普通檔案時可能回OK；新增conversion前的檔案存在檢查，未改oracle。
 staged Actions38722977144 completed/success，writer46/46嚴格Gate通過；Master38726127041待核對。原GUI runner完全未重跑，原14/16維持GUI_NOT_VERIFIED。
-獨立Lv40靜態capture兩尺寸已解碼驗證並目視，詳ALL_BRANCHES_FINAL_MERGE_REPORT；不是原輸入測試、真人或GPU benchmark。下方「本輪沒有run」限定委派Agent階段，不能誤讀為主控沒做這些驗證。
+獨立Lv40靜態capture兩尺寸已解碼驗證並目視；不是原輸入測試、真人或GPU benchmark。此分支合併收據已清除；下方「本輪沒有run」限定委派Agent階段，不能誤讀為主控沒做這些驗證。
 
 日期：2026-10-15。狀態：`IMPLEMENTED_NOT_VERIFIED`；helper 測試為 `TEST_WRITTEN / NOT_EXECUTED`。本輪沒有執行 Godot（包含 `--version`、import、parse、headless helper 與 GUI runner），沒有新截圖、runtime log、CI run、commit 或 push。
 

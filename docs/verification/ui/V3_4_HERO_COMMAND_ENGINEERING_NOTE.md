@@ -1,6 +1,6 @@
 # V3.4 — Hero Roster & Command Visual System
 
-> 2026-10-15 Codex整合補記：以下為來源分支歷史收據，不代表最新master的GUI驗收。共用元件另修正legacy翻譯初始化錯誤；最新89871c9正式Master Fast/Full/Render全success，GUI未重跑。最終狀態以[V3.4審查與合併報告](V3_4_REVIEW_AND_MERGE_REPORT.md)為準。
+> 2026-10-15 Codex整合補記：以下為來源分支歷史收據，不代表最新master的GUI驗收。共用元件另修正legacy翻譯初始化錯誤；最新89871c9正式Master Fast/Full/Render全success，GUI未重跑。合併收據已清除；GUI／真人使用狀態以現行待驗收清單及專項視覺驗收紀錄為準。
 
 > **IMPLEMENTED / CI PENDING**. Branch `ui/v3-visual-foundation-20261015`; based on V3.3 reviewed source `85d5c64b396145beca43153d66c644ab2497a269`. `master` and Codex-reviewing V2 remain unmodified.
 

@@ -28,6 +28,19 @@
 5. Godot Domain owns HP, AP, MP, RP, deck zones, turn order, reaction ordering and RNG; renderer is never authoritative. No unapproved free movement, auto-pass reaction timeout or Counter-Function.
 6. For implementation changes, require repeatable headless tests, case IDs, failure logs, CI evidence and code commits. Do not claim pass without evidence.
 
+## Token-efficient development and handoff
+
+For feature work, use a two-stage AI workflow when the user can assign models:
+
+1. A stronger AI implements the change and completes an independent code review before handoff. Keep implementation and review focused on the relevant source, contracts, and diff.
+2. After review, that AI writes one concise, task-specific handoff under `docs/handoff/`. Include the goal and scope, changed files/commit, exact test and acceptance commands, expected results, known risks, and any tests that must not be rerun. Do not duplicate specifications or paste large logs; link to durable evidence.
+3. The user gives the handoff to a lower-cost AI for test execution and acceptance. That AI verifies the stated commit, runs only authorized/current test groups, records actual results, and does not silently change implementation or weaken assertions. On failure, it returns a concise failure handoff to the stronger AI for fixes and review.
+4. Once required tests and acceptance pass for the reviewed commit, delete the task-specific handoff and remove its README entry. If blocked or failed, keep/update the handoff until resumed or explicitly closed.
+
+Keep durable records that remain useful after handoff: source-of-truth specifications, test code, concise verification status, raw test logs/artifacts required by CI or audit, asset manifests/licensing/provenance, and unresolved requirements. Only the temporary coordination handoff is deleted on completion; do not delete evidence or authoritative documentation to save tokens. Never mark acceptance complete from a prior commit's results.
+
+When the app does not expose model selection, state the intended role split in the handoff so the user can route it to the appropriate model; do not claim that a model was switched automatically.
+
 
 ## Asset-first one-command requests（2026-10-15）
 

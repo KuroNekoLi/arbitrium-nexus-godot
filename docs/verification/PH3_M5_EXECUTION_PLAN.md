@@ -29,7 +29,7 @@
 | `scripts/domain/m4/integration/m4_domain_resolver.gd` | Chantless/Full/Last 已合法扣費與排程；`SpellEffectDeferredToM5`／`LastSpellEffectDeferredToM5` 尚未扣 HP | 由 M5 整合 resolver 在**正確 effect-resolve boundary**結算已授權技能效果，絕不能在已完成的 action 外任意追加第二筆傷害 |
 | `scripts/domain/m4/casting/casting_invalidation_resolver.gd` | HP0→Incapacitated、普通 Full Casting→Discard、CORE-02 Last Spell 強制取消、Revive 狀態紀錄已驗證 | 真實 HP 傷害歸零即重用它；不新寫另一套「死亡／取消」判定 |
 | `scripts/domain/m3/enemy/enemy_action_scheduler.gd` | 依已公開 Intent 排序，尚未具備策略性 Boss AI | M5.3 加入能重播的有限狀態/條件權重 policy，先鎖定並公布意圖再進 M3 原有排程 |
-| `docs/verification/PH3_M4_HANDOFF.md` | M4 可信 hit/HP0/Revive **FIXTURE_ONLY** | M5 應逐步以真正可信 effect resolver 取代／封裝，舊 fixture 僅供歷史回歸；不得公開成玩家任意扣血 API |
+| M4 trusted hit/HP0/Revive boundary | **FIXTURE_ONLY** | M5 使用真正 authoritative effect flow；fixture 留在現役測試中，不公開成玩家任意扣血 API |
 
 ### 明確設計的唯一 M5 整合入口
 
@@ -115,7 +115,7 @@
 5. 輸出各 seed 的 seed/content version、合法/拒絕命令數、回合/事件數、第一次 HP0、Boss fallback 次數、終局、狀態/事件 Hash、耗時/例外；若某個固定 Seed 合法進入玩家決策但無輸入，不准偷偷自動 Pass。Driver 應採可重播有策略的 fixture policy，與 Domain 本體分層。
 6. 狀態只在完整 M5.1～M5.5+舊 897 回歸、100 seed suite 全通過才標 `M5 DOMAIN VERIFIED — HEADLESS BATTLE SCOPE`。若缺某個已核准但無 content 的功能，不可虛稱「全部已實作」，需列 SPEC_GAP / DEFERRED_CONTENT 的明確適用範圍。
 
-**建議新檔**：`tests/fixtures/m5_full_battle_fixture.gd`、`tests/test_m5_integration.gd`、`tests/test_m5_replay.gd`、`tests/test_m5_100_seeds.gd`、`.github/workflows/godot-m5-5-acceptance.yml`、`docs/verification/PH3_M5_5_ACCEPTANCE_REPORT.md`、`docs/verification/PH3_M5_HANDOFF.md`。
+**原始交付清單（已完成）**：`tests/fixtures/m5_full_battle_fixture.gd`、`tests/test_m5_integration.gd`、`tests/test_m5_replay.gd`、`tests/test_m5_100_seeds.gd`、`.github/workflows/godot-m5-5-acceptance.yml`。完成後的 acceptance receipt 與 handoff 已清除；目前測試入口見 `docs/ci/CI_TEST_MATRIX.md`。
 
 **Gate / 必要案例**：`P2-D16-001`、`P2-REPLAY-01`、`P2-VIS-01/02`、`RNG-001`、`P2-OUT-01～03`、`BREAK-001`、`COMBO-001～004`，當期所有 M51～M55 cases，**全部前置 M1～M4.5 897 cases**，4 組 legacy scripts。不得只重跑各子階段而沒有完整 Boss 戰鬥與 deterministic Replay。
 
@@ -174,4 +174,4 @@ Committed & publicly declared Intent → M3 optional Reaction Window（若有合
 
 ## 6. Agent 執行協議與交接入口
 
-下一輪使用者只需指定 **「M5.1」**。新執行者必須重新讀取 `AGENTS.md`、`docs/combat/22_PHASE12_AGENT_IMPLEMENTATION_CONTRACT.md`、`docs/combat/23_PHASE3_EXECUTION_PLAN.md`、本計畫及最新 `docs/verification/PH3_M4_HANDOFF.md`，以實際 GitHub master SHA 與 CI 為準。**只建立 M5.1 需要的程式/測試/CI/Engineering Note，不提前改 M5.2～M5.5**。每次實作完獨立交付、通過測試、核驗 master 後停止並交接。任何 BLOCKED_CONTENT 或 UNRESOLVED_CORE_EDGE 都要具名報告，不靠試出綠燈重新定義玩法。
+此計畫是歷史里程碑紀錄，不再是施工入口。新工作依根目錄 `AGENTS.md`、`docs/combat/README.md`、現行工程契約與缺口表執行，以實際 HEAD 和 Actions 為準；未解決的 BLOCKED_CONTENT／UNRESOLVED_CORE_EDGE 仍依現行待實作與待驗證清單處理。
