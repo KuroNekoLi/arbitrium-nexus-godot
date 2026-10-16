@@ -52,6 +52,11 @@ func _shot(screen: Control, state: Dictionary, label: String,
 	if picture == null or picture.is_empty(): return
 	var output: Dictionary = writer.write_png(picture,label,capture_prefix)
 	check(bool(output.get("ok",false)), "RET-VIS-SAVED-" + label)
+	if label in ["ret_ko_1280_zh","ret_exhausted_1280_zh"]:
+		var thumb: Image = picture.duplicate()
+		thumb.resize(640,360,Image.INTERPOLATE_LANCZOS)
+		var thumb_path: String = str(output.get("path","")).get_base_dir().path_join(label+"_thumb.jpg")
+		check(thumb.save_jpg(thumb_path,0.72) == OK,"RET-VIS-THUMB-"+label)
 	cases.append({"case":label,"resolution":[size.x,size.y],"locale":locale,
 		"condition":"EXHAUSTED" if should_retire else "INCAPACITATED",
 		"written":bool(output.get("ok",false))})

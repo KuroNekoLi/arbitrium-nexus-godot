@@ -126,35 +126,27 @@ jobs:
             "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/retirement.log" 2>&1 || {
               cat "$RUNNER_TEMP/v23/retirement.log"; exit 1;
             }
-          grep 'RETIREMENT_RENDER_REPORT executed=18 passed=18 failed=0' "$RUNNER_TEMP/v23/retirement.log"
+          grep 'RETIREMENT_RENDER_REPORT executed=20 passed=20 failed=0' "$RUNNER_TEMP/v23/retirement.log"
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/retirement.log"
           base="outputs/p4_input_capture/$prefix"
           test -s "$base/retirement_manifest.json"
           for id in ret_ko_1280_zh ret_ko_1920_en ret_exhausted_1280_zh ret_exhausted_1920_en; do
             test -s "$base/$id.png"
           done
-      - name: Upload retirement preview thumbnail
+      - name: Share actual Godot KO and exhausted thumbnails
         if: success()
         shell: bash
         run: |
           set -Eeuo pipefail
           printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-          python3 - "outputs/p4_input_capture/$prefix/ret_exhausted_1280_zh.png" <<'PY'
-          import sys
-          try:
-              from PIL import Image
-              img=Image.open(sys.argv[1])
-              img.resize((640,360)).save("outputs/p4_input_capture/"+sys.argv[1].split("/")[-2]+"/retirement_preview.jpg", quality=70)
-          except ImportError:
-              print("PIL unavailable; original PNG remains authoritative")
-          PY
-          preview="outputs/p4_input_capture/$prefix/retirement_preview.jpg"
-          if [ -s "$preview" ]; then
-            echo 'RETIREMENT_IMAGE_BASE64_BEGIN'
-            base64 -w 0 "$preview"
+          base="outputs/p4_input_capture/$prefix"
+          for scenario in ret_ko_1280_zh ret_exhausted_1280_zh; do
+            test -s "$base/${scenario}_thumb.jpg"
+            echo "RETIREMENT_IMAGE_${scenario}_BASE64_BEGIN"
+            base64 -w 0 "$base/${scenario}_thumb.jpg"
             echo
-            echo 'RETIREMENT_IMAGE_BASE64_END'
-          fi
+            echo "RETIREMENT_IMAGE_${scenario}_BASE64_END"
+          done
       - name: Preserve runner logs
         if: always()
         shell: bash
