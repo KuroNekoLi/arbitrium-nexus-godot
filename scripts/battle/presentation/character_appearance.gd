@@ -5,11 +5,23 @@ extends Resource
 
 @export var atlas: Texture2D
 @export var cg: Texture2D
-@export var columns: PackedInt32Array = PackedInt32Array([0, 418, 836, 1254])
-@export var rows: PackedInt32Array = PackedInt32Array([0, 418, 800, 1254])
+@export var columns: PackedInt32Array = PackedInt32Array([0, 418, 836, 1254]):
+	set(value):
+		columns = value
+		emit_changed()
+@export var rows: PackedInt32Array = PackedInt32Array([0, 418, 800, 1254]):
+	set(value):
+		rows = value
+		emit_changed()
 @export var portrait_rect: Rect2 = Rect2(80, 130, 864, 940)
-@export var foot_offset: Vector2 = Vector2.ZERO
-@export var tint: Color = Color.WHITE
+@export var foot_offset: Vector2 = Vector2.ZERO:
+	set(value):
+		foot_offset = value
+		emit_changed()
+@export var tint: Color = Color.WHITE:
+	set(value):
+		tint = value
+		emit_changed()
 
 func region_for(animation_row: int, frame_column: int) -> Rect2:
 	if atlas == null or rows.size() != 4 or columns.size() != 4:

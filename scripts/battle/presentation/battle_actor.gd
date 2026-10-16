@@ -32,6 +32,8 @@ var base_tint: Color = Color.WHITE
 
 func _ready() -> void:
 	home = position
+	if appearance != null and not appearance.changed.is_connected(_on_art_changed):
+		appearance.changed.connect(_on_art_changed)
 	_on_art_changed()
 	if Engine.is_editor_hint():
 		# Editor redraws appearance only; no combat commands or tweens.
