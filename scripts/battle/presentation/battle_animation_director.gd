@@ -3,6 +3,7 @@ extends Node
 signal idle()
 signal cue_presented(cue: Dictionary)
 const Mapper = preload("res://scripts/battle/presentation/battle_cue_mapper.gd")
+const SpellCatalog = preload("res://scripts/battle/presentation/spell_animation_catalog.gd")
 var arena: Node2D
 var overlay: Control
 var queue: Array[Dictionary] = []
@@ -48,46 +49,84 @@ func _play_next() -> void:
 	var current_generation: int = generation
 	var item: Dictionary = queue.pop_front()
 	var command: Dictionary = item["command"]
-	var cues: Array[Dictionary] = Mapper.map_events(item["events"])
-	var magic: bool = command["type"] == "CAST_SPELL_M4"
+	var events: Array = item["events"]
+	var cues: Array[Dictionary] = Mapper.map_events(events)
+	var style: String = SpellCatalog.receipt_style(command,events)
+	var magic: bool = SpellCatalog.is_projectile(style) or SpellCatalog.is_support(style) or command["type"] == "CAST_SPELL_M4"
+	var cast_started: bool = false
 	for cue: Dictionary in cues:
 		presented_cues.append(cue.duplicate(true))
 		cue_presented.emit(cue)
 		if not is_inside_tree() or current_generation != generation: return
 		if cue["kind"] == "COMBO" and cue["detail"].has("setup_actor_id"):
 			overlay.show_combo(str(cue["detail"]["setup_actor_id"]),str(cue["detail"]["finisher_actor_id"]),str(cue["detail"]["name_key"]))
-		if cue["kind"] in ["CAST_RELEASE","LAST_RELEASE"]: magic = true
+		if cue["kind"] in ["CAST_RELEASE","LAST_RELEASE"]:
+			magic = true
+		if cue["kind"] in ["CAST_START","LAST_START"]:
+			cast_started = true
 		var unit: Node2D = _actor(str(cue["actor_id"]))
-		if cue["kind"] == "PROTECT": unit = _actor(str(cue["detail"]["to_actor_id"]))
-		if cue["kind"] != "DAMAGE" and unit != null:
+		if cue["kind"] == "PROTECT":
+			unit = _actor(str(cue["detail"]["to_actor_id"]))
+		if cue["kind"] != "DAMAGE" and cue["kind"] not in ["CAST_RELEASE","LAST_RELEASE"] and unit != null:
 			overlay.burst(unit.position+Vector2(0,-100),true,Color("94c9ff"))
 	var source: String = str(command.get("actor_id",""))
 	var recipient: String = str(command.get("target_actor_id","Boss"))
-	var has_damage: bool = false
-	for event: Dictionary in item["events"]:
+	var damage_targets: Array[String] = []
+	for event: Dictionary in events:
 		if event["kind"] == "DamageTrace":
-			has_damage = true
-			source = str(event["details"]["source_actor_id"])
-			recipient = str(event["details"]["recipient_id"])
+			var detail: Dictionary = event["details"]
+			source = str(detail["source_actor_id"])
+			recipient = str(detail["recipient_id"])
+			if not damage_targets.has(recipient):
+				damage_targets.append(recipient)
+		if event["kind"] in ["CastingReleased","LastSpellReleased"]:
+			source = str(event["details"].get("caster_id",source))
+			if event["details"].has("target_actor_id"):
+				recipient = str(event["details"]["target_actor_id"])
 	var attacker: Node2D = _actor(source)
 	var target: Node2D = _actor(recipient)
+	var has_damage: bool = not damage_targets.is_empty()
+	if attacker != null and magic:
+		if not reduced_motion:
+			attacker.play_spell_cast()
+		overlay.casting_pulse(attacker.position+Vector2(0,-attacker.visual_height*0.65),style)
+	if cast_started and not has_damage:
+		# Full Chant commits schedule damage for a later phase. Do not fire early.
+		_play_next()
+		return
 	if has_damage and attacker != null and target != null:
-		if not reduced_motion and not magic: attacker.play_attack(target.position)
+		if not magic and not reduced_motion:
+			attacker.play_attack(target.position)
+		elif magic and SpellCatalog.is_projectile(style):
+			var origin: Vector2 = attacker.position + Vector2(55,-attacker.visual_height*0.65)
+			for id: String in damage_targets:
+				var victim: Node2D = _actor(id)
+				if victim != null:
+					overlay.launch_projectile(origin,victim.position+Vector2(0,-victim.visual_height*0.6),style)
 		overlay.sound(magic)
 		if not reduced_motion:
-			var windup: SceneTreeTimer = get_tree().create_timer(0.19)
+			var windup: SceneTreeTimer = get_tree().create_timer(0.36 if magic and SpellCatalog.is_projectile(style) else 0.19)
 			pending_timers.append(windup)
 			await windup.timeout
 			pending_timers.erase(windup)
 			if not is_inside_tree() or current_generation != generation: return
-	for event: Dictionary in item["events"]:
+	elif not has_damage and attacker != null and SpellCatalog.is_support(style):
+		overlay.sound(true)
+		if style == "PARTY_HEAL":
+			for actor: Node2D in arena.get_children():
+				if actor.actor_id != "Boss" and actor.visible:
+					overlay.support_pulse(actor.position+Vector2(0,-actor.visual_height*0.60),style)
+		elif target != null:
+			overlay.support_pulse(target.position+Vector2(0,-target.visual_height*0.60),style)
+	for event: Dictionary in events:
 		if event["kind"] != "DamageTrace": continue
 		var detail: Dictionary = event["details"]
 		presented_damage.append(detail.duplicate(true))
 		var victim: Node2D = _actor(str(detail["recipient_id"]))
 		if victim == null: continue
 		victim.play_hit()
-		overlay.burst(victim.position+Vector2(0,-100),magic,Color("90c9ff") if magic else Color("ffdf96"))
+		overlay.burst(victim.position+Vector2(0,-100),magic,
+			SpellCatalog.tint(style) if magic else Color("ffdf96"))
 		var number := Label.new()
 		number.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		number.text = str(detail["hp_damage"]) if detail["hit"] else tr("BATTLE_MISS")

@@ -148,7 +148,15 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 	# kept so a locale rebuild re-translates instead of replaying stale text).
 	log_events.append_array(events.duplicate(true))
 	hud.get_node("BattleLogPanel").append_rows(_log_rows(events))
-	director.enqueue(events,command)
+	# Visual-only metadata from the accepted, post-resolution card instance.
+	# Never add card data or VFX timing to the Domain command/replay tape.
+	var visual_command: Dictionary = command.duplicate(true)
+	var owner_id: String = str(command.get("actor_id",""))
+	var card_id: String = str(command.get("card_instance_id",""))
+	var instances: Dictionary = state.get("core",{}).get("cards",{}).get("actors",{}).get(owner_id,{}).get("instances",{})
+	if instances.has(card_id):
+		visual_command["_visual_card_id"] = str(instances[card_id].get("definition_id",""))
+	director.enqueue(events,visual_command)
 
 ## Same name fallbacks as the visible panels: EnemyStatus titles the Boss with
 ## BATTLE_TITLE and the party roster uses BATTLE_HERO_<id>.
