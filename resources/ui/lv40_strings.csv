@@ -69,3 +69,29 @@ intent.b11.name,Weakened Strike,弱化攻擊
 last_spell.ren.name,Ren's Last Spell,蓮的終極法術
 last_spell.akane.name,Akane's Last Spell,朱音的終極法術
 last_spell.tsumugi.name,Tsumugi's Last Spell,紬的終極法術
+CP2_PREPARATION,Combo preparation,連攜預備
+CP2_POTENTIAL,Potential combo,潛在連攜
+CP2_ELIGIBLE,Combo eligible,可連攜
+CP2_PARTNER,Select a highlighted partner,請選擇高亮搭檔
+CP2_WAIT_FINISHER,Select a highlighted finisher SP,等待接續技能：選擇高亮 SP
+CP2_NORMAL,Normal cast,普通施放
+CP2_COMMIT,Execute combo,發動連攜
+CP2_INVALIDATED,Preparation expired. Select again.,連攜條件已失效，請重新選擇。
+CP2_CANCELLED,Confirmation cancelled. Continue selecting or press Esc.,已取消確認，可繼續選牌或按 Esc 取消預備。
+CP2_FULL_UNSUPPORTED,Prepared combos support instant casts only. Full Chant remains available normally.,預備連攜僅支援瞬發。完整詠唱請依一般流程施放。
+CP2_INDICATOR,%s · %s → Combo preparation,%s · %s → 連攜預備
+CP2_PAIR,%s + %s,%s ＋ %s
+CP2_SETUP_TARGET,Select Setup target,請選擇 Setup 目標
+CP2_RECIPE,Select combo recipe,請選擇連攜配方
+CP2_OFFENSE,Swordflame Pursuit,劍焰追擊
+CP2_DEFENSE,Double Guard,雙重護衛
+CP2_NORMAL_INFO,Normal: %s only\nTarget: %s\nSetup remains unspent.,普通：僅施放 %s\n目標：%s\nSetup 不扣費、不消耗卡牌。
+CP2_COMBO_INFO,Combo: %s → %s\nSetup target: %s\nFinisher target: %s,連攜：%s → %s\nSetup 目標：%s\nFinisher 目標：%s
+CP2_PAIR_COST,%d AP · %s %d MP / %s %d MP\nCombo extra AP: 0,%d AP · %s %d MP／%s %d MP\n連攜額外 AP：0
+CP2_DAMAGE,%s: %d HP damage,%s：%d HP 傷害
+CP2_BARRIER,%s: +%d Barrier,%s：＋%d 護盾
+CP2_MP,Insufficient MP,MP 不足
+CP2_AP,Insufficient AP,AP 不足
+CP2_NO_OPPORTUNITY,Setup does not create the required opportunity now.,Setup 目前無法建立所需連攜機會。
+CP2_SHARED_TARGET,This recipe requires the same target for both SP.,此配方要求兩張 SP 指向同一目標。
+CP2_SUCCESS,Combo executed,連攜發動成功

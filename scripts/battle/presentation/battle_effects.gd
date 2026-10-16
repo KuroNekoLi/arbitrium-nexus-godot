@@ -41,3 +41,42 @@ func clear_effects() -> void:
 	for child: Node in get_children():
 		if child is AudioStreamPlayer: child.stop()
 		else: child.queue_free()
+
+## Replaceable placeholder cut-in using existing character CG. No AI asset
+## is required for gameplay; timings and appearance never drive the reducer.
+func show_combo(setup: String, finisher: String, name_key: String) -> void:
+	var panel := PanelContainer.new()
+	panel.name = "ComboPlaceholderCutIn"
+	panel.position = Vector2(330,145)
+	panel.size = Vector2(590,230)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.mouse_behavior_recursive = Control.MOUSE_BEHAVIOR_DISABLED
+	panel.z_index = 150
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.04,0.025,0.1,0.95)
+	style.border_color = Color("d9b46d")
+	style.set_border_width_all(2)
+	panel.add_theme_stylebox_override("panel",style)
+	add_child(panel)
+	var row := HBoxContainer.new()
+	panel.add_child(row)
+	for actor: String in [setup,finisher]:
+		var cg := TextureRect.new()
+		cg.texture = preload("res://scripts/battle/presentation/character_appearance_registry.gd").cg_for(actor)
+		cg.custom_minimum_size = Vector2(155,225)
+		cg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		cg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		row.add_child(cg)
+		if actor == setup:
+			var label := Label.new()
+			label.text = tr(name_key)+"\n"+tr("CP2_SUCCESS")
+			label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			label.custom_minimum_size.x = 260
+			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			label.add_theme_font_size_override("font_size",24)
+			label.add_theme_color_override("font_color",Color("e1beff"))
+			row.add_child(label)
+	var tween: Tween = panel.create_tween()
+	tween.tween_interval(0.8 if reduced_motion else 1.4)
+	tween.tween_property(panel,"modulate:a",0.0,0.2)
+	tween.tween_callback(panel.queue_free)

@@ -1,0 +1,32 @@
+name: Combo V2 - Import and Parse Only
+on:
+  push:
+    branches: ['feature/combo-preparation-v2']
+    paths: ['scripts/**', 'resources/ui/**', 'tests/**', '.github/workflows/ci-combo-preparation-v2.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  import-parse:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot-ci
+      - name: Fresh import and parse; no Domain or GUI acceptance rerun
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/combo-static"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/combo-static/import.log" 2>&1
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/combo-static/import.log"
+          for script in test_combo_preparation_v2 test_combo_preparation_v2_gui; do
+            timeout 30s "$GODOT_BIN" --headless --path . --check-only --script "res://tests/$script.gd" > "$RUNNER_TEMP/combo-static/$script.log" 2>&1
+            python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/combo-static/$script.log"
+          done
+          echo 'STATIC_ONLY: user deferred Domain and GUI acceptance reruns; no gameplay PASS is claimed.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: combo-v2-import-parse-only
+          path: ${{ runner.temp }}/combo-static/

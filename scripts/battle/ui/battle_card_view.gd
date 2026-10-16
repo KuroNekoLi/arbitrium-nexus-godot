@@ -2,6 +2,7 @@ extends "res://addons/simple_cards/card/card.gd"
 const Frame = preload("res://scripts/battle/ui/components/battle_card_frame.gd")
 signal selection_requested(instance: String)
 signal release_requested(instance: String, pointer: Vector2)
+signal drag_requested(instance: String)
 signal chant_held(instance: String, full: bool)
 const FULL_CHANT_HOLD_SECONDS: float = 0.45
 var can_full_chant: bool = false
@@ -19,6 +20,10 @@ var home_rotation: float = 0.0
 var home_scale: Vector2 = Vector2.ONE
 var hover_tween: Tween
 var selected_visual: bool = false
+var combo_eligible: bool = false
+var combo_badge: Label
+var _release_pointer: Vector2
+var _has_release_pointer: bool = false
 var _hover_visual: bool = false
 var _style: StyleBoxFlat
 var _idle_style: StyleBoxFlat
@@ -45,6 +50,14 @@ func _card_ready() -> void:
 	add_child(face)
 	# Independent native Controls. Source data is never baked into card artwork.
 	Frame.build(face, appearance, cost_text, legal, unavailable_reason)
+	combo_badge = Label.new()
+	combo_badge.text = "◇ " + tr("CP2_ELIGIBLE")
+	combo_badge.position = Vector2(8,190)
+	combo_badge.add_theme_font_size_override("font_size",13)
+	combo_badge.add_theme_color_override("font_color",Color("ffe2a1"))
+	combo_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	face.add_child(combo_badge)
+	combo_badge.visible = combo_eligible
 	chant_hint = Label.new()
 	chant_hint.name = "HoldChantHint"
 	chant_hint.text = tr("BATTLE_FULL")
@@ -58,9 +71,11 @@ func _card_ready() -> void:
 	face.add_child(chant_hint)
 	tooltip_text = tr(appearance.description_key) + ("\n" + unavailable_reason if not legal else "")
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
-	drag_started.connect(func(_card: Card) -> void: z_index = 90)
+	drag_started.connect(func(_card: Card) -> void:
+		z_index = 90
+		drag_requested.emit(instance_id))
 	drag_ended.connect(func(_card: Card) -> void:
-		release_requested.emit(instance_id,get_global_mouse_position())
+		release_requested.emit(instance_id,_release_pointer if _has_release_pointer else get_global_mouse_position())
 		_restore_home.call_deferred()
 		_apply_visual_state())
 	card_hovered.connect(_hover.bind(true))
@@ -69,9 +84,18 @@ func _card_ready() -> void:
 	card_unfocused.connect(_hover.bind(false))
 
 func _on_button_down() -> void:
+	_has_release_pointer = false
 	_press_seconds = 0.0
 	full_chant_held = false
 	super._on_button_down()
+
+func _input(event: InputEvent) -> void:
+	# The release event owns the drop coordinate. Polling the OS cursor inside
+	# a later signal can observe a subsequent motion (especially on Windows).
+	# SimpleCards remains the only owner of press/drag/release state.
+	if holding and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		_release_pointer = get_canvas_transform().affine_inverse()*event.position
+		_has_release_pointer = true
 
 func _process(delta: float) -> void:
 	super._process(delta)
@@ -104,6 +128,11 @@ func set_selected_visual(active: bool) -> void:
 	selected_visual = active
 	_apply_visual_state()
 
+func set_combo_eligible(active: bool) -> void:
+	combo_eligible = active
+	if combo_badge != null: combo_badge.visible = active
+	_apply_visual_state()
+
 func _hover(active: bool) -> void:
 	_hover_visual = active
 	if holding or not is_instance_valid(face):
@@ -126,6 +155,10 @@ func _apply_visual_state() -> void:
 	_style.border_color = Color("ffe8a3") if selected_visual else Color("9beafc") if prominent else _idle_style.border_color
 	_style.shadow_color = Color(0.56, 0.83, 1.0, 0.56) if selected_visual else Color(0.33, 0.70, 0.92, 0.42) if prominent else _idle_style.shadow_color
 	_style.shadow_size = 9 if prominent else _idle_style.shadow_size
+	if combo_eligible:
+		_style.border_color = Color("ffe2a1") if selected_visual else Color("caa0f2")
+		_style.shadow_color = Color(0.65,0.35,0.94,0.5)
+		_style.shadow_size = 12 if selected_visual else 7
 	hover_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE)
 	hover_tween.tween_property(face, "position:y", lift, 0.14)
 	hover_tween.tween_property(face, "scale", magnify, 0.14)

@@ -22,7 +22,16 @@ func enqueue(events: Array, command: Dictionary) -> void:
 		seen[id] = true
 		fresh.append(event)
 	if fresh.is_empty(): return
-	queue.append({"events":fresh.duplicate(true),"command":command.duplicate(true)})
+	if command["type"] == "COMMIT_PREPARED_COMBO_V2":
+		# Keep A's presentation ahead of B. Only accepted receipts enter here.
+		for suffix: String in [":setup",":finisher"]:
+			var group: Array = []
+			for event: Dictionary in fresh:
+				if str(event["command_id"]) == str(command["command_id"])+suffix: group.append(event)
+			var source: String = command["setup_actor_id"] if suffix == ":setup" else command["finisher_actor_id"]
+			queue.append({"events":group.duplicate(true),"command":{"type":"PLAY_LV40_CARD","actor_id":source}})
+	else:
+		queue.append({"events":fresh.duplicate(true),"command":command.duplicate(true)})
 	if not playing: _play_next()
 
 func _actor(id: String) -> Node2D:
@@ -45,6 +54,8 @@ func _play_next() -> void:
 		presented_cues.append(cue.duplicate(true))
 		cue_presented.emit(cue)
 		if not is_inside_tree() or current_generation != generation: return
+		if cue["kind"] == "COMBO" and cue["detail"].has("setup_actor_id"):
+			overlay.show_combo(str(cue["detail"]["setup_actor_id"]),str(cue["detail"]["finisher_actor_id"]),str(cue["detail"]["name_key"]))
 		if cue["kind"] in ["CAST_RELEASE","LAST_RELEASE"]: magic = true
 		var unit: Node2D = _actor(str(cue["actor_id"]))
 		if cue["kind"] == "PROTECT": unit = _actor(str(cue["detail"]["to_actor_id"]))

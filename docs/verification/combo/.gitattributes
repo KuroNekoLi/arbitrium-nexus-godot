@@ -1,0 +1,3 @@
+# Evidence hashes refer to exact bytes; preserve Windows raw logs on checkout.
+evidence/logs/** -text
+evidence/*.png -text

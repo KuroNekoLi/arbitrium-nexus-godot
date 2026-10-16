@@ -25,6 +25,8 @@ var status_kind: String = ""
 var combat_status: String = "ACTIVE"
 var retired: bool = false
 var retirement_mark: Label
+var combo_strength: int = 0
+var combo_mark: Label
 
 func _ready() -> void:
 	# This reusable component also lives in the legacy scene, which does not
@@ -72,6 +74,21 @@ func _ready() -> void:
 	retirement_mark.position = Vector2(22, 18)
 	portrait.get_parent().add_child(retirement_mark)
 	retirement_mark.hide()
+	combo_mark = Label.new()
+	combo_mark.name = "ComboPartnerIndicator"
+	combo_mark.text = "◇"
+	combo_mark.position = Vector2(60,0)
+	combo_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	combo_mark.add_theme_font_size_override("font_size",22)
+	portrait.get_parent().add_child(combo_mark)
+	combo_mark.hide()
+
+func set_combo_indicator(strength: int) -> void:
+	combo_strength = strength if combat_status == "ACTIVE" and not retired else 0
+	combo_mark.visible = combo_strength > 0
+	combo_mark.modulate = Color("e7baff") if combo_strength > 1 else Color("78668c")
+	combo_mark.tooltip_text = tr("CP2_PARTNER" if combo_strength > 1 else "CP2_POTENTIAL")
+	_apply_style()
 
 func _make_resource_bar(container: VBoxContainer, label: String, fill_color: Color) -> ProgressBar:
 	var bar := ProgressBar.new()
@@ -218,3 +235,11 @@ func _apply_style() -> void:
 	add_theme_stylebox_override("pressed", Tokens.hero_surface(accent, true))
 	add_theme_stylebox_override("hover_pressed", Tokens.hero_surface(accent, true, true))
 	add_theme_stylebox_override("focus", Tokens.focus_ring())
+	if combo_strength > 1 and combat_status == "ACTIVE" and not retired:
+		var combo_style: StyleBoxFlat = Tokens.hero_surface(accent, button_pressed).duplicate()
+		combo_style.border_color = Color("dbb1ff")
+		combo_style.set_border_width_all(2)
+		combo_style.shadow_color = Color(0.63,0.3,0.8,0.35)
+		combo_style.shadow_size = 7
+		add_theme_stylebox_override("normal",combo_style)
+		add_theme_stylebox_override("pressed",combo_style)
