@@ -1,5 +1,7 @@
 # Combat Specification Index — 戰鬥規格唯一閱讀入口
 
+2026-10-16 最新 USER_APPROVED：[終式真正退場與無在場成員敗北](LAST_SPELL_RETIREMENT_APPROVED_20261016.md)。本議題明確取代舊耗竭仍可受擊／治療、全耗竭待決部分；歷史Replay保留原配置，不回溯改Hash。
+
 2026-10-15 all-branches續作：新增獨立Lv40正向場景接線，不修改Domain規則；驗收狀態見 requirements_traceability 與 P4_LV40_POSITIVE_INTEGRATION_NOTE。原GUI/已用盡測試預算不重設。
 
 2026-10-15 CI補記：新增CI-EVIDENCE-01/02失敗傳遞／日誌閘門與legacy UI測試清理，未改玩法。詳見[工程Note](../verification/CI_EVIDENCE_GATE_ENGINEERING_NOTE.md)；P4.4 GUI仍未驗收，依使用者決定不額外重跑。

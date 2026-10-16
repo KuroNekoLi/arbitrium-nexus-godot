@@ -15,6 +15,8 @@ static func check(core: Dictionary, action: Dictionary, entry: Dictionary,
 	if not battle["allies"].has(actor_id) or not cards["actors"].has(actor_id):
 		return {"ok": false, "error": "ACTOR_NOT_FOUND"}
 	var actor: Dictionary = battle["actors"][actor_id]
+	if bool(battle.get("retired_from_field_by_actor", {}).get(actor_id, false)) or bool(battle.get("retired_from_field_by_actor", {}).get(str(entry.get("target_actor_id", "")), false)):
+		return {"ok":false,"error":"ACTOR_RETIRED_FROM_FIELD"}
 	if int(actor.get("hp", 0)) <= 0 or str(actor.get("status", "")) in ["INCAPACITATED", "EXHAUSTED"]:
 		return {"ok": false, "error": "ACTOR_UNAVAILABLE"}
 	var kind: String = str(entry.get("kind", ""))

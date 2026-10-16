@@ -7,6 +7,8 @@ const Refund = preload("res://scripts/domain/m4/casting/casting_refund_policy.gd
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 
 static func barrier(core: Dictionary, actor: String, amount: int, round_id: int) -> Dictionary:
+	if bool(core["battle"].get("retired_from_field_by_actor", {}).get(actor, false)):
+		return {"ok":false,"error":"ACTOR_RETIRED_FROM_FIELD"}
 	var next: Dictionary = core.duplicate(true)
 	if not next["battle"].has("hp_barriers"):
 		next["battle"]["hp_barriers"] = {}

@@ -79,6 +79,12 @@ static func settle_due(core: Dictionary, next_round: int,
 					timeline.append(last_release["timeline"][2])
 			else:
 				timeline.append_array(last_release["timeline"])
+			if config.get("last_spell_retirement_v1", false):
+				source = LastSpell.mark_retired(source, str(cast["caster_id"]))
+				for record: Dictionary in timeline:
+					if record.get("kind", "") == "ActorExhausted" and record.get("actor_id", "") == cast["caster_id"]:
+						record["still_targetable"] = false
+						record["retired_from_field"] = true
 			continue
 		var actor: String = str(cast["caster_id"])
 		var card: String = str(cast["card_instance_id"])

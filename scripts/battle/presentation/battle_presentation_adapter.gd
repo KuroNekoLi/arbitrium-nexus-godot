@@ -20,6 +20,8 @@ static func project(state: Dictionary, config: Dictionary = {}) -> Dictionary:
 		"tactical":battle.get("m53",{}).duplicate(true),
 		"actor_name_keys":{}, "hand_cards":{}, "public_intent_labels":[],
 		"boss_cast_public":{}}
+	for actor_id: String in view["actors"]:
+		view["actors"][actor_id]["retired_from_field"] = bool(battle.get("retired_from_field_by_actor", {}).get(actor_id, false))
 	if config.get("m5_lv40_enabled",false) != true:
 		return view
 	var name_keys: Dictionary = config.get("actor_name_keys",{})

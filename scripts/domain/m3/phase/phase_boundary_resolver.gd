@@ -17,7 +17,7 @@ static func outcome(battle: Dictionary) -> String:
 		return "VICTORY"
 	var any_ally_alive: bool = false
 	for ally_id: Variant in battle.get("allies", []):
-		if int(battle["actors"][ally_id].get("hp", 0)) > 0:
+		if int(battle["actors"][ally_id].get("hp", 0)) > 0 and not bool(battle.get("retired_from_field_by_actor", {}).get(ally_id, false)):
 			any_ally_alive = true
 	return "ONGOING" if any_ally_alive else "DEFEAT"
 
@@ -72,7 +72,7 @@ static func check_action_outcome(core: Dictionary, config: Dictionary = {}) -> D
 			var member: Dictionary = next["battle"]["actors"][ally]
 			if int(member["hp"]) <= 0 or str(member["status"]) != "EXHAUSTED":
 				all_exhausted = false
-		if all_exhausted and result == "ONGOING":
+		if all_exhausted and result == "ONGOING" and not config.get("last_spell_retirement_v1", false):
 			event["core_rule_edge"] = "ALL_EXHAUSTED_HP_POSITIVE_PENDING_DECISION"
 			event["auto_defeat"] = false
 	return {"ok": true, "error": "", "core": next, "event": event}

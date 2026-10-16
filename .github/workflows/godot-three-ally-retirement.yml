@@ -1,0 +1,86 @@
+name: Reviewed Last Spell Retirement Acceptance
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'candidate runs new RET-01..05 group; master reuses its exact-source receipt (quota)'
+        type: choice
+        options: [candidate, master]
+        default: candidate
+permissions:
+  contents: read
+jobs:
+  retirement:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup verified Godot and project cache
+        uses: ./.github/actions/setup-godot-ci
+      - name: Strict import
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/retirement"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/retirement/import.log" 2>&1
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/import.log"
+      - name: Full M1-M5 regression without duplicate representative runners
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          while IFS= read -r spec; do
+            [[ -z "$spec" || "$spec" == \#* ]] && continue
+            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/retirement"
+          done < tools/ci/integration_suites.txt
+          timeout 900s "$GODOT_BIN" --headless --path . --script res://tests/test_m5_100_seeds.gd > "$RUNNER_TEMP/retirement/seeds.log" 2>&1
+          grep -Eq '^M5_5_100_SEEDS_REPORT executed=110 passed=110 failed=0 runs=100 ' "$RUNNER_TEMP/retirement/seeds.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/seeds.log"
+          echo 'RETIREMENT_DOMAIN_REPORT assertions=1238 seeds=100 failed=0'
+      - name: Source retirement and actual scene contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for spec in \
+            'test_lv40_content:LV40_CONTENT_REPORT:37' \
+            'test_lv40_domain:LV40_DOMAIN_REPORT:83' \
+            'test_lv40_edges:LV40_EDGES_REPORT:37' \
+            'test_p4_last_spell_retirement:RETIREMENT_REPORT:29' \
+            'test_p4_component_contract:V1_COMPONENT_REPORT:24' \
+            'test_p4_hud:P4_2_REPORT:36' \
+            'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32'; do
+            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/retirement"
+          done
+          for suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do
+            log="$RUNNER_TEMP/retirement/$suite.log"
+            timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1
+            python3 tools/ci/assert_godot_logs.py "$log"
+          done
+      - name: New approved rules, real M5 defeat and legacy replay
+        if: inputs.stage == 'candidate'
+        shell: bash
+        run: bash tools/ci/run_suite.sh 'test_retirement_approved_rules:RETIREMENT_APPROVED_REPORT:26' "$RUNNER_TEMP/retirement"
+      - name: Record scoped master evidence reuse
+        if: inputs.stage == 'master'
+        run: echo 'RET-01..05 candidate receipt reused only when runtime sources are identical. Original group exhausted after local1/local2/candidateCI3; not rerun.'
+      - name: Candidate native render and real Controller defeat tape
+        if: inputs.stage == 'candidate'
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          prefix="retirement_ci_${GITHUB_RUN_ID}"
+          timeout 160s xvfb-run -a -s '-screen 0 1920x1080x24' \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/capture_p4_last_spell_retirement.gd -- "--capture-prefix=$prefix" > "$RUNNER_TEMP/retirement/native.log" 2>&1
+          grep -Fxq 'RETIREMENT_RENDER_REPORT executed=29 passed=29 failed=0' "$RUNNER_TEMP/retirement/native.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/native.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-retirement-evidence
+          path: |
+            ${{ runner.temp }}/retirement/
+            outputs/p4_input_capture/retirement_ci_*/
+          retention-days: 14

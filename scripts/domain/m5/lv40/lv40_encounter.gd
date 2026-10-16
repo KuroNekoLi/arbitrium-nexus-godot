@@ -6,7 +6,7 @@ const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Phase = preload("res://scripts/domain/m3/phase/phase_engine.gd")
 const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const Content = preload("res://scripts/domain/m5/lv40/lv40_content.gd")
-const VERSION: String = "lv40-starter-v0.3-boss-v0.2-A-provisional-2"
+const VERSION: String = "lv40-starter-v0.3-boss-v0.2-A-provisional-3"
 const LOADOUTS: Dictionary = {
 	"A":["U01","U02","U03","U04","U05","R01","R02","R03","R05","R06","R07","R08"],
 	"B":["U01","U02","U03","U04","U05","A01","A02","A03","A04","A05","A06","A07"],
@@ -15,7 +15,9 @@ const CHARACTERS: Dictionary = {"A":"ren","B":"akane","C":"tsumugi"}
 const VARIANTS: Dictionary = {"A":"ren_swordsman_v1","B":"akane_burst_mage_v1","C":"tsumugi_healer_v1"}
 
 static func config() -> Dictionary:
-	return Content.config(VERSION)
+	var result: Dictionary = Content.config(VERSION)
+	result["last_spell_retirement_v1"] = true
+	return result
 
 static func initial(seed: int = 20261014) -> Dictionary:
 	if seed <= 0:

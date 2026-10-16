@@ -27,4 +27,6 @@
 
 ## Next verification contract
 
+2026-10-16後續裁決：使用者明確選擇真正退場，並核准所有人退場且Boss存活判敗北。RET-R01/R02解除；RET-R03～05按 [Integration Note](V3_RETIREMENT_INTEGRATION_NOTE_20261016.md)修復並驗證。上文保留審查當時狀態，不是最新核准的否定。
+
 選定A/B後，按最小diff整合；建立runner-level執行帳本，避免Fast與Integration重疊造成超次數。需要新的KO/退場契約、1280/1920實際Godot圖、完整M5 regression／seeded replay及master CI。沿用既有assertions，不將fixture PASS當真人驗收。

@@ -1,0 +1,61 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS RET3-VERSIONED-CONTENT
+PASS RET3-ACTIVATION-A
+PASS RET3-ACTIVATION-B
+PASS RET3-ACTIVATION-C
+SCRIPT ERROR: Trying to assign an array of type "Array" to a variable of type "Array[String]".
+   at: settle (res://scripts/domain/m5/lv40/lv40_cast_effect.gd:23)
+   GDScript backtrace (most recent call first):
+       [0] settle (res://scripts/domain/m5/lv40/lv40_cast_effect.gd:23)
+       [1] settle_due (res://scripts/domain/m4/casting/casting_timeline_resolver.gd:35)
+       [2] open_player (res://scripts/domain/m3/phase/phase_boundary_resolver.gd:115)
+       [3] apply (res://scripts/domain/m3/phase/phase_engine.gd:416)
+       [4] apply (res://scripts/domain/m4/integration/m4_domain_resolver.gd:335)
+       [5] apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:100)
+       [6] apply (res://scripts/domain/m5/integration/m5_domain_resolver.gd:257)
+       [7] run (res://tests/test_retirement_approved_rules.gd:51)
+SCRIPT ERROR: Invalid access to property or key 'ok' on a base object of type 'Dictionary'.
+   at: settle_due (res://scripts/domain/m4/casting/casting_timeline_resolver.gd:36)
+   GDScript backtrace (most recent call first):
+       [0] settle_due (res://scripts/domain/m4/casting/casting_timeline_resolver.gd:36)
+       [1] open_player (res://scripts/domain/m3/phase/phase_boundary_resolver.gd:115)
+       [2] apply (res://scripts/domain/m3/phase/phase_engine.gd:416)
+       [3] apply (res://scripts/domain/m4/integration/m4_domain_resolver.gd:335)
+       [4] apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:100)
+       [5] apply (res://scripts/domain/m5/integration/m5_domain_resolver.gd:257)
+       [6] run (res://tests/test_retirement_approved_rules.gd:51)
+SCRIPT ERROR: Invalid access to property or key 'ok' on a base object of type 'Dictionary'.
+   at: open_player (res://scripts/domain/m3/phase/phase_boundary_resolver.gd:116)
+   GDScript backtrace (most recent call first):
+       [0] open_player (res://scripts/domain/m3/phase/phase_boundary_resolver.gd:116)
+       [1] apply (res://scripts/domain/m3/phase/phase_engine.gd:416)
+       [2] apply (res://scripts/domain/m4/integration/m4_domain_resolver.gd:335)
+       [3] apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:100)
+       [4] apply (res://scripts/domain/m5/integration/m5_domain_resolver.gd:257)
+       [5] run (res://tests/test_retirement_approved_rules.gd:51)
+SCRIPT ERROR: Invalid access to property or key 'ok' on a base object of type 'Dictionary'.
+   at: apply (res://scripts/domain/m3/phase/phase_engine.gd:418)
+   GDScript backtrace (most recent call first):
+       [0] apply (res://scripts/domain/m3/phase/phase_engine.gd:418)
+       [1] apply (res://scripts/domain/m4/integration/m4_domain_resolver.gd:335)
+       [2] apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:100)
+       [3] apply (res://scripts/domain/m5/integration/m5_domain_resolver.gd:257)
+       [4] run (res://tests/test_retirement_approved_rules.gd:51)
+SCRIPT ERROR: Invalid access to property or key 'accepted' on a base object of type 'Dictionary'.
+   at: apply (res://scripts/domain/m4/integration/m4_domain_resolver.gd:336)
+   GDScript backtrace (most recent call first):
+       [0] apply (res://scripts/domain/m4/integration/m4_domain_resolver.gd:336)
+       [1] apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:100)
+       [2] apply (res://scripts/domain/m5/integration/m5_domain_resolver.gd:257)
+       [3] run (res://tests/test_retirement_approved_rules.gd:51)
+SCRIPT ERROR: Invalid access to property or key 'accepted' on a base object of type 'Dictionary'.
+   at: apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:101)
+   GDScript backtrace (most recent call first):
+       [0] apply (res://scripts/domain/m5/lv40/lv40_domain_extension.gd:101)
+       [1] apply (res://scripts/domain/m5/integration/m5_domain_resolver.gd:257)
+       [2] run (res://tests/test_retirement_approved_rules.gd:51)
+SCRIPT ERROR: Invalid access to property or key 'accepted' on a base object of type 'Dictionary'.
+   at: run (res://tests/test_retirement_approved_rules.gd:52)
+   GDScript backtrace (most recent call first):
+       [0] run (res://tests/test_retirement_approved_rules.gd:52)

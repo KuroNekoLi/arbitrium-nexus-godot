@@ -50,6 +50,8 @@ static func commit(core: Dictionary, actor_id: String, target_id: String,
 	var proposal: Dictionary = inspect(core,actor_id,config)
 	if not proposal["ok"]:
 		return proposal
+	if bool(core["battle"].get("retired_from_field_by_actor", {}).get(target_id, false)):
+		return {"ok":false,"error":"ACTOR_RETIRED_FROM_FIELD"}
 	if target_id.is_empty() or not core["battle"]["actors"].has(target_id) or \
 			int(core["battle"]["actors"][target_id]["hp"]) <= 0:
 		return {"ok":false,"error":"INVALID_LAST_SPELL_TARGET"}
@@ -96,7 +98,8 @@ static func commit(core: Dictionary, actor_id: String, target_id: String,
 	next["battle"]["actors"][actor_id]["status"] = "CONCENTRATING"
 	return {"ok":true,"error":"","core":next,"instance":last,"events":paid["events"]}
 
-static func settle(core: Dictionary, spell: Dictionary, round_index: int) -> Dictionary:
+static func settle(core: Dictionary, spell: Dictionary, round_index: int,
+		retire_on_release: bool = false) -> Dictionary:
 	if str(spell.get("kind","")) != "LAST_SPELL" or str(spell.get("state","")) != "CASTING":
 		return {"ok":false,"error":"INVALID_LAST_SPELL_RELEASE"}
 	var actor: String = str(spell["caster_id"])
@@ -110,6 +113,12 @@ static func settle(core: Dictionary, spell: Dictionary, round_index: int) -> Dic
 	var s: Dictionary = core.duplicate(true)
 	s["battle"]["casting_instances"].erase(str(spell["casting_id"]))
 	s["battle"]["actors"][actor]["status"] = "EXHAUSTED"
+	# Versioned retirement. Historical deterministic tapes keep their
+	# existing status/event schema; opted-in battles retire the active slot.
+	if retire_on_release:
+		if not s["battle"].has("retired_from_field_by_actor"):
+			s["battle"]["retired_from_field_by_actor"] = {}
+		s["battle"]["retired_from_field_by_actor"][actor] = true
 	# Lifetime Exhausted persists through HP0 and a legitimate Revive.
 	if not s["battle"].has("last_spell_resolved_by_actor"):
 		s["battle"]["last_spell_resolved_by_actor"] = {}
@@ -129,4 +138,14 @@ static func settle(core: Dictionary, spell: Dictionary, round_index: int) -> Dic
 		{"kind":"ActorExhausted","actor_id":actor,
 			"can_initiate_actions":false,"still_targetable":true}
 	]
+	if retire_on_release:
+		records[-1]["still_targetable"] = false
+		records[-1]["retired_from_field"] = true
 	return {"ok":true,"core":s,"timeline":records}
+
+static func mark_retired(core: Dictionary, actor: String) -> Dictionary:
+	var next: Dictionary = core.duplicate(true)
+	if not next["battle"].has("retired_from_field_by_actor"):
+		next["battle"]["retired_from_field_by_actor"] = {}
+	next["battle"]["retired_from_field_by_actor"][actor] = true
+	return next

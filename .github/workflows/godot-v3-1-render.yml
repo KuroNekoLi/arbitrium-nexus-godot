@@ -8,6 +8,9 @@ on:
       - 'tests/capture_p4_v23_layout.gd'
       - 'tests/capture_p4_v31_boss.gd'
       - 'scripts/battle/ui/**'
+      - 'scripts/battle/presentation/battle_actor.gd'
+      - 'scripts/ui/hero_roster_item.gd'
+      - 'tests/capture_p4_last_spell_retirement.gd'
       - 'scenes/battle/ui/**'
   workflow_dispatch:
 permissions:
@@ -111,6 +114,36 @@ jobs:
           base64 -w 0 "$V23_EVIDENCE_DIR/v23_idle_1280_zh_thumb.jpg"
           echo
           echo 'V23_IMAGE_BASE64_END'
+      - name: Capture genuine incapacitated and retired ally portraits
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          timeout 160s xvfb-run -a -s "-screen 0 1920x1080x24" \
+            env LIBGL_ALWAYS_SOFTWARE=1 MESA_GL_VERSION_OVERRIDE=3.3 \
+            "$GODOT_BIN" --path . --audio-driver Dummy --rendering-method gl_compatibility \
+            --script res://tests/capture_p4_last_spell_retirement.gd -- \
+            "--capture-prefix=$prefix" > "$RUNNER_TEMP/v23/retirement.log" 2>&1 || {
+              cat "$RUNNER_TEMP/v23/retirement.log"; exit 1;
+            }
+          grep 'RETIREMENT_RENDER_REPORT executed=29 passed=29 failed=0' "$RUNNER_TEMP/v23/retirement.log"
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/v23/retirement.log"
+          base="outputs/p4_input_capture/$prefix"
+          test -s "$base/retirement_manifest.json"
+          for id in ret_ko_1280_zh ret_ko_1920_en ret_exhausted_1280_zh ret_exhausted_1920_en; do
+            test -s "$base/$id.png"
+          done
+      - name: Share actual Godot KO and exhausted thumbnails
+        if: success()
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          printf -v prefix 'ret_%s_%s' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+          base="outputs/p4_input_capture/$prefix"
+          for scenario in ret_ko_1280_zh ret_exhausted_1280_zh; do
+            test -s "$base/${scenario}_thumb.jpg"
+            echo "Retirement thumbnail available in artifact: $base/${scenario}_thumb.jpg"
+          done
       - name: Preserve runner logs
         if: always()
         shell: bash
@@ -127,5 +160,6 @@ jobs:
           path: |
             outputs/p4_input_capture/v23_*/
             outputs/p4_input_capture/v31_*/
+            outputs/p4_input_capture/ret_*/
           retention-days: 14
 

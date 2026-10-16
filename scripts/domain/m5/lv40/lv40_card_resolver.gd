@@ -57,7 +57,8 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 		return _error("LV40_INSTANT_CARD_MODE_REQUIRED")
 	var enemy: bool = ["MAGIC","PHYSICAL"].has(str(content["kind"])) or definition == "A05"
 	var team: Array = core["battle"]["enemies"] if enemy else core["battle"]["allies"]
-	if not team.has(target) or int(core["battle"]["actors"][target]["hp"]) <= 0:
+	if not team.has(target) or int(core["battle"]["actors"][target]["hp"]) <= 0 or \
+			bool(core["battle"].get("retired_from_field_by_actor",{}).get(target,false)):
 		return _error("LV40_ILLEGAL_TARGET")
 	if ["A03"].has(definition) and target != actor:
 		return _error("LV40_SELF_TARGET_REQUIRED")

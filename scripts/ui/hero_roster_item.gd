@@ -22,6 +22,9 @@ var mana_bar: ProgressBar
 ## that read authoritative projection fields; this component never infers state.
 var status_badges: HBoxContainer
 var status_kind: String = ""
+var combat_status: String = "ACTIVE"
+var retired: bool = false
+var retirement_mark: Label
 
 func _ready() -> void:
 	# This reusable component also lives in the legacy scene, which does not
@@ -60,6 +63,15 @@ func _ready() -> void:
 	subtitle.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_build_status_overlay()
+	retirement_mark = Label.new()
+	retirement_mark.name = "RetirementMark"
+	retirement_mark.text = "×"
+	retirement_mark.add_theme_font_size_override("font_size", 48)
+	retirement_mark.add_theme_color_override("font_color", Color("ee718d"))
+	retirement_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	retirement_mark.position = Vector2(22, 18)
+	portrait.get_parent().add_child(retirement_mark)
+	retirement_mark.hide()
 
 func _make_resource_bar(container: VBoxContainer, label: String, fill_color: Color) -> ProgressBar:
 	var bar := ProgressBar.new()
@@ -120,6 +132,8 @@ func update_status(hp: int, max_hp: int, mana: int, max_mana: int, _hand_count: 
 	_update_resources(hp, max_hp, mana, max_mana)
 
 func update_projection(actor: Dictionary, state_text: String) -> void:
+	combat_status = str(actor.get("status", "ACTIVE"))
+	retired = bool(actor.get("retired_from_field", false))
 	_update_resources(int(actor["hp"]), int(actor["max_hp"]), int(actor["mp"]), int(actor["max_mp"]))
 	var subtitle: Label = get_node("Layout/Stats/Subtitle")
 	subtitle.text = state_text
@@ -148,6 +162,14 @@ func set_status_kind(status: String) -> void:
 		subtitle.add_theme_color_override("font_color",
 			Tokens.STATUS_COLORS.get(status, Tokens.COMMAND_UTILITY).lightened(0.35))
 	portrait.modulate = Color(0.55, 0.5, 0.55) if status == "INCAPACITATED" else Color.WHITE
+	_apply_retirement()
+
+func _apply_retirement() -> void:
+	if retirement_mark == null: return
+	retirement_mark.visible = retired
+	disabled = retired
+	if retired:
+		portrait.modulate = Color("646464")
 
 ## badges: Array of {"id": String, "icon": Texture2D, "tooltip": String}.
 ## Callers must source each entry from a real projection field.
@@ -179,6 +201,7 @@ func set_selected(selected: bool) -> void:
 	_apply_style()
 
 func _on_pressed() -> void:
+	if retired: return
 	hero_selected.emit(hero_id)
 
 func _apply_style() -> void:

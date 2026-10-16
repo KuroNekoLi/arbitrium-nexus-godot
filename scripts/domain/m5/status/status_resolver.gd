@@ -80,6 +80,8 @@ static func grant(core: Dictionary, source_actor_id: String,
 		target_actor_id: String, status_id: String, command_id: String,
 		config: Dictionary) -> Dictionary:
 	var d: Dictionary = _definition(config,status_id)
+	if bool(core["battle"].get("retired_from_field_by_actor", {}).get(target_actor_id, false)):
+		return _fail("ACTOR_RETIRED_FROM_FIELD")
 	if not _legal(d):
 		return _fail("M52_UNKNOWN_STATUS_DEFINITION")
 	if not core["battle"]["actors"].has(source_actor_id) or \
@@ -198,10 +200,11 @@ static func tick(core: Dictionary, next_round: int, config: Dictionary,
 			"stacks":int(status["stacks"])})
 		var kind: String = str(d["kind"])
 		var hp: Dictionary = {}
-		if kind == "DOT":
+		var retired: bool = bool(state["battle"].get("retired_from_field_by_actor", {}).get(target, false))
+		if kind == "DOT" and not retired:
 			hp = HP.dot(state,target,int(d["tick_amount"])*int(status["stacks"]),
 				str(d["barrier_mode"]),config,command_id)
-		elif kind == "HOT":
+		elif kind == "HOT" and not retired:
 			if int(state["battle"]["actors"][target]["hp"]) > 0:
 				hp = HP.heal(state,target,int(d["tick_amount"])*int(status["stacks"]))
 		if not hp.is_empty():

@@ -27,7 +27,8 @@ static func _target(core: Dictionary, strategy: String) -> String:
 	var candidates: Array[String] = []
 	for id: Variant in core["battle"]["allies"]:
 		var key: String = str(id)
-		if int(core["battle"]["actors"][key]["hp"]) > 0:
+		if int(core["battle"]["actors"][key]["hp"]) > 0 and \
+				not bool(core["battle"].get("retired_from_field_by_actor",{}).get(key,false)):
 			candidates.append(key)
 	candidates.sort()
 	if candidates.is_empty():

@@ -13,6 +13,8 @@ static func check(core: Dictionary, action: Dictionary, window: Dictionary,
 		return {"ok": false, "error": "ACTOR_OR_TARGET_NOT_FOUND"}
 	if actor_id == target_id:
 		return {"ok": false, "error": "CANNOT_PROTECT_SELF"}
+	if bool(battle.get("retired_from_field_by_actor", {}).get(target_id, false)):
+		return {"ok":false,"error":"TARGET_RETIRED_FROM_FIELD"}
 	var actor: Dictionary = battle["actors"][actor_id]
 	if int(actor.get("hp", 0)) <= 0 or str(actor.get("status", "")) in ["INCAPACITATED", "EXHAUSTED"]:
 		return {"ok": false, "error": "ACTOR_UNAVAILABLE"}

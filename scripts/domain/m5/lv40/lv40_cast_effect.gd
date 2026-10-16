@@ -14,6 +14,8 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 	var spell: String = str(cast["spell_id"])
 	var records: Array = []
 	var is_last: bool = str(cast.get("kind","")) == "LAST_SPELL"
+	var retire_after_effect: bool = is_last and bool(config.get("last_spell_retirement_v1", false))
+	var exhaustion: Dictionary = {}
 	if int(next["battle"]["actors"][actor]["hp"]) <= 0:
 		return {"ok":false,"error":"LV40_CASTER_HP0_RELEASE_FORBIDDEN"}
 	if is_last:
@@ -29,7 +31,9 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 			return settled
 		next = settled["core"]
 		records.append(settled["timeline"][0])
-		records.append(settled["timeline"][2])
+		exhaustion = settled["timeline"][2].duplicate(true)
+		if not retire_after_effect:
+			records.append(exhaustion)
 	else:
 		var moved: Dictionary = M2.apply(next,{"type":"SETTLE_CASTING_CARD_M4",
 			"actor_id":actor,"card_instance_id":str(cast["card_instance_id"]),
@@ -51,6 +55,9 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 		recipients = LastTargets.recipients(next, actor, target, config)
 	else:
 		recipients.append(target)
+	if not is_last and bool(next["battle"].get("retired_from_field_by_actor", {}).get(target, false)):
+		records.append({"kind":"CastingEffectFizzled", "casting_id":cast["casting_id"], "reason":"TARGET_RETIRED_FROM_FIELD"})
+		return {"ok":true,"core":next,"timeline":records}
 	if spell == "LS_TSUMUGI_HEAL_V1":
 		for ally: String in recipients:
 			if int(next["battle"]["actors"][ally]["hp"]) <= 0:
@@ -85,4 +92,11 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 						next = broken["core"]
 						records.append_array(broken["timeline"])
 						break
+	if retire_after_effect:
+		# A support Last Spell completes its effects before its caster leaves.
+		# Outcome is evaluated by the existing phase/action boundary afterwards.
+		next = Last.mark_retired(next, actor)
+		exhaustion["still_targetable"] = false
+		exhaustion["retired_from_field"] = true
+		records.append(exhaustion)
 	return {"ok":true,"core":next,"timeline":records}

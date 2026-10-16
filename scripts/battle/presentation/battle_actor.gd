@@ -39,6 +39,8 @@ var barrier_active: bool = false
 var pulse: float = 0.0
 var base_tint: Color = Color.WHITE
 var condition_tint: Color = Color.WHITE
+var downed: bool = false
+var retired: bool = false
 
 func _enter_tree() -> void:
 	home = position
@@ -103,6 +105,7 @@ func _on_art_changed() -> void:
 	_update_base_tint()
 	body.modulate = base_tint
 	body.play("idle")
+	if downed: body.stop()
 	_align_frame()
 	queue_redraw()
 
@@ -115,6 +118,11 @@ func _align_frame() -> void:
 		return
 	var row: int = ["idle", "run", "strike"].find(str(body.animation))
 	if row < 0 or body.frame >= body.sprite_frames.get_frame_count(body.animation):
+		return
+	if downed:
+		body.centered = true
+		body.rotation = -0.95
+		body.position = Vector2(-visual_height * 0.2, -visual_height * 0.19)
 		return
 	# The atlas has unequal row heights; anchor every frame to its own feet,
 	# without resizing actors or moving their authoritative visual slots.
@@ -132,7 +140,7 @@ func _draw() -> void:
 	draw_arc(Vector2.ZERO,visual_height*0.24,0,TAU,48,Color(accent,0.6),2)
 
 func play_attack(target_position: Vector2) -> void:
-	if Engine.is_editor_hint() or body == null:
+	if Engine.is_editor_hint() or body == null or downed or retired:
 		return
 	if motion: motion.kill()
 	var from: Vector2 = position
@@ -145,7 +153,7 @@ func play_attack(target_position: Vector2) -> void:
 	if not boss_art: motion.tween_callback(body.play.bind("idle"))
 
 func play_hit() -> void:
-	if Engine.is_editor_hint() or body == null: return
+	if Engine.is_editor_hint() or body == null or retired: return
 	body.modulate = Color(2,1.3,1.5)
 	create_tween().tween_property(body,"modulate",base_tint,0.28)
 
@@ -153,11 +161,25 @@ func _update_base_tint() -> void:
 	# base_tint remains the public resting colour used by skip/reset contracts.
 	base_tint = (appearance.tint if appearance != null and not boss_art else Color.WHITE) * condition_tint
 
-func project_conditions(status: String, casting: bool, barrier: bool) -> void:
+func project_conditions(status: String, casting: bool, barrier: bool, field_retired: bool = false) -> void:
 	if Engine.is_editor_hint() or body == null:
 		return
-	cast_active = casting
-	barrier_active = barrier
+	var changed_pose: bool = downed != (status == "INCAPACITATED") or retired != field_retired
+	downed = status == "INCAPACITATED"
+	retired = field_retired
+	visible = not retired
+	cast_active = casting and not downed and not retired
+	barrier_active = barrier and not retired
+	if changed_pose:
+		if motion: motion.kill()
+		position = home
+		body.rotation = 0.0
+		if downed:
+			body.stop()
+			body.frame = 0
+		else:
+			body.play("idle")
+		_align_frame()
 	condition_tint = Color("626c83") if status == "INCAPACITATED" else Color("c0a988") if status == "EXHAUSTED" else Color.WHITE
 	_update_base_tint()
 	body.modulate = base_tint
@@ -169,6 +191,9 @@ func reset_motion() -> void:
 	if motion: motion.kill()
 	position = home
 	body.play("idle")
+	if downed:
+		body.stop()
+	_align_frame()
 	_update_base_tint()
 	body.modulate = base_tint
 

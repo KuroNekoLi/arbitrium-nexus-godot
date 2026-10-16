@@ -5,6 +5,8 @@ const Invalidation = preload("res://scripts/domain/m4/casting/casting_invalidati
 static func heal(core: Dictionary, actor: String, amount: int) -> Dictionary:
 	if amount <= 0 or not core["battle"]["actors"].has(actor):
 		return {"ok":false,"error":"M52_INVALID_HEAL"}
+	if bool(core["battle"].get("retired_from_field_by_actor",{}).get(actor,false)):
+		return {"ok":false,"error":"ACTOR_RETIRED_FROM_FIELD"}
 	var current: int = int(core["battle"]["actors"][actor]["hp"])
 	if current == 0:
 		return {"ok":false,"error":"M52_HEAL_CANNOT_REVIVE"}
@@ -15,6 +17,8 @@ static func heal(core: Dictionary, actor: String, amount: int) -> Dictionary:
 		"before":current,"after":after,"amount":after-current,"revive":false}]}
 
 static func revive(core: Dictionary, actor: String, restored: int) -> Dictionary:
+	if bool(core["battle"].get("retired_from_field_by_actor",{}).get(actor,false)):
+		return {"ok":false,"error":"ACTOR_RETIRED_FROM_FIELD"}
 	var outcome: Dictionary = Invalidation.revive(core,actor,restored)
 	if not outcome["ok"]:
 		return {"ok":false,"error":str(outcome["error"])}
@@ -25,6 +29,8 @@ static func revive(core: Dictionary, actor: String, restored: int) -> Dictionary
 
 static func dot(core: Dictionary, actor: String, amount: int,
 		barrier_mode: String, config: Dictionary, command_id: String) -> Dictionary:
+	if bool(core["battle"].get("retired_from_field_by_actor", {}).get(actor, false)):
+		return {"ok":true,"core":core.duplicate(true),"timeline":[{"kind":"StatusTickSkipped","actor_id":actor,"reason":"ACTOR_RETIRED_FROM_FIELD"}]}
 	if amount <= 0 or not ["ABSORB","BYPASS"].has(barrier_mode) or \
 			not core["battle"]["actors"].has(actor):
 		return {"ok":false,"error":"M52_INVALID_DOT"}

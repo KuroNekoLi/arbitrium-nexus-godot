@@ -20,7 +20,7 @@ static func candidates(core: Dictionary, actor: String, config: Dictionary) -> A
 	var battle: Dictionary = core["battle"]
 	for id: String in battle["allies" if data["team"] == "ALLY" else "enemies"]:
 		if data.get("legacy_boss_only", false) and id != "Boss": continue
-		if int(battle["actors"][id]["hp"]) > 0:
+		if int(battle["actors"][id]["hp"]) > 0 and not bool(battle.get("retired_from_field_by_actor", {}).get(id, false)):
 			result.append(id)
 	return result
 
@@ -28,4 +28,7 @@ static func recipients(core: Dictionary, actor: String, anchor: String, config: 
 	var available: Array[String] = candidates(core, actor, config)
 	if definition(config, actor).get("scope", "") == "ALL":
 		return available
-	return [anchor] if available.has(anchor) else []
+	var result: Array[String] = []
+	if available.has(anchor):
+		result.append(anchor)
+	return result
