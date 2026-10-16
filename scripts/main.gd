@@ -9,12 +9,12 @@ const HeroRosterItemScene: PackedScene = preload("res://scenes/ui/hero_roster_it
 const CardResourceType = preload("res://addons/simple_cards/card/card_resource/card_resource.gd")
 const BATTLEFIELD_BG: Texture2D = preload("res://assets/battlefield_bg.png")
 const HERO_ATLASES := {
-	"kleya": preload("res://assets/nova_atlas.png"),
-	"nova": preload("res://assets/kleya_atlas.png"),
-	"yora": preload("res://assets/yora_atlas.png")
+	"kleya": preload("res://assets/legacy/characters/nova_atlas.png"),
+	"nova": preload("res://assets/legacy/characters/kleya_atlas.png"),
+	"yora": preload("res://assets/legacy/characters/yora_atlas.png")
 }
 const PARTY_ART: Texture2D = preload("res://assets/nexus_party_splash.png")
-const PARTY_PORTRAITS: Texture2D = preload("res://assets/portraits/party_portraits.png")
+const PARTY_PORTRAITS: Texture2D = preload("res://assets/legacy/portraits/party_portraits.png")
 const FANTASY_FRAME: Texture2D = preload("res://addons/kenney_fantasy_ui_borders/panel-border-000.png")
 
 var battle: BattleState
