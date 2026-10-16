@@ -84,3 +84,7 @@ CG 以各自 Atlas 為參考，要求保留身份、單一人物、直式透明�
 - 新 Appearance/Editor QA [#38836688296](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836688296) 的第三次試行嚴格 **Godot Editor Import PASS**，31 項外觀/場景前置斷言 PASS，但 `test_character_editor_preview.gd` 的 `_init` 檢查早於 Sprite `_ready`，導致 `EDITOR-ACTOR-SPRITE` FAIL 與 Nil `owner`；修正測試延後至 `_initialize → call_deferred(run)`，**尚未再執行**。該群組已用滿三次配額，因此 Editor QA Workflow 已改為手動觸發，避免後續普通 Push 意外第四次執行；任何手動重跑仍需要使用者新授權。
 - 現狀 **源碼 IMPLEMENTED / CI NOT VERIFIED / NATIVE EDITOR SCREENSHOT NOT VERIFIED / NOT READY FOR MASTER MERGE**。任何前述 PASS 只屬該測試當時的 Source SHA 與 scope，不能推論最終 HEAD 已正式全綠。
 
+## 已接手完成並合併 — 2026-10-16
+
+上方 NOT READY 是歷史交接狀態。使用者明確追加授權後完成審查修復、原生Editor／runtime截圖與適用CI，已合併／Push master `bc057c5b419ee43bec25e5fb179e9f4dbe3f8312`。Master Fast／Domain SUCCESS；P4 1149／Editor39亦有成功候選CI。正式收據、精確scope、已知限制及測試排程例外見 [CHARACTER_EDITOR_FINAL_MERGE_REPORT_20261016.md](CHARACTER_EDITOR_FINAL_MERGE_REPORT_20261016.md)。候選角色美術仍待使用者最終核准。
+

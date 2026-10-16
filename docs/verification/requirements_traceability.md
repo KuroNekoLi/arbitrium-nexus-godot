@@ -489,3 +489,17 @@ Original Last Spell group, old P4.4 GUI group and separate character appearance 
 ### Current CI regression caveat — 2026-10-16
 - [Fast #38837390317](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38837390317) **FAILED** on Last Spell Release GDScript typed-array runtime bug and P4 V35 Resource leak/error. Conditional typed-array fix committed subsequently without rerun; status remains **NOT_VERIFIED**.
 - Appearance group [#38836688296](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836688296) third attempt Editor Import succeeded, initial 31 assertions passed then fixture initialization nil failed; subsequent deferred-run test change not rerun (quota exhausted). **35/35 NOT VERIFIED**.
+
+### Authorized completion / master merge — 2026-10-16
+
+以上 caveat 為保留的歷史快照；本輪使用者明確追加驗證權限後已修復並合併 master `bc057c5b419ee43bec25e5fb179e9f4dbe3f8312`。
+
+| Requirement | New evidence | Status |
+|---|---|---|
+| Independent Lv40 actors / atlas / CG | appearance39/39 CI38840497344；native character15/15；actual Editor PNG | SCOPED_VERIFIED |
+| Editor preview isolation / live appearance / re-entry | no Controller/snapshot in actual editor；Resource changed / re-entry / foot anchor assertions | SCOPED_VERIFIED；不是OS F6按鍵測試 |
+| Legacy relocation / playable runtime / scope | Master Fast38843036070成功；P4候選1149＋Legacy4成功；native Last scope29/29 | SCOPED_VERIFIED |
+| M1–M5.5 regression | Master Integration38843037835：1128/1128；本機100 seeds runner110/110 | 1238/1238；100完整battle/replay PASS |
+| Final visual identity / high-fidelity user acceptance | generated candidate art、Boss placeholder、3-frame actions | USER_APPROVAL_PENDING |
+
+完整SHA／Run URL、失敗與修復、raw logs、截圖、runner重疊造成的次數例外見 [Final Merge Receipt](../handoff/CHARACTER_EDITOR_FINAL_MERGE_REPORT_20261016.md)。沒有修改原測試斷言或清除歷史P4.4 GUI14/16。

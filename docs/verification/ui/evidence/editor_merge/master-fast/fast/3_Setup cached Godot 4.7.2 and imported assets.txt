@@ -1,0 +1,86 @@
+﻿2026-10-16T02:57:14.7897083Z Prepare all required actions
+2026-10-16T02:57:14.7898279Z Getting action download info
+2026-10-16T02:57:14.9048613Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-10-16T02:57:15.1335054Z ##[group]Run ./.github/actions/setup-godot-ci
+2026-10-16T02:57:15.1335471Z ##[endgroup]
+2026-10-16T02:57:15.1399834Z ##[start-action display=Restore official Godot executable;id=__self.binary-cache]
+2026-10-16T02:57:15.1476671Z ##[group]Run actions/cache@v4
+2026-10-16T02:57:15.1477042Z with:
+2026-10-16T02:57:15.1477371Z   path: .ci-cache/godot-4.7.2
+2026-10-16T02:57:15.1477728Z   key: godot-4.7.2-linux-x86_64-verified-v1
+2026-10-16T02:57:15.1478116Z   enableCrossOsArchive: false
+2026-10-16T02:57:15.1478468Z   fail-on-cache-miss: false
+2026-10-16T02:57:15.1478788Z   lookup-only: false
+2026-10-16T02:57:15.1479096Z   save-always: false
+2026-10-16T02:57:15.1479442Z ##[endgroup]
+2026-10-16T02:57:15.2536274Z (node:2125) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:57:15.2537849Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:57:15.4500800Z Cache hit for: godot-4.7.2-linux-x86_64-verified-v1
+2026-10-16T02:57:15.4591983Z (node:2125) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:57:16.6527493Z Received 50331648 of 75809565 (66.4%), 48.0 MBs/sec
+2026-10-16T02:57:16.8187287Z Received 75809565 of 75809565 (100.0%), 62.0 MBs/sec
+2026-10-16T02:57:16.8222145Z Cache Size: ~72 MB (75809565 B)
+2026-10-16T02:57:16.8336721Z [command]/usr/bin/tar -xf /home/runner/work/_temp/75a69a1e-255b-4f97-b739-201843b84226/cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --use-compress-program unzstd
+2026-10-16T02:57:17.1616856Z Cache restored successfully
+2026-10-16T02:57:17.1724108Z Cache restored from key: godot-4.7.2-linux-x86_64-verified-v1
+2026-10-16T02:57:17.1820193Z ##[end-action id=__self.binary-cache;outcome=success;conclusion=success;duration_ms=2041]
+2026-10-16T02:57:17.1826095Z ##[start-action display=Verify or install official Godot;id=__self.__run]
+2026-10-16T02:57:17.2297246Z ##[group]Run bash tools/ci/install_godot.sh
+2026-10-16T02:57:17.2297732Z [36;1mbash tools/ci/install_godot.sh[0m
+2026-10-16T02:57:17.8256797Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:17.8257334Z ##[endgroup]
+2026-10-16T02:57:18.0889168Z ./Godot_v4.7.2-stable_linux.x86_64: OK
+2026-10-16T02:57:18.2070859Z Using checksum-verified cached Godot 4.7.2
+2026-10-16T02:57:18.2245919Z 4.7.2.stable.official.ed1daf0bf
+2026-10-16T02:57:18.2305508Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=1047]
+2026-10-16T02:57:18.2308669Z ##[start-action display=Restore Godot asset import cache;id=__self.import-cache]
+2026-10-16T02:57:18.7012946Z ##[group]Run actions/cache@v4
+2026-10-16T02:57:18.7013339Z with:
+2026-10-16T02:57:18.7013684Z   path: .godot/imported/
+.godot/uid_cache.bin
+
+2026-10-16T02:57:18.7014320Z   key: godot-import-ubuntu24-4.7.2-v1-403e6189713fe6eef62731bb366648d080acb1623d089fd9c8339c2c3d465dd3
+2026-10-16T02:57:18.7014919Z   restore-keys: godot-import-ubuntu24-4.7.2-v1-
+
+2026-10-16T02:57:18.7015330Z   enableCrossOsArchive: false
+2026-10-16T02:57:18.7015678Z   fail-on-cache-miss: false
+2026-10-16T02:57:18.7016046Z   lookup-only: false
+2026-10-16T02:57:18.7016379Z   save-always: false
+2026-10-16T02:57:18.7016668Z env:
+2026-10-16T02:57:18.7017202Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:18.7017851Z ##[endgroup]
+2026-10-16T02:57:18.8119043Z (node:2167) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:57:18.8120336Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:57:19.0082168Z Cache hit for restore-key: godot-import-ubuntu24-4.7.2-v1-274734ed71fd21574c90176d00e1862b42965e6165d6a9831f6ee809203a8291
+2026-10-16T02:57:19.0209048Z (node:2167) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:57:20.2356839Z Received 42643023 of 55225935 (77.2%), 40.7 MBs/sec
+2026-10-16T02:57:20.4090798Z Received 55225935 of 55225935 (100.0%), 44.9 MBs/sec
+2026-10-16T02:57:20.4097777Z Cache Size: ~53 MB (55225935 B)
+2026-10-16T02:57:20.4149715Z [command]/usr/bin/tar -xf /home/runner/work/_temp/43aa919f-ad7a-4481-b6e8-15240c31a1b3/cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --use-compress-program unzstd
+2026-10-16T02:57:20.4882179Z Cache restored successfully
+2026-10-16T02:57:20.5002499Z Cache restored from key: godot-import-ubuntu24-4.7.2-v1-274734ed71fd21574c90176d00e1862b42965e6165d6a9831f6ee809203a8291
+2026-10-16T02:57:20.5062519Z ##[end-action id=__self.import-cache;outcome=success;conclusion=success;duration_ms=2275]
+2026-10-16T02:57:20.5067059Z ##[start-action display=Disable unavailable editor VCS integration in CI checkout;id=__self.__run_2]
+2026-10-16T02:57:20.8158528Z ##[group]Run python3 tools/ci/prepare_project.py project.godot
+2026-10-16T02:57:20.8159123Z [36;1mpython3 tools/ci/prepare_project.py project.godot[0m
+2026-10-16T02:57:20.8199192Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:20.8199635Z env:
+2026-10-16T02:57:20.8200258Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:20.8200886Z ##[endgroup]
+2026-10-16T02:57:20.9048059Z CI_PROJECT_PREPARED: no editor VCS configuration present
+2026-10-16T02:57:20.9093858Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=402]
+2026-10-16T02:57:20.9098690Z ##[start-action display=Record cache results;id=__self.__run_3]
+2026-10-16T02:57:20.9851405Z ##[group]Run {
+2026-10-16T02:57:20.9851781Z [36;1m{[0m
+2026-10-16T02:57:20.9852117Z [36;1m  echo '### Godot CI cache'[0m
+2026-10-16T02:57:20.9852621Z [36;1m  echo "- Binary exact hit: ${BINARY_CACHE_HIT:-false}"[0m
+2026-10-16T02:57:20.9853113Z [36;1m  echo "- Imported assets exact hit: ${IMPORT_CACHE_HIT:-false}"[0m
+2026-10-16T02:57:20.9853728Z [36;1m  echo '- All jobs still run a fresh Godot editor import + strict log validation.'[0m
+2026-10-16T02:57:20.9854226Z [36;1m} >> "$GITHUB_STEP_SUMMARY"[0m
+2026-10-16T02:57:20.9890541Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:20.9891050Z env:
+2026-10-16T02:57:20.9891711Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:20.9892384Z   BINARY_CACHE_HIT: true
+2026-10-16T02:57:20.9892739Z   IMPORT_CACHE_HIT: false
+2026-10-16T02:57:20.9893112Z ##[endgroup]
+2026-10-16T02:57:21.1340565Z ##[end-action id=__self.__run_3;outcome=success;conclusion=success;duration_ms=224]

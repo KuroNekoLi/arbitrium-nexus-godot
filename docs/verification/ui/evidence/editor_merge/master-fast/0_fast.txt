@@ -1,0 +1,292 @@
+﻿2026-10-16T02:57:06.8055065Z Current runner version: '2.337.0'
+2026-10-16T02:57:06.8088756Z ##[group]Runner Image Provisioner
+2026-10-16T02:57:06.8090150Z Hosted Compute Agent
+2026-10-16T02:57:06.8091211Z Version: 20261012.601
+2026-10-16T02:57:06.8092158Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-16T02:57:06.8093145Z Build Date: 2026-10-12T17:48:21Z
+2026-10-16T02:57:06.8094110Z Worker ID: {8c7a02c6-39e3-4052-b330-0354f77587ad}
+2026-10-16T02:57:06.8095032Z Region: westcentralus
+2026-10-16T02:57:06.8095768Z Cloud: Azure
+2026-10-16T02:57:06.8096526Z ##[endgroup]
+2026-10-16T02:57:06.8098641Z ##[group]Operating System
+2026-10-16T02:57:06.8099535Z Ubuntu
+2026-10-16T02:57:06.8100268Z 24.04.5
+2026-10-16T02:57:06.8121369Z LTS
+2026-10-16T02:57:06.8122513Z ##[endgroup]
+2026-10-16T02:57:06.8123292Z ##[group]Runner Image
+2026-10-16T02:57:06.8124168Z Image: ubuntu-24.04
+2026-10-16T02:57:06.8124930Z Version: 20261012.334.1
+2026-10-16T02:57:06.8126638Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-16T02:57:06.8128654Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-16T02:57:06.8129970Z ##[endgroup]
+2026-10-16T02:57:06.8131749Z ##[group]GITHUB_TOKEN Permissions
+2026-10-16T02:57:06.8134824Z Contents: read
+2026-10-16T02:57:06.8135632Z Metadata: read
+2026-10-16T02:57:06.8136378Z ##[endgroup]
+2026-10-16T02:57:06.8139653Z Secret source: Actions
+2026-10-16T02:57:06.8161485Z Cache mode: write
+2026-10-16T02:57:06.8163003Z Prepare workflow directory
+2026-10-16T02:57:06.8748704Z Prepare all required actions
+2026-10-16T02:57:06.8818209Z Getting action download info
+2026-10-16T02:57:07.2557845Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-16T02:57:07.8243268Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-16T02:57:08.1605174Z Complete job name: fast
+2026-10-16T02:57:08.2409375Z ##[group]Run actions/checkout@v4
+2026-10-16T02:57:08.2410868Z with:
+2026-10-16T02:57:08.2412566Z   repository: KuroNekoLi/arbitrium-nexus-godot
+2026-10-16T02:57:08.2422390Z   token: ***
+2026-10-16T02:57:08.2423480Z   ssh-strict: true
+2026-10-16T02:57:08.2424466Z   ssh-user: git
+2026-10-16T02:57:08.2425546Z   persist-credentials: true
+2026-10-16T02:57:08.2426652Z   clean: true
+2026-10-16T02:57:08.2427645Z   sparse-checkout-cone-mode: true
+2026-10-16T02:57:08.2428780Z   fetch-depth: 1
+2026-10-16T02:57:08.2429693Z   fetch-tags: false
+2026-10-16T02:57:08.2430653Z   show-progress: true
+2026-10-16T02:57:08.2431850Z   lfs: false
+2026-10-16T02:57:08.2432754Z   submodules: false
+2026-10-16T02:57:08.2433796Z   set-safe-directory: true
+2026-10-16T02:57:08.2434882Z   allow-unsafe-pr-checkout: false
+2026-10-16T02:57:08.2436329Z ##[endgroup]
+2026-10-16T02:57:08.3558957Z Syncing repository: KuroNekoLi/arbitrium-nexus-godot
+2026-10-16T02:57:08.3564238Z ##[group]Getting Git version info
+2026-10-16T02:57:08.3567263Z Working directory is '/home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot'
+2026-10-16T02:57:08.3571155Z [command]/usr/bin/git version
+2026-10-16T02:57:08.3683350Z git version 2.55.0
+2026-10-16T02:57:08.3753242Z ##[endgroup]
+2026-10-16T02:57:08.3777748Z Temporarily overriding HOME='/home/runner/work/_temp/7cf2e3f0-216e-4f07-9e56-e003fa429ba3' before making global git config changes
+2026-10-16T02:57:08.3797611Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T02:57:08.3802363Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot
+2026-10-16T02:57:08.3858239Z Deleting the contents of '/home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot'
+2026-10-16T02:57:08.3862905Z ##[group]Initializing the repository
+2026-10-16T02:57:08.3870006Z [command]/usr/bin/git init /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot
+2026-10-16T02:57:08.3975592Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-16T02:57:08.3992216Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-16T02:57:08.3995490Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-16T02:57:08.3998411Z hint: call:
+2026-10-16T02:57:08.4000007Z hint:
+2026-10-16T02:57:08.4001972Z hint: 	git config --global init.defaultBranch <name>
+2026-10-16T02:57:08.4004065Z hint:
+2026-10-16T02:57:08.4005951Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-16T02:57:08.4009085Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-16T02:57:08.4011704Z hint:
+2026-10-16T02:57:08.4013241Z hint: 	git branch -m <name>
+2026-10-16T02:57:08.4014904Z hint:
+2026-10-16T02:57:08.4017268Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-16T02:57:08.4021243Z Initialized empty Git repository in /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.git/
+2026-10-16T02:57:08.4027275Z [command]/usr/bin/git remote add origin https://github.com/KuroNekoLi/arbitrium-nexus-godot
+2026-10-16T02:57:08.4075480Z ##[endgroup]
+2026-10-16T02:57:08.4094144Z ##[group]Disabling automatic garbage collection
+2026-10-16T02:57:08.4112861Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-16T02:57:08.4172539Z ##[endgroup]
+2026-10-16T02:57:08.4175305Z ##[group]Setting up auth
+2026-10-16T02:57:08.4183557Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T02:57:08.4193644Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-16T02:57:08.4689974Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T02:57:08.4762663Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-16T02:57:08.4928373Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T02:57:08.4957911Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-16T02:57:08.5152765Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-16T02:57:08.5191602Z ##[endgroup]
+2026-10-16T02:57:08.5194654Z ##[group]Fetching the repository
+2026-10-16T02:57:08.5202119Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +bc057c5b419ee43bec25e5fb179e9f4dbe3f8312:refs/remotes/origin/master
+2026-10-16T02:57:14.2020473Z From https://github.com/KuroNekoLi/arbitrium-nexus-godot
+2026-10-16T02:57:14.2033046Z  * [new ref]         bc057c5b419ee43bec25e5fb179e9f4dbe3f8312 -> origin/master
+2026-10-16T02:57:14.2037259Z ##[endgroup]
+2026-10-16T02:57:14.2038312Z ##[group]Determining the checkout info
+2026-10-16T02:57:14.2039370Z ##[endgroup]
+2026-10-16T02:57:14.2040046Z [command]/usr/bin/git sparse-checkout disable
+2026-10-16T02:57:14.2088278Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-16T02:57:14.2120587Z ##[group]Checking out the ref
+2026-10-16T02:57:14.2125526Z [command]/usr/bin/git checkout --progress --force -B master refs/remotes/origin/master
+2026-10-16T02:57:14.7474202Z Reset branch 'master'
+2026-10-16T02:57:14.7479769Z branch 'master' set up to track 'origin/master'.
+2026-10-16T02:57:14.7506650Z ##[endgroup]
+2026-10-16T02:57:14.7562833Z [command]/usr/bin/git log -1 --format=%H
+2026-10-16T02:57:14.7605094Z bc057c5b419ee43bec25e5fb179e9f4dbe3f8312
+2026-10-16T02:57:14.7897108Z Prepare all required actions
+2026-10-16T02:57:14.7898288Z Getting action download info
+2026-10-16T02:57:14.9048632Z Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-10-16T02:57:15.1335075Z ##[group]Run ./.github/actions/setup-godot-ci
+2026-10-16T02:57:15.1335476Z ##[endgroup]
+2026-10-16T02:57:15.1399870Z ##[start-action display=Restore official Godot executable;id=__self.binary-cache]
+2026-10-16T02:57:15.1476691Z ##[group]Run actions/cache@v4
+2026-10-16T02:57:15.1477047Z with:
+2026-10-16T02:57:15.1477375Z   path: .ci-cache/godot-4.7.2
+2026-10-16T02:57:15.1477735Z   key: godot-4.7.2-linux-x86_64-verified-v1
+2026-10-16T02:57:15.1478121Z   enableCrossOsArchive: false
+2026-10-16T02:57:15.1478473Z   fail-on-cache-miss: false
+2026-10-16T02:57:15.1478793Z   lookup-only: false
+2026-10-16T02:57:15.1479100Z   save-always: false
+2026-10-16T02:57:15.1479446Z ##[endgroup]
+2026-10-16T02:57:15.2536477Z (node:2125) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:57:15.2537859Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:57:15.4500844Z Cache hit for: godot-4.7.2-linux-x86_64-verified-v1
+2026-10-16T02:57:15.4592030Z (node:2125) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:57:16.6527544Z Received 50331648 of 75809565 (66.4%), 48.0 MBs/sec
+2026-10-16T02:57:16.8187337Z Received 75809565 of 75809565 (100.0%), 62.0 MBs/sec
+2026-10-16T02:57:16.8222188Z Cache Size: ~72 MB (75809565 B)
+2026-10-16T02:57:16.8336768Z [command]/usr/bin/tar -xf /home/runner/work/_temp/75a69a1e-255b-4f97-b739-201843b84226/cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --use-compress-program unzstd
+2026-10-16T02:57:17.1616898Z Cache restored successfully
+2026-10-16T02:57:17.1724186Z Cache restored from key: godot-4.7.2-linux-x86_64-verified-v1
+2026-10-16T02:57:17.1820208Z ##[end-action id=__self.binary-cache;outcome=success;conclusion=success;duration_ms=2041]
+2026-10-16T02:57:17.1826107Z ##[start-action display=Verify or install official Godot;id=__self.__run]
+2026-10-16T02:57:17.2297270Z ##[group]Run bash tools/ci/install_godot.sh
+2026-10-16T02:57:17.2297736Z [36;1mbash tools/ci/install_godot.sh[0m
+2026-10-16T02:57:17.8256825Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:17.8257338Z ##[endgroup]
+2026-10-16T02:57:18.0889207Z ./Godot_v4.7.2-stable_linux.x86_64: OK
+2026-10-16T02:57:18.2071080Z Using checksum-verified cached Godot 4.7.2
+2026-10-16T02:57:18.2245957Z 4.7.2.stable.official.ed1daf0bf
+2026-10-16T02:57:18.2305526Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=1047]
+2026-10-16T02:57:18.2308677Z ##[start-action display=Restore Godot asset import cache;id=__self.import-cache]
+2026-10-16T02:57:18.7012993Z ##[group]Run actions/cache@v4
+2026-10-16T02:57:18.7013341Z with:
+2026-10-16T02:57:18.7013689Z   path: .godot/imported/
+.godot/uid_cache.bin
+
+2026-10-16T02:57:18.7014323Z   key: godot-import-ubuntu24-4.7.2-v1-403e6189713fe6eef62731bb366648d080acb1623d089fd9c8339c2c3d465dd3
+2026-10-16T02:57:18.7014923Z   restore-keys: godot-import-ubuntu24-4.7.2-v1-
+
+2026-10-16T02:57:18.7015333Z   enableCrossOsArchive: false
+2026-10-16T02:57:18.7015681Z   fail-on-cache-miss: false
+2026-10-16T02:57:18.7016048Z   lookup-only: false
+2026-10-16T02:57:18.7016381Z   save-always: false
+2026-10-16T02:57:18.7016670Z env:
+2026-10-16T02:57:18.7017205Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:18.7017854Z ##[endgroup]
+2026-10-16T02:57:18.8119088Z (node:2167) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:57:18.8120670Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:57:19.0082206Z Cache hit for restore-key: godot-import-ubuntu24-4.7.2-v1-274734ed71fd21574c90176d00e1862b42965e6165d6a9831f6ee809203a8291
+2026-10-16T02:57:19.0209089Z (node:2167) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:57:20.2356895Z Received 42643023 of 55225935 (77.2%), 40.7 MBs/sec
+2026-10-16T02:57:20.4090845Z Received 55225935 of 55225935 (100.0%), 44.9 MBs/sec
+2026-10-16T02:57:20.4097805Z Cache Size: ~53 MB (55225935 B)
+2026-10-16T02:57:20.4149837Z [command]/usr/bin/tar -xf /home/runner/work/_temp/43aa919f-ad7a-4481-b6e8-15240c31a1b3/cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --use-compress-program unzstd
+2026-10-16T02:57:20.4882220Z Cache restored successfully
+2026-10-16T02:57:20.5002571Z Cache restored from key: godot-import-ubuntu24-4.7.2-v1-274734ed71fd21574c90176d00e1862b42965e6165d6a9831f6ee809203a8291
+2026-10-16T02:57:20.5062539Z ##[end-action id=__self.import-cache;outcome=success;conclusion=success;duration_ms=2275]
+2026-10-16T02:57:20.5067072Z ##[start-action display=Disable unavailable editor VCS integration in CI checkout;id=__self.__run_2]
+2026-10-16T02:57:20.8158549Z ##[group]Run python3 tools/ci/prepare_project.py project.godot
+2026-10-16T02:57:20.8159128Z [36;1mpython3 tools/ci/prepare_project.py project.godot[0m
+2026-10-16T02:57:20.8199205Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:20.8199638Z env:
+2026-10-16T02:57:20.8200263Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:20.8200889Z ##[endgroup]
+2026-10-16T02:57:20.9048096Z CI_PROJECT_PREPARED: no editor VCS configuration present
+2026-10-16T02:57:20.9093888Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=402]
+2026-10-16T02:57:20.9098696Z ##[start-action display=Record cache results;id=__self.__run_3]
+2026-10-16T02:57:20.9851424Z ##[group]Run {
+2026-10-16T02:57:20.9851784Z [36;1m{[0m
+2026-10-16T02:57:20.9852121Z [36;1m  echo '### Godot CI cache'[0m
+2026-10-16T02:57:20.9852623Z [36;1m  echo "- Binary exact hit: ${BINARY_CACHE_HIT:-false}"[0m
+2026-10-16T02:57:20.9853117Z [36;1m  echo "- Imported assets exact hit: ${IMPORT_CACHE_HIT:-false}"[0m
+2026-10-16T02:57:20.9853730Z [36;1m  echo '- All jobs still run a fresh Godot editor import + strict log validation.'[0m
+2026-10-16T02:57:20.9854228Z [36;1m} >> "$GITHUB_STEP_SUMMARY"[0m
+2026-10-16T02:57:20.9890551Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:20.9891055Z env:
+2026-10-16T02:57:20.9891784Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:20.9892387Z   BINARY_CACHE_HIT: true
+2026-10-16T02:57:20.9892757Z   IMPORT_CACHE_HIT: false
+2026-10-16T02:57:20.9893115Z ##[endgroup]
+2026-10-16T02:57:21.1340579Z ##[end-action id=__self.__run_3;outcome=success;conclusion=success;duration_ms=224]
+2026-10-16T02:57:21.2348168Z ##[group]Run set -Eeuo pipefail
+2026-10-16T02:57:21.2348674Z [36;1mset -Eeuo pipefail[0m
+2026-10-16T02:57:21.2349036Z [36;1mmkdir -p "$RUNNER_TEMP/fast-logs"[0m
+2026-10-16T02:57:21.2349673Z [36;1mpython3 -m unittest discover -s tests/ci -p 'test_*.py' -v > "$RUNNER_TEMP/fast-logs/ci-tests.log" 2>&1 || {[0m
+2026-10-16T02:57:21.2350269Z [36;1m  cat "$RUNNER_TEMP/fast-logs/ci-tests.log"; exit 1;[0m
+2026-10-16T02:57:21.2350642Z [36;1m}[0m
+2026-10-16T02:57:21.2351376Z [36;1mtimeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/fast-logs/import.log" 2>&1 || {[0m
+2026-10-16T02:57:21.2351984Z [36;1m  cat "$RUNNER_TEMP/fast-logs/import.log"; exit 1;[0m
+2026-10-16T02:57:21.2352417Z [36;1m}[0m
+2026-10-16T02:57:21.2352825Z [36;1mpython3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/fast-logs/import.log"[0m
+2026-10-16T02:57:21.2353357Z [36;1mfor spec in \[0m
+2026-10-16T02:57:21.2353831Z [36;1m  'test_m5_integration:M5_5_INTEGRATION_REPORT:32' \[0m
+2026-10-16T02:57:21.2354279Z [36;1m  'test_m5_replay:M5_5_REPLAY_REPORT:15' \[0m
+2026-10-16T02:57:21.2354842Z [36;1m  'test_m5_fast_seeds:M5_5_FAST_SEEDS_REPORT:5' \[0m
+2026-10-16T02:57:21.2355271Z [36;1m  'test_p4_scene:P4_1_REPORT:8' \[0m
+2026-10-16T02:57:21.2355645Z [36;1m  'test_p4_hud:P4_2_REPORT:36' \[0m
+2026-10-16T02:57:21.2356046Z [36;1m  'test_p4_integration:P4_3_REPORT:31' \[0m
+2026-10-16T02:57:21.2356508Z [36;1m  'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32' \[0m
+2026-10-16T02:57:21.2357040Z [36;1m  'test_screenshot_writer:SCREENSHOT_WRITER_REPORT:46'; do[0m
+2026-10-16T02:57:21.2357559Z [36;1m  bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/fast-logs"[0m
+2026-10-16T02:57:21.2357996Z [36;1mdone[0m
+2026-10-16T02:57:21.2358374Z [36;1mecho 'CI_FAST_VERIFIED (Headless only)'[0m
+2026-10-16T02:57:21.2397713Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:21.2398284Z env:
+2026-10-16T02:57:21.2398879Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:21.2399556Z ##[endgroup]
+2026-10-16T02:58:08.1851450Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/import.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:58:10.6166450Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_m5_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:10.6229750Z M5_5_INTEGRATION_REPORT executed=32 passed=32 failed=0
+2026-10-16T02:58:17.6073951Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_m5_replay.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:17.6135155Z M5_5_REPLAY_REPORT executed=15 passed=15 failed=0
+2026-10-16T02:58:27.5741962Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_m5_fast_seeds.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:27.5794511Z M5_5_FAST_SEEDS_REPORT executed=5 passed=5 failed=0
+2026-10-16T02:58:28.9867746Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_scene.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:28.9919199Z P4_1_REPORT executed=8 passed=8 failed=0
+2026-10-16T02:58:31.0536301Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_hud.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:31.0588411Z P4_2_REPORT executed=36 passed=36 failed=0
+2026-10-16T02:58:34.4273631Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:34.4327327Z P4_3_REPORT executed=31 passed=31 failed=0
+2026-10-16T02:59:03.6048894Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_lv40_playable.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:59:03.6102185Z P4_LV40_PLAYABLE_REPORT executed=32 passed=32 failed=0
+2026-10-16T02:59:03.9007724Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_screenshot_writer.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:59:03.9060798Z SCREENSHOT_WRITER_REPORT executed=46 passed=46 failed=0
+2026-10-16T02:59:03.9064428Z CI_FAST_VERIFIED (Headless only)
+2026-10-16T02:59:03.9144292Z ##[group]Run actions/upload-artifact@v4
+2026-10-16T02:59:03.9144682Z with:
+2026-10-16T02:59:03.9144973Z   name: ci-fast-logs
+2026-10-16T02:59:03.9145275Z   path: /home/runner/work/_temp/fast-logs/
+2026-10-16T02:59:03.9145666Z   retention-days: 7
+2026-10-16T02:59:03.9145955Z   if-no-files-found: warn
+2026-10-16T02:59:03.9146293Z   compression-level: 6
+2026-10-16T02:59:03.9146603Z   overwrite: false
+2026-10-16T02:59:03.9146903Z   include-hidden-files: false
+2026-10-16T02:59:03.9147241Z env:
+2026-10-16T02:59:03.9147752Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:59:03.9148384Z ##[endgroup]
+2026-10-16T02:59:04.0806318Z (node:2363) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:59:04.0807578Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:59:04.0936536Z With the provided path, there will be 10 files uploaded
+2026-10-16T02:59:04.0939010Z Artifact name is valid!
+2026-10-16T02:59:04.0939656Z Root directory input is valid!
+2026-10-16T02:59:04.4363045Z Beginning upload of artifact content to blob storage
+2026-10-16T02:59:04.4755953Z (node:2363) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:59:04.6875855Z Uploaded bytes 10186
+2026-10-16T02:59:04.7462222Z Finished uploading artifact content to blob storage!
+2026-10-16T02:59:04.7463651Z SHA256 digest of uploaded artifact zip is 06b6d4ff31d822e68ea8f5146b0c851a46a2a575edeecbdbd3909a5a78928f46
+2026-10-16T02:59:04.7465141Z Finalizing artifact upload
+2026-10-16T02:59:04.9880371Z Artifact ci-fast-logs.zip successfully finalized. Artifact ID 12022585399
+2026-10-16T02:59:04.9882234Z Artifact ci-fast-logs has been successfully uploaded! Final size is 10186 bytes. Artifact ID is 12022585399
+2026-10-16T02:59:04.9891494Z Artifact download URL: https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38843036070/artifacts/12022585399
+2026-10-16T02:59:05.0049498Z Post job cleanup.
+2026-10-16T02:59:05.0055120Z ##[start-action display=Restore Godot asset import cache;id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.import-cache]
+2026-10-16T02:59:05.5325333Z Post job cleanup.
+2026-10-16T02:59:05.6467613Z (node:2389) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:59:05.6474690Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:59:05.6747657Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --files-from manifest.txt --use-compress-program zstdmt
+2026-10-16T02:59:06.1263151Z Failed to save: Unable to reserve cache with key godot-import-ubuntu24-4.7.2-v1-403e6189713fe6eef62731bb366648d080acb1623d089fd9c8339c2c3d465dd3, another job may be creating this cache.
+2026-10-16T02:59:06.1362262Z ##[end-action id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.import-cache;outcome=success;conclusion=success;duration_ms=1130]
+2026-10-16T02:59:06.1366968Z ##[start-action display=Restore official Godot executable;id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.binary-cache]
+2026-10-16T02:59:06.1432330Z Post job cleanup.
+2026-10-16T02:59:06.2568902Z Cache hit occurred on the primary key godot-4.7.2-linux-x86_64-verified-v1, not saving cache.
+2026-10-16T02:59:06.2570571Z (node:2410) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:59:06.2574087Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:59:06.2611714Z ##[end-action id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.binary-cache;outcome=success;conclusion=success;duration_ms=124]
+2026-10-16T02:59:06.2728814Z Post job cleanup.
+2026-10-16T02:59:06.3752294Z [command]/usr/bin/git version
+2026-10-16T02:59:06.3811940Z git version 2.55.0
+2026-10-16T02:59:06.3878170Z Temporarily overriding HOME='/home/runner/work/_temp/2e77c3a1-099d-42ef-bce7-cc472188a0e8' before making global git config changes
+2026-10-16T02:59:06.3879579Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T02:59:06.3881090Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot
+2026-10-16T02:59:06.3958124Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T02:59:06.3993420Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-16T02:59:06.4399197Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T02:59:06.4449329Z http.https://github.com/.extraheader
+2026-10-16T02:59:06.4470784Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-16T02:59:06.4512036Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-16T02:59:06.4946234Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T02:59:06.4992992Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-16T02:59:06.5516012Z Cleaning up orphan processes
+2026-10-16T02:59:06.5760394Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache@v4, actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

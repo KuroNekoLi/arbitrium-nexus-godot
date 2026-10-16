@@ -1,0 +1,13 @@
+﻿2026-10-16T02:54:04.6234767Z Post job cleanup.
+2026-10-16T02:54:04.6239578Z ##[start-action display=Restore Godot asset import cache;id=__68d0990e-41c0-4537-b5a3-a096c02baf53.import-cache]
+2026-10-16T02:54:05.2784648Z Post job cleanup.
+2026-10-16T02:54:05.3986870Z Cache hit occurred on the primary key godot-import-ubuntu24-4.7.2-v1-403e6189713fe6eef62731bb366648d080acb1623d089fd9c8339c2c3d465dd3, not saving cache.
+2026-10-16T02:54:05.3989329Z (node:2620) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:54:05.3990812Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:54:05.4049773Z ##[end-action id=__68d0990e-41c0-4537-b5a3-a096c02baf53.import-cache;outcome=success;conclusion=success;duration_ms=780]
+2026-10-16T02:54:05.4052621Z ##[start-action display=Restore official Godot executable;id=__68d0990e-41c0-4537-b5a3-a096c02baf53.binary-cache]
+2026-10-16T02:54:05.4091643Z Post job cleanup.
+2026-10-16T02:54:05.5328340Z Cache hit occurred on the primary key godot-4.7.2-linux-x86_64-verified-v1, not saving cache.
+2026-10-16T02:54:05.5390071Z (node:2628) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:54:05.5408331Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:54:05.5441822Z ##[end-action id=__68d0990e-41c0-4537-b5a3-a096c02baf53.binary-cache;outcome=success;conclusion=success;duration_ms=138]

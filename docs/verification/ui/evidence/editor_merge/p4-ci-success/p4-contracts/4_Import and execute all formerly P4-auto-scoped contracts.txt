@@ -1,0 +1,108 @@
+﻿2026-10-16T02:51:18.1842502Z ##[group]Run set -Eeuo pipefail
+2026-10-16T02:51:18.1842904Z [36;1mset -Eeuo pipefail[0m
+2026-10-16T02:51:18.1843193Z [36;1mmkdir -p "$RUNNER_TEMP/p4-logs"[0m
+2026-10-16T02:51:18.1843765Z [36;1mtimeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/p4-logs/import.log" 2>&1 || {[0m
+2026-10-16T02:51:18.1844387Z [36;1m  cat "$RUNNER_TEMP/p4-logs/import.log"; exit 1;[0m
+2026-10-16T02:51:18.1844725Z [36;1m}[0m
+2026-10-16T02:51:18.1845079Z [36;1mpython3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/p4-logs/import.log"[0m
+2026-10-16T02:51:18.1845501Z [36;1mfor spec in \[0m
+2026-10-16T02:51:18.1845787Z [36;1m  'test_lv40_content:LV40_CONTENT_REPORT:37' \[0m
+2026-10-16T02:51:18.1846178Z [36;1m  'test_p4_component_contract:V1_COMPONENT_REPORT:24' \[0m
+2026-10-16T02:51:18.1846552Z [36;1m  'test_p4_feedback:P4_4_REPORT:45' \[0m
+2026-10-16T02:51:18.1846893Z [36;1m  'test_p4_feedback_edges:P4_4_EDGE_REPORT:80' \[0m
+2026-10-16T02:51:18.1847260Z [36;1m  'test_p4_lv40_ui:P4_LV40_UI_STAGING_REPORT:10' \[0m
+2026-10-16T02:51:18.1848183Z [36;1m  'test_p4_localization:P4_LOCALIZATION_REPORT:198' \[0m
+2026-10-16T02:51:18.1848598Z [36;1m  'test_p4_lv40_readmodel:P4_READMODEL_REPORT:29' \[0m
+2026-10-16T02:51:18.1849021Z [36;1m  'test_p4_balance_metrics:P4_BALANCE_METRICS_REPORT:35' \[0m
+2026-10-16T02:51:18.1849456Z [36;1m  'test_p4_profile_metrics:P4_PROFILE_METRICS_REPORT:30'; do[0m
+2026-10-16T02:51:18.1849896Z [36;1m  bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"[0m
+2026-10-16T02:51:18.1850236Z [36;1mdone[0m
+2026-10-16T02:51:18.1850601Z [36;1mfor suite in test_battle_state test_deck_builder test_combat_ui test_turn_flow; do[0m
+2026-10-16T02:51:18.1851082Z [36;1m  log="$RUNNER_TEMP/p4-logs/legacy-$suite.log"[0m
+2026-10-16T02:51:18.1851611Z [36;1m  timeout 120s "$GODOT_BIN" --headless --path . --script "res://tests/$suite.gd" > "$log" 2>&1 || {[0m
+2026-10-16T02:51:18.1852109Z [36;1m    tail -n 100 "$log"; exit 1;[0m
+2026-10-16T02:51:18.1852371Z [36;1m  }[0m
+2026-10-16T02:51:18.1852634Z [36;1m  python3 tools/ci/assert_godot_logs.py "$log"[0m
+2026-10-16T02:51:18.1852935Z [36;1mdone[0m
+2026-10-16T02:51:18.1853136Z [36;1mfor spec in \[0m
+2026-10-16T02:51:18.1853415Z [36;1m  'test_p4_v2_layout:V2_LAYOUT_REPORT:18' \[0m
+2026-10-16T02:51:18.1853772Z [36;1m  'test_p4_v2_context_layout:V2_CONTEXT_REPORT:23' \[0m
+2026-10-16T02:51:18.1854131Z [36;1m  'test_p4_v24_hand:V24_HAND_REPORT:39' \[0m
+2026-10-16T02:51:18.1854466Z [36;1m  'test_p4_v27_face_bounds:V27_FACE_REPORT:8' \[0m
+2026-10-16T02:51:18.1854808Z [36;1m  'test_p4_v31_visual:V31_VISUAL_REPORT:31' \[0m
+2026-10-16T02:51:18.1855141Z [36;1m  'test_p4_v32_card:V32_CARD_REPORT:73' \[0m
+2026-10-16T02:51:18.1855461Z [36;1m  'test_p4_v33_boss:V33_BOSS_REPORT:47' \[0m
+2026-10-16T02:51:18.1855797Z [36;1m  'test_p4_v3_integration:V3_MERGE_REPORT:90' \[0m
+2026-10-16T02:51:18.1856192Z [36;1m  'test_p4_v34_roster_command:V34_ROSTER_COMMAND_REPORT:102' \[0m
+2026-10-16T02:51:18.1856620Z [36;1m  'test_p4_v34_legacy_roster:V34_LEGACY_ROSTER_REPORT:18' \[0m
+2026-10-16T02:51:18.1857028Z [36;1m  'test_p4_v35_resources:V35_RESOURCES_REPORT:32' \[0m
+2026-10-16T02:51:18.1857399Z [36;1m  'test_p4_v35_party:V35_PARTY_REPORT:57' \[0m
+2026-10-16T02:51:18.1857905Z [36;1m  'test_p4_v35_command:V35_COMMAND_REPORT:30' \[0m
+2026-10-16T02:51:18.1858247Z [36;1m  'test_p4_v35_intent:V35_INTENT_REPORT:35' \[0m
+2026-10-16T02:51:18.1858580Z [36;1m  'test_p4_v35_log:V35_LOG_REPORT:33' \[0m
+2026-10-16T02:51:18.1858937Z [36;1m  'test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25'; do[0m
+2026-10-16T02:51:18.1859361Z [36;1m  bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/p4-logs"[0m
+2026-10-16T02:51:18.1859698Z [36;1mdone[0m
+2026-10-16T02:51:18.1860028Z [36;1mecho 'CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0'[0m
+2026-10-16T02:51:18.1860568Z [36;1mecho 'GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun'[0m
+2026-10-16T02:51:18.1918257Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:51:18.1918819Z env:
+2026-10-16T02:51:18.1919349Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:51:18.1919933Z ##[endgroup]
+2026-10-16T02:52:05.6588491Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/import.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:52:06.2397800Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_lv40_content.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:52:06.2452985Z LV40_CONTENT_REPORT executed=37 passed=37 failed=0
+2026-10-16T02:52:07.7519263Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_component_contract.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:52:07.7565014Z V1_COMPONENT_REPORT executed=24 passed=24 failed=0
+2026-10-16T02:52:21.1710143Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_feedback.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:52:21.1766735Z P4_4_REPORT executed=45 passed=45 failed=0
+2026-10-16T02:53:23.1245823Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_feedback_edges.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:23.1304887Z P4_4_EDGE_REPORT executed=80 passed=80 failed=0
+2026-10-16T02:53:24.4514207Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_lv40_ui.log", "errors": [], "warnings": ["line 3: WARNING: BLOCKED_CONTRACT: Lv40 playable BattleScreen/Controller wiring remains staging-only"], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:24.4572139Z P4_LV40_UI_STAGING_REPORT executed=10 passed=10 failed=0
+2026-10-16T02:53:25.0363697Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_localization.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:25.0424126Z P4_LOCALIZATION_REPORT executed=198 passed=198 failed=0
+2026-10-16T02:53:25.7128651Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_lv40_readmodel.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:25.7185850Z P4_READMODEL_REPORT executed=29 passed=29 failed=0
+2026-10-16T02:53:26.2990451Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_balance_metrics.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:26.3047734Z P4_BALANCE_METRICS_REPORT executed=35 passed=35 failed=0
+2026-10-16T02:53:26.5993428Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_profile_metrics.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:26.6051305Z P4_PROFILE_METRICS_REPORT executed=30 passed=30 failed=0
+2026-10-16T02:53:26.8953032Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/legacy-test_battle_state.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:53:28.2219350Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/legacy-test_deck_builder.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:53:29.6380592Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/legacy-test_combat_ui.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:53:31.9846010Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/legacy-test_turn_flow.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:53:33.6830000Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v2_layout.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:33.6909201Z V2_LAYOUT_REPORT executed=18 passed=18 failed=0
+2026-10-16T02:53:35.1059701Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v2_context_layout.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:35.1113737Z V2_CONTEXT_REPORT executed=23 passed=23 failed=0
+2026-10-16T02:53:37.1770750Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v24_hand.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:37.1825348Z V24_HAND_REPORT executed=39 passed=39 failed=0
+2026-10-16T02:53:41.1072830Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v27_face_bounds.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:41.1128279Z V27_FACE_REPORT executed=8 passed=8 failed=0
+2026-10-16T02:53:42.5270033Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v31_visual.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:42.5325443Z V31_VISUAL_REPORT executed=31 passed=31 failed=0
+2026-10-16T02:53:44.2245552Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v32_card.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:44.2303166Z V32_CARD_REPORT executed=73 passed=73 failed=0
+2026-10-16T02:53:45.6449206Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v33_boss.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:45.6505098Z V33_BOSS_REPORT executed=47 passed=47 failed=0
+2026-10-16T02:53:51.2506228Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v3_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:51.2563868Z V3_MERGE_REPORT executed=90 passed=90 failed=0
+2026-10-16T02:53:52.8584985Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v34_roster_command.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:52.8642036Z V34_ROSTER_COMMAND_REPORT executed=102 passed=102 failed=0
+2026-10-16T02:53:53.2534721Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v34_legacy_roster.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:53.2591283Z V34_LEGACY_ROSTER_REPORT executed=18 passed=18 failed=0
+2026-10-16T02:53:54.7622033Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v35_resources.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:54.7678504Z V35_RESOURCES_REPORT executed=32 passed=32 failed=0
+2026-10-16T02:53:56.8326346Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v35_party.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:56.8382360Z V35_PARTY_REPORT executed=57 passed=57 failed=0
+2026-10-16T02:53:58.5306703Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v35_command.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:53:58.5361123Z V35_COMMAND_REPORT executed=30 passed=30 failed=0
+2026-10-16T02:54:00.3219030Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v35_intent.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:54:00.3265514Z V35_INTENT_REPORT executed=35 passed=35 failed=0
+2026-10-16T02:54:02.0231077Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v35_log.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:54:02.0295159Z V35_LOG_REPORT executed=33 passed=33 failed=0
+2026-10-16T02:54:03.8186634Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/p4-logs/test_p4_v35_convergence.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:54:03.8243587Z V35_CONVERGENCE_REPORT executed=25 passed=25 failed=0
+2026-10-16T02:54:03.8248245Z CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0
+2026-10-16T02:54:03.8249386Z GUI_NOT_VERIFIED: restricted historical GUI input suite NOT rerun

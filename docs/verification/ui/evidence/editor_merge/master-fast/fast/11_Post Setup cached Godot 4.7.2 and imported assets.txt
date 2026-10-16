@@ -1,0 +1,14 @@
+﻿2026-10-16T02:59:05.0049484Z Post job cleanup.
+2026-10-16T02:59:05.0055112Z ##[start-action display=Restore Godot asset import cache;id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.import-cache]
+2026-10-16T02:59:05.5325313Z Post job cleanup.
+2026-10-16T02:59:05.6467571Z (node:2389) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:59:05.6474658Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:59:05.6747626Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --files-from manifest.txt --use-compress-program zstdmt
+2026-10-16T02:59:06.1263096Z Failed to save: Unable to reserve cache with key godot-import-ubuntu24-4.7.2-v1-403e6189713fe6eef62731bb366648d080acb1623d089fd9c8339c2c3d465dd3, another job may be creating this cache.
+2026-10-16T02:59:06.1362033Z ##[end-action id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.import-cache;outcome=success;conclusion=success;duration_ms=1130]
+2026-10-16T02:59:06.1366954Z ##[start-action display=Restore official Godot executable;id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.binary-cache]
+2026-10-16T02:59:06.1432315Z Post job cleanup.
+2026-10-16T02:59:06.2568866Z Cache hit occurred on the primary key godot-4.7.2-linux-x86_64-verified-v1, not saving cache.
+2026-10-16T02:59:06.2570565Z (node:2410) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:59:06.2574071Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:59:06.2611698Z ##[end-action id=__52e3aa14-9070-4ff7-ba1a-832d534beb64.binary-cache;outcome=success;conclusion=success;duration_ms=124]

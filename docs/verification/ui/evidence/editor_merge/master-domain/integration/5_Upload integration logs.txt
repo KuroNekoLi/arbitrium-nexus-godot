@@ -1,0 +1,26 @@
+﻿2026-10-16T02:58:40.0238829Z ##[group]Run actions/upload-artifact@v4
+2026-10-16T02:58:40.0239173Z with:
+2026-10-16T02:58:40.0239391Z   name: ci-integration-logs
+2026-10-16T02:58:40.0239711Z   path: /home/runner/work/_temp/integration-logs/
+2026-10-16T02:58:40.0240220Z   retention-days: 14
+2026-10-16T02:58:40.0240467Z   if-no-files-found: warn
+2026-10-16T02:58:40.0240712Z   compression-level: 6
+2026-10-16T02:58:40.0240936Z   overwrite: false
+2026-10-16T02:58:40.0241166Z   include-hidden-files: false
+2026-10-16T02:58:40.0241406Z env:
+2026-10-16T02:58:40.0241918Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:58:40.0242515Z ##[endgroup]
+2026-10-16T02:58:40.1985542Z (node:2560) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:58:40.1987178Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:58:40.2324452Z With the provided path, there will be 27 files uploaded
+2026-10-16T02:58:40.2325454Z Artifact name is valid!
+2026-10-16T02:58:40.2325909Z Root directory input is valid!
+2026-10-16T02:58:40.6041948Z Beginning upload of artifact content to blob storage
+2026-10-16T02:58:40.6713513Z (node:2560) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:58:40.9429162Z Uploaded bytes 30845
+2026-10-16T02:58:41.0076848Z Finished uploading artifact content to blob storage!
+2026-10-16T02:58:41.0078895Z SHA256 digest of uploaded artifact zip is 2121c4b28b631a26f85a0f9c609706539e327bfcede55f095be09eaa32e6da41
+2026-10-16T02:58:41.0080179Z Finalizing artifact upload
+2026-10-16T02:58:41.3026780Z Artifact ci-integration-logs.zip successfully finalized. Artifact ID 12021783053
+2026-10-16T02:58:41.3029251Z Artifact ci-integration-logs has been successfully uploaded! Final size is 30845 bytes. Artifact ID is 12021783053
+2026-10-16T02:58:41.3038311Z Artifact download URL: https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38843037835/artifacts/12021783053

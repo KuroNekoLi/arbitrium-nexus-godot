@@ -1,0 +1,44 @@
+﻿2026-10-16T02:57:21.2348155Z ##[group]Run set -Eeuo pipefail
+2026-10-16T02:57:21.2348671Z [36;1mset -Eeuo pipefail[0m
+2026-10-16T02:57:21.2349033Z [36;1mmkdir -p "$RUNNER_TEMP/fast-logs"[0m
+2026-10-16T02:57:21.2349669Z [36;1mpython3 -m unittest discover -s tests/ci -p 'test_*.py' -v > "$RUNNER_TEMP/fast-logs/ci-tests.log" 2>&1 || {[0m
+2026-10-16T02:57:21.2350267Z [36;1m  cat "$RUNNER_TEMP/fast-logs/ci-tests.log"; exit 1;[0m
+2026-10-16T02:57:21.2350639Z [36;1m}[0m
+2026-10-16T02:57:21.2351369Z [36;1mtimeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/fast-logs/import.log" 2>&1 || {[0m
+2026-10-16T02:57:21.2351981Z [36;1m  cat "$RUNNER_TEMP/fast-logs/import.log"; exit 1;[0m
+2026-10-16T02:57:21.2352414Z [36;1m}[0m
+2026-10-16T02:57:21.2352823Z [36;1mpython3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/fast-logs/import.log"[0m
+2026-10-16T02:57:21.2353355Z [36;1mfor spec in \[0m
+2026-10-16T02:57:21.2353730Z [36;1m  'test_m5_integration:M5_5_INTEGRATION_REPORT:32' \[0m
+2026-10-16T02:57:21.2354277Z [36;1m  'test_m5_replay:M5_5_REPLAY_REPORT:15' \[0m
+2026-10-16T02:57:21.2354840Z [36;1m  'test_m5_fast_seeds:M5_5_FAST_SEEDS_REPORT:5' \[0m
+2026-10-16T02:57:21.2355269Z [36;1m  'test_p4_scene:P4_1_REPORT:8' \[0m
+2026-10-16T02:57:21.2355643Z [36;1m  'test_p4_hud:P4_2_REPORT:36' \[0m
+2026-10-16T02:57:21.2356044Z [36;1m  'test_p4_integration:P4_3_REPORT:31' \[0m
+2026-10-16T02:57:21.2356505Z [36;1m  'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32' \[0m
+2026-10-16T02:57:21.2357037Z [36;1m  'test_screenshot_writer:SCREENSHOT_WRITER_REPORT:46'; do[0m
+2026-10-16T02:57:21.2357557Z [36;1m  bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/fast-logs"[0m
+2026-10-16T02:57:21.2357983Z [36;1mdone[0m
+2026-10-16T02:57:21.2358371Z [36;1mecho 'CI_FAST_VERIFIED (Headless only)'[0m
+2026-10-16T02:57:21.2397699Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:57:21.2398280Z env:
+2026-10-16T02:57:21.2398860Z   GODOT_BIN: /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot/.ci-cache/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64
+2026-10-16T02:57:21.2399553Z ##[endgroup]
+2026-10-16T02:58:08.1851417Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/import.log", "errors": [], "warnings": [], "summaries": 0}], "errors": 0}
+2026-10-16T02:58:10.6166389Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_m5_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:10.6229711Z M5_5_INTEGRATION_REPORT executed=32 passed=32 failed=0
+2026-10-16T02:58:17.6073887Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_m5_replay.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:17.6135120Z M5_5_REPLAY_REPORT executed=15 passed=15 failed=0
+2026-10-16T02:58:27.5741896Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_m5_fast_seeds.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:27.5794445Z M5_5_FAST_SEEDS_REPORT executed=5 passed=5 failed=0
+2026-10-16T02:58:28.9867679Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_scene.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:28.9919165Z P4_1_REPORT executed=8 passed=8 failed=0
+2026-10-16T02:58:31.0536230Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_hud.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:31.0588374Z P4_2_REPORT executed=36 passed=36 failed=0
+2026-10-16T02:58:34.4273571Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_integration.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:58:34.4327293Z P4_3_REPORT executed=31 passed=31 failed=0
+2026-10-16T02:59:03.6048831Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_p4_lv40_playable.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:59:03.6101798Z P4_LV40_PLAYABLE_REPORT executed=32 passed=32 failed=0
+2026-10-16T02:59:03.9007659Z CI_LOG_GATE {"files": [{"path": "/home/runner/work/_temp/fast-logs/test_screenshot_writer.log", "errors": [], "warnings": [], "summaries": 1}], "errors": 0}
+2026-10-16T02:59:03.9060767Z SCREENSHOT_WRITER_REPORT executed=46 passed=46 failed=0
+2026-10-16T02:59:03.9064415Z CI_FAST_VERIFIED (Headless only)

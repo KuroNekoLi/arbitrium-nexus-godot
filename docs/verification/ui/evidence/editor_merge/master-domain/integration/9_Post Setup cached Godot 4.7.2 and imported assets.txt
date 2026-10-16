@@ -1,0 +1,17 @@
+﻿2026-10-16T02:58:41.3240167Z Post job cleanup.
+2026-10-16T02:58:41.3244561Z ##[start-action display=Restore Godot asset import cache;id=__af1e299c-6684-46f3-bc4d-2206ac181f73.import-cache]
+2026-10-16T02:58:42.0155554Z Post job cleanup.
+2026-10-16T02:58:42.1385247Z (node:2585) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:58:42.1386741Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:58:42.2032221Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/arbitrium-nexus-godot/arbitrium-nexus-godot --files-from manifest.txt --use-compress-program zstdmt
+2026-10-16T02:58:42.6776538Z (node:2585) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:58:43.6671185Z Sent 42008576 of 85192144 (49.3%), 40.1 MBs/sec
+2026-10-16T02:58:44.4436582Z Sent 85192144 of 85192144 (100.0%), 45.7 MBs/sec
+2026-10-16T02:58:44.6534535Z Cache saved with key: godot-import-ubuntu24-4.7.2-v1-403e6189713fe6eef62731bb366648d080acb1623d089fd9c8339c2c3d465dd3
+2026-10-16T02:58:44.6632789Z ##[end-action id=__af1e299c-6684-46f3-bc4d-2206ac181f73.import-cache;outcome=success;conclusion=success;duration_ms=3338]
+2026-10-16T02:58:44.6637702Z ##[start-action display=Restore official Godot executable;id=__af1e299c-6684-46f3-bc4d-2206ac181f73.binary-cache]
+2026-10-16T02:58:44.6695162Z Post job cleanup.
+2026-10-16T02:58:44.7903095Z Cache hit occurred on the primary key godot-4.7.2-linux-x86_64-verified-v1, not saving cache.
+2026-10-16T02:58:44.7904882Z (node:2605) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:58:44.7907543Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:58:44.7976358Z ##[end-action id=__af1e299c-6684-46f3-bc4d-2206ac181f73.binary-cache;outcome=success;conclusion=success;duration_ms=133]
