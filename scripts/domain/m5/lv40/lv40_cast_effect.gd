@@ -20,7 +20,9 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 		return {"ok":false,"error":"LV40_CASTER_HP0_RELEASE_FORBIDDEN"}
 	if is_last:
 		var release_cast: Dictionary = cast.duplicate(true)
-		var current_targets: Array[String] = LastTargets.recipients(next, actor, target, config)
+		var current_targets: Array[String] = []
+		for candidate: String in LastTargets.recipients(next, actor, target, config):
+			current_targets.append(candidate)
 		var target_definition: Dictionary = LastTargets.definition(config, actor)
 		if target_definition.get("scope", "") == "ALL" and not target_definition.get("legacy", false) and not current_targets.is_empty():
 			# An AoE anchor is a command compatibility field, not a selected victim.
@@ -52,7 +54,8 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 	var denominator: int = int(cast.get("outcome_modifier_denominator",1))
 	var recipients: Array[String] = []
 	if is_last:
-		recipients = LastTargets.recipients(next, actor, target, config)
+		for candidate: String in LastTargets.recipients(next, actor, target, config):
+			recipients.append(candidate)
 	else:
 		recipients.append(target)
 	if not is_last and bool(next["battle"].get("retired_from_field_by_actor", {}).get(target, false)):

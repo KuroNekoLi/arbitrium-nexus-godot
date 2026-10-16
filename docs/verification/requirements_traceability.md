@@ -1,5 +1,7 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+2026-10-16 Lv40 Full Chant／Last Spell 目標清單型別修復：使用者實機堆疊 → `lv40_cast_effect.gd` 兩處逐項加入 typed array → `test_lv40_domain.gd` DEMO-12、83/83 與 strict import；證據與限制見 [Casting Array Fix Note](ui/LV40_CAST_TARGET_ARRAY_FIX_20261016.md)。不將 headless PASS 當真人 GUI 驗收。
+
 2026-10-16 RET-01～05：使用者核准耗竭真正退場、敵存活且無存活在場我方判DEFEAT；新版Lv40配置v3、效果後退場、非法目標原子拒絕、舊配置Replay隔離。來源見 [核准紀錄](../combat/LAST_SPELL_RETIREMENT_APPROVED_20261016.md)，本輪證據及測試次數見 [整合Note](ui/V3_RETIREMENT_INTEGRATION_NOTE_20261016.md)。本條不升級歷史GUI或美術驗收。
 
 2026-10-16 Last Spell 範圍 UI：LST-UI01～05／LST-DOM01／LST-COMPAT01 與新群組 22/22→26/26→26/28→使用者明確追加一次29/29 見 [Last Scope Note](ui/LAST_SPELL_TARGET_SCOPE_ENGINEERING_NOTE_20261016.md)。SCOPED_NATIVE_VERIFIED；既有完整回歸／CI未重跑，非使用者高保真驗收完成。
