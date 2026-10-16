@@ -46,6 +46,12 @@ func _run() -> void:
 			"ROSTER-LAST-EFFECT-"+actor)
 		check(content["last_spell_name_keys"][actor] == data["actors"][actor]["last_spell_name_key"],
 			"ROSTER-LAST-NAME-"+actor)
+	var rules: Dictionary = content["lv40_card_eligibility"]
+	check(rules.size() == 31, "ROSTER-31-ELIGIBILITY-DEFINITIONS")
+	check(Roster.eligible(rules["U05"], "future_person", []), "ROSTER-UNIVERSAL-REPLACEABLE")
+	check(Roster.eligible(rules["R01"], "future_person", ["SWORDSMAN"]), "ROSTER-ROLE-REPLACEABLE")
+	check(not Roster.eligible(rules["R06"], "future_person", ["SWORDSMAN"]), "ROSTER-CHARACTER-EXCLUSIVE")
+	check(not Roster.eligible(rules["R01"], "future_person", ["HEALER"]), "ROSTER-TAG-EXCLUSIVE")
 	var state: Dictionary = Encounter.initial(20261014)
 	check(not state.is_empty(), "ROSTER-INITIAL-BATTLE")
 	if not state.is_empty():

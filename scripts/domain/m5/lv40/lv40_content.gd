@@ -13,6 +13,10 @@ static func config(version: String) -> Dictionary:
 	var roster: Dictionary = Roster.read()
 	if roster.is_empty():
 		return {}
+	var eligibility: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://resources/combat/cards/lv40_eligibility_v0_3.json"))
+	if not eligibility is Dictionary:
+		return {}
 	var costs: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://resources/combat/rulesets/m2_2_provisional_costs.json"))
 	var economy: Dictionary = costs.duplicate(true)
@@ -36,6 +40,7 @@ static func config(version: String) -> Dictionary:
 			"denominator":2,"rounding":"FLOOR_FIXTURE"},
 		"m5_4_last_release_recoil":{},
 		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
+	c["lv40_card_eligibility"] = eligibility.get("cards", {})
 	c["lv40_actor_passives"] = {}
 	c["last_spell_name_keys"] = {}
 	c["lv40_boss_target_character_id"] = str(roster["boss"].get("preferred_target_character_id",""))
@@ -61,7 +66,8 @@ static func config(version: String) -> Dictionary:
 			"accuracy":int(r["accuracy"]),"evasion":int(r["evasion"]),
 			"crit_rate_bp":int(r["crit_rate_bp"]),"crit_bonus_bp":int(r["crit_bonus_bp"])}
 		c["lv40_actor_definitions"][actor] = {"max_hp":int(r["max_hp"]),"max_mp":int(r["max_mp"]),
-			"character_id":str(r["character_id"]),"name_key":str(r["name_key"]),"level":40}
+			"character_id":str(r["character_id"]),"name_key":str(r["name_key"]),
+			"role_tags":r.get("role_tags",[]).duplicate(),"level":40}
 		c["m5_element_resistance"][actor] = {"NEUTRAL":10000,"FIRE":11500 if actor == "Boss" else 10000,
 			"ARCANE":9000 if actor == "Boss" else 10000}
 	c["m5_basic_attack_profile"] = profile("PHYSICAL",10000,1,"RANDOM_PERCENT")
