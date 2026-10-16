@@ -90,6 +90,8 @@ func _ready() -> void:
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)
+	hud.card_drag_started.connect(_begin_card_arrow)
+	hud.card_chant_held.connect(_on_card_arrow_chant)
 	hud.command_requested.connect(_command_requested)
 	hud.target_requested.connect(select_target)
 	hud.confirm_requested.connect(confirm_action)
@@ -328,6 +330,7 @@ func confirm_action() -> void:
 	action_requested.emit(pending_command.duplicate(true))
 
 func cancel_action() -> void:
+	if is_node_ready(): hud.end_targeting_arrow()
 	pending_card = ""
 	pending_kind = ""
 	selected_target = ""
@@ -352,6 +355,29 @@ func cancel_action() -> void:
 	hud.combo.hide()
 	hud.confirm_button.disabled = true
 	hud.feedback.text = ""
+
+func _begin_card_arrow(instance: String) -> void:
+	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible:
+		return
+	var found: bool = false
+	for card: Control in hud.card_views:
+		if str(card.instance_id) == instance:
+			found = bool(card.legal)
+			break
+	if not found:
+		return
+	# Reuse the existing authoritative preview and CardInstanceID.
+	select_card(instance, false)
+	if pending_card == instance and not legal_targets.is_empty():
+		hud.begin_targeting_arrow(instance,legal_targets)
+
+func _on_card_arrow_chant(instance: String, full: bool) -> void:
+	if pending_card != instance or not hud.targeting_arrow.is_aiming:
+		return
+	# Full Chant may alter the legal target set. Revalidate in the Domain
+	# preview instead of allowing an outdated arrow to imply legality.
+	var mode: String = "FULL" if full else "CHANTLESS"
+	hud.update_targeting_arrow(_targets_for_card(instance,mode))
 
 func _drop_card(instance: String, pointer: Vector2) -> void:
 	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible:

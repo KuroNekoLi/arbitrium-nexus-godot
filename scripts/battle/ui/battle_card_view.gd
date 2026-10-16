@@ -2,6 +2,7 @@ extends "res://addons/simple_cards/card/card.gd"
 const Frame = preload("res://scripts/battle/ui/components/battle_card_frame.gd")
 signal selection_requested(instance: String)
 signal release_requested(instance: String, pointer: Vector2)
+signal drag_requested(instance: String)
 signal chant_held(instance: String, full: bool)
 const FULL_CHANT_HOLD_SECONDS: float = 0.45
 var can_full_chant: bool = false
@@ -58,7 +59,9 @@ func _card_ready() -> void:
 	face.add_child(chant_hint)
 	tooltip_text = tr(appearance.description_key) + ("\n" + unavailable_reason if not legal else "")
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
-	drag_started.connect(func(_card: Card) -> void: z_index = 90)
+	drag_started.connect(func(_card: Card) -> void:
+		z_index = 90
+		drag_requested.emit(instance_id))
 	drag_ended.connect(func(_card: Card) -> void:
 		release_requested.emit(instance_id,get_global_mouse_position())
 		_restore_home.call_deferred()

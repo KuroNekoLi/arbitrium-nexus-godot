@@ -9,12 +9,15 @@ const ContextScene = preload("res://scenes/battle/ui/action_context_panel.tscn")
 const LogScene = preload("res://scenes/battle/ui/battle_log_panel.tscn")
 const HandScene = preload("res://scenes/battle/ui/hand_view.tscn")
 const TargetsScene = preload("res://scenes/battle/ui/target_hit_regions.tscn")
+const ArrowOverlay = preload("res://scripts/battle/ui/components/card_targeting_arrow_overlay.gd")
 const ReactionScene = preload("res://scenes/battle/ui/reaction_queue.tscn")
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 
 signal actor_requested(actor: String)
 signal card_requested(instance: String)
 signal card_released(instance: String, pointer: Vector2)
+signal card_drag_started(instance: String)
+signal card_chant_held(instance: String, full: bool)
 signal command_requested(kind: String, fields: Dictionary)
 signal target_requested(actor: String)
 signal confirm_requested()
@@ -54,6 +57,7 @@ var _commands: Control
 var _enemy: Control
 var _context: Control
 var _log: Control
+var targeting_arrow: Control
 var _targets: Control
 var _modal_shield: Control
 var _modal_active: bool = false
@@ -162,13 +166,24 @@ func _build() -> void:
 	hand = _place(HandScene, Rect2(290, 470, 686, 240))
 	card_views = hand.card_views
 	hand.card_requested.connect(func(instance: String) -> void: card_requested.emit(instance))
-	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void: card_released.emit(instance, pointer))
+	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void:
+		end_targeting_arrow()
+		card_released.emit(instance, pointer))
+	hand.card_drag_started.connect(func(instance: String) -> void: card_drag_started.emit(instance))
 	hand.chant_held.connect(func(instance: String, full: bool) -> void:
+		card_chant_held.emit(instance,full)
 		command_requested.emit("HOLD_CHANT", {"instance_id": instance, "full": full}))
 
 	_targets = _place(TargetsScene, Rect2(0, 0, 1280, 720))
 	target_buttons = _targets.target_buttons
 	_targets.target_requested.connect(func(actor: String) -> void: target_requested.emit(actor))
+	# Visual-only aim path. No input interception and no Domain access.
+	targeting_arrow = ArrowOverlay.new()
+	targeting_arrow.name = "CardTargetingArrow"
+	targeting_arrow.position = Vector2.ZERO
+	targeting_arrow.size = Vector2(1280,720)
+	targeting_arrow.z_index = 75
+	add_child(targeting_arrow)
 
 	reaction_panel = _place(ReactionScene, Rect2(300, 154, 665, 305)) as PanelContainer
 	reaction_panel.z_index = 100
@@ -295,6 +310,26 @@ func _arrange_hand() -> void:
 func _render_reaction(choices: Array) -> void:
 	# Legacy compatibility adapter; the ReactionQueue owns draft rows.
 	reaction_panel.render_window(vm["reaction"], choices,vm.get("actor_name_keys",{}))
+
+func begin_targeting_arrow(instance: String, targets: Array) -> void:
+	var source: Vector2 = Vector2.ZERO
+	var found: bool = false
+	for card: Control in card_views:
+		if str(card.instance_id) == instance:
+			# Anchor to the slot in the fan, not the moving dragged card.
+			source = hand.to_global(card.home + Vector2(card.size.x * 0.5, card.size.y * 0.22))
+			found = true
+			break
+	if found:
+		targeting_arrow.begin_aim(source,targets,target_buttons)
+
+func update_targeting_arrow(targets: Array) -> void:
+	if targeting_arrow.is_aiming:
+		targeting_arrow.update_legal_targets(targets)
+
+func end_targeting_arrow() -> void:
+	if targeting_arrow != null:
+		targeting_arrow.end_aim()
 
 func set_targets(ids: Array) -> void:
 	_targets.set_targets(ids)
