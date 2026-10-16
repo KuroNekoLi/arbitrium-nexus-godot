@@ -14,3 +14,12 @@
 - 新視覺皆為可替換 placeholder；三份既有 state atlas 為來源待確認候選，不宣稱正式美術採用。未生成／下載新圖。
 
 Master 最終合併 SHA、遠端推送及 ancestry 檢查將附於下方；未 force push、未刪除來源分支。
+
+## 已完成的 master 更新
+
+- Master merge：`
+2ff61ba3b0da63ce21fc1a6d1971c6fb3ad66790
+`。
+- Remote `origin/master` 已由 `50bf7b1` 正常推送至此合併提交；沒有 force push。
+- `git branch -a --no-merged HEAD` 輸出為空：本輪盤點的本機／origin 分支均為 master 祖先。
+- 來源分支保留；原工作目錄未提交內容不納入合併。
