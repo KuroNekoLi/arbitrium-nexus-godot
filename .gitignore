@@ -30,3 +30,7 @@ __pycache__/
 
 # NOTE: *.uid files are intentionally tracked (Godot 4.4+ recommendation and
 # existing repo convention); do not ignore them.
+
+# Godot Git Plugin may leave atomic-replacement copies while loading its
+# Windows editor extension. Keep the shipped DLL and import libraries tracked.
+addons/godot-git-plugin/win64/~libgit_plugin.windows.editor.x86_64.dll*
