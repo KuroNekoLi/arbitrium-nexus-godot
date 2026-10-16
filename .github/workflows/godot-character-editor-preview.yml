@@ -30,9 +30,13 @@ jobs:
         run: |
           set -Eeuo pipefail
           mkdir -p "$RUNNER_TEMP/character-preview"
+          # GitPlugin is a Windows editor setting, unavailable on Linux CI.
+          # Remove it only in this disposable checkout, NOT from tracked project.godot.
+          sed -i '/^version_control\/plugin_name=/d; /^version_control\/autoload_on_startup=/d' project.godot
           timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/character-preview/import.log" 2>&1 || {
             cat "$RUNNER_TEMP/character-preview/import.log"; exit 1;
           }
+          grep -n -B2 -A4 -E 'SCRIPT ERROR|^ERROR:' "$RUNNER_TEMP/character-preview/import.log" || true
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/character-preview/import.log"
       - name: New character appearance and editor isolation suite (35 assertions)
         shell: bash

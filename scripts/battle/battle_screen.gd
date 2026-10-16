@@ -45,7 +45,9 @@ var _last_actor_visibility: Dictionary = {}
 
 func _enter_tree() -> void:
 	if Engine.is_editor_hint():
-		# Never register gameplay input or reset the editor locale.
+		# Install our battle translations for formatted HUD labels without
+		# changing editor language or initializing any combat controller.
+		Translations.install()
 		return
 	Bindings.install()
 	Translations.install()
