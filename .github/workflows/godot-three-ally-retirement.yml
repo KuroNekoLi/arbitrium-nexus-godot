@@ -38,11 +38,6 @@ jobs:
           test -n "$bin"
           chmod +x "$bin"
           echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
-      - uses: actions/upload-artifact@v4
-        if: never()
-        with:
-          name: placeholder
-          path: '.'
       - name: Strict import and retirement contract
         shell: bash
         run: |
