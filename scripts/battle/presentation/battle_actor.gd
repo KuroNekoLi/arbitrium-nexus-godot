@@ -152,6 +152,19 @@ func play_attack(target_position: Vector2) -> void:
 	motion.tween_property(self,"position",from,0.22).set_trans(Tween.TRANS_CUBIC)
 	if not boss_art: motion.tween_callback(body.play.bind("idle"))
 
+## Stationary casting gesture; no scene movement or Domain state change.
+func play_spell_cast() -> void:
+	if Engine.is_editor_hint() or body == null or downed or retired:
+		return
+	if motion: motion.kill()
+	position = home
+	if not boss_art:
+		body.play("idle")
+	_align_frame()
+	body.modulate = base_tint.lightened(0.33)
+	var cast_flash: Tween = create_tween()
+	cast_flash.tween_property(body,"modulate",base_tint,0.31)
+
 func play_hit() -> void:
 	if Engine.is_editor_hint() or body == null or retired: return
 	body.modulate = Color(2,1.3,1.5)

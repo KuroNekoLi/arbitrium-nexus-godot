@@ -37,6 +37,47 @@ func burst(point: Vector2, magic: bool, tint: Color = Color.WHITE) -> void:
 	tween.tween_property(sprite,"modulate:a",0.0,0.25)
 	tween.tween_callback(sprite.queue_free)
 
+
+## An independent Godot visual object: the caster remains at its home slot.
+## Kenney Particle Pack sprites (already vendored, CC0); no collision or damage.
+func launch_projectile(start: Vector2, target: Vector2, style: String) -> void:
+	var registry := preload("res://scripts/battle/presentation/spell_animation_catalog.gd")
+	var texture: Texture2D = registry.projectile_texture(style)
+	if reduced_motion:
+		burst(target,true,registry.tint(style))
+		return
+	var projectile := Sprite2D.new()
+	projectile.name = "SpellProjectile"
+	projectile.texture = texture
+	projectile.position = start
+	projectile.z_index = 5
+	projectile.modulate = registry.tint(style)
+	projectile.scale = Vector2.ONE * (62.0 / maxf(1.0,float(maxi(texture.get_width(),texture.get_height()))))
+	projectile.rotation = (target-start).angle()
+	projectile.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	var material := CanvasItemMaterial.new()
+	material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	projectile.material = material
+	add_child(projectile)
+	var glow := Sprite2D.new()
+	glow.name = "SpellCore"
+	glow.texture = preload("res://addons/kenney_particle_pack/circle_04.png")
+	glow.modulate = Color(registry.tint(style),0.62)
+	glow.scale = Vector2.ONE * (38.0 / maxf(1.0,float(maxi(glow.texture.get_width(),glow.texture.get_height()))))
+	projectile.add_child(glow)
+	var tween: Tween = projectile.create_tween().set_parallel(true)
+	tween.tween_property(projectile,"position",target,0.34).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.tween_property(projectile,"rotation",projectile.rotation+PI*0.3,0.34)
+	tween.chain().tween_callback(projectile.queue_free)
+
+func casting_pulse(point: Vector2, style: String) -> void:
+	var registry := preload("res://scripts/battle/presentation/spell_animation_catalog.gd")
+	burst(point,true,registry.tint(style))
+
+func support_pulse(point: Vector2, style: String) -> void:
+	var registry := preload("res://scripts/battle/presentation/spell_animation_catalog.gd")
+	burst(point,true,registry.tint(style))
+
 func clear_effects() -> void:
 	for child: Node in get_children():
 		if child is AudioStreamPlayer: child.stop()

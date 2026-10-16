@@ -1,0 +1,61 @@
+name: Godot Spell Projectile Visuals
+on:
+  push:
+    branches: [feature/spell-projectile-visuals-20261016]
+    paths:
+      - '.github/workflows/godot-spell-projectile-visuals.yml'
+      - 'scripts/battle/battle_screen.gd'
+      - 'scripts/battle/presentation/battle_actor.gd'
+      - 'scripts/battle/presentation/battle_animation_director.gd'
+      - 'scripts/battle/presentation/battle_effects.gd'
+      - 'scripts/battle/presentation/spell_animation_catalog.gd'
+      - 'tests/test_spell_visual_foundation.gd'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  spell-visual:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and SHA512-check Godot 4.7.2
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/godot"
+          cd "$RUNNER_TEMP/godot"
+          root="https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable"
+          zip="Godot_v4.7.2-stable_linux.x86_64.zip"
+          curl -fLsS --retry 3 "$root/$zip" -o "$zip"
+          curl -fLsS --retry 3 "$root/SHA512-SUMS.txt" -o sums
+          grep -F "$zip" sums > selected.sha512
+          test "$(wc -l < selected.sha512)" -eq 1
+          sha512sum -c selected.sha512
+          unzip -q "$zip"
+          bin="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          chmod +x "$bin"
+          echo "GODOT_BIN=$bin" >> "$GITHUB_ENV"
+      - name: Import and targeted regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p evidence
+          timeout 120s "$GODOT_BIN" --headless --path . --editor --import --quit > evidence/import.log 2>&1 || { cat evidence/import.log; exit 1; }
+          python3 tools/ci/assert_godot_logs.py evidence/import.log
+          for name in test_spell_visual_foundation test_p4_integration test_p4_lv40_playable test_p4_v3_integration; do
+            timeout 160s "$GODOT_BIN" --headless --path . --script "res://tests/$name.gd" > "evidence/$name.log" 2>&1 || {
+              cat "evidence/$name.log"; exit 1;
+            }
+            python3 tools/ci/assert_godot_logs.py "evidence/$name.log"
+            grep -E 'REPORT executed=' "evidence/$name.log"
+          done
+          grep -qE '^SPELL_VISUAL_REPORT executed=[0-9]+ passed=[0-9]+ failed=0$' evidence/test_spell_visual_foundation.log
+          ! grep -q '^FAIL ' evidence/test_spell_visual_foundation.log
+      - name: Publish Godot logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spell-visual-verification-logs
+          path: evidence/
+          retention-days: 14
