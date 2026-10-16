@@ -44,7 +44,7 @@ static func initial(seed: int = 20261014) -> Dictionary:
 			"variant_id":definition["variant_id"],"tags":definition["role_tags"].duplicate()}
 		owned[actor] = {}
 		for card: String in loadout[actor]:
-			if not c["lv40_card_eligibility"].has(card) or not Roster.eligible(c["lv40_card_eligibility"][card],
+			if not c["lv40_cards"].has(card) or not c["lv40_card_eligibility"].has(card) or not Roster.eligible(c["lv40_card_eligibility"][card],
 					str(definition["character_id"]), definition["role_tags"]):
 				return {}
 			owned[actor][card] = int(owned[actor].get(card, 0)) + 1
