@@ -53,6 +53,15 @@ static func config(version: String) -> Dictionary:
 		c["m5_element_resistance"][actor] = {"NEUTRAL":10000,"FIRE":11500 if actor == "Boss" else 10000,
 			"ARCANE":9000 if actor == "Boss" else 10000}
 	c["m5_basic_attack_profile"] = profile("PHYSICAL",10000,1,"RANDOM_PERCENT")
+	var card_owners: Dictionary = {}
+	for active_actor: String in party_ids:
+		for assigned_card: String in roster["actors"][active_actor]["loadout"]:
+			if assigned_card.begins_with("U"):
+				continue
+			if card_owners.has(assigned_card) and card_owners[assigned_card] != active_actor:
+				card_owners[assigned_card] = "*"
+			elif not card_owners.has(assigned_card):
+				card_owners[assigned_card] = active_actor
 	var prices: Dictionary = {"U01":[1,2],"U02":[1,2],"U03":[1,1],"U04":[1,0],"U05":[1,2],
 		"R01":[1,0],"R02":[2,0],"R03":[1,1],"R05":[0,1],"R06":[2,2],"R07":[1,1],"R08":[1,2],
 		"A01":[1,2],"A02":[2,4],"A03":[1,1],"A04":[2,5],"A05":[1,2],"A06":[2,5],"A07":[1,3],
@@ -61,7 +70,7 @@ static func config(version: String) -> Dictionary:
 		c["definitions"][card] = {"card_id":card,"ap_cost":prices[card][0],"mp_cost":prices[card][1]}
 		c["lv40_cards"][card] = {"name_key":"LV40_"+card+"_NAME",
 			"description_key":"LV40_"+card+"_DESC",
-			"owner":"*" if card.begins_with("U") else {"R":"A","A":"B","T":"C"}[card.left(1)],
+			"owner":"*" if card.begins_with("U") else str(card_owners.get(card, "")),
 			"kind":"SUPPORT","mode":"INSTANT"}
 	var magic: Dictionary = {"U01":[8500,14500,"ARCANE"],"A01":[10000,16500,"FIRE"],
 		"A02":[6800,11500,"FIRE"],"A04":[14500,21500,"FIRE"],
