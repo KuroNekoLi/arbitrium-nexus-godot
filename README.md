@@ -1,47 +1,30 @@
-# 仲裁核心
+# Arbitrium Nexus｜Godot 三人卡牌 RPG
 
-> **現行戰鬥玩法唯一入口：** [docs/combat/README.md](docs/combat/README.md)。新版各系統規則、[31張候選技能圖鑑](docs/combat/卡牌圖鑑.md)與[Agent實作契約](docs/combat/engineering/戰鬥引擎實作契約.md)已整合。**每人12張牌組／起手4／手牌最多8／全隊共享6AP**；本README下方8卡／兩次出牌等敘述是**舊UI原型使用說明**，不代表現行規格。Lv40另有 `scenes/battle/lv40_playable_battle.tscn` 的正向接線測試，仍須核對正式可玩驗收。
+目前唯一的預設遊戲入口：`project.godot` → `res://scenes/battle/lv40_playable_battle.tscn`。
 
-Godot 4.x 單人 2D 橫向回合制卡牌 JRPG 原型，採 1280×720（16:9）畫面。
+## 已確認的玩法
+每名戰鬥角色**各自持有12張技能卡**，開局各抽4張，每個玩家階段不足4才補至4，手牌上限8。全隊共享基準6AP，MP各人獨立且不會每回合自然回滿；沒有「每人最多出兩張」的舊版限制。敵方反應窗口不計時自動Pass；終式獨立、成功後耗竭。
 
-## 執行
+## 角色與牌組：資料驅動
+`resources/combat/rosters/lv40_party_v0_3.json` 定義目前示範戰的3個戰鬥槽位、角色身分、形態、name_key、立繪資源、能力及每人12張起始牌。新增或替換角色應修改內容檔與對應翻譯／美術／技能內容，不應在 BattleScreen、CardCatalog 或牌組儲存器寫死人物名字。
 
-以 Godot 4.x 開啟本資料夾並執行主場景。
+原8張卡原型已從正式遊戲入口撤下；本專案的 M1～M5 Domain 與 Lv40 正向場景為唯一開發路線。**內容數值仍為候選**，尚需依真實 Godot 對局與CI確認；不能由 README 或舊原型覆寫正式戰鬥規格。
 
-## 操作
+## 文件與實作
+- [現行戰鬥規則（唯一入口）](docs/combat/README.md)
+- [角色圖鑑](docs/combat/角色圖鑑.md)
+- [卡牌圖鑑與起始牌組](docs/combat/卡牌圖鑑.md)
+- [工程實作契約](docs/combat/engineering/戰鬥引擎實作契約.md)
+- [規則與程式對照](docs/combat/engineering/規則與程式對照表.md)
+- [UI規格](docs/ui/README.md)
 
-- 點擊角色面板，切換至該角色獨立的牌組與手牌。
-- 我方階段將普通卡牌拖曳至戰場出牌；全隊每階段最多普通出牌兩次。
-- 點擊「結束回合」揭露首領意圖；首領會在可用反應窗口結束後自動行動。
-- 反應窗口內若持有可用的「中斷反制」且能量足夠，可拖曳至戰場取消意圖；也可按「略過反應」立即結算。沒有可用反應時，首領立即自動行動。
-- 點擊「牌組編輯」可從 12 種卡牌 Resource 為每位角色挑選 8 張牌，儲存／載入牌組、匯出 JSON，或套用設定並重新開始戰鬥。
-- 卡牌拖曳、追蹤與放開判定使用開源 Simple Cards `Card` 元件；卡面與戰鬥規則由本專案實作。
-- 卡牌懸停會抬起，無效放置會彈回；有效出牌時卡牌飛入戰場、角色移動並播放專屬動作，命中後才結算傷害。
-- 角色列與首領資訊框使用 Kenney Fantasy UI Borders；戰鬥命中、魔法支援與中斷使用 Kenney 粒子素材；卡牌懸停／拖取、角色選擇與按鈕提供 UI 音效，攻擊出招與敵方命中另有戰鬥音效。第三方素材來源與授權列於 [CREDITS.md](CREDITS.md)。
-
-## 驗證
-
-```text
-godot --headless --path . --script res://tests/test_battle_state.gd
-godot --headless --path . --script res://tests/test_combat_ui.gd
-godot --headless --path . --script res://tests/test_deck_builder.gd
+## 目前有效的驗證
+```bash
+godot --headless --path . --editor --import --quit
+godot --headless --path . --script res://tests/test_lv40_roster.gd
+godot --headless --path . --script res://tests/test_lv40_content.gd
+godot --headless --path . --script res://tests/test_p4_lv40_playable.gd
 ```
+完整自動化以 `.github/workflows/ci-fast.yml`、`ci-integration.yml` 與 M5 regression workflow 的最新證據為準。**提交程式碼不等於這些測試已通過**。翻譯以 `resources/ui/lv40_strings.csv` 和戰鬥既有翻譯資源為準。
 
-重新擷取執行畫面（需圖形環境）：
-
-```text
-godot --path . --script res://tests/capture_combat_screenshots.gd
-godot --path . --script res://tests/capture_deck_builder.gd
-```
-
-畫面證據：[主戰鬥介面](outputs/combat_ui_mvp.png)、[牌組編輯器](outputs/deck_builder.png)、[角色突進／卡牌飛行](outputs/card_attack_midflight.png)、[命中結果](outputs/card_attack_impact.png)。
-
-戰鬥規格 Source of Truth：[docs/combat/README.md](docs/combat/README.md)；舊 `docs/COMBAT_RULES_V1.md` 為歷史原型說明。
-
-## 範圍
-
-M0–M5 MVP 已完成：包含可執行專案、純戰鬥引擎與固定種子測試、獨立牌組與抽牌、能量保留、每階段出牌上限、反應中斷、首領生命／穩定度／弱點節點、分析與敵方意圖、可玩的 16:9 戰鬥介面，以及可編輯、儲存、載入與匯出 JSON 的牌組編輯器。克蕾雅、諾瓦、尤拉各有待機／奔跑／出招逐格圖集；不同卡牌類型有各自配色、圖樣與施放特效。這是功能完整的 MVP 原型，尚未達商業發行產品的最終內容與打磨標準。
-
-## 後續 UI／美術／動畫交接（僅規劃）
-
-未來 Agent 請從 [docs/ui/README.md](docs/ui/README.md) 開始。該文件僅記錄戰鬥 HUD 模板化、獨立素材、角色／Boss 動畫及驗收規劃，**尚未實作**。其戰鬥規則必須以 `docs/combat/` 最新核准決策為準；本 README 中的既有原型操作說明不代表最新核准規格。
+原型視覺素材與第三方資源保留其授權記錄，詳見 [CREDITS](CREDITS.md)。切換新的角色資產前須確認影像與授權，不要因清除舊程式直接刪除仍被場景引用的素材。
