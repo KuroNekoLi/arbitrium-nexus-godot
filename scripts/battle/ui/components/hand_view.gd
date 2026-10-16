@@ -5,6 +5,7 @@ const CardView = preload("res://scripts/battle/ui/battle_card_view.gd")
 const HandArc = preload("res://addons/simple_cards/shape/premade_shapes/arc_shape.gd")
 signal card_requested(instance: String)
 signal card_released(instance: String, pointer: Vector2)
+signal card_drag_started(instance: String)
 signal chant_held(instance: String, full: bool)
 
 var card_views: Array[Control] = []
@@ -45,6 +46,7 @@ func render_cards(cards: Array) -> void:
 		add_child(card)
 		card.selection_requested.connect(func(id: String) -> void: card_requested.emit(id))
 		card.release_requested.connect(func(id: String, point: Vector2) -> void: card_released.emit(id, point))
+		card.drag_requested.connect(func(id: String) -> void: card_drag_started.emit(id))
 		card.chant_held.connect(func(id: String, full: bool) -> void: chant_held.emit(id, full))
 		card_views.append(card)
 	_arrange_hand()

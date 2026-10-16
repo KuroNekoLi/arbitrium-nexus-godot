@@ -17,6 +17,11 @@ const LogFormatter = preload("res://scripts/battle/presentation/battle_log_forma
 const LastView = preload("res://scripts/battle/presentation/last_spell_read_model.gd")
 const Appearances = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 const EditorPreview = preload("res://scripts/battle/presentation/battle_editor_preview_data.gd")
+const Preparation = preload("res://scripts/battle/combo_preparation_controller.gd")
+const ComboPreview = preload("res://scripts/battle/presentation/combo_preview.gd")
+const Prepared = preload("res://scripts/domain/m5/combo/prepared_combo_resolver.gd")
+var preparation: RefCounted = Preparation.new()
+var combo_comparison: Dictionary = {}
 @export_enum("Battle", "Last Spell Slot 1", "Last Spell Slot 2", "Last Spell Slot 3") var editor_preview_mode: String = "Battle":
 	set(value):
 		editor_preview_mode = value
@@ -90,11 +95,14 @@ func _ready() -> void:
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)
+	hud.card_drag_started.connect(_begin_card_arrow)
+	hud.card_chant_held.connect(_on_card_arrow_chant)
 	hud.command_requested.connect(_command_requested)
 	hud.target_requested.connect(select_target)
 	hud.confirm_requested.connect(confirm_action)
 	hud.cancel_requested.connect(cancel_action)
 	hud.locale_requested.connect(set_locale)
+	_connect_combo_overlay()
 	present(_initial_state())
 	resized.connect(_fit_design)
 	_fit_design()
@@ -157,6 +165,9 @@ func _log_rows(events: Array) -> Array:
 
 func present(state: Dictionary) -> void:
 	snapshot = state.duplicate(true)
+	if not preparation.reconcile(snapshot):
+		hud.combo_preview.hide()
+		hud.feedback.text = tr("CP2_INVALIDATED")
 	view_model = Adapter.project(snapshot,config)
 	for actor: Node2D in $Design/Arena.get_children():
 		var casting: bool = false
@@ -186,6 +197,7 @@ func present(state: Dictionary) -> void:
 	hud.render(view_model,selected_actor,cards,_reaction_choices())
 	hud.confirm_button.disabled = true
 	hud.set_targets([])
+	_render_preparation()
 	if view_model["outcome"] != "ONGOING": hud.feedback.text = tr("BATTLE_"+str(view_model["outcome"]))
 
 func _targets_for_card(instance: String, casting_mode: String = "CHANTLESS") -> Array:
@@ -223,6 +235,15 @@ func _reaction_choices() -> Array:
 func select_actor(actor: String) -> void:
 	if not snapshot["core"]["battle"]["allies"].has(actor): return
 	if bool(snapshot["core"]["battle"].get("retired_from_field_by_actor",{}).get(actor,false)): return
+	if preparation.select_partner(actor):
+		selected_actor = actor
+		pending_card = ""
+		pending_kind = ""
+		pending_command = {}
+		selected_target = ""
+		hud.get_node("Context").hide()
+		present(snapshot)
+		return
 	selected_actor = actor
 	cancel_action()
 	present(snapshot)
@@ -230,6 +251,11 @@ func select_actor(actor: String) -> void:
 func select_card(instance: String, inspect_details: bool = true) -> void:
 	var own: Dictionary = snapshot["core"]["cards"]["actors"][selected_actor]
 	if not own["zones"]["hand"].has(instance): return
+	if config.get("m5_lv40_enabled",false):
+		if preparation.finisher_actor_id == selected_actor and preparation.select_finisher(instance):
+			pass
+		else:
+			preparation.select_setup(snapshot,selected_actor,instance)
 	hud.clear_command_confirmation()
 	hud.get_node("Context").visible = inspect_details
 	pending_card = instance
@@ -248,6 +274,7 @@ func select_card(instance: String, inspect_details: bool = true) -> void:
 	hud.set_targets(legal_targets)
 	hud.confirm_button.disabled = true
 	_update_action_summary()
+	_render_preparation()
 
 func _update_action_summary() -> void:
 	var context: Control = hud.get_node("Context")
@@ -287,6 +314,10 @@ func select_target(target: String) -> void:
 		_refresh_preview()
 		return
 	selected_target = target
+	if preparation.state == "FINISHER_SELECTED":
+		preparation.finisher_target_ids = [target]
+		_open_combo_confirmation()
+		return
 	if pending_kind == "ACTIVATE_LAST_SPELL_M4":
 		if hud.last_preview.targeting.get("team", "") == "ALLY":
 			remembered_last_ally_target = target
@@ -328,6 +359,13 @@ func confirm_action() -> void:
 	action_requested.emit(pending_command.duplicate(true))
 
 func cancel_action() -> void:
+	preparation.clear()
+	combo_comparison.clear()
+	if is_node_ready():
+		hud.combo_preview.hide()
+		hud.preparation_indicator.text = ""
+		_render_preparation()
+	if is_node_ready(): hud.end_targeting_arrow()
 	pending_card = ""
 	pending_kind = ""
 	selected_target = ""
@@ -353,7 +391,31 @@ func cancel_action() -> void:
 	hud.confirm_button.disabled = true
 	hud.feedback.text = ""
 
+func _begin_card_arrow(instance: String) -> void:
+	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible:
+		return
+	var found: bool = false
+	for card: Control in hud.card_views:
+		if str(card.instance_id) == instance:
+			found = bool(card.legal)
+			break
+	if not found:
+		return
+	# Reuse the existing authoritative preview and CardInstanceID.
+	select_card(instance, false)
+	if pending_card == instance and not legal_targets.is_empty():
+		hud.begin_targeting_arrow(instance,legal_targets)
+
+func _on_card_arrow_chant(instance: String, full: bool) -> void:
+	if pending_card != instance or not hud.targeting_arrow.is_aiming:
+		return
+	# Full Chant may alter the legal target set. Revalidate in the Domain
+	# preview instead of allowing an outdated arrow to imply legality.
+	var mode: String = "FULL" if full else "CHANTLESS"
+	hud.update_targeting_arrow(_targets_for_card(instance,mode))
+
 func _drop_card(instance: String, pointer: Vector2) -> void:
+	if hud.combo_preview.visible: return
 	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible:
 		return
 	var full: bool = false
@@ -370,6 +432,13 @@ func _drop_card(instance: String, pointer: Vector2) -> void:
 		hud.set_targets(legal_targets)
 	for target: String in legal_targets:
 		if hud.target_buttons[target].get_global_rect().has_point(pointer):
+			if preparation.state == "FINISHER_SELECTED":
+				if full:
+					hud.feedback.text = tr("CP2_FULL_UNSUPPORTED")
+					hud.mode.select(0)
+					return
+				select_target(target)
+				return
 			select_target(target)
 			confirm_action()
 			hud.mode.select(0)
@@ -426,6 +495,10 @@ func _last_target_portrait(id: String) -> Texture2D:
 	return preload("res://assets/ui/v35/intent_skill.svg")
 
 func _command_requested(kind: String, fields: Dictionary) -> void:
+	if hud.combo_preview.visible: return
+	if kind == "HOLD_CHANT" and not preparation.finisher_actor_id.is_empty():
+		hud.feedback.text = tr("CP2_FULL_UNSUPPORTED")
+		return
 	if kind == "ACTIVATE_LAST_PREVIEW":
 		var command: Dictionary = Factory.build(snapshot, "ACTIVATE_LAST_SPELL_M4", {
 			"actor_id": selected_actor, "target_actor_id": str(fields.get("target_id", "")),
@@ -540,11 +613,14 @@ func _connect_hud() -> void:
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)
+	hud.card_drag_started.connect(_begin_card_arrow)
+	hud.card_chant_held.connect(_on_card_arrow_chant)
 	hud.command_requested.connect(_command_requested)
 	hud.target_requested.connect(select_target)
 	hud.confirm_requested.connect(confirm_action)
 	hud.cancel_requested.connect(cancel_action)
 	hud.locale_requested.connect(set_locale)
+	_connect_combo_overlay()
 
 func _reason(code: String) -> String:
 	if "INSUFFICIENT" in code: return tr("BATTLE_ERROR_RESOURCE")
@@ -559,9 +635,138 @@ func _basic_target_labels() -> Dictionary:
 		labels[target] = log_actor_name(target)
 	return labels
 
+func _connect_combo_overlay() -> void:
+	hud.combo_preview.cancelled.connect(_cancel_combo_confirmation)
+	hud.combo_preview.choice_requested.connect(_commit_preparation)
+	hud.combo_preview.selection_changed.connect(_update_combo_comparison)
+
+func _render_preparation() -> void:
+	if not is_node_ready() or snapshot.is_empty(): return
+	var partners: Array = preparation.partners()
+	var finishers: Array = preparation.finishers()
+	var potential: Array = []
+	if config.get("m5_lv40_enabled",false) and preparation.setup_actor_id.is_empty():
+		for actor: String in snapshot["core"]["battle"]["allies"]:
+			for card: String in snapshot["core"]["cards"]["actors"][actor]["zones"]["hand"]:
+				if not Prepared.potentials(snapshot,actor,card).is_empty() and not potential.has(actor): potential.append(actor)
+	for actor: String in hud.roster:
+		hud.roster[actor].set_combo_indicator(2 if partners.has(actor) or preparation.setup_actor_id == actor else 1 if potential.has(actor) else 0)
+	for card: Control in hud.card_views:
+		card.set_combo_eligible(finishers.has(card.instance_id) or (preparation.setup_actor_id == selected_actor and preparation.setup_card_instance_id == card.instance_id))
+	if preparation.setup_actor_id.is_empty():
+		hud.preparation_indicator.text = ""
+	else:
+		var definition: String = Prepared.definition(snapshot,preparation.setup_actor_id,preparation.setup_card_instance_id)
+		hud.preparation_indicator.text = tr("CP2_INDICATOR") % [log_actor_name(preparation.setup_actor_id),_card_name(definition)]
+		if preparation.state == "SETUP_SELECTED": hud.feedback.text = tr("CP2_PARTNER")
+		elif preparation.state == "PARTNER_SELECTED": hud.feedback.text = tr("CP2_WAIT_FINISHER")
+
+func _card_name(definition: String) -> String:
+	return tr(str(config.get("lv40_cards",{}).get(definition,{}).get("name_key",definition)))
+
+func _open_combo_confirmation() -> void:
+	var overlay: Control = hud.combo_preview
+	overlay.setup_targets.clear()
+	var targets: Array = ComboPreview.targets(snapshot,config,preparation.setup_actor_id,preparation.setup_card_instance_id)
+	overlay.setup_targets.add_item(tr("CP2_SETUP_TARGET"))
+	overlay.setup_targets.set_item_metadata(0,"")
+	for target: String in targets:
+		overlay.setup_targets.add_item(log_actor_name(target))
+		overlay.setup_targets.set_item_metadata(overlay.setup_targets.item_count-1,target)
+	preparation.setup_target_ids.clear()
+	overlay.recipes.clear()
+	var options: Array = preparation.recipe_options()
+	if options.size() != 1:
+		overlay.recipes.add_item(tr("CP2_RECIPE"))
+		overlay.recipes.set_item_metadata(0,"")
+	for recipe: String in options:
+		overlay.recipes.add_item(tr(Prepared.recipes()[recipe]["name_key"]))
+		overlay.recipes.set_item_metadata(overlay.recipes.item_count-1,recipe)
+	if not preparation.recipe_id.is_empty() and Prepared.recipes()[preparation.recipe_id]["shared_target"]:
+		var common: String = preparation.finisher_target_ids[0]
+		for i: int in overlay.setup_targets.item_count:
+			if overlay.setup_targets.get_item_metadata(i) == common: overlay.setup_targets.select(i)
+	elif targets.size() == 1: overlay.setup_targets.select(1)
+	for i: int in 2:
+		var actor: String = preparation.setup_actor_id if i == 0 else preparation.finisher_actor_id
+		overlay.portraits[i].texture = Appearances.portrait_for(actor)
+	preparation.state = "AWAITING_CONFIRMATION"
+	hud.get_node("Context").hide()
+	hud.set_targets([])
+	overlay.show()
+	_update_combo_comparison()
+	hud._sync_modal_focus()
+	overlay.cancel_button.grab_focus.call_deferred()
+
+func _update_combo_comparison() -> void:
+	if preparation.state != "AWAITING_CONFIRMATION" or preparation.finisher_target_ids.is_empty(): return
+	var overlay: Control = hud.combo_preview
+	preparation.recipe_id = str(overlay.recipes.get_item_metadata(overlay.recipes.selected))
+	var target: String = str(overlay.setup_targets.get_item_metadata(overlay.setup_targets.selected))
+	preparation.setup_target_ids = [] if target.is_empty() else [target]
+	combo_comparison = ComboPreview.compare(snapshot,preparation.command(snapshot),config)
+	var a_name: String = _card_name(combo_comparison["setup_definition"])
+	var b_name: String = _card_name(combo_comparison["finisher_definition"])
+	overlay.title.text = tr("CP2_PAIR") % [a_name,b_name]
+	var nq: Dictionary = combo_comparison["normal_quote"]
+	var normal: String = tr("CP2_NORMAL_INFO") % [b_name,log_actor_name(preparation.finisher_target_ids[0])]
+	normal += "\n" + (tr("BATTLE_COST") % [nq["ap_cost"],nq["mp_cost"]] if nq.get("ok",false) else _combo_reason(str(nq.get("error",""))))
+	var combo: String = tr("CP2_COMBO_INFO") % [a_name,b_name,log_actor_name(target) if not target.is_empty() else tr("CP2_SETUP_TARGET"),log_actor_name(preparation.finisher_target_ids[0])]
+	if combo_comparison["combo_accepted"]:
+		var quotes: Dictionary = combo_comparison["combo_quotes"]
+		combo += "\n" + tr("CP2_PAIR_COST") % [combo_comparison["combo_ap"],log_actor_name(preparation.setup_actor_id),quotes["setup"]["mp_cost"],log_actor_name(preparation.finisher_actor_id),quotes["finisher"]["mp_cost"]]
+	else: combo += "\n" + _combo_reason(combo_comparison["combo_error"])
+	normal += "\n" + _preview_effects(combo_comparison["normal_events"])
+	combo += "\n" + _preview_effects(combo_comparison["combo_events"])
+	overlay.render_comparison(combo_comparison,normal,combo)
+
+func _preview_effects(events: Array) -> String:
+	var rows: PackedStringArray = []
+	for event: Dictionary in events:
+		var detail: Dictionary = event["details"]
+		if event["kind"] == "DamageTrace": rows.append(tr("CP2_DAMAGE") % [log_actor_name(str(detail["recipient_id"])),detail["hp_damage"]])
+		elif event["kind"] == "HPBarrierGranted": rows.append(tr("CP2_BARRIER") % [log_actor_name(str(detail.get("target_id",detail.get("actor_id","")))),detail.get("amount",0)])
+	return "\n".join(rows)
+
+func _combo_reason(reason: String) -> String:
+	if "INSUFFICIENT_MP" in reason: return tr("CP2_MP")
+	if "INSUFFICIENT_AP" in reason: return tr("CP2_AP")
+	if "OPPORTUNITY" in reason or "COMBO_NOT" in reason: return tr("CP2_NO_OPPORTUNITY")
+	if "TARGET_ANCHOR" in reason: return tr("CP2_SETUP_TARGET")
+	if "SHARED_TARGET" in reason: return tr("CP2_SHARED_TARGET")
+	if "UNKNOWN_RECIPE" in reason: return tr("CP2_RECIPE")
+	return _reason(reason)
+
+func _cancel_combo_confirmation() -> void:
+	hud.combo_preview.hide()
+	combo_comparison.clear()
+	preparation.state = "FINISHER_SELECTED"
+	hud._sync_modal_focus()
+	hud.feedback.text = tr("CP2_CANCELLED")
+	legal_targets = _targets_for_card(pending_card) if not pending_card.is_empty() else []
+	hud.set_targets(legal_targets)
+
+func _commit_preparation(combo: bool) -> void:
+	if preparation.state != "AWAITING_CONFIRMATION" or combo_comparison.is_empty(): return
+	if not combo_comparison["combo_accepted" if combo else "normal_accepted"]: return
+	preparation.state = "COMMITTING"
+	var command: Dictionary = combo_comparison["combo_command" if combo else "normal_command"].duplicate(true)
+	# Preserve the pre-preview revision for BOTH choices; never silently rebase.
+	command["expected_event_seq"] = preparation.revision
+	if controller.submit(command):
+		preparation.clear("COMPLETED")
+	else:
+		cancel_action()
+		hud.feedback.text = tr("CP2_INVALIDATED")
+
 func _input(event: InputEvent) -> void:
 	if snapshot.is_empty(): return
 	if not event is InputEventKey or not event.pressed or event.echo: return
+	if hud.combo_preview.visible:
+		if event.is_action_pressed("ui_cancel"):
+			_cancel_combo_confirmation()
+			get_viewport().set_input_as_handled()
+		return
 	# Modal buttons own Enter/Space/Tab; never turn a key into implicit Pass.
 	if hud.reaction_panel.visible or hud.result_panel.visible or hud.command_prompt.visible or hud.last_preview.visible: return
 	if event.is_action_pressed("end_turn"):
