@@ -76,3 +76,11 @@ CG 以各自 Atlas 為參考，要求保留身份、單一人物、直式透明�
 - **BLOCKED — 高保真視覺證據**：沒有在此執行環境中使用真實 GUI Godot Editor 確認 F6 Live Preview、Atlas 各格流暢度或 1280／1920 像素對照；沒有新原生編輯器截圖。角色 CG 仍為待使用者核准的 AI 生成 **候選**，不宣稱 Canon Art。相同原生 Last Spell 29/29 第四次經額外授權成功的歷史證據保持原樣，**本次完全未重跑**。
 
 不得用 Editor Import PASS 代替 Editor on-screen visual approval，也不得因 UI 測試 quota 已用盡重新命名同一套測試規避限制；若需重新取得正式 35/35 需另外取得使用者明確允許的新執行額度。後續請依 [Engineering Note](../verification/ui/CHARACTER_EDITOR_INTEGRATION_ENGINEERING_NOTE_20261016.md) 審查改動，僅合併已被驗證的範圍。
+
+## 最後檢查：CI Scope 與 Domain Release Bug（2026-10-16）
+
+- 分支最後一次一般 Fast CI [#38837390317](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38837390317) = **FAIL**，不是 Success。Fast Job 前置 Golden Battle、Replay、5 Seeds、P4.1～P4.3 全部通過，P4.5 Lv40 playable 在下一回合完整詠唱釋放時 `lv40_cast_effect.gd:49` 發生 **Array → Array[String] 不合法賦值**，並連鎖造成 Phase Boundary `ok/accepted` 缺失與 `P45-NEXT-ROUND` Fail。已使用在兩個分支輸入都能使用的 **明確 typed Array[String] 初始化後再 append** 修正條件運算造成的隱式 Array 型別轉換，Commit [`0ec1b743`](https://github.com/KuroNekoLi/arbitrium-nexus-godot/commit/0ec1b7436fb55f615a430272bced9fc0c437e034)。**修復後未重新執行受限 Fast 群組，不能宣稱 Regression PASS。**
+- 同一 Fast CI 的 P4 Contracts 不是完全通過：其它群組先前 PASS，但 `test_p4_v35_convergence` 項目完成後仍輸出 Godot `ERROR: 2 resources still in use at exit`、`WARNING: 4 ObjectDB instances were leaked at exit`。此錯誤目前沒有完整可驗證根因，仍標記 **UNRESOLVED_RESOURCE_EXIT_WARNING**，嚴格 CI gate 沒有被弱化、沒有偷偷忽略 ERROR。需用新的使用者核准測試額度與完整 runtime resource trace 才能驗證修復。
+- 新 Appearance/Editor QA [#38836688296](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836688296) 的第三次試行嚴格 **Godot Editor Import PASS**，31 項外觀/場景前置斷言 PASS，但 `test_character_editor_preview.gd` 的 `_init` 檢查早於 Sprite `_ready`，導致 `EDITOR-ACTOR-SPRITE` FAIL 與 Nil `owner`；修正測試延後至 `_initialize → call_deferred(run)`，**尚未再執行**。該群組已用滿三次配額，因此 Editor QA Workflow 已改為手動觸發，避免後續普通 Push 意外第四次執行；任何手動重跑仍需要使用者新授權。
+- 現狀 **源碼 IMPLEMENTED / CI NOT VERIFIED / NATIVE EDITOR SCREENSHOT NOT VERIFIED / NOT READY FOR MASTER MERGE**。任何前述 PASS 只屬該測試當時的 Source SHA 與 scope，不能推論最終 HEAD 已正式全綠。
+

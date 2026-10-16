@@ -1,15 +1,7 @@
 name: Godot Character Editor Preview - New QA Contract
 on:
-  push:
-    branches: ['ui/last-spell-target-scope-20261016']
-    paths:
-      - '.github/workflows/godot-character-editor-preview.yml'
-      - 'scripts/battle/**'
-      - 'scripts/ui/hero_roster_item.gd'
-      - 'scenes/battle/**'
-      - 'resources/ui/characters/**'
-      - 'tests/test_character_editor_preview.gd'
-      - 'assets/characters/**'
+  # Three permitted attempts exhausted: no automatic fourth attempt.
+  # Manual execution requires the owner to explicitly approve new quota.
   workflow_dispatch:
 permissions:
   contents: read

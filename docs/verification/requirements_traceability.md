@@ -485,3 +485,7 @@ See [review and outstanding branches](../handoff/P4_APPROVED_MERGES_AND_PENDING_
 | Final actor art and high-fidelity scene | Six candidate images are AI generated; no final visual user approval | **VISUAL_NOT_VERIFIED / USER_APPROVAL_PENDING** |
 
 Original Last Spell group, old P4.4 GUI group and separate character appearance suite have exhausted their respective authorized attempt budgets. Do not rerun without explicit owner authorization. See [Checkpoint](../handoff/CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md).
+
+### Current CI regression caveat — 2026-10-16
+- [Fast #38837390317](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38837390317) **FAILED** on Last Spell Release GDScript typed-array runtime bug and P4 V35 Resource leak/error. Conditional typed-array fix committed subsequently without rerun; status remains **NOT_VERIFIED**.
+- Appearance group [#38836688296](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38836688296) third attempt Editor Import succeeded, initial 31 assertions passed then fixture initialization nil failed; subsequent deferred-run test change not rerun (quota exhausted). **35/35 NOT VERIFIED**.
