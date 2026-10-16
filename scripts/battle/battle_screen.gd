@@ -550,6 +550,7 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 		director.reduced_motion = bool(fields["enabled"])
 		director.overlay.reduced_motion = director.reduced_motion
 		if director.reduced_motion: director.skip_all()
+		_render_preparation()
 		return
 	if kind == "MUTE_AUDIO":
 		director.overlay.audio_enabled = not bool(fields["enabled"])
@@ -663,10 +664,25 @@ func _render_preparation() -> void:
 		for actor: String in snapshot["core"]["battle"]["allies"]:
 			for card: String in snapshot["core"]["cards"]["actors"][actor]["zones"]["hand"]:
 				if not Prepared.potentials(snapshot,actor,card).is_empty() and not potential.has(actor): potential.append(actor)
+	# Presentation-only mapping of the preparation controller (never Domain).
+	var preparing: bool = not preparation.setup_actor_id.is_empty()
+	# The first present() in _ready runs before the director exists.
+	var reduced: bool = director != null and director.reduced_motion
 	for actor: String in hud.roster:
-		hud.roster[actor].set_combo_indicator(2 if partners.has(actor) or preparation.setup_actor_id == actor else 1 if potential.has(actor) else 0)
+		var partner_state: String = ""
+		if preparation.setup_actor_id == actor: partner_state = "SELECTED"
+		elif partners.has(actor): partner_state = "ELIGIBLE"
+		elif preparing: partner_state = "UNAVAILABLE"
+		elif potential.has(actor): partner_state = "IDLE"
+		hud.roster[actor].set_combo_state(partner_state)
 	for card: Control in hud.card_views:
-		card.set_combo_eligible(finishers.has(card.instance_id) or (preparation.setup_actor_id == selected_actor and preparation.setup_card_instance_id == card.instance_id))
+		var card_state: String = ""
+		if preparation.setup_actor_id == selected_actor and preparation.setup_card_instance_id == card.instance_id:
+			card_state = "SELECTED"
+		elif finishers.has(card.instance_id):
+			if card.instance_id == preparation.finisher_card_instance_id: card_state = "SELECTED"
+			else: card_state = "ELIGIBLE" if card.legal else "UNAVAILABLE"
+		card.set_combo_state(card_state, reduced)
 	if preparation.setup_actor_id.is_empty():
 		hud.preparation_indicator.text = ""
 	else:

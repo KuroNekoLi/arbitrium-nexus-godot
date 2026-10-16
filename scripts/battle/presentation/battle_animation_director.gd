@@ -63,6 +63,7 @@ func _play_next() -> void:
 		if not is_inside_tree() or current_generation != generation: return
 		if cue["kind"] == "COMBO" and cue["detail"].has("setup_actor_id"):
 			overlay.show_combo(str(cue["detail"]["setup_actor_id"]),str(cue["detail"]["finisher_actor_id"]),str(cue["detail"]["name_key"]))
+			_combo_vfx(cue["detail"],command)
 		if cue["kind"] in ["CAST_RELEASE","LAST_RELEASE"]:
 			magic = true
 		if cue["kind"] in ["CAST_START","LAST_START"]:
@@ -150,6 +151,18 @@ func _play_next() -> void:
 		pending_timers.erase(recovery)
 		if not is_inside_tree() or current_generation != generation: return
 	_play_next()
+
+## Presentation follow-up for an already accepted ComboExecuted receipt. The
+## recipe catalogue is read only to choose offense/defense art.
+func _combo_vfx(detail: Dictionary, command: Dictionary) -> void:
+	var recipes: Dictionary = preload("res://scripts/domain/m5/combo/prepared_combo_resolver.gd").recipes()
+	var recipe: Dictionary = recipes.get(str(detail.get("recipe_id","")),{})
+	var defense: bool = str(recipe.get("opportunity","")) == "DEFENSE" or str(detail.get("name_key","")) == "CP2_DEFENSE"
+	var target_id: String = str(detail.get("target_id",command.get("target_actor_id","Boss")))
+	var target: Node2D = _actor(target_id)
+	if target == null: return
+	var height: float = float(target.visual_height)
+	overlay.combo_vfx(target.position+Vector2(0,-height*0.5),defense,height,overlay.combo_cutin_duration())
 
 func play_card(artwork: Texture2D, origin: Vector2, target: Vector2) -> void:
 	if reduced_motion:
