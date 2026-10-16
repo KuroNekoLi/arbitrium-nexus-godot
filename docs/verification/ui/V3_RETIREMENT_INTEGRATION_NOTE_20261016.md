@@ -47,3 +47,7 @@ Domain map像Kotlin不可變State的場上成員集合，和HP生命狀態分開
 第二次CI [38856860449](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38856860449) 在取消前已完成RET26、來源29、HUD36、Component24、Playable32、Lv40Content37/Domain83/Edges37/Roster31及4個12SP smoke；原生步驟啟動中，保守算一次。不能將cancelled workflow當整體成功，亦不能重設已完成runner次數。此時master另推`61fea52d94e6abc283f21f0033fb8be30c76f458`，加入獨立卡牌資格資料、RoleTag/Character檢查與未實作卡的開場拒絕；已普通merge保留。Roster測試從31增36是該工作線新增5項斷言，不是本輪放寬預期。
 
 新RET／capture已達3次，最新合併runtime的第四次需使用者追加授權；來源29/HUD/Component/Playable的最後一次留給最新candidate，master僅跑完整Domain最後一次並重用同源scoped收據。未取得授權前不啟動第四次RET／capture。
+
+## Merge disposition
+
+使用者明確選擇「不追加，保留待驗證」，其後指示先合併master並於V3分支工作結束後刪除。故本輪以現有靜態審查、舊SHA的測試收據和明確保留的驗證缺口交付；不啟動新的RET26／native截圖／完整Domain runner，不把合併或舊綠燈宣稱為最新master的驗收通過。master上的退場行為狀態為`IMPLEMENTED_NOT_VERIFIED`；保留兩次取消的CI連結與logs，待未來另外授權驗證時再更新狀態。
