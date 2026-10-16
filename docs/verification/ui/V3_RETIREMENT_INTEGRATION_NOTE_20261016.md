@@ -20,7 +20,7 @@
 
 | Group | Local | Candidate CI | Master CI |
 |---|---|---|---|
-| 26 Domain suites +100 seeds | 1 PASS：1238/1238，100/100 | 2待驗證 | 3待驗證 |
+| 26 Domain suites +100 seeds | 1 PASS：1238/1238，100/100 | 2取消，保守計入已啟動runner；最終candidate不重跑 | 3待驗證 |
 | Source retirement29 / HUD36 / Component24 / Lv40Playable32 | 1 PASS | 2待驗證 | 3待驗證 |
 | Lv40Content37 / Domain83 / Edges37 / Legacy4 | 未執行 | 1待驗證 | 2待驗證 |
 | 新RET-01～05 | 1 FAIL typed-array；2 PASS22；新增atomic/target/event order後26項待CI | 3（最後一次） | 不重跑，須與候選受測runtime tree相同 |
@@ -37,3 +37,9 @@ Domain map像Kotlin不可變State的場上成員集合，和HP生命狀態分開
 面試追問：為何全耗竭不是HP0？為何施法完成與退場順序影響支援魔法？如何保留舊Replay又不讓UI開關規則？如何避免CI重複執行同runner超預算？
 
 限制：KO是既有CG變換，不是專門重繪倒地動畫；美術仍候選。沒有後備隊員、自動替補、VC、換位AP或真人usability／GPU benchmark。最終CI及merge收據後續回填，不把本Note的待驗證當PASS。
+
+## Concurrent master reconciliation
+
+初次候選10698d6的CI [38856012734](https://github.com/KuroNekoLi/arbitrium-nexus-godot/actions/runs/38856012734) 在完整回歸執行中因master更新而取消，不算PASS；新RET26／native29尚未啟動，不消耗其第三次執行。保留已啟動Domain runner的執行次數，最終candidate只跑scoped suites，完整1238／100seeds留給master第三次。
+
+重新正常merge master `45d23de13eb583fa7db8964ddc4b68b4f5dc2f93`：保留JSON roster、data-driven Last Spell effects／被動、最新角色外觀來源、12SP煙霧測試與中文規格歸檔。三個衝突逐項解決：Spec Index保留新入口加RET核准連結；Encounter保留Roster API並升v3；CastEffect保留資料化效果，在效果後執行retirement。master移除8卡舊引擎是另一工作線已提交變更，本輪沒有將其復原或覆蓋。

@@ -3,21 +3,24 @@ extends RefCounted
 ## MOCK_ONLY Godot Inspector/Editor preview. Never creates M5 Domain state,
 ## Controller, signal subscriptions, card instances or command tape.
 const Appearances = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
+const PartyCatalogue = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 const CardFrame = preload("res://scripts/battle/ui/components/battle_card_frame.gd")
 
 static func projection() -> Dictionary:
 	var actors: Dictionary = {}
-	for id: String in ["A","B","C","Boss"]:
+	for id: String in PartyCatalogue.party_ids() + ["Boss"]:
 		actors[id] = {"hp": 2100 if id=="Boss" else 120,
 			"max_hp": 2700 if id=="Boss" else 120,
 			"mp": 14, "max_mp": 20,"status":"ACTIVE"}
+	var names: Dictionary = {"Boss":str(PartyCatalogue.read().get("boss",{}).get("name_key","BATTLE_TITLE"))}
+	for slot: String in PartyCatalogue.party_ids():
+		names[slot] = str(PartyCatalogue.read()["actors"][slot]["name_key"])
 	return {"actors":actors,"resources":{"current_ap":6,"base_ap":6,"rp":0},
 		"phase":"PLAYER_PHASE","round":1,"outcome":"ONGOING",
 		"reaction":{"status":"CLOSED","draft":[],"guard_actor_ids":[]},
 		"casts":{},"barriers":{},"tactical":{"break_gauge":16,"break_max":22,
 			"break_locked":false,"exposed":{}},
-		"actor_name_keys":{"A":"BATTLE_HERO_A","B":"BATTLE_HERO_B",
-			"C":"BATTLE_HERO_C","Boss":"BATTLE_TITLE"},
+		"actor_name_keys":names,
 		"intent":[{"enemy_id":"Boss","skill_id":"B01","name_key":"BATTLE_B01",
 			"target_ids":["A"],"hit_count":1}]}
 
@@ -59,11 +62,11 @@ static func show(hud: Control, mode: String) -> void:
 	hud._top.render_resource_values(projection()["resources"])
 	hud.end_button.text = "結束回合"
 	hud.feedback.text = "EDITOR MOCK_ONLY — 不會建立戰鬥／付款／重播"
-	for id: String in ["A","B","C"]:
+	for id: String in PartyCatalogue.party_ids():
 		var hero: Button = hud.roster[id]
-		var index: int = ["A","B","C"].find(id)
+		var index: int = PartyCatalogue.party_ids().find(id)
 		var tint: Color = [Color("efc675"),Color("75d6ff"),Color("df9cff")][index]
-		var name_key: String = {"A":"actor.ren.name", "B":"actor.akane.name", "C":"actor.tsumugi.name"}[id]
+		var name_key: String = str(PartyCatalogue.read()["actors"][id]["name_key"])
 		hero.configure(id,str(labels.get(name_key,"角色 "+id)),
 			Appearances.portrait_for(id),tint)
 		hero.hp_label.text = "HP 120 / 120"
@@ -72,7 +75,7 @@ static func show(hud: Control, mode: String) -> void:
 		hero.hp_bar.value = 120
 		hero.mana_bar.max_value = 20
 		hero.mana_bar.value = 14
-		hero.set_selected(id=="A")
+		hero.set_selected(index == 0)
 		hero.get_node("Layout/Stats/Subtitle").text = "可行動"
 	var enemy: PanelContainer = hud._enemy
 	enemy.boss_title.text = str(labels.get("BATTLE_TITLE","Boss"))
@@ -94,7 +97,8 @@ static func show(hud: Control, mode: String) -> void:
 		return
 	# Reuse the REAL LastSpellPreview Control, without invoking its runtime
 	# target/quote legality or cost formatter in the editor.
-	var actor: String = "A" if mode=="Last Spell Ren" else "B" if mode=="Last Spell Akane" else "C"
+	var slot_index: int = 0 if mode == "Last Spell Slot 1" else 1 if mode == "Last Spell Slot 2" else 2
+	var actor: String = PartyCatalogue.party_ids()[slot_index]
 	hud.hand.hide()
 	var preview: Control = hud.last_preview
 	preview.artwork.texture = Appearances.cg_for(actor)

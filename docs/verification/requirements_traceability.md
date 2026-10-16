@@ -1,5 +1,7 @@
 # G0 Requirements Traceability Matrix — Arbitrium Nexus
 
+2026-10-16 RET-01～05：使用者核准耗竭真正退場、敵存活且無存活在場我方判DEFEAT；新版Lv40配置v3、效果後退場、非法目標原子拒絕、舊配置Replay隔離。來源見 [核准紀錄](../combat/LAST_SPELL_RETIREMENT_APPROVED_20261016.md)，本輪證據及測試次數見 [整合Note](ui/V3_RETIREMENT_INTEGRATION_NOTE_20261016.md)。本條不升級歷史GUI或美術驗收。
+
 2026-10-16 Last Spell 範圍 UI：LST-UI01～05／LST-DOM01／LST-COMPAT01 與新群組 22/22→26/26→26/28→使用者明確追加一次29/29 見 [Last Scope Note](ui/LAST_SPELL_TARGET_SCOPE_ENGINEERING_NOTE_20261016.md)。SCOPED_NATIVE_VERIFIED；既有完整回歸／CI未重跑，非使用者高保真驗收完成。
 
 2026-10-16 V3.5續作：SP拖放／長按、符卡詳情純資訊、右上工具移除與Last cut-in的最新USER_APPROVED來源及實際收據，見 [V35 Current Review](ui/V35_FINAL_REVIEW_REPORT.md)。81f3d94完整Domain／100seeds CI成功；77bd22a導致Lv40三項相容失敗；1861663修復後新Last native25/25 CI成功，但原Lv4032未追加複驗、最新截圖待授權，整體NEEDS_REVISION。保留P4.4 14/16與全部失敗，不升級最終視覺驗收。

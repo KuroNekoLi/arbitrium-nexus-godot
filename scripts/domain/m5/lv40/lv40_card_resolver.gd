@@ -149,10 +149,13 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 		next = result["core"]
 		records.append_array(result["timeline"])
 		var round_id: int = int(next["battle"]["round"])
-		if int(effect["break_damage"]) > 0 and not bool(core["battle"]["m53"]["break_locked"]) and bool(result["successful_hit"]) and int(next["battle"]["lv40"]["ren_passive_round"]) != round_id:
-			next["battle"]["lv40"]["ren_passive_round"] = round_id
-			records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":"REN_P01","break_bonus":2})
-			next = _merge(Effects.break_damage(next,2,card),next,records)
+		var passive: Dictionary = config.get("lv40_actor_passives", {}).get(actor, {})
+		var used: Dictionary = next["battle"]["lv40"]["break_passive_rounds"]
+		if int(effect["break_damage"]) > 0 and not bool(core["battle"]["m53"]["break_locked"]) and bool(result["successful_hit"]) and str(passive.get("kind", "")) == "BREAK_FIRST_HIT" and int(used.get(actor, 0)) != round_id:
+			var bonus: int = int(passive["amount"])
+			used[actor] = round_id
+			records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":str(passive["id"]),"break_bonus":bonus})
+			next = _merge(Effects.break_damage(next,bonus,card),next,records)
 	else:
 		if combo == "COMBO" and definition != "T04":
 			return _error("LV40_NO_REGISTERED_SUPPORT_COMBO_RECIPE")
@@ -181,10 +184,13 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 					next["battle"]["lv40"]["defense_combo"] = {"source_actor_id":actor,"expires_round":int(next["battle"]["round"])+1}
 			"U05","T01","T03","T06":
 				var amount: int = {"U05":150,"T01":200,"T03":140,"T06":380}[definition]
-				if actor == "C" and int(next["battle"]["lv40"]["tsumugi_passive_round"]) != int(next["battle"]["round"]):
-					amount += 60
-					next["battle"]["lv40"]["tsumugi_passive_round"] = int(next["battle"]["round"])
-					records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":"TSUMUGI_P01","heal_bonus":60})
+				var heal_passive: Dictionary = config.get("lv40_actor_passives", {}).get(actor, {})
+				var used_heals: Dictionary = next["battle"]["lv40"]["healing_passive_rounds"]
+				if str(heal_passive.get("kind", "")) == "HEAL_FIRST_SP" and int(used_heals.get(actor, 0)) != int(next["battle"]["round"]):
+					var bonus: int = int(heal_passive["amount"])
+					amount += bonus
+					used_heals[actor] = int(next["battle"]["round"])
+					records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":str(heal_passive["id"]),"heal_bonus":bonus})
 				var targets: Array = next["battle"]["allies"] if definition == "T03" else [target]
 				for ally: String in targets:
 					if int(next["battle"]["actors"][ally]["hp"]) > 0:

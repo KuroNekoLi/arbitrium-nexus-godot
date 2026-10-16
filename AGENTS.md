@@ -1,15 +1,23 @@
 # Arbitrium Nexus Godot — Agent Instructions
 
+## CURRENT COMBAT ENTRY — source of truth
+- Read [docs/combat/README.md](docs/combat/README.md), then the system guide, then [engineering contracts](docs/combat/engineering/戰鬥引擎實作契約.md). Historical phase-numbered documents are **not** active authoritative entrypoints.
+- New game entry: `res://scenes/battle/lv40_playable_battle.tscn`; never reintroduce the 8-card / two-plays / timed-reaction prototype.
+- Current roster is `resources/combat/rosters/lv40_party_v0_3.json`: slot IDs are battle-instance addresses, **not fixed character identities**. Obtain actors, name keys, stats, starting decks, variant IDs, and art paths from content rather than hardcoding `A/B/C` to named heroes.
+- Each active actor has exactly **12 SP**, opening hand **4**, refill to **4**, max hand **8**; use M1–M5 Domain as the single authority. Do not reintroduce old `CardCatalog` or `DeckProfileStore`.
+- Changing content identity requires updating i18n, matching card and Last Spell definitions, and versioned test fixtures. Never claim a new character is fully supported merely because its name changed in JSON.
+
 > This repository is an executable Godot card-JRPG prototype. These rules apply to this repository, not to the documentation-only source `KuroNekoLi/astraea-combat-rules`.
 
-## Transfer status (2026-10-15)
-- Authoritative **source snapshot for this transfer**: `KuroNekoLi/astraea-combat-rules@cac49361e1cbc0e783fbdf75699080724f1c70a9`.
-- Source **new content** `docs/combat/25`–`31` and reproducible Python balance tools `tools/balance/` have been copied unchanged (identical blob SHAs).
-- **Owner-selected A semantic reconciliation is completed for `docs/combat/00`–`24`.** The retained target canonical rules were checked against upstream, and unique `P2-*` acceptance IDs were merged into file 13. See `docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md`; this does not imply Godot implementation parity.
-- The existing `README.md` describes a prototype with 8-card loadouts / two ordinary plays per phase, while the imported approved Combat Rules specify 12 SP instances per actor / shared AP6. **This is an implementation-versus-specification conflict, not yet a completed migration.**
-- Document 19's active canonical filename is `docs/combat/19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`; the upstream longer variant is reference-only under `docs/combat/archive/`, not a second authority.
-- The source repo's root `AGENTS.md` says “documentation-only”; this does **not** describe this executable Godot repository, so this repository-specific file replaces it, not verbatim copied.
-- The imported `31_...` document points to a historically separate implementation repo `Astraea-Academy`. For this migration the active target is `KuroNekoLi/arbitrium-nexus-godot`; references in historical handoff texts are not automatically updated.
+## Combat Source of Truth（2026-10-16）
+
+**IMPORTANT — mandatory for every combat/UI/gameplay Agent**: First read [docs/combat/README.md](docs/combat/README.md). The descriptive Chinese-language files in that index define current gameplay. Follow with the matching player-facing topic, [engineering contract](docs/combat/engineering/戰鬥引擎實作契約.md), [code traceability](docs/combat/engineering/規則與程式對照表.md), and [open features](docs/combat/engineering/待實作與待驗證功能.md). Check the real `master` HEAD, source code, tests and current CI each time.
+
+**Hard invariants**: each of three active characters has exactly **12 SP instances**, opening 4, refill *only if below 4*, hand cap **8**, and one free one-for-one discard/draw per character per Player Phase. Shared BaseAP **6** (not six per person), MP individual and not naturally restored, RP normally capped at **6** and cleared after the following Enemy Phase. Last Spell occupies a separate slot; casting and Exhausted use approved outcome rules. Reaction with a legal option always waits for explicit Confirm/Pass, never times out. A real successful mutual-KO action is VICTORY. The protagonist starts as swordsman; UNIVERSAL attack/heal/shield magic cards can be equipped by all characters.
+
+**Content status**: named party, **31 ordinary SP CardDefinitions / 3 separate LastSpellDefinitions**, candidate Lv40 Boss, multipliers and starter decks are `CONTENT_PROVISIONAL` unless specifically approved. The Lv40 starter has 24 different SP definitions represented by **36 instances** across three 12-card loadouts, not all 31 available candidate definitions. No new gameplay rule is approved just because it appears in a headless fixture.
+
+**Legacy retired**: the previous 8-card runtime, `CardCatalog`, `DeckProfileStore`, old-character hardcoded battle script and old card Resources have been deleted. The four old test entrypoints now delegate to the new 12-SP roster smoke. Historical design docs are preserved under `docs/combat/archive/legacy-2026-10-16/`, not active authority. No automatic import of old `user://deck_profile.json` exists. All three current slots read character, Variant, portrait, stats, passive and Last Spell content from the roster JSON. Do not confuse stable battle slot IDs with fixed identities. Adding more than three active slots is not implemented. New features must be actually tested at the same commit before claiming PASS.
 
 ## Work restrictions
 1. Verify Git HEAD, Godot project/version, existing tests, and real implementation before attempting changes.
@@ -33,14 +41,15 @@ Read [UI Resource Scout / Asset Vault SOP](docs/ui/03_FREE_OPEN_SOURCE_RESOURCE_
 ## Context-efficient exploration
 
 - Use `rg --hidden --ignore-file .codexignore --files` for broad discovery and `rg --hidden --ignore-file .codexignore -n PATTERN scripts scenes tests docs .codex` for scoped search. `--hidden` keeps `.codex/skills` visible; `.git/` remains excluded. This is an explicit ripgrep policy, not a verified native Codex setting or access-control boundary.
-- Read the authoritative spec index and current handoff first; then relevant modules and required Skill references. Read selected instructions completely. Do not dump all docs, logs, JSON tapes, images or addon sources into context.
+- Read the new authoritative Combat README and current handoff first; then relevant modules and required Skill references. Read selected instructions completely. Do not dump all docs, logs, JSON tapes, images or addon sources into context.
 - Exclusions only affect broad discovery. For audits, failures, asset work or historical conflicts, explicitly inspect required excluded paths (`Get-Content PATH` or `rg --no-ignore -n PATTERN EXACT_PATH`). Never omit required evidence or tests because of this policy.
 - Keep raw logs on disk; report counts, failures and relevant excerpts. Do not print image base64, entire Command Tapes or unbounded output. This reduces irrelevant context, but does not guarantee cache hits, quota savings or billing reductions.
 - Keep current scripts, scenes, tests, combat authority, UI specs, Skills, manifests and handoffs discoverable. Preserve all Git tracking and test evidence.
 
 ## Entry points
-- [Approved A reconciliation audit](docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md)
-- [Original transfer provenance](docs/combat/UPSTREAM_TRANSFER_STATUS.md)
-- [Latest imported Lv40 demo handoff](docs/combat/31_LEVEL40_DEMO_GODOT_AGENT_START_HERE.md)
-- [Boss encounter fixture](docs/combat/27_LEVEL40_DEMO_BOSS_ENCOUNTER_V0_1.md)
+- [Current Combat Rule Index](docs/combat/README.md)
+- [Character and full card catalog](docs/combat/角色圖鑑.md) / [Card catalog](docs/combat/卡牌圖鑑.md)
+- [Agent implementation and mapping](docs/combat/engineering/戰鬥引擎實作契約.md)
+- [Current UI source and resource workflow](docs/ui/README.md)
+- [Historical transfer and provenance archive](docs/combat/archive/README.md)
 - [Python balance tools](tools/balance/)

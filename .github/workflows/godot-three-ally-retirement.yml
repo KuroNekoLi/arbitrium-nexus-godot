@@ -25,6 +25,7 @@ jobs:
           timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/retirement/import.log" 2>&1
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/retirement/import.log"
       - name: Full M1-M5 regression without duplicate representative runners
+        if: inputs.stage == 'master'
         shell: bash
         run: |
           set -Eeuo pipefail
@@ -42,6 +43,7 @@ jobs:
           set -Eeuo pipefail
           for spec in \
             'test_lv40_content:LV40_CONTENT_REPORT:37' \
+            'test_lv40_roster:CURRENT_ROSTER_REPORT:31' \
             'test_lv40_domain:LV40_DOMAIN_REPORT:83' \
             'test_lv40_edges:LV40_EDGES_REPORT:37' \
             'test_p4_last_spell_retirement:RETIREMENT_REPORT:29' \

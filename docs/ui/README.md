@@ -1,7 +1,7 @@
 # Arbitrium Nexus — Battle UI、Visual Assets 與 Animation 規劃入口
 
-> **文件版本：2026-10-15 / PLANNED / NOT IMPLEMENTED**  
-> 本目錄是未來 Godot Agent 的正式 **UI／美術／動畫研究與交接入口**。本次只補充文件及免費／開源資源調查；**沒有**實際製作 UI Scene、圖片、美術、動畫、遊戲新功能，也**沒有**執行 Godot UI 驗收。  
+> **設計規劃版本：2026-10-15；2026-10-16 Combat文件入口已更新**  
+> 本目錄是未來 Godot Agent 的正式 **UI／美術／動畫研究與交接入口**。本次只補充文件及免費／開源資源調查；**此份UI規劃編寫當時**沒有新實作；但後續已新增Lv40 playable Scene、限定正向接線測試與靜態截圖，詳細進度需核對 `docs/verification/ui/` 的最新證據。這些仍不等於全部真人操作驗收。  
 > 現有 Repository 本來就有舊版可玩 UI MVP、卡牌和動畫；「NOT IMPLEMENTED」指**本套高保真重建規劃尚未落地**，不能誤讀為工程沒有任何 UI。
 
 ## 快速導覽（未來 Agent 請依序閱讀）
@@ -21,8 +21,8 @@
 
 - 唯一 Repository：`KuroNekoLi/arbitrium-nexus-godot`，`master`；**每次開工重新讀 HEAD**。
 - 目標 Godot：`4.7.2.stable`；是否有可執行 binary 要現場確認；`project.godot` 現設 1280×720、Compatibility renderer。
-- **Gameplay authority**：`docs/combat/00_README_COMBAT_RULES_BASELINE_V0_8.md`；重要批准補充 `18_MAGIC_AP_ECONOMY_APPROVED_M_D01_D17.md`、`19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md`、`20_PHASE12_PREIMPLEMENTATION_ADR_AND_OPEN_ITEMS.md`、`21_PHASE2_SPEC_ACCEPTANCE_REPORT.md`。
-- 工程合約：`docs/combat/22_PHASE12_AGENT_IMPLEMENTATION_CONTRACT.md`、`23_PHASE3_EXECUTION_PLAN.md`、`docs/verification/` 最新 Engineering Notes + CI 證據。舊規格檔原來曾寫過其他 Repo／docs-only 前提；**以這個使用者指定的真實 Godot Repo 為工作目標**，不要回頭處理舊 Repo。
+- **Gameplay authority**：[`docs/combat/README.md`](../combat/README.md) 及其繁體中文主題規格；工程入口是[`docs/combat/engineering/戰鬥引擎實作契約.md`](../combat/engineering/戰鬥引擎實作契約.md)。舊編號文件已列為歷史並歸檔，不再並列判斷權威。
+- 工程合約：[`docs/combat/engineering/戰鬥引擎實作契約.md`](../combat/engineering/戰鬥引擎實作契約.md)、[規則程式對照表](../combat/engineering/規則與程式對照表.md)、`docs/verification/` 最新 Engineering Notes + CI 證據。舊規格檔原來曾寫過其他 Repo／docs-only 前提；**以這個使用者指定的真實 Godot Repo 為工作目標**，不要回頭處理舊 Repo。
 - 規格優先級：最新明示 `USER_APPROVED` > 原已核准 P1/P2/M > 合法 `DELEGATED_DEFAULT` > `BALANCE_PROVISIONAL` > `HISTORICAL/SUPERSEDED`。文件不能擅自把 TBD 變正式規則。
 - 根 `README.md` 原有 MVP 操作包含舊版 8 卡／每階段出牌兩次／Reaction 倒數；**是舊 UI 原型描述**，不得當新版 Domain 規格或新 HUD 必須複製的行為。
 
@@ -49,9 +49,9 @@
 ## 最值得優先重用的程式與素材
 
 - `scenes/ui/hero_roster_item.tscn` + `scripts/ui/hero_roster_item.gd`：已是角色資訊共用元件。
-- `scripts/ui/card_view.gd` + `addons/simple_cards/`：已具 hover／drag，但 Card Artwork 還是用 atlas index hardcode。
+- 現行卡牌以 `scripts/battle/ui/` 元件和 `resources/ui/appearances/` 呈現；舊 `scripts/ui/card_view.gd` 已隨8卡原型刪除。
 - `scripts/main.gd`：目前大量原型 UI 是動態搭建在這支檔案；應逐步抽離而不是整包重寫。
-- `assets/kleya_atlas.png`、`nova_atlas.png`、`yora_atlas.png`、`assets/portraits/`、`assets/card_art_atlas.png`。
+- 現行角色 CG／頭像由 `resources/combat/rosters/lv40_party_v0_3.json` 的 `appearance_path` 指向；舊角色名字已從新正式資料流退役。
 - `addons/kenney_fantasy_ui_borders/`、`kenney_particle_pack/`、`kenney_ui_audio/`、`kenney_rpg_audio/`，授權清單見 `CREDITS.md`。
 - `.codex/skills/` 內已有專業 `godot-card-rpg-uiux-engineer`、`godot-game-asset-pipeline`、`godot-2-5d-rendering-engineer`、`godot-qa-ci-engineer` 等；未來由 orchestrator 協調而非新造一套平行技能。
 

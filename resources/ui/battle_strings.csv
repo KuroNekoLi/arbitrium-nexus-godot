@@ -41,9 +41,9 @@ BATTLE_INTENT_DETAIL,%s → %s · %d hits,%s → %s · %d 段
 BATTLE_PROTECTABLE,Single target · Protect available,單體攻擊 · 可守護
 BATTLE_BOSS_STRIKE,Core assault,核心突擊
 BATTLE_BOSS_FALLBACK,Disrupted strike,失衡突擊
-BATTLE_HERO_A,Kleya,克蕾雅
-BATTLE_HERO_B,Nova,諾瓦
-BATTLE_HERO_C,Yora,尤拉
+BATTLE_HERO_A,Party Slot 1,隊員一
+BATTLE_HERO_B,Party Slot 2,隊員二
+BATTLE_HERO_C,Party Slot 3,隊員三
 BATTLE_ROLE_A,Vanguard,前鋒
 BATTLE_ROLE_B,Tactical support,戰術支援
 BATTLE_ROLE_C,Spellcaster,施法者

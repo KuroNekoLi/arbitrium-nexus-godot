@@ -58,17 +58,18 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 	if not is_last and bool(next["battle"].get("retired_from_field_by_actor", {}).get(target, false)):
 		records.append({"kind":"CastingEffectFizzled", "casting_id":cast["casting_id"], "reason":"TARGET_RETIRED_FROM_FIELD"})
 		return {"ok":true,"core":next,"timeline":records}
-	if spell == "LS_TSUMUGI_HEAL_V1":
+	var last_effect: Dictionary = config.get("last_spell_effects", {}).get(spell, {}) if is_last else {}
+	if is_last and str(last_effect.get("kind","")) == "HEAL_BARRIER":
 		for ally: String in recipients:
 			if int(next["battle"]["actors"][ally]["hp"]) <= 0:
 				continue
-			var amount: int = int(int(next["battle"]["actors"][ally]["max_hp"])*35*numerator/(100*denominator))
+			var amount: int = int(int(next["battle"]["actors"][ally]["max_hp"])*int(last_effect["heal_max_hp_bp"])*numerator/(10000*denominator))
 			var healed: Dictionary = Effects.heal(next,ally,amount)
 			if not healed["ok"]:
 				return healed
 			next = healed["core"]
 			records.append_array(healed["timeline"])
-			var shield: Dictionary = Effects.barrier(next,ally,int(260*numerator/denominator),round_id)
+			var shield: Dictionary = Effects.barrier(next,ally,int(int(last_effect["barrier_amount"])*numerator/denominator),round_id)
 			next = shield["core"]
 			records.append_array(shield["timeline"])
 	else:
@@ -76,19 +77,22 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 		p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*numerator/denominator)
 		if not is_last:
 			p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*int(cast.get("lv40_power_bp",10000))/10000)
-			if actor == "B":
-				p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*110/100)
-				records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":"AKANE_P01","multiplier_bp":11000})
+			var full_passive: Dictionary = config.get("lv40_full_chant_passives", {}).get(actor, {})
+			if str(full_passive.get("kind", "")) == "FULL_CHANT_HP_MULTIPLIER":
+				var bonus_bp: int = int(full_passive["multiplier_bp"])
+				p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*bonus_bp/10000)
+				records.append({"kind":"PassiveTriggered","actor_id":actor,
+					"passive_id":str(full_passive["id"]),"multiplier_bp":bonus_bp})
 		for recipient: String in recipients:
 			var hit: Dictionary = Damage.resolve(next,actor,recipient,p,{},config,command_id)
 			if not hit["ok"]:
 				return hit
 			next = hit["core"]
 			records.append_array(hit["timeline"])
-			if spell == "LS_REN_SWORD_V1":
+			if is_last and int(last_effect.get("break_on_hit",0)) > 0:
 				for trace: Dictionary in hit["timeline"]:
 					if str(trace.get("kind","")) == "DamageTrace" and bool(trace.get("hit",false)):
-						var broken: Dictionary = Effects.break_damage(next,24,str(cast["casting_id"]))
+						var broken: Dictionary = Effects.break_damage(next,int(last_effect["break_on_hit"]),str(cast["casting_id"]))
 						next = broken["core"]
 						records.append_array(broken["timeline"])
 						break

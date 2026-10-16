@@ -65,8 +65,8 @@ static func check_action_outcome(core: Dictionary, config: Dictionary = {}) -> D
 		"victory_priority": true, "scope": "M3_1_HP_BOUNDARY_ONLY"}
 	if config.get("m5_4_outcome_enabled",false) == true:
 		event["scope"] = "M5_4_COMMITTED_ACTION_OR_PHASE_BOUNDARY"
-		# All-Exhausted while HP>0 remains an explicit pending user decision.
-		# Never reclassify it as all Incapacitated/DEFEAT.
+		# Historical configs retain their old unresolved edge. New battles use
+		# approved retirement membership, independently from HP/KO status.
 		var all_exhausted: bool = not next["battle"]["allies"].is_empty()
 		for ally: Variant in next["battle"]["allies"]:
 			var member: Dictionary = next["battle"]["actors"][ally]
