@@ -2,6 +2,7 @@
 extends VBoxContainer
 const Roster = preload("res://scenes/ui/hero_roster_item.tscn")
 const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
+const PartyCatalogue = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 const ICON_BARRIER: Texture2D = preload("res://assets/ui/v35/status_barrier.svg")
 const ICON_GUARD: Texture2D = preload("res://assets/ui/v35/status_guard.svg")
 const ICON_CASTING: Texture2D = preload("res://assets/ui/v35/status_casting.svg")
@@ -12,14 +13,16 @@ var roster: Dictionary = {}
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 9)
-	for i: int in 3:
-		var actor: String = ["A", "B", "C"][i]
+	var roster_data: Dictionary = PartyCatalogue.read()
+	var party_ids: Array[String] = PartyCatalogue.party_ids(roster_data)
+	for i: int in party_ids.size():
+		var actor: String = party_ids[i]
 		var view: Button = Roster.instantiate()
 		view.custom_minimum_size = Vector2(260, 100)
 		add_child(view)
 		view.get_node("Layout/Stats").add_theme_constant_override("separation", 0)
 		var portrait: Texture2D = AppearanceRegistry.portrait_for(actor)
-		view.configure(actor, tr("BATTLE_HERO_" + actor), portrait, [Color("efc675"), Color("75d6ff"), Color("df9cff")][i])
+		view.configure(actor, tr(str(roster_data["actors"][actor]["name_key"])), portrait, [Color("efc675"), Color("75d6ff"), Color("df9cff")][i % 3])
 		view.hero_selected.connect(func(id: String) -> void: actor_requested.emit(id))
 		roster[actor] = view
 

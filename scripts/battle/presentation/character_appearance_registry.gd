@@ -1,17 +1,15 @@
 @tool
 extends RefCounted
-## Current reversible art mapping: actual Lv40 actors A Ren / B Akane / C Tsumugi.
-## No domain metadata is stored here. Boss keeps its current placeholder.
-const REN: Resource = preload("res://resources/ui/characters/ren.tres")
-const AKANE: Resource = preload("res://resources/ui/characters/akane.tres")
-const TSUMUGI: Resource = preload("res://resources/ui/characters/tsumugi.tres")
+## Battle slots are stable; identity and appearance come from versioned roster.
+const Roster = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 
 static func appearance_for(id: String) -> BattleCharacterAppearance:
-	match id:
-		"A": return REN as BattleCharacterAppearance
-		"B": return AKANE as BattleCharacterAppearance
-		"C": return TSUMUGI as BattleCharacterAppearance
-	return null
+	var roster: Dictionary = Roster.read()
+	var actor: Dictionary = roster.get("actors", {}).get(id, {})
+	var path: String = str(actor.get("appearance_path", ""))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return null
+	return load(path) as BattleCharacterAppearance
 
 static func portrait_for(id: String) -> Texture2D:
 	var item: BattleCharacterAppearance = appearance_for(id)

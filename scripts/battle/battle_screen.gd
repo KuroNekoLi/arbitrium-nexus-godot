@@ -4,6 +4,7 @@ extends Control
 @export_enum("fixture", "lv40", "lv40_playable") var encounter_profile: String = "fixture"
 const Encounter = preload("res://tests/fixtures/m5_full_battle_fixture.gd")
 const Lv40Encounter = preload("res://scripts/domain/m5/lv40/lv40_encounter.gd")
+const PartyCatalogue = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 const Adapter = preload("res://scripts/battle/presentation/battle_presentation_adapter.gd")
 const Factory = preload("res://scripts/battle/battle_command_factory.gd")
 const Cost = preload("res://scripts/domain/m2/economy/cost_resolver.gd")
@@ -16,7 +17,7 @@ const LogFormatter = preload("res://scripts/battle/presentation/battle_log_forma
 const LastView = preload("res://scripts/battle/presentation/last_spell_read_model.gd")
 const Appearances = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 const EditorPreview = preload("res://scripts/battle/presentation/battle_editor_preview_data.gd")
-@export_enum("Battle", "Last Spell Ren", "Last Spell Akane", "Last Spell Tsumugi") var editor_preview_mode: String = "Battle":
+@export_enum("Battle", "Last Spell Slot 1", "Last Spell Slot 2", "Last Spell Slot 3") var editor_preview_mode: String = "Battle":
 	set(value):
 		editor_preview_mode = value
 		if Engine.is_editor_hint() and is_node_ready():
@@ -28,7 +29,7 @@ var director: Node
 signal action_requested(command: Dictionary)
 var snapshot: Dictionary = {}
 var config: Dictionary = {}
-var selected_actor: String = "A"
+var selected_actor: String = "A" # Neutral battle slot, reassigned from the roster on entry
 var pending_card: String = ""
 var pending_kind: String = ""
 var selected_target: String = ""
@@ -55,7 +56,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
-		for id: String in ["A","B","C"]:
+		for id: String in PartyCatalogue.party_ids():
 			var item: Resource = Appearances.appearance_for(id)
 			if item != null and not item.changed.is_connected(_on_editor_appearance_changed):
 				item.changed.connect(_on_editor_appearance_changed)
@@ -77,6 +78,15 @@ func _ready() -> void:
 		push_warning("BLOCKED_CONTRACT: Lv40 playable BattleScreen/Controller wiring remains staging-only")
 		return
 	config = Lv40Encounter.config() if encounter_profile == "lv40_playable" else Encounter.config()
+	var slots: Array[String] = PartyCatalogue.party_ids()
+	if slots.is_empty():
+		push_error("Invalid or missing party roster")
+		return
+	selected_actor = slots[0]
+	for slot: String in slots:
+		var visual: Node = $Design/Arena.get_node_or_null(slot)
+		if visual != null and config.get("m5_lv40_enabled", false):
+			visual.set("appearance", Appearances.appearance_for(slot))
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)
@@ -135,7 +145,7 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 ## Same name fallbacks as the visible panels: EnemyStatus titles the Boss with
 ## BATTLE_TITLE and the party roster uses BATTLE_HERO_<id>.
 func log_actor_name(id: String) -> String:
-	var fallback: String = "BATTLE_TITLE" if id == "Boss" else "BATTLE_HERO_" + id if id in ["A", "B", "C"] else id
+	var fallback: String = "BATTLE_TITLE" if id == "Boss" else str(PartyCatalogue.read().get("actors", {}).get(id, {}).get("name_key", id))
 	return tr(str(view_model.get("actor_name_keys", {}).get(id, fallback)))
 
 func _log_rows(events: Array) -> Array:
@@ -182,7 +192,7 @@ func _reaction_choices() -> Array:
 	var options: Array = []
 	var window: Dictionary = snapshot["reaction_window"]
 	if window.get("status","") != "DRAFTING": return options
-	for actor: String in ["A","B","C"]:
+	for actor: String in snapshot["core"]["battle"]["allies"]:
 		for kind: String in ["BASIC_GUARD","BASIC_PROTECT"]:
 			var target: String = actor if kind == "BASIC_GUARD" else str(snapshot["published_intents"][0]["target_ids"][0])
 			var entry: Dictionary = {"kind":kind,"actor_id":actor,"target_actor_id":target}
@@ -389,7 +399,7 @@ func _open_last_preview() -> void:
 	presentation["actor_id"] = selected_actor
 	var texture: Texture2D = Appearances.cg_for(selected_actor)
 	if texture == null: texture = hud.roster[selected_actor].portrait.texture
-	var character: String = str(Lv40Encounter.CHARACTERS.get(selected_actor, "")) if config.get("m5_lv40_enabled", false) else ""
+	var character: String = str(config.get("lv40_actor_definitions", {}).get(selected_actor, {}).get("character_id", "")) if config.get("m5_lv40_enabled", false) else ""
 	var title: String = tr("last_spell." + character + ".name") if not character.is_empty() else tr("BATTLE_LAST")
 	_hand_before_last = hud.hand.visible
 	hud.hand.hide()
@@ -551,12 +561,12 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 	var party_index: int = -1
-	for i: int in 3:
+	for i: int in PartyCatalogue.party_ids().size():
 		if event.is_action_pressed("battle_party_"+str(i+1)): party_index = i
 	var focused: Control = get_viewport().gui_get_focus_owner()
 	if focused is Button and not focused is Card and event.is_action_pressed("ui_accept"): return
 	if party_index >= 0:
-		select_actor(["A","B","C"][party_index])
+		select_actor(PartyCatalogue.party_ids()[party_index])
 	elif event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right"):
 		if hud.card_views.is_empty(): return
 		keyboard_index = wrapi(keyboard_index + (1 if event.is_action_pressed("ui_right") else -1),0,hud.card_views.size())
@@ -586,7 +596,7 @@ func _refresh_editor_preview() -> void:
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint():
-		for id: String in ["A","B","C"]:
+		for id: String in PartyCatalogue.party_ids():
 			var item: Resource = Appearances.appearance_for(id)
 			if item != null and item.changed.is_connected(_on_editor_appearance_changed):
 				item.changed.disconnect(_on_editor_appearance_changed)

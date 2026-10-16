@@ -34,7 +34,7 @@ func _initialize() -> void:
 		check(due.get("ok",false) and due["timeline"].size() > 0 and int(due["core"]["battle"]["statuses"][0]["remaining_ticks"]) == 1, "DEMO-10-SCORCH-ENEMY-END-ONLY")
 	check(s["core"]["battle"]["enemies"] == ["Boss"],"DEMO-01-SINGLE-BOSS")
 	check(int(s["core"]["battle"]["party_resources"]["current_ap"]) == 6,"DEMO-01-AP6")
-	for actor: String in Encounter.LOADOUTS:
+	for actor: String in Encounter.loadouts():
 		var cards: Dictionary = s["core"]["cards"]["actors"][actor]
 		check(cards["instances"].size() == 12,"DEMO-01-INSTANCES-"+actor)
 		check(cards["zones"]["hand"].size() == 4,"DEMO-01-HAND-"+actor)
@@ -42,10 +42,10 @@ func _initialize() -> void:
 		for instance: Dictionary in cards["instances"].values():
 			actual.append(instance["definition_id"])
 		actual.sort()
-		var expected: Array = Encounter.LOADOUTS[actor].duplicate()
+		var expected: Array = Encounter.loadouts()[actor].duplicate()
 		expected.sort()
 		check(actual == expected,"DEMO-01-EXACT-DECK-"+actor)
-		check(s["core"]["battle"]["actors"][actor]["meta"]["character_id"] == Encounter.CHARACTERS[actor],"DEMO-01-CHARACTER-"+actor)
+		check(s["core"]["battle"]["actors"][actor]["meta"]["character_id"] == Encounter.characters()[actor],"DEMO-01-CHARACTER-"+actor)
 	check(int(s["core"]["battle"]["actors"]["Boss"]["max_hp"]) == 2700,"DEMO-01-DOC29-HP")
 	check(c["m5_actor_stats"]["Boss"]["patk"] == 417 and c["m5_actor_stats"]["Boss"]["matk"] == 434,"DEMO-01-DOC29-ATTACK")
 	check(s["core"]["battle"]["m53"]["break_gauge"] == 22,"DEMO-09-DOC29-BREAK")
