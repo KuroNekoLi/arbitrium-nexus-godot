@@ -1,6 +1,6 @@
 # 仲裁核心
 
-> **2026-10-15 戰鬥規格同步提醒**：本 README 以下敘述（每角色配8張卡、每 Player Phase 普通出牌最多2張）是目前**可執行舊版原型**的操作方法，不是最新已核准 Combat Rules。新版玩法以 [docs/combat/00](docs/combat/00_README_COMBAT_RULES_BASELINE_V0_8.md)、[19](docs/combat/19_PHASE2_APPROVED_M_D18_D31_AND_P2_D10_D16.md)、20/21 以及25–31為準：每角色配置12張 SP、全隊共享 BaseAP6，基礎攻擊／治療／防護可跨職能配牌。**規格已語義合併，Godot 程式與UI尚未遷移**。來源/目標衝突稽核：[A方案報告](docs/combat/UPSTREAM_RECONCILIATION_A_2026-10-15.md)。
+> **現行戰鬥玩法唯一入口：** [docs/combat/README.md](docs/combat/README.md)。新版各系統規則、[31張候選技能圖鑑](docs/combat/卡牌圖鑑.md)與[Agent實作契約](docs/combat/engineering/戰鬥引擎實作契約.md)已整合。**每人12張牌組／起手4／手牌最多8／全隊共享6AP**；本README下方8卡／兩次出牌等敘述是**舊UI原型使用說明**，不代表現行規格。Lv40另有 `scenes/battle/lv40_playable_battle.tscn` 的正向接線測試，仍須核對正式可玩驗收。
 
 Godot 4.x 單人 2D 橫向回合制卡牌 JRPG 原型，採 1280×720（16:9）畫面。
 
@@ -36,7 +36,7 @@ godot --path . --script res://tests/capture_deck_builder.gd
 
 畫面證據：[主戰鬥介面](outputs/combat_ui_mvp.png)、[牌組編輯器](outputs/deck_builder.png)、[角色突進／卡牌飛行](outputs/card_attack_midflight.png)、[命中結果](outputs/card_attack_impact.png)。
 
-戰鬥規格 source of truth：[docs/COMBAT_RULES_V1.md](docs/COMBAT_RULES_V1.md)。
+戰鬥規格 Source of Truth：[docs/combat/README.md](docs/combat/README.md)；舊 `docs/COMBAT_RULES_V1.md` 為歷史原型說明。
 
 ## 範圍
 
