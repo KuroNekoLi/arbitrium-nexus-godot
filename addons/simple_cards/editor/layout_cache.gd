@@ -135,6 +135,15 @@ func _generate_layout_ids_file() -> void:
 ## Non-destructive startup sync: removes only entries whose files are deleted from disk, and adds any new layouts found.
 func sync_cache() -> void:
 	if DEBUG_LOG: print("LayoutCache: Syncing cache...")
+	# `work/` is a local scratch area (gitignored by this project), not part of
+	# the layouts shipped with the project. Remove stale entries from older
+	# scans and keep it out of the recursive scan below.
+	var scratch_paths: Array[String] = []
+	for cached_path in layouts.keys():
+		if str(cached_path).begins_with("res://work/"):
+			scratch_paths.append(cached_path)
+	for cached_path in scratch_paths:
+		layouts.erase(cached_path)
 	
 	var paths_to_remove: Array[String] = []
 	for path in layouts.keys():
@@ -193,7 +202,7 @@ func _scan_directory_recursive(path: String, found_paths: Array[String]) -> void
 		var full_path = path + file_name
 
 		if dir.current_is_dir():
-			if not file_name.begins_with("."):
+			if not file_name.begins_with(".") and full_path != "res://work":
 				_scan_directory_recursive(full_path + "/", found_paths)
 
 		elif file_name.ends_with(".tscn"):

@@ -30,9 +30,6 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
 
-[editor]
-
-
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/simple_cards/plugin.cfg")
