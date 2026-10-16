@@ -5,6 +5,8 @@ const Scene = preload("res://scenes/battle/battle_screen.tscn")
 const Fixture = preload("res://tests/fixtures/m5_full_battle_fixture.gd")
 const Last = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd")
 const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
+const BossPolicy = preload("res://scripts/domain/m5/boss/boss_ai_policy.gd")
+const Lv40Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 var total: int = 0
 var failed: int = 0
@@ -59,6 +61,11 @@ func run() -> void:
 			"RET-DOMAIN-FIELD-MEMBERSHIP")
 		check(final_core["battle"]["allies"].has("B"), "RET-DOMAIN-KEEPS-IDENTITY")
 		check(final_core["cards"]["actors"].has("B"), "RET-DOMAIN-KEEPS-HAND-ZONES")
+		check(not HP.heal(final_core,"B",5)["ok"], "RET-DOMAIN-HEAL-REJECTS-RETIRED")
+		check(not HP.revive(final_core,"B",20)["ok"], "RET-DOMAIN-REVIVE-REJECTS-RETIRED")
+		check(BossPolicy._target(final_core,"FIRST_ACTIVE") == "A", "RET-BOSS-TARGETS-OTHER-ALLY")
+		check(not Lv40Boss._live(final_core).has("B"), "RET-LV40-BOSS-EXCLUDES-RETIRED")
+		check(Lv40Boss._live(final_core).size() == 2, "RET-EXACTLY-TWO-LIVE-COMBATANTS")
 		check(result["timeline"][-1]["kind"] == "ActorExhausted" and
 			not bool(result["timeline"][-1]["still_targetable"]),
 			"RET-DOMAIN-EVENT-NO-LONGER-TARGETABLE")
