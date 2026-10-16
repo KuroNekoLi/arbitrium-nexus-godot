@@ -58,6 +58,11 @@ func try_drag(screen: Control, label: String) -> void:
 	for i: int in 20:
 		await move_mouse(start.lerp(target,float(i+1)/20.0))
 	await create_timer(0.1).timeout
+	print("TARGET_ARROW_DIAG scenario=%s viewport=%s window=%s screen=%s designScale=%s start=%s target=%s hitRect=%s actualMouse=%s arrowTip=%s hovered=%s manualHit=%s" % [
+		label, root.get_visible_rect().size, root.size, screen.size, screen.design.scale,
+		start, target, screen.hud.target_buttons["Boss"].get_global_rect(),
+		arrow.get_global_mouse_position(), arrow.end_global, arrow.hovered_target,
+		arrow.target_at(arrow.get_global_mouse_position())])
 	check(arrow.is_aiming,"DRAG-STARTED-"+label)
 	check(arrow.hovered_target == "Boss","SNAPPED-TO-BOSS-"+label)
 	check(arrow.end_global.distance_to(target) < 3.0,"ARROW-TIP-"+label)
