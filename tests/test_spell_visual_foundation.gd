@@ -89,6 +89,9 @@ func run() -> void:
 	await process_frame
 	screen.queue_free()
 	await process_frame
+	# SceneTreeTimer objects exist until their scheduled timeout even when
+	# the director manually emits timeout to cancel suspended visual waits.
+	await create_timer(0.55).timeout
 	print("SPELL_VISUAL_REPORT executed=%d passed=%d failed=%d" %
 		[checks,checks-failures,failures])
 	quit(0 if failures == 0 else 1)
