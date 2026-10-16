@@ -84,3 +84,19 @@
 本功能示範如何把「玩家正在考慮的選擇」與「已發生的戰鬥事實」分開；Control／signal／focus 負責互動，Dictionary snapshot／Reducer 負責規則。把 UI query 和 command 共用真 Resolver，可避免預覽與實際費用漂移；深複製候選狀態保證 RNG、卡區及事件一起隔離。動畫從 accepted receipt 消費，省略動畫也不改結果。
 
 未採先扣 A 再退款的補償設計，因為無法可靠撤銷 RNG、Boss Break 與觸發。未採另一套 Card Drag Controller，以免手感、輸入和焦點互搶。未建立獨立 Combo 普通卡牌，也沒有把 Finisher 改名。回退可 revert 本分支程式 commit，既有 Scene、素材及舊 Replay 無須遷移。
+
+## 2026-10-17：Domain、GUI 與正式 Lv40 開局牌組驗收
+
+本節更新上述 2026-10-16 的暫緩狀態；只覆蓋本節列出的 Combo Preparation V2 行為，不代表整場 Boss 戰或所有連攜內容全部驗收完成。
+
+- Repo HEAD：`89803be`（驗收時 `master` 與 `origin/master` 同步）；Godot：`4.7.2.stable.official.ed1daf0bf`。
+- 新 Domain：`COMBO_V2_REPORT executed=142 passed=142 failed=0`，涵蓋 Setup／Finisher 真付款、額外 AP 為 0、雙目標防禦配方、原子拒絕、重播與 100 個 seed。
+- 新 GUI：`COMBO_V2_GUI_REPORT executed=260 passed=260 failed=0`，經真 Godot 視窗的滑鼠輸入、既有拖曳／目標箭頭、連攜比較、取消／普通分支／複合提交與 Replay；涵蓋繁中／英文及 1280×720／1920×1080。第一輪曾遇到 Windows 輸入／測試 seed 問題，原始紀錄保留於 `evidence/logs/gui-attempt-1.log`、`gui-attempt-2-missed-setup-seed.log`；最終第三輪通過紀錄為 `evidence/logs/gui-current-master.log`。
+- **可重跑真實內容測試**：新增 `tests/test_real_lv40_combo_v2_domain.gd` 與 `tests/test_real_lv40_combo_v2_gui.gd`。Domain 使用真實內容／起手牌，14/14；GUI 在真實 Lv40 場景以原生 Godot 視窗操作，20/20；兩支測試皆經 `--check-only`。真實場景 GUI 測試以 `Lv40Encounter.initial(6)` 開始，不改牌區、不注入卡片：A 槽 `A:sp:11`（R08）與 C 槽 `C:sp:07`（T04）自然出現在 v0.3 開局手牌；操作完成準備、選擇不同友方目標、預覽、確認與一次複合命令提交。兩卡皆進入棄牌堆，AP 由 6 降至 4，B/C 的 Barrier 分別為 90/265，Replay hash 相符。詳 `evidence/logs/real-roster-domain-committed-test.log`、`real-roster-gui.log` 及四張 `evidence/real-lv40-*.png`。
+- 回歸：舊 M5 Combo 44/44、Replay 15/15、Lv40 playable integration 32/32；原始輸出在 `evidence/logs/*-current-master.log`。
+
+### 採納範圍與保留限制
+
+Combo Preparation V2 的 Setup／Finisher 選擇、兩種已登錄配方（OFFENSE 與 DEFENSE）、比較／取消／一般施放／複合提交現在已接入正式 Lv40 可玩場景；真實開局牌組的 DEFENSE 配方已通過端到端場景操作。攻擊配方已由新版 Domain 與雙語／雙解析度 GUI suite 覆蓋。玩家可在 Lv40 實際戰鬥中使用目前實作的兩種 V2 配方。此驗收完成的是戰鬥內一次連攜交易，不是完整 Boss 勝利流程。
+
+以下仍不能宣稱完成：完整真人／整場 Boss 戰勝利流程、未列入 V2 Recipe Registry 的 CASTING 配方、Last Spell 共鳴、多敵人／全體連攜及角色專屬正式演出。角色配方數值與技能仍依規格標為候選／`BALANCE_PROVISIONAL`；本輪驗收只證明流程、支付、效果投影及重播一致，並未把候選數值升格為已核准平衡。

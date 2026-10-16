@@ -41,7 +41,7 @@ func click(point: Vector2) -> void:
 	await motion(point)
 	await button(point,true)
 	await button(point,false)
-	await create_timer(0.1).timeout
+	await create_timer(0.25).timeout
 
 func card_for(instance: String) -> Control:
 	for card: Control in screen.hud.card_views:
@@ -92,7 +92,7 @@ func begin_pair(rig: Dictionary, target: String, screenshot: bool = false) -> vo
 	check(screen.hud.targeting_arrow.is_aiming,"CP2-34-existing-drag-arrow")
 	if screenshot: await capture("04-drag")
 	await button(end,false)
-	await create_timer(0.1).timeout
+	await create_timer(0.25).timeout
 	check(screen.hud.combo_preview.visible and screen.preparation.state == "AWAITING_CONFIRMATION","CP2-35-confirmation")
 	check(Model.state_hash(screen.snapshot) == before and screen.controller.tape().is_empty(),"CP2-drop-no-payment")
 
@@ -112,7 +112,7 @@ func run() -> void:
 			screen.director.reduced_motion = true
 			screen.director.overlay.reduced_motion = true
 			screen.director.overlay.audio_enabled = false
-			prefix = "%dx%d-%s" % [dimensions.x,dimensions.y,locale]
+			prefix = "acceptance-20261017-%dx%d-%s" % [dimensions.x,dimensions.y,locale]
 			await capture("01-normal")
 			var rig: Dictionary = Fixture.make()
 			await reset(rig)
@@ -145,8 +145,7 @@ func run() -> void:
 			screen.hud.combo_preview.setup_targets.select(1)
 			screen._update_combo_comparison()
 			# The longer English comparison expands the VBox. Read button geometry
-			# only after the real Container layout completes. NOT rerun locally:
-			# user retained the three-attempt GUI gate on 2026-10-16.
+			# only after the real Container layout completes; English wraps differently.
 			await process_frame
 			await process_frame
 			await click(screen.hud.combo_preview.combo_button.get_global_rect().get_center())

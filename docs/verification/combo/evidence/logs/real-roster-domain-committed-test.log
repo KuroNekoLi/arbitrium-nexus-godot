@@ -1,0 +1,17 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS REAL-COMBO-01-approved-roster-content-loaded
+PASS REAL-COMBO-02-12-SP-A
+PASS REAL-COMBO-02-12-SP-B
+PASS REAL-COMBO-02-12-SP-C
+PASS REAL-COMBO-03-natural-opening-hand-R08-T04
+PASS REAL-COMBO-04-recipe-from-live-hand
+PASS REAL-COMBO-05-two-card-action-accepted
+PASS REAL-COMBO-06-input-snapshot-unchanged
+PASS REAL-COMBO-07-real-card-instances-paid
+PASS REAL-COMBO-08-real-AP-MP-costs-no-bonus-AP
+PASS REAL-COMBO-09-selected-target-effects
+PASS REAL-COMBO-10-domain-combo-event
+PASS REAL-COMBO-11-replay-equality
+PASS REAL-COMBO-12-low-MP-atomic-rejection
+REAL_LV40_COMBO_DOMAIN_REPORT executed=14 passed=14 failed=0 seed=6
