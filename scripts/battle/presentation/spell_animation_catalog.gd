@@ -22,6 +22,34 @@ const SUPPORT: Array[String] = ["BARRIER", "WARD", "AURA", "HEAL", "PARTY_HEAL",
 static func style_for(card_id: String) -> String:
 	return str(STYLE.get(card_id, "NONE"))
 
+## Pure visual enrichment: production CastingReleased omits spell/target IDs.
+## Never mutate authoritative events or add these fields to replay commands.
+static func annotate_releases(events: Array, prior_casts: Dictionary) -> Array:
+	var result: Array = events.duplicate(true)
+	for event: Dictionary in result:
+		if str(event.get("kind","")) not in ["CastingReleased","LastSpellReleased"]: continue
+		var detail: Dictionary = event.get("details",{})
+		var cast: Dictionary = prior_casts.get(str(detail.get("casting_id","")),{})
+		if not detail.has("spell_id") and cast.has("spell_id"): detail["spell_id"] = cast["spell_id"]
+		if not detail.has("target_actor_id") and cast.has("target_snapshot"):
+			detail["target_actor_id"] = str(cast["target_snapshot"].get("actor_id",""))
+	return result
+
+## Separate releases in a scheduler receipt must keep their own caster/style.
+static func release_groups(events: Array) -> Array:
+	var groups: Array = []
+	var current: Array = []
+	var has_release: bool = false
+	for event: Dictionary in events:
+		if str(event.get("kind","")) in ["CastingReleased","LastSpellReleased"]:
+			if has_release:
+				groups.append(current)
+				current = []
+			has_release = true
+		current.append(event)
+	if not current.is_empty(): groups.append(current)
+	return groups
+
 static func is_projectile(style: String) -> bool:
 	return PROJECTILES.has(style)
 

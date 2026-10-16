@@ -136,6 +136,9 @@ func _submit(command: Dictionary) -> void:
 	controller.submit(command)
 
 func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void:
+	# Released instances have disappeared from the accepted state. Recover
+	# presentation metadata from the previous snapshot, never the command tape.
+	var prior_casts: Dictionary = snapshot.get("core",{}).get("battle",{}).get("casting_instances",{}).duplicate(true)
 	for card: Control in hud.card_views:
 		if card.instance_id == command.get("card_instance_id",""):
 			var origin: Vector2 = design.get_global_transform().affine_inverse()*card.global_position
@@ -156,7 +159,10 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 	var instances: Dictionary = state.get("core",{}).get("cards",{}).get("actors",{}).get(owner_id,{}).get("instances",{})
 	if instances.has(card_id):
 		visual_command["_visual_card_id"] = str(instances[card_id].get("definition_id",""))
-	director.enqueue(events,visual_command)
+	if command.get("type","") == "COMMIT_PREPARED_COMBO_V2":
+		for role: String in ["setup","finisher"]:
+			visual_command["_visual_"+role+"_card_id"] = Prepared.definition(state,str(command[role+"_actor_id"]),str(command[role+"_card_instance_id"]))
+	director.enqueue(preload("res://scripts/battle/presentation/spell_animation_catalog.gd").annotate_releases(events,prior_casts),visual_command)
 
 ## Same name fallbacks as the visible panels: EnemyStatus titles the Boss with
 ## BATTLE_TITLE and the party roster uses BATTLE_HERO_<id>.

@@ -35,6 +35,7 @@ const AppearanceRegistry = preload("res://scripts/battle/presentation/character_
 var state_cg: Sprite2D
 var body: AnimatedSprite2D
 var motion: Tween
+var tint_tween: Tween
 var home: Vector2
 var cast_active: bool = false
 var barrier_active: bool = false
@@ -169,7 +170,10 @@ func play_attack(target_position: Vector2) -> void:
 	if Engine.is_editor_hint() or body == null or downed or retired:
 		return
 	if motion: motion.kill()
-	var from: Vector2 = position
+	var from: Vector2 = home
+	position = home # A second receipt may interrupt an unfinished lunge.
+	if state_cg != null: state_cg.hide()
+	body.show()
 	if not boss_art: body.play("run")
 	motion = create_tween()
 	motion.tween_property(self,"position",from.lerp(target_position,0.65),0.18).set_trans(Tween.TRANS_QUAD)
@@ -177,6 +181,7 @@ func play_attack(target_position: Vector2) -> void:
 	motion.tween_interval(0.18)
 	motion.tween_property(self,"position",from,0.22).set_trans(Tween.TRANS_CUBIC)
 	if not boss_art: motion.tween_callback(body.play.bind("idle"))
+	motion.tween_callback(_sync_state_cg)
 
 ## Stationary casting gesture; no scene movement or Domain state change.
 func play_spell_cast() -> void:
@@ -187,16 +192,19 @@ func play_spell_cast() -> void:
 	if not boss_art:
 		body.play("idle")
 	_align_frame()
-	body.modulate = base_tint.lightened(0.33)
-	var cast_flash: Tween = create_tween()
-	cast_flash.tween_property(body,"modulate",base_tint,0.31)
+	_sync_state_cg()
+	_flash_tint(base_tint.lightened(0.33),0.31)
 
 func play_hit() -> void:
 	if Engine.is_editor_hint() or body == null or retired: return
-	body.modulate = Color(2,1.3,1.5)
+	_flash_tint(Color(2,1.3,1.5),0.28)
+
+func _flash_tint(tint: Color, duration: float) -> void:
+	if tint_tween: tint_tween.kill()
 	var drawable: CanvasItem = state_cg if state_cg != null and state_cg.visible else body
-	drawable.modulate = Color(2,1.3,1.5)
-	create_tween().tween_property(drawable,"modulate",base_tint,0.28)
+	drawable.modulate = tint
+	tint_tween = create_tween()
+	tint_tween.tween_property(drawable,"modulate",base_tint,duration)
 
 func _update_base_tint() -> void:
 	# base_tint remains the public resting colour used by skip/reset contracts.
@@ -213,6 +221,7 @@ func project_conditions(status: String, casting: bool, barrier: bool, field_reti
 	barrier_active = barrier and not retired
 	if changed_pose:
 		if motion: motion.kill()
+		if tint_tween: tint_tween.kill()
 		position = home
 		body.rotation = 0.0
 		if downed:
@@ -231,6 +240,7 @@ func reset_motion() -> void:
 	if Engine.is_editor_hint() or body == null:
 		return
 	if motion: motion.kill()
+	if tint_tween: tint_tween.kill()
 	position = home
 	body.play("idle")
 	if downed:
@@ -248,5 +258,6 @@ func _process(delta: float) -> void:
 
 func _exit_tree() -> void:
 	if motion: motion.kill()
+	if tint_tween: tint_tween.kill()
 	if appearance != null and appearance.changed.is_connected(_on_art_changed):
 		appearance.changed.disconnect(_on_art_changed)

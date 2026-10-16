@@ -30,9 +30,12 @@ func enqueue(events: Array, command: Dictionary) -> void:
 			for event: Dictionary in fresh:
 				if str(event["command_id"]) == str(command["command_id"])+suffix: group.append(event)
 			var source: String = command["setup_actor_id"] if suffix == ":setup" else command["finisher_actor_id"]
-			queue.append({"events":group.duplicate(true),"command":{"type":"PLAY_LV40_CARD","actor_id":source}})
+			var role: String = "setup" if suffix == ":setup" else "finisher"
+			queue.append({"events":group.duplicate(true),"command":{"type":"PLAY_LV40_CARD","actor_id":source,
+				"target_actor_id":str(command[role+"_target_ids"][0]),"_visual_card_id":str(command.get("_visual_"+role+"_card_id",""))}})
 	else:
-		queue.append({"events":fresh.duplicate(true),"command":command.duplicate(true)})
+		for group: Array in SpellCatalog.release_groups(fresh):
+			queue.append({"events":group.duplicate(true),"command":command.duplicate(true)})
 	if not playing: _play_next()
 
 func _actor(id: String) -> Node2D:

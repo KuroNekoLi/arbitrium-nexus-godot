@@ -1,0 +1,43 @@
+name: Reviewed Branch Presentation - Headless Only
+on:
+  push:
+    branches: [master, 'codex/review-all-unmerged-20261016']
+    paths:
+      - 'scripts/battle/**'
+      - 'scripts/ui/**'
+      - 'assets/characters/**'
+      - 'tests/test_branch_merge_presentation.gd'
+      - 'tests/test_spell_visual_foundation.gd'
+      - 'tests/test_p4_character_state_cg.gd'
+      - 'tests/test_p4_target_arrow_contract.gd'
+      - '.github/workflows/ci-reviewed-presentation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  presentation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-godot-ci
+      - name: Import and 126 presentation assertions; deferred Combo suites excluded
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/reviewed-presentation"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/reviewed-presentation/import.log" 2>&1
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/reviewed-presentation/import.log"
+          for spec in \
+            'test_branch_merge_presentation:BRANCH_PRESENTATION_REPORT:15' \
+            'test_spell_visual_foundation:SPELL_VISUAL_REPORT:46' \
+            'test_p4_character_state_cg:STATE_CG_REPORT:39' \
+            'test_p4_target_arrow_contract:TARGET_ARROW_REPORT:26'; do
+            bash tools/ci/run_suite.sh "$spec" "$RUNNER_TEMP/reviewed-presentation"
+          done
+          echo '126 presentation assertions; no Combo Domain or mouse GUI acceptance rerun.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reviewed-presentation-headless
+          path: ${{ runner.temp }}/reviewed-presentation/
