@@ -60,6 +60,7 @@ jobs:
             'test_m5_integration:M5_5_INTEGRATION_REPORT:32' \
             'test_m5_replay:M5_5_REPLAY_REPORT:15' \
             'test_m5_fast_seeds:M5_5_FAST_SEEDS_REPORT:5' \
+            'test_lv40_roster:CURRENT_ROSTER_REPORT:31' \
             'test_p4_scene:P4_1_REPORT:8' \
             'test_p4_hud:P4_2_REPORT:36' \
             'test_p4_integration:P4_3_REPORT:31' \

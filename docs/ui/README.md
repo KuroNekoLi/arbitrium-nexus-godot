@@ -49,9 +49,9 @@
 ## 最值得優先重用的程式與素材
 
 - `scenes/ui/hero_roster_item.tscn` + `scripts/ui/hero_roster_item.gd`：已是角色資訊共用元件。
-- `scripts/ui/card_view.gd` + `addons/simple_cards/`：已具 hover／drag，但 Card Artwork 還是用 atlas index hardcode。
+- 現行卡牌以 `scripts/battle/ui/` 元件和 `resources/ui/appearances/` 呈現；舊 `scripts/ui/card_view.gd` 已隨8卡原型刪除。
 - `scripts/main.gd`：目前大量原型 UI 是動態搭建在這支檔案；應逐步抽離而不是整包重寫。
-- `assets/kleya_atlas.png`、`nova_atlas.png`、`yora_atlas.png`、`assets/portraits/`、`assets/card_art_atlas.png`。
+- 現行角色 CG／頭像由 `resources/combat/rosters/lv40_party_v0_3.json` 的 `appearance_path` 指向；舊角色名字已從新正式資料流退役。
 - `addons/kenney_fantasy_ui_borders/`、`kenney_particle_pack/`、`kenney_ui_audio/`、`kenney_rpg_audio/`，授權清單見 `CREDITS.md`。
 - `.codex/skills/` 內已有專業 `godot-card-rpg-uiux-engineer`、`godot-game-asset-pipeline`、`godot-2-5d-rendering-engineer`、`godot-qa-ci-engineer` 等；未來由 orchestrator 協調而非新造一套平行技能。
 

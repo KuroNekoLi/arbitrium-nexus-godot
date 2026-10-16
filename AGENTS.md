@@ -17,7 +17,7 @@
 
 **Content status**: named party, **31 ordinary SP CardDefinitions / 3 separate LastSpellDefinitions**, candidate Lv40 Boss, multipliers and starter decks are `CONTENT_PROVISIONAL` unless specifically approved. The Lv40 starter has 24 different SP definitions represented by **36 instances** across three 12-card loadouts, not all 31 available candidate definitions. No new gameplay rule is approved just because it appears in a headless fixture.
 
-**Legacy**: the 2026-10-14/15 numbered combat docs have been retained as historical evidence under `docs/combat/archive/legacy-2026-10-16/`; they are **NOT** parallel combat authority. Old 8-card `scripts/domain/deck_profile_store.gd` and `kleya/nova/yora` are prototype code, not grounds to downgrade the 12-card specification. This documentation reorganization does not itself change Godot gameplay or establish CI/visual acceptance.
+**Legacy retired**: the previous 8-card runtime, `CardCatalog`, `DeckProfileStore`, old-character hardcoded battle script and old card Resources have been deleted. The four old test entrypoints now delegate to the new 12-SP roster smoke. Historical design docs are preserved under `docs/combat/archive/legacy-2026-10-16/`, not active authority. No automatic import of old `user://deck_profile.json` exists. All three current slots read character, Variant, portrait, stats, passive and Last Spell content from the roster JSON. Do not confuse stable battle slot IDs with fixed identities. Adding more than three active slots is not implemented. New features must be actually tested at the same commit before claiming PASS.
 
 ## Work restrictions
 1. Verify Git HEAD, Godot project/version, existing tests, and real implementation before attempting changes.
