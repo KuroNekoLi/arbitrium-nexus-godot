@@ -44,12 +44,12 @@ static func config(version: String) -> Dictionary:
 	all_actors.append("Boss")
 	for actor: String in all_actors:
 		var r: Dictionary = roster["boss"] if actor == "Boss" else roster["actors"][actor]
-		c["m5_actor_stats"][actor] = {"patk":r["patk"],"matk":r["matk"],
-			"pdef":r["pdef"],"mdef":r["mdef"],
-			"accuracy":r["accuracy"],"evasion":r["evasion"],
-			"crit_rate_bp":r["crit_rate_bp"],"crit_bonus_bp":r["crit_bonus_bp"]}
-		c["lv40_actor_definitions"][actor] = {"max_hp":r["max_hp"],"max_mp":r["max_mp"],
-			"character_id":r["character_id"],"name_key":r["name_key"],"level":40}
+		c["m5_actor_stats"][actor] = {"patk":int(r["patk"]),"matk":int(r["matk"]),
+			"pdef":int(r["pdef"]),"mdef":int(r["mdef"]),
+			"accuracy":int(r["accuracy"]),"evasion":int(r["evasion"]),
+			"crit_rate_bp":int(r["crit_rate_bp"]),"crit_bonus_bp":int(r["crit_bonus_bp"])}
+		c["lv40_actor_definitions"][actor] = {"max_hp":int(r["max_hp"]),"max_mp":int(r["max_mp"]),
+			"character_id":str(r["character_id"]),"name_key":str(r["name_key"]),"level":40}
 		c["m5_element_resistance"][actor] = {"NEUTRAL":10000,"FIRE":11500 if actor == "Boss" else 10000,
 			"ARCANE":9000 if actor == "Boss" else 10000}
 	c["m5_basic_attack_profile"] = profile("PHYSICAL",10000,1,"RANDOM_PERCENT")
@@ -107,7 +107,7 @@ static func config(version: String) -> Dictionary:
 		c["last_spell_slots"][actor] = {"spell_id":spell,"unlocked":true,
 			"planned_delay_rounds":2,"base_stability":10}
 		c["last_spell_cost_definitions"][spell] = {"card_id":spell,
-			"ap_cost":3,"mp_cost":actor_data["last_spell_mp_cost"]}
+			"ap_cost":3,"mp_cost":int(actor_data["last_spell_mp_cost"])}
 		c["m5_spell_profiles"][spell] = profile("PHYSICAL" if spell == "LS_REN_SWORD_V1" else "MAGICAL",
 			65000 if spell == "LS_REN_SWORD_V1" else 68000,1,
 			"RANDOM_PERCENT" if spell == "LS_REN_SWORD_V1" else "GUARANTEED",
