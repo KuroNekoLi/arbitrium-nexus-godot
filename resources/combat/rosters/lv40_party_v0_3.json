@@ -60,7 +60,11 @@
       "last_spell_effect": {
         "kind": "DAMAGE",
         "break_on_hit": 24
-      }
+      },
+      "role_tags": [
+        "SWORDSMAN",
+        "VANGUARD"
+      ]
     },
     "B": {
       "character_id": "akane",
@@ -114,7 +118,11 @@
         "id": "AKANE_P01",
         "kind": "FULL_CHANT_HP_MULTIPLIER",
         "multiplier_bp": 11000
-      }
+      },
+      "role_tags": [
+        "BURST_MAGE",
+        "ARCANE"
+      ]
     },
     "C": {
       "character_id": "tsumugi",
@@ -170,7 +178,11 @@
         "kind": "HEAL_BARRIER",
         "heal_max_hp_bp": 3500,
         "barrier_amount": 260
-      }
+      },
+      "role_tags": [
+        "HEALER",
+        "SUPPORT"
+      ]
     }
   },
   "boss": {

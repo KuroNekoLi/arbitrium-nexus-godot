@@ -51,6 +51,12 @@ static func read(path: String = PATH) -> Dictionary:
 			return {}
 		if not full_passive.is_empty() and (str(full_passive.get("kind", "")) != "FULL_CHANT_HP_MULTIPLIER" or str(full_passive.get("id", "")).is_empty() or int(full_passive.get("multiplier_bp", 0)) < 0):
 			return {}
+		var tags: Variant = actor.get("role_tags", null)
+		if not tags is Array:
+			return {}
+		for tag: Variant in tags:
+			if not tag is String or str(tag).is_empty():
+				return {}
 		for card: Variant in actor["loadout"]:
 			if not card is String or str(card).is_empty():
 				return {}
@@ -91,3 +97,13 @@ static func variants(roster: Dictionary = {}) -> Dictionary:
 	for actor: String in party_ids(data):
 		result[actor] = str(data["actors"][actor]["variant_id"])
 	return result
+
+static func eligible(card_rule: Dictionary, character_id: String, role_tags: Array) -> bool:
+	match str(card_rule.get("kind", "")):
+		"UNIVERSAL":
+			return true
+		"ROLE_TAG":
+			return role_tags.has(str(card_rule.get("tag", ""))) and not str(card_rule.get("tag","")).is_empty()
+		"CHARACTER":
+			return not character_id.is_empty() and character_id == str(card_rule.get("character_id", ""))
+	return false

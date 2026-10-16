@@ -41,9 +41,12 @@ static func initial(seed: int = 20261014) -> Dictionary:
 	for actor: String in ids:
 		var definition: Dictionary = roster["actors"][actor]
 		contexts[actor] = {"actor_id":actor,"character_id":definition["character_id"],
-			"variant_id":definition["variant_id"],"tags":[]}
+			"variant_id":definition["variant_id"],"tags":definition["role_tags"].duplicate()}
 		owned[actor] = {}
 		for card: String in loadout[actor]:
+			if not c["lv40_card_eligibility"].has(card) or not Roster.eligible(c["lv40_card_eligibility"][card],
+					str(definition["character_id"]), definition["role_tags"]):
+				return {}
 			owned[actor][card] = int(owned[actor].get(card, 0)) + 1
 			catalogue[card] = {"id":card,"kind":"SP"}
 	var dealt: Dictionary = Draw.start_battle(loadout,contexts,catalogue,owned,seed)

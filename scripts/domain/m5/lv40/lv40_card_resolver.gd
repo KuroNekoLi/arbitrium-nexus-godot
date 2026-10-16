@@ -3,6 +3,7 @@ extends RefCounted
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const M4 = preload("res://scripts/domain/m4/integration/m4_domain_resolver.gd")
 const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
+const Roster = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 const Tactical = preload("res://scripts/domain/m5/combo/tactical_sp_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const Effects = preload("res://scripts/domain/m5/lv40/lv40_effects.gd")
@@ -46,6 +47,10 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 	var content: Dictionary = config["lv40_cards"][definition]
 	if not ["*",actor].has(str(content["owner"])):
 		return _error("LV40_INELIGIBLE_OWNER")
+	var identity: Dictionary = config.get("lv40_actor_definitions", {}).get(actor, {})
+	var card_rule: Dictionary = config.get("lv40_card_eligibility", {}).get(definition, {})
+	if not Roster.eligible(card_rule, str(identity.get("character_id","")), identity.get("role_tags", [])):
+		return _error("LV40_CARD_ELIGIBILITY_FAILED")
 	if not ["NORMAL","COMBO"].has(combo):
 		return _error("LV40_INVALID_COMBO_MODE")
 	if str(content["kind"]) == "REACTION":

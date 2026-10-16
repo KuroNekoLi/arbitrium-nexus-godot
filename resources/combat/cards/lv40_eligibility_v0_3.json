@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "authority": "CONTENT_PROVISIONAL",
+  "cards": {
+    "U01": {
+      "kind": "UNIVERSAL"
+    },
+    "U02": {
+      "kind": "UNIVERSAL"
+    },
+    "U03": {
+      "kind": "UNIVERSAL"
+    },
+    "U04": {
+      "kind": "UNIVERSAL"
+    },
+    "U05": {
+      "kind": "UNIVERSAL"
+    },
+    "R01": {
+      "kind": "ROLE_TAG",
+      "tag": "SWORDSMAN"
+    },
+    "R02": {
+      "kind": "ROLE_TAG",
+      "tag": "SWORDSMAN"
+    },
+    "R03": {
+      "kind": "ROLE_TAG",
+      "tag": "SWORDSMAN"
+    },
+    "R04": {
+      "kind": "ROLE_TAG",
+      "tag": "VANGUARD"
+    },
+    "R05": {
+      "kind": "ROLE_TAG",
+      "tag": "VANGUARD"
+    },
+    "A01": {
+      "kind": "ROLE_TAG",
+      "tag": "BURST_MAGE"
+    },
+    "A02": {
+      "kind": "ROLE_TAG",
+      "tag": "BURST_MAGE"
+    },
+    "A03": {
+      "kind": "ROLE_TAG",
+      "tag": "BURST_MAGE"
+    },
+    "A04": {
+      "kind": "ROLE_TAG",
+      "tag": "BURST_MAGE"
+    },
+    "A05": {
+      "kind": "ROLE_TAG",
+      "tag": "ARCANE"
+    },
+    "T01": {
+      "kind": "ROLE_TAG",
+      "tag": "HEALER"
+    },
+    "T02": {
+      "kind": "ROLE_TAG",
+      "tag": "HEALER"
+    },
+    "T03": {
+      "kind": "ROLE_TAG",
+      "tag": "HEALER"
+    },
+    "T04": {
+      "kind": "ROLE_TAG",
+      "tag": "SUPPORT"
+    },
+    "T05": {
+      "kind": "ROLE_TAG",
+      "tag": "SUPPORT"
+    },
+    "R06": {
+      "kind": "CHARACTER",
+      "character_id": "ren"
+    },
+    "R07": {
+      "kind": "CHARACTER",
+      "character_id": "ren"
+    },
+    "R08": {
+      "kind": "CHARACTER",
+      "character_id": "ren"
+    },
+    "A06": {
+      "kind": "CHARACTER",
+      "character_id": "akane"
+    },
+    "A07": {
+      "kind": "CHARACTER",
+      "character_id": "akane"
+    },
+    "A08": {
+      "kind": "CHARACTER",
+      "character_id": "akane"
+    },
+    "T06": {
+      "kind": "CHARACTER",
+      "character_id": "tsumugi"
+    },
+    "T07": {
+      "kind": "CHARACTER",
+      "character_id": "tsumugi"
+    },
+    "T08": {
+      "kind": "CHARACTER",
+      "character_id": "tsumugi"
+    },
+    "T09": {
+      "kind": "CHARACTER",
+      "character_id": "tsumugi"
+    },
+    "T10": {
+      "kind": "CHARACTER",
+      "character_id": "tsumugi"
+    }
+  }
+}
