@@ -1,30 +1,40 @@
-# Arbitrium Nexus｜Godot 三人卡牌 RPG
+# Arbitrium Nexus — Godot 卡牌 JRPG
 
-目前唯一的預設遊戲入口：`project.godot` → `res://scenes/battle/lv40_playable_battle.tscn`。
+> **現行戰鬥引擎只有一套：M1～M5 Domain + Lv40 Battle。** 先讀 [繁體中文戰鬥規則](docs/combat/README.md)，不要使用已退役的八張牌原型或歷史測試。
 
-## 已確認的玩法
-每名戰鬥角色**各自持有12張技能卡**，開局各抽4張，每個玩家階段不足4才補至4，手牌上限8。全隊共享基準6AP，MP各人獨立且不會每回合自然回滿；沒有「每人最多出兩張」的舊版限制。敵方反應窗口不計時自動Pass；終式獨立、成功後耗竭。
+## 執行入口與資料流
 
-## 角色與牌組：資料驅動
-`resources/combat/rosters/lv40_party_v0_3.json` 定義目前示範戰的3個戰鬥槽位、角色身分、形態、name_key、立繪資源、能力及每人12張起始牌。新增或替換角色應修改內容檔與對應翻譯／美術／技能內容，不應在 BattleScreen、CardCatalog 或牌組儲存器寫死人物名字。
+- Godot `project.godot` 預設場景：`res://scenes/battle/lv40_playable_battle.tscn`。
+- 戰鬥 UI：`scenes/battle/battle_screen.tscn`、`scripts/battle/battle_screen.gd`、`scripts/battle/ui/`。
+- 命令提交／重播：`scripts/battle/battle_controller.gd` → `scripts/domain/m5/integration/m5_domain_resolver.gd` → M1～M5。
+- Lv40 初始隊伍及 Boss 內容：`resources/combat/rosters/lv40_party_v0_3.json`；解析：`scripts/domain/m5/lv40/lv40_party_catalog.gd`；試玩／初始牌組：`lv40_encounter.gd`；候選卡牌、敵方效果及平衡參數：`lv40_content.gd` 和同目錄 resolver。
+- 角色 **A/B/C 是場內位置 ID**，不是固定人物。當前三人（朝霧蓮、九條朱音、白石紬）只是候選內容。角色美術、雙語名稱、牌組、技能和終式需一併配置，不能僅改顯示姓名就宣稱完成角色替換。
 
-原8張卡原型已從正式遊戲入口撤下；本專案的 M1～M5 Domain 與 Lv40 正向場景為唯一開發路線。**內容數值仍為候選**，尚需依真實 Godot 對局與CI確認；不能由 README 或舊原型覆寫正式戰鬥規格。
+## 不可退回的戰鬥規則
 
-## 文件與實作
-- [現行戰鬥規則（唯一入口）](docs/combat/README.md)
-- [角色圖鑑](docs/combat/角色圖鑑.md)
-- [卡牌圖鑑與起始牌組](docs/combat/卡牌圖鑑.md)
-- [工程實作契約](docs/combat/engineering/戰鬥引擎實作契約.md)
+每人 **12 張 SP**、開局手牌 4、玩家階段不足 4 補至 4、上限 8、每人每階段一次免費換牌；全隊共用 **Base AP 6**，MP 不自然逐回合補滿，未用 AP 依規則轉換 RP。沒有舊原型「每人 8 張／每階段最多出兩張／限時 Reaction 自動 Pass」。終式不進普通牌組，每人每戰一次完整詠唱；成功後耗竭，釋放前 HP 歸零則失效。詳細規則及例外以中文主題文件為準。
+
+## 工程文件
+
+- [戰鬥主題規則與角色／卡牌／Boss 圖鑑](docs/combat/README.md)
+- [Agent 實作契約](docs/combat/engineering/戰鬥引擎實作契約.md)
 - [規則與程式對照](docs/combat/engineering/規則與程式對照表.md)
-- [UI規格](docs/ui/README.md)
+- [已知差距／待驗證清單](docs/combat/engineering/待實作與待驗證功能.md)
+- [舊系統退役紀錄](docs/combat/engineering/舊系統退役與驗收紀錄.md)
+- [Battle UI／素材開發規範](docs/ui/README.md)
 
-## 目前有效的驗證
+## 執行與驗證
+
 ```bash
 godot --headless --path . --editor --import --quit
 godot --headless --path . --script res://tests/test_lv40_roster.gd
 godot --headless --path . --script res://tests/test_lv40_content.gd
 godot --headless --path . --script res://tests/test_p4_lv40_playable.gd
+python3 -m unittest discover -s tests/ci -p 'test_*.py' -v
 ```
-完整自動化以 `.github/workflows/ci-fast.yml`、`ci-integration.yml` 與 M5 regression workflow 的最新證據為準。**提交程式碼不等於這些測試已通過**。翻譯以 `resources/ui/lv40_strings.csv` 和戰鬥既有翻譯資源為準。
 
-原型視覺素材與第三方資源保留其授權記錄，詳見 [CREDITS](CREDITS.md)。切換新的角色資產前須確認影像與授權，不要因清除舊程式直接刪除仍被場景引用的素材。
+GitHub Actions：`CI Fast`、`CI Integration`、`CI P4 UI Contracts`、`CI Visual`；每日／手動 `CI Full` 執行目前 Domain 的 100 場固定種子對局。CI 成功需以**實際 commit 與該次 run** 為準，不可拿舊版紀錄充當新提交驗收。
+
+**退役範圍**：八張牌原型的 main 場景、舊 Domain／DeckBuilder 已從程式移除；舊測試相容殼與呼叫它們的 workflow 步驟也已從清理分支刪除。M1～M5 目錄是新引擎，不能因編號較早而刪掉。仍被新 HUD 使用的 `scenes/ui/hero_roster_item.tscn` 是**現役可重用元件**。
+
+美術和第三方授權見 [CREDITS](CREDITS.md)；保留歷史核准與驗證紀錄在 `docs/combat/archive/` 與 `docs/verification/`，它們不是現行規則。
