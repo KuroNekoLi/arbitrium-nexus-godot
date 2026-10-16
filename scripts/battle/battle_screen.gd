@@ -45,6 +45,8 @@ func _ready() -> void:
 		push_warning("BLOCKED_CONTRACT: Lv40 playable BattleScreen/Controller wiring remains staging-only")
 		return
 	config = Lv40Encounter.config() if encounter_profile == "lv40_playable" else Encounter.config()
+	# V3.5 live-battle policy; legacy recorded replay fixtures remain versioned.
+	config["last_spell_retirement_v1"] = true
 	hud.actor_requested.connect(select_actor)
 	hud.card_requested.connect(select_card)
 	hud.card_released.connect(_drop_card)

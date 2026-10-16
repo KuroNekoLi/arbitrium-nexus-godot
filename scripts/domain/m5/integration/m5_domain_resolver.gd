@@ -66,8 +66,9 @@ static func _status_sp(original: Dictionary, command: Dictionary,
 		return _deny(original,"M52_WRONG_TEAM")
 	if team == "ENEMY" and not battle["enemies"].has(target):
 		return _deny(original,"M52_WRONG_TEAM")
-	if bool(battle.get("retired_from_field_by_actor",{}).get(target,false)) or \
-			str(battle["actors"][target]["status"]) == "EXHAUSTED":
+	if bool(config.get("last_spell_retirement_v1",false)) and (
+			bool(battle.get("retired_from_field_by_actor",{}).get(target,false)) or
+			str(battle["actors"][target]["status"]) == "EXHAUSTED"):
 		return _deny(original,"ACTOR_RETIRED_FROM_FIELD")
 	var hp_before: int = int(battle["actors"][target]["hp"])
 	if kind == "REVIVE":

@@ -39,7 +39,8 @@ static func settle_due(core: Dictionary, next_round: int,
 			timeline.append_array(lv40_release["timeline"])
 			continue
 		if str(cast.get("kind","")) == "LAST_SPELL":
-			var last_release: Dictionary = LastSpell.settle(source,cast,next_round)
+			var last_release: Dictionary = LastSpell.settle(source,cast,next_round,
+				bool(config.get("last_spell_retirement_v1",false)))
 			if not last_release["ok"]:
 				return {"ok":false,"error":str(last_release["error"])}
 			source = last_release["core"]

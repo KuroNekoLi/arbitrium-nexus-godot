@@ -19,7 +19,8 @@ static func initialize(core: Dictionary, config: Dictionary) -> Dictionary:
 static func _live(core: Dictionary) -> Array:
 	var result: Array = []
 	for actor: String in core["battle"]["allies"]:
-		if int(core["battle"]["actors"][actor]["hp"]) > 0:
+		if int(core["battle"]["actors"][actor]["hp"]) > 0 and \
+				not bool(core["battle"].get("retired_from_field_by_actor",{}).get(actor,false)):
 			result.append(actor)
 	return result
 
@@ -183,7 +184,8 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 			fsm["core_open"] = false
 		var targets: Array = _live(next) if str(public["targeting_mode"]) == "ALL_ELIGIBLE_AT_RESOLVE" else public["target_ids"]
 		for target: String in targets:
-			if not next["battle"]["actors"].has(target) or int(next["battle"]["actors"][target]["hp"]) <= 0:
+			if not next["battle"]["actors"].has(target) or int(next["battle"]["actors"][target]["hp"]) <= 0 or \
+					bool(next["battle"].get("retired_from_field_by_actor",{}).get(target,false)):
 				records.append({"kind":"BossActionFizzled","skill_id":skill,"target_actor_id":target,"reason":"INVALID_LOCKED_TARGET"})
 				continue
 			var context: Dictionary = {"guard_actor_ids":defense.get("guard_actor_ids",[])}

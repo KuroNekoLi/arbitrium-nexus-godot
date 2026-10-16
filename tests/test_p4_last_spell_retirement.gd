@@ -50,21 +50,22 @@ func run() -> void:
 		"outcome_modifier_numerator":1,"outcome_modifier_denominator":1
 	}
 	casting["core"]["battle"]["casting_instances"][spell["casting_id"]] = spell.duplicate(true)
-	var result: Dictionary = Last.settle(casting["core"],spell,3)
+	var result: Dictionary = Last.settle(casting["core"],spell,3,true)
 	check(result["ok"], "RET-LAST-SPELL-SETTLES")
 	if result["ok"]:
 		var final_core: Dictionary = result["core"]
 		check(final_core["battle"]["actors"]["B"]["status"] == "EXHAUSTED", "RET-DOMAIN-EXHAUSTED")
-		check(final_core["battle"]["actors"]["B"]["status"] == "EXHAUSTED",
-			"RET-DOMAIN-EXHAUSTED-IS-RETIREMENT")
+		check(bool(final_core["battle"].get("retired_from_field_by_actor",{}).get("B",false)),
+			"RET-DOMAIN-FIELD-MEMBERSHIP")
 		check(final_core["battle"]["allies"].has("B"), "RET-DOMAIN-KEEPS-IDENTITY")
 		check(final_core["cards"]["actors"].has("B"), "RET-DOMAIN-KEEPS-HAND-ZONES")
-		check(result["timeline"][-1]["kind"] == "ActorExhausted", "RET-LEGACY-EVENT-PRESERVED")
+		check(result["timeline"][-1]["kind"] == "ActorExhausted" and
+			not bool(result["timeline"][-1]["still_targetable"]),
+			"RET-DOMAIN-EVENT-NO-LONGER-TARGETABLE")
 		var retired: Dictionary = initial.duplicate(true)
 		retired["core"] = final_core
-		retired["core"]["battle"]["retired_from_field_by_actor"] = {"B":true}
 		var state_hash: String = Model.state_hash(retired)
-		screen.select_actor("B")
+		screen.select_actor("A")
 		screen.present(retired)
 		card_b = screen.hud.roster["B"]
 		check(not actor_b.visible and actor_b.retired, "RET-CG-EXITED")

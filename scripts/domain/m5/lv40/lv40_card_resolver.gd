@@ -58,7 +58,7 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 	var enemy: bool = ["MAGIC","PHYSICAL"].has(str(content["kind"])) or definition == "A05"
 	var team: Array = core["battle"]["enemies"] if enemy else core["battle"]["allies"]
 	if not team.has(target) or int(core["battle"]["actors"][target]["hp"]) <= 0 or \
-			str(core["battle"]["actors"][target]["status"]) == "EXHAUSTED":
+			bool(core["battle"].get("retired_from_field_by_actor",{}).get(target,false)):
 		return _error("LV40_ILLEGAL_TARGET")
 	if ["A03"].has(definition) and target != actor:
 		return _error("LV40_SELF_TARGET_REQUIRED")

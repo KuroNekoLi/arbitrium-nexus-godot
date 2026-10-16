@@ -16,7 +16,8 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 	if int(next["battle"]["actors"][actor]["hp"]) <= 0:
 		return {"ok":false,"error":"LV40_CASTER_HP0_RELEASE_FORBIDDEN"}
 	if is_last:
-		var settled: Dictionary = Last.settle(next,cast,round_id)
+		var settled: Dictionary = Last.settle(next,cast,round_id,
+			bool(config.get("last_spell_retirement_v1",false)))
 		if not settled["ok"]:
 			return settled
 		next = settled["core"]
@@ -40,7 +41,8 @@ static func settle(core: Dictionary, cast: Dictionary, round_id: int,
 	var denominator: int = int(cast.get("outcome_modifier_denominator",1))
 	if spell == "LS_TSUMUGI_HEAL_V1":
 		for ally: String in next["battle"]["allies"]:
-			if int(next["battle"]["actors"][ally]["hp"]) <= 0:
+			if int(next["battle"]["actors"][ally]["hp"]) <= 0 or \
+					bool(next["battle"].get("retired_from_field_by_actor",{}).get(ally,false)):
 				continue
 			var amount: int = int(int(next["battle"]["actors"][ally]["max_hp"])*35*numerator/(100*denominator))
 			var healed: Dictionary = Effects.heal(next,ally,amount)
