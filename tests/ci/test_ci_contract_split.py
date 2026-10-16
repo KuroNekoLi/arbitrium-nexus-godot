@@ -41,7 +41,7 @@ class CIContractSplitTests(unittest.TestCase):
         self.assertIn("'tests/test_p4_*.gd'", self.p4)
         self.assertIn("schedule:", self.p4)
         self.assertIn("workflow_dispatch:", self.p4)
-        self.assertIn("github.sha == '81f3d941ae033f9c6523c8fdb2e7049e4cf023d4'", self.p4)
+        self.assertNotIn("github.sha ==", self.p4)
         self.assertIn("GUI_NOT_VERIFIED", self.p4)
 
 

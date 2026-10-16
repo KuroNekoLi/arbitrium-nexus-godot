@@ -7,7 +7,7 @@ var hovered_target: String = ""
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for entry: Array in [["Boss", Rect2(722,125,250,335)], ["A", Rect2(380,285,105,175)], ["B", Rect2(485,249,55,173)], ["C", Rect2(540,225,75,164)]]:
+	for entry: Array in [["Boss", Rect2(722,125,250,335)], ["A", Rect2(340,285,110,175)], ["B", Rect2(590,249,100,173)], ["C", Rect2(475,225,90,164)]]:
 		var target := Button.new()
 		target.name = "Target" + entry[0]
 		target.position = entry[1].position

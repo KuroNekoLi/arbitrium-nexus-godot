@@ -63,7 +63,15 @@ func run() -> void:
 		var target: Vector2 = screen.hud.target_buttons["Boss"].get_global_rect().get_center()
 		await move_pointer(target)
 		await create_timer(0.07).timeout
-		check(not card.face.visible, "SPG-AIM-ARROW-WITHOUT-CARD-FACE-" + str(full))
+		check(card.face.visible and card.position.distance_to(card.home) < 1.0,
+			"SPG-AIM-CARD-REMAINS-IN-HAND-" + str(full))
+		if screen.hud.targeting_arrow.hovered_target != "Boss":
+			var target_button: Control = screen.hud.target_buttons["Boss"]
+			print("SPG-AIM-DIAG mode=%s pointer=%s mouse=%s arrow_rect=%s boss_rect=%s target_at=%s legal=%s arrow_hover=%s hit_hover=%s marker=%s" % [
+				str(full), target, root.get_mouse_position(), screen.hud.targeting_arrow.get_global_rect(),
+				target_button.get_global_rect(), screen.hud.targeting_arrow.target_at(root.get_mouse_position()),
+				screen.hud.targeting_arrow.legal_ids, screen.hud.targeting_arrow.hovered_target,
+				screen.hud._targets.hovered_target, screen.hud.target_buttons["Boss"].text])
 		check(screen.hud.targeting_arrow.hovered_target == "Boss" and
 			screen.hud._targets.hovered_target == "Boss" and
 			screen.hud.target_buttons["Boss"].text == "◆",

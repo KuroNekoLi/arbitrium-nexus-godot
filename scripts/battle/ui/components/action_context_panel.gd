@@ -21,6 +21,8 @@ var artwork: TextureRect
 var action_title: Label
 var cost_badge: Label
 var target_label: Label
+var preferences_disclosure: Button
+var preferences_content: Control
 
 func _ready() -> void:
 	var root := VBoxContainer.new()
@@ -101,24 +103,25 @@ func _ready() -> void:
 
 	# V2.5: presentation-only preferences are a collapsed disclosure.
 	# Confirm/Cancel stay visible below DetailScroll even with the disclosure open.
-	var disclosure := Button.new()
-	disclosure.name = "PreferencesDisclosure"
-	disclosure.text = "⚙"
-	disclosure.tooltip_text = tr("BATTLE_REDUCED") + " · " + tr("BATTLE_MUTE")
-	disclosure.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	disclosure.custom_minimum_size.y = 18
-	disclosure.add_theme_font_size_override("font_size", 11)
+	preferences_disclosure = Button.new()
+	preferences_disclosure.name = "PreferencesDisclosure"
+	preferences_disclosure.text = "⚙"
+	preferences_disclosure.tooltip_text = tr("BATTLE_REDUCED") + " · " + tr("BATTLE_MUTE")
+	preferences_disclosure.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	preferences_disclosure.custom_minimum_size.y = 18
+	preferences_disclosure.add_theme_font_size_override("font_size", 11)
 	var preferences_style := StyleBoxEmpty.new()
 	preferences_style.content_margin_left = 4
 	preferences_style.content_margin_top = 0
 	preferences_style.content_margin_bottom = 0
-	disclosure.add_theme_stylebox_override("normal", preferences_style)
-	root.add_child(disclosure)
+	preferences_disclosure.add_theme_stylebox_override("normal", preferences_style)
+	root.add_child(preferences_disclosure)
 	var settings := VBoxContainer.new()
 	settings.name = "PreferencesContent"
 	settings.visible = false
 	content.add_child(settings)
-	disclosure.pressed.connect(func() -> void:
+	preferences_content = settings
+	preferences_disclosure.pressed.connect(func() -> void:
 		settings.visible = not settings.visible)
 	reduced_toggle = CheckButton.new()
 	reduced_toggle.text = tr("BATTLE_REDUCED")

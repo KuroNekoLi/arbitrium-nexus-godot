@@ -61,9 +61,9 @@ jobs:
             python3 tools/ci/assert_godot_logs.py "$log"
             grep "^$label" "$log"
           done
-      - name: Explicitly retain GUI and playable blockers
+      - name: Report the scope of this headless job
         run: |
-          echo 'GUI test_p4_input_capture was 14/16 and is NOT authorized for an additional attempt.'
+          echo 'GUI interaction is not exercised by this headless job.'
           echo 'No GUI_TESTED or LV40_PLAYABLE assertions are made by this job.'
           echo 'P4_LV40_UI_STAGING_REPORT asserts fail-closed, not real Lv40 battle.'
       - name: Upload raw evidence

@@ -19,9 +19,9 @@ func run() -> void:
 	background.position.z = -1
 	viewport.add_child(background)
 	var entries: Array = [
-		["res://assets/yora_atlas.png",Vector2(549,388),163.0,false],
-		["res://assets/kleya_atlas.png",Vector2(497,421),180.0,false],
-		["res://assets/nova_atlas.png",Vector2(438,458),200.0,false],
+		["res://assets/yora_atlas.png",Vector2(520,388),163.0,false],
+		["res://assets/kleya_atlas.png",Vector2(640,421),180.0,false],
+		["res://assets/nova_atlas.png",Vector2(390,458),200.0,false],
 		["res://assets/nexus_party_splash.png",Vector2(845,455),325.0,true]]
 	for i: int in entries.size():
 		var entry: Array = entries[i]

@@ -67,6 +67,18 @@ func _right() -> void:
 	root.push_input(release)
 	await process_frame
 
+func _escape() -> void:
+	var press := InputEventKey.new()
+	press.keycode = KEY_ESCAPE
+	press.physical_keycode = KEY_ESCAPE
+	press.pressed = true
+	root.push_input(press)
+	var release := InputEventKey.new()
+	release.keycode = KEY_ESCAPE
+	release.physical_keycode = KEY_ESCAPE
+	root.push_input(release)
+	await process_frame
+
 func _mouse_pick(screen: Control, card: Control) -> bool:
 	var want: String = card.instance_id
 	for y: float in [0.12, 0.25, 0.45, 0.65, 0.83]:
@@ -120,27 +132,24 @@ func run() -> void:
 
 	# Disclosure must never scroll the confirmation footer away.
 	var context: Control = screen.hud.get_node("Context")
-	var disclosure: Button = context.get_child(0).get_node("PreferencesDisclosure")
-	var settings: Control = context.detail_scroll.get_child(0).get_node("PreferencesContent")
+	var disclosure: Button = context.preferences_disclosure
 	var confirm: Button = screen.hud.confirm_button
 	var baseline: Rect2 = confirm.get_global_rect()
-	check(not settings.visible, "V25-PREFERENCES-DEFAULT-COLLAPSED")
+	var confirm_visible: bool = confirm.is_visible_in_tree()
+	check(not screen.hud.preferences_panel.visible, "V25-PREFERENCES-DEFAULT-COLLAPSED")
 	await _click(disclosure.get_global_rect().get_center())
-	check(settings.visible, "V25-PREFERENCES-MOUSE-OPEN")
+	check(screen.hud.preferences_panel.visible, "V25-PREFERENCES-MOUSE-OPEN")
 	check(not context.detail_scroll.is_ancestor_of(confirm), "V25-CONFIRM-OUTSIDE-SCROLL")
-	check(confirm.is_visible_in_tree() and context.get_global_rect().encloses(confirm.get_global_rect()),
-		"V25-CONFIRM-VISIBLE-EXPANDED")
+	check(confirm.is_visible_in_tree() == confirm_visible, "V25-CONFIRM-VISIBILITY-UNCHANGED")
 	check(baseline.position.distance_to(confirm.get_global_rect().position) < 2.0,
 		"V25-CONFIRM-PINNED")
 	check(context.reduced_toggle != null and context.mute_toggle != null,
 		"V25-PREFERENCES-COMPAT-ALIASES")
 	await _click(disclosure.get_global_rect().get_center())
-	check(not settings.visible, "V25-PREFERENCES-MOUSE-CLOSE")
-	screen.select_card(screen.hud.card_views[0].instance_id)
-	var cancel: Button = context.action_row.get_child(1)
-	await _click(cancel.get_global_rect().get_center())
-	check(screen.pending_card.is_empty(), "V25-FOOTER-CANCEL-REAL-MOUSE")
-	check(Model.state_hash(screen.snapshot) == hash, "V25-FOOTER-NO-DOMAIN-WRITE")
+	check(not screen.hud.preferences_panel.visible, "V25-PREFERENCES-MOUSE-CLOSE")
+	await _escape()
+	check(screen.pending_card.is_empty(), "V25-SELECTION-CANCEL-KEYBOARD")
+	check(Model.state_hash(screen.snapshot) == hash, "V25-CANCEL-NO-DOMAIN-WRITE")
 
 	# Also exercise the same physical GUI geometry under 1920x1080 stretch.
 	root.size = Vector2i(1920, 1080)

@@ -61,7 +61,7 @@ func run() -> void:
 	await create_timer(0.7).timeout
 	check(not screen.director.presented_damage.is_empty(),"P43-ANIMATION-CONSUMED-EVENT")
 	check(Model.state_hash(screen.controller.snapshot()) == frozen,"P43-ANIMATION-NO-MUTATION")
-	check(screen.get_node("Design/Arena/A").position == Vector2(438,458),"P43-ACTOR-RETURNS-HOME")
+	check(screen.get_node("Design/Arena/A").position == Vector2(390,458),"P43-ACTOR-RETURNS-HOME")
 	screen._command_requested("END_PLAYER_PHASE",{})
 	check(screen.snapshot["reaction_window"].get("status","") == "DRAFTING","P43-END-AUTO-ENEMY-UNTIL-REACTION")
 	var pause: String = Model.state_hash(screen.controller.snapshot())

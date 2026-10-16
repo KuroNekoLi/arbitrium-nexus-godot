@@ -12,6 +12,7 @@ const TargetsScene = preload("res://scenes/battle/ui/target_hit_regions.tscn")
 const ArrowOverlay = preload("res://scripts/battle/ui/components/card_targeting_arrow_overlay.gd")
 const ReactionScene = preload("res://scenes/battle/ui/reaction_queue.tscn")
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
+const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
 
 signal actor_requested(actor: String)
 signal card_requested(instance: String)
@@ -140,15 +141,24 @@ func _build() -> void:
 	preferences_panel.size = Vector2(280, 170)
 	preferences_panel.z_index = 80
 	add_child(preferences_panel)
-	var preferences: Control = _context.detail_scroll.get_child(0).get_node("PreferencesContent")
+	var preferences: Control = _context.preferences_content
 	preferences.reparent(preferences_panel)
 	preferences.show()
 	preferences_panel.hide()
-	var disclosure: Button = _context.get_child(0).get_node("PreferencesDisclosure")
+	var disclosure: Button = _context.preferences_disclosure
 	# Replace the old local disclosure, not its presentation preference signals.
 	for connection: Dictionary in disclosure.pressed.get_connections():
 		disclosure.pressed.disconnect(connection["callable"])
-	disclosure.reparent(_top.get_node("UtilityPanel").get_child(0))
+	# The old locale/save utility island is intentionally hidden. Keep the
+	# single settings affordance visible in the empty header gap without
+	# restoring that retired toolbar.
+	disclosure.reparent(_top)
+	disclosure.position = Vector2(930, 8)
+	disclosure.size = Vector2(44, 44)
+	disclosure.add_theme_stylebox_override("normal", Tokens.command_surface(Tokens.COMMAND_UTILITY, false))
+	disclosure.add_theme_stylebox_override("hover", Tokens.command_surface(Tokens.COMMAND_UTILITY, false, true))
+	disclosure.add_theme_stylebox_override("pressed", Tokens.command_surface(Tokens.COMMAND_UTILITY, true))
+	disclosure.add_theme_stylebox_override("focus", Tokens.focus_ring())
 	disclosure.pressed.connect(func() -> void: preferences_panel.visible = not preferences_panel.visible)
 	command_prompt = PanelContainer.new()
 	command_prompt.name = "CommandConfirmation"

@@ -18,20 +18,38 @@ func shot(path: String) -> void:
 	print("P43_CAPTURE_WRITE ", JSON.stringify(result))
 	check(result["ok"],"P43-CAPTURE-"+path)
 func mouse(point: Vector2, down: bool) -> void:
+	var physical: Vector2 = point * Vector2(root.size) / root.get_visible_rect().size
 	root.warp_mouse(point)
+	var motion := InputEventMouseMotion.new()
+	motion.position = physical
+	motion.global_position = physical
+	root.push_input(motion)
+	await create_timer(0.05).timeout
 	var event := InputEventMouseButton.new()
 	event.button_index = MOUSE_BUTTON_LEFT
-	event.position = point
-	event.global_position = point
+	event.position = physical
+	event.global_position = physical
 	event.pressed = down
 	root.push_input(event)
+	await process_frame
+func move_pointer(point: Vector2) -> void:
+	var physical: Vector2 = point * Vector2(root.size) / root.get_visible_rect().size
+	root.warp_mouse(point)
+	var motion := InputEventMouseMotion.new()
+	motion.position = physical
+	motion.global_position = physical
+	root.push_input(motion)
+	await create_timer(0.05).timeout
 func key(code: Key) -> void:
 	var event := InputEventKey.new()
+	event.keycode = code
 	event.physical_keycode = code
 	event.pressed = true
 	root.push_input(event)
 	event = InputEventKey.new()
+	event.keycode = code
 	event.physical_keycode = code
+	event.pressed = false
 	root.push_input(event)
 func run() -> void:
 	root.size = Vector2i(1280,720)
@@ -46,16 +64,29 @@ func run() -> void:
 	var origin: Vector2 = card.global_position+card.size*0.5
 	mouse(origin,true)
 	await create_timer(0.08).timeout
-	root.warp_mouse(Vector2(820,285))
-	await create_timer(0.15).timeout
+	await move_pointer(Vector2(820,285))
 	check(card.holding,"P43-MOUSE-DRAG-ACTUAL-ADDON")
+	check(card.face.visible and card.position.distance_to(card.home) < 1.0,"P43-DRAG-CARD-REMAINS-IN-HAND")
 	await shot("p4_3_drag_1280")
 	mouse(Vector2(820,285),false)
-	await process_frame
-	check(screen.selected_target == "Boss" and not screen.hud.confirm_button.disabled,"P43-DROP-LEGAL-TARGET")
+	await create_timer(0.35).timeout
 	var hp: int = screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"]
+	check(hp < 290 and screen.controller.tape().size() == 1,"P43-DROP-LEGAL-TARGET-COMMITS-ONCE")
+	# Keyboard confirmation is a separate path: select a card, select its target,
+	# then use Enter. Do not Enter the already committed drag transaction.
+	var keyboard_card: Control = screen.hud.card_views[0]
+	var keyboard_origin: Vector2 = keyboard_card.global_position+keyboard_card.size*0.5
+	mouse(keyboard_origin,true)
+	mouse(keyboard_origin,false)
+	await create_timer(0.12).timeout
+	check(screen.pending_kind == "CARD" and screen.pending_card == keyboard_card.instance_id,"P43-KEYBOARD-CARD-SELECTION")
 	key(KEY_ENTER)
-	check(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"] < hp,"P43-KEYBOARD-CONFIRM-PAYS-AND-DAMAGES")
+	await process_frame
+	check(screen.legal_targets.has(screen.selected_target) and not screen.hud.confirm_button.disabled,"P43-KEYBOARD-CONFIRM-PREVIEW")
+	var keyboard_hp: int = screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"]
+	key(KEY_ENTER)
+	await create_timer(0.35).timeout
+	check(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"] < keyboard_hp,"P43-KEYBOARD-CONFIRM-PAYS-AND-DAMAGES")
 	await create_timer(0.22).timeout
 	await shot("p4_3_hit_1280")
 	await create_timer(0.5).timeout
@@ -66,10 +97,21 @@ func run() -> void:
 	# Click the actual modal Pass button, not a direct command/test damage hook.
 	var pass_button: Button = screen.hud.reaction_column.get_child(-1).get_child(-1)
 	var center: Vector2 = pass_button.get_global_rect().get_center()
+	var tape_before_pass: int = screen.controller.tape().size()
 	mouse(center,true)
 	mouse(center,false)
-	await process_frame
-	check(screen.snapshot["phase"] == "PLAYER_PHASE","P43-MOUSE-PASS-RESUMES-BOSS")
+	await create_timer(0.65).timeout
+	check(screen.controller.tape().size() > tape_before_pass,"P43-MOUSE-PASS-SUBMITS-REACTION")
+	var explicit_passes: int = 1
+	while screen.snapshot["phase"] == "ENEMY_PHASE" and screen.hud.reaction_panel.visible and explicit_passes < 4:
+		var next_actions: HBoxContainer = screen.hud.reaction_column.get_child(screen.hud.reaction_column.get_child_count()-1)
+		var next_pass: Button = next_actions.get_child(1)
+		var next_center: Vector2 = next_pass.get_global_rect().get_center()
+		mouse(next_center,true)
+		mouse(next_center,false)
+		await create_timer(0.65).timeout
+		explicit_passes += 1
+	check(screen.snapshot["phase"] == "PLAYER_PHASE","P43-MOUSE-PASS-EXPLICITLY-COMPLETES-ENEMY-PHASE")
 	await create_timer(0.8).timeout
 	root.size = Vector2i(1920,1080)
 	await process_frame

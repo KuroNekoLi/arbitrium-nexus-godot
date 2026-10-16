@@ -87,9 +87,8 @@ func _card_ready() -> void:
 	card_clicked.connect(func(_card: Card) -> void: selection_requested.emit(instance_id))
 	drag_started.connect(func(_card: Card) -> void:
 		z_index = 90
-		# Keep the card Control alive for SimpleCards input/release bookkeeping,
-		# but hide its entire face while the targeting arrow is being aimed.
-		face.hide()
+		# Keep the card visible in its hand slot while dragging; only the arrow
+		# follows the pointer. The held Card still owns SimpleCards release input.
 		drag_requested.emit(instance_id))
 	drag_ended.connect(func(_card: Card) -> void:
 		release_requested.emit(instance_id,_release_pointer if _has_release_pointer else get_global_mouse_position())
@@ -115,7 +114,10 @@ func _input(event: InputEvent) -> void:
 		_has_release_pointer = true
 
 func _process(delta: float) -> void:
-	super._process(delta)
+	# SimpleCards normally moves the held card under the pointer. For battle
+	# targeting, preserve the real card in the hand and let the arrow convey aim.
+	if not holding:
+		super._process(delta)
 	if not _released and can_full_chant and not full_chant_held:
 		_press_seconds += delta
 		if _press_seconds >= FULL_CHANT_HOLD_SECONDS:

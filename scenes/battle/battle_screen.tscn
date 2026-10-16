@@ -29,18 +29,18 @@ mouse_filter = 2
 [node name="Arena" type="Node2D" parent="Design"]
 y_sort_enabled = true
 [node name="C" parent="Design/Arena" instance=ExtResource("3")]
-position = Vector2(549, 388)
+position = Vector2(520, 388)
 actor_id = "C"
 appearance = ExtResource("11")
 visual_height = 163.0
 accent = Color(0.83, 0.66, 1, 1)
 [node name="B" parent="Design/Arena" instance=ExtResource("3")]
-position = Vector2(497, 421)
+position = Vector2(640, 421)
 actor_id = "B"
 appearance = ExtResource("10")
 visual_height = 180.0
 [node name="A" parent="Design/Arena" instance=ExtResource("3")]
-position = Vector2(438, 458)
+position = Vector2(390, 458)
 actor_id = "A"
 appearance = ExtResource("9")
 visual_height = 200.0

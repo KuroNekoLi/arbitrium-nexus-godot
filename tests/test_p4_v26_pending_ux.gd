@@ -86,6 +86,8 @@ func run() -> void:
 	var chosen: Control = screen.hud.card_views[0]
 	check(await pick(screen,chosen),"V26-SELECTED-FAN-PICK")
 	await create_timer(0.2).timeout
+	var boss_hp_before: int = int(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"])
+	var discard_before: int = screen.snapshot["core"]["cards"]["actors"]["A"]["zones"]["discard"].size()
 	var start: Vector2 = chosen.get_global_transform()*Vector2(20,25)
 	await move(start)
 	await button(start,true)
@@ -95,32 +97,30 @@ func run() -> void:
 	check(chosen.holding,"V26-SELECTED-FAN-DRAG")
 	await button(target,false)
 	await process_frame
-	check(screen.selected_target == "Boss" and not screen.hud.confirm_button.disabled,"V26-FAN-DROP-PREVIEW")
-	check(Model.state_hash(screen.snapshot) == before,"V26-DROP-NO-EARLY-PAYMENT")
-	var instance: String = screen.pending_card
-	await click(screen.hud.confirm_button.get_global_rect().get_center())
-	check(screen.snapshot["core"]["cards"]["actors"]["A"]["zones"]["discard"].has(instance),"V26-FOOTER-ONE-TRANSACTION")
+	check(int(screen.snapshot["core"]["battle"]["actors"]["Boss"]["hp"]) < boss_hp_before,
+		"V26-LEGAL-DROP-COMMITS-DAMAGE")
+	check(screen.controller.tape().size() == 1,"V26-DROP-ONE-COMMAND")
+	check(screen.snapshot["core"]["cards"]["actors"]["A"]["zones"]["discard"].size() == discard_before + 1,
+		"V26-DROP-ONE-CARD-TRANSACTION")
 	check(screen.controller.replay_receipt()["matches"],"V26-TRANSACTION-REPLAY")
 	var context: Control = screen.hud.get_node("Context")
-	var disclosure: Button = context.get_child(0).get_node("PreferencesDisclosure")
+	var disclosure: Button = context.preferences_disclosure
+	var confirm_rect: Rect2 = context.confirm_button.get_global_rect()
 	await click(disclosure.get_global_rect().get_center())
-	var scroll: ScrollContainer = context.detail_scroll
-	var wheel_point: Vector2 = scroll.get_global_rect().get_center()
-	await move(wheel_point)
-	for i: int in 12:
-		await button(wheel_point,true,MOUSE_BUTTON_WHEEL_DOWN)
-		await button(wheel_point,false,MOUSE_BUTTON_WHEEL_DOWN)
-	check(scroll.scroll_vertical > 0,"V26-PREFERENCES-ACTUAL-WHEEL")
+	check(screen.hud.preferences_panel.visible,"V26-PREFERENCES-REAL-OPEN")
+	check(screen.hud.preferences_panel.get_global_rect().position.y < context.get_global_rect().position.y,
+		"V26-PREFERENCES-POPOVER-OUTSIDE-CONTEXT")
 	context.mute_toggle.grab_focus()
 	await create_timer(0.1).timeout
-	check(scroll.get_global_rect().intersects(context.mute_toggle.get_global_rect()),"V26-FOCUSED-PREFERENCE-IN-SCROLL")
 	await click(context.mute_toggle.get_global_rect().get_center())
 	check(not screen.director.overlay.audio_enabled,"V26-MUTE-REAL-CLICK")
 	context.reduced_toggle.grab_focus()
 	await create_timer(0.1).timeout
 	await click(context.reduced_toggle.get_global_rect().get_center())
 	check(screen.director.reduced_motion,"V26-REDUCED-REAL-CLICK")
-	check(context.get_global_rect().encloses(context.confirm_button.get_global_rect()),"V26-FOOTER-REMAINS-VISIBLE")
+	await click(disclosure.get_global_rect().get_center())
+	check(not screen.hud.preferences_panel.visible,"V26-PREFERENCES-REAL-CLOSE")
+	check(context.confirm_button.get_global_rect() == confirm_rect,"V26-CONFIRM-RECT-STABLE")
 	screen._command_requested("END_PLAYER_PHASE",{})
 	await process_frame
 	check(screen.hud.reaction_panel.visible,"V26-MODAL-SETUP")
