@@ -15,6 +15,7 @@ work/simple-cards-v-2/
 # Local headless capture / QA runs. Evidence is recorded by path + SHA256 in
 # docs/handoff backfills; commit curated PNGs explicitly under outputs/ instead.
 outputs/p4_input_capture/
+outputs/visual_regression/
 outputs/**/logs/
 
 # OS noise.

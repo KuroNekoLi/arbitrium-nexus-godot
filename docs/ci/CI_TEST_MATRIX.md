@@ -62,3 +62,9 @@ Further candidate optimizations (not implemented here) should benchmark the ~64-
 - Restricted historical V26 GUI tests are unchanged and not made runnable as ordinary Push/PR tests. The screenshot scripts only observe the actual Godot-rendered viewport or mock-only Boss **projection**, without changing Domain state or driving GUI clicks.
 - **Limits:** These screenshots verify visual output existence and integrity, **not** a pixel-diff Golden Image baseline, multi-enemy targeting, Last Spell target selection, or manual visual approval. Those require their own fixtures and oracles.
 - Deliberately left unchanged: P4 Feedback Edges timing, current 25/1149 headless contracts, Fast/Integration/Full rules, and all combat mechanics.
+
+## P6 — Approved Golden Images (pending human review)
+
+- `CI Visual` additionally emits `visual-regression-evidence` and the status `pending_review` until an owner approves all 12 reference images. The status is **not a pixel-perfect approval**.
+- Approved baselines are SHA-256 pinned and compared with the 12 real screenshots; large diff causes a failing Visual CI job and diff images in the artifact.
+- Baseline update requires a **separate deliberate human-reviewed commit**; CI never copies fresh PNGs over the reference set. See [Visual Regression P6](VISUAL_REGRESSION_P6.md).

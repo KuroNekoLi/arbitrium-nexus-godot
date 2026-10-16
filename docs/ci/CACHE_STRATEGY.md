@@ -24,3 +24,7 @@ Cache keys encode Linux runner, Godot version, and asset/scene/import dependenci
 
 ## Future extension
 Active real-render capture now reuses the composite action and Xvfb/Mesa. Its real PNGs and manifests are checked and uploaded (no image generation or pixel-diff claim). Historical workflows remain untouched.
+
+## P6 Visual Regression outputs
+
+Visual comparison reuses the same real screenshots, Godot/import caches and the stdlib Python environment (no added dependency/download). PNG candidate hashes, reviewed-baseline comparisons and heatmaps are GitHub **Artifacts** (not `actions/cache`). The `tests/visual_baselines/images/` directory is intentionally empty until a human explicitly approves images and pins their SHA-256 in `approved.json`.

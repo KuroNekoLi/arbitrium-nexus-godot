@@ -7,6 +7,7 @@ on:
       - '.github/actions/setup-godot-ci/**'
       - 'tools/ci/**'
       - 'project.godot'
+      - 'tests/visual_baselines/**'
       - 'tests/capture_p4_v23_layout.gd'
       - 'tests/capture_p4_v31_boss.gd'
       - 'tests/test_p4_v26_pending_ux.gd'
@@ -26,6 +27,7 @@ on:
       - '.github/actions/setup-godot-ci/**'
       - 'tools/ci/**'
       - 'project.godot'
+      - 'tests/visual_baselines/**'
       - 'tests/capture_p4_v23_layout.gd'
       - 'tests/capture_p4_v31_boss.gd'
       - 'tests/fixtures/m5_full_battle_fixture.gd'
@@ -138,6 +140,23 @@ jobs:
             echo ''
             echo 'These are genuine rendered screenshots; no pixel-baseline similarity gate is claimed.'
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: P6 Visual Regression - compare or prepare approval report
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          output="outputs/visual_regression/p6_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          mkdir -p "$output"
+          status=0
+          python3 tools/ci/compare_visual_snapshots.py \
+            --captures outputs/p4_input_capture \
+            --baseline tests/visual_baselines/approved.json \
+            --output "$output" \
+            --run-id "$GITHUB_RUN_ID" --attempt "$GITHUB_RUN_ATTEMPT" \
+            | tee "$RUNNER_TEMP/v23/regression.log" || status=$?
+          if [ -s "$output/visual_regression_summary.md" ]; then
+            cat "$output/visual_regression_summary.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$status"
       - name: Preserve runner logs
         if: always()
         shell: bash
@@ -157,3 +176,11 @@ jobs:
             outputs/p4_input_capture/v31_*/
           retention-days: 14
 
+      - name: Upload P6 visual regression report and diff heatmaps
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-evidence
+          path: outputs/visual_regression/p6_*/
+          if-no-files-found: warn
+          retention-days: 14

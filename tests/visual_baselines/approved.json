@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "status": "pending",
+  "case_ids": [
+    "v23_hand0_1280_zh",
+    "v23_hand1_1280_zh",
+    "v23_hand8_1280_zh",
+    "v23_hand8_1920_en",
+    "v23_idle_1280_en",
+    "v23_idle_1280_zh",
+    "v23_idle_1920_en",
+    "v23_idle_1920_zh",
+    "v23_selected_1280_zh",
+    "v31_boss_break_1280_zh",
+    "v31_boss_break_1920_en",
+    "v31_boss_locked_1280_zh"
+  ],
+  "images": {}
+}
