@@ -2,9 +2,9 @@
 
 ## What is used
 - `ci-fast.yml`: representative headless smoke (single job, normally each relevant push). 
-- `ci-p4-contracts.yml`: full 25-suite / 1149-assertion P4 headless UI contract gate for UI/scene/assets/test changes; runs nightly and manually for cross-domain coverage.
-- `ci-integration.yml`: named M1–M5.5 domain regression and legacy smoke.
-- `ci-full.yml`: scheduled / release / core-change full gate invoking `godot-m5-5-acceptance.yml`, including **100 seeded battles**.
+- `ci-p4-contracts.yml`: full 25-suite / 1149-assertion P4 headless UI contract gate for UI/scene/assets/test changes; runs nightly and manually for cross-domain coverage. Legacy prototype suites are no longer duplicated here.
+- `ci-integration.yml`: 26 named M1–M5.5 domain suites, 1128 assertions; early prototype legacy smoke suites were removed from this daily gate in P4.
+- `ci-full.yml`: scheduled (02:00 Asia/Taipei), manual, and release-published full gate invoking `godot-m5-5-acceptance.yml`, including **100 seeded battles and the four legacy prototype smoke suites**. It does not trigger on Push or PR.
 - Earlier phase workflows remain callable; they are not rewritten or silently deleted.
 
 ## Shared setup

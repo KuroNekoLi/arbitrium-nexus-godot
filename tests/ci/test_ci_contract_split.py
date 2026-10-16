@@ -24,12 +24,13 @@ class CIContractSplitTests(unittest.TestCase):
 
     def test_all_25_p4_contracts_retained_with_same_oracles(self):
         self.assertIn("\n  p4-contracts:\n", self.p4)
-        self.assertIn("CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=4 failed=0", self.p4)
+        self.assertIn("CI_P4_CONTRACTS_REPORT suites=25 assertions=1149 legacy=0 failed=0", self.p4)
         self.assertIn("test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25", self.p4)
         self.assertIn("test_p4_feedback_edges:P4_4_EDGE_REPORT:80", self.p4)
         self.assertIn("test_p4_localization:P4_LOCALIZATION_REPORT:198", self.p4)
+        # These retired prototype suites are now verified only in nightly Full.
         for legacy in ("test_battle_state", "test_deck_builder", "test_combat_ui", "test_turn_flow"):
-            self.assertIn(legacy, self.p4)
+            self.assertNotIn(legacy, self.p4)
         self.assertIn("assert_godot_logs.py", self.p4)
         self.assertIn("GUI_NOT_VERIFIED", self.p4)
 

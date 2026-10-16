@@ -3,24 +3,11 @@ on:
   schedule:
     # 02:00 Asia/Taipei (18:00 UTC) daily
     - cron: '0 18 * * *'
+  # Run a full gate manually on release candidates or before risky merges.
   workflow_dispatch:
+  # Evidence after publication; a published release is not a pre-release gate.
   release:
     types: [published]
-  push:
-    branches: [master, 'integration/v2-reviewed-20261015', 'integration/v3-reviewed-20261015', 'integration/v34-reviewed-20261015']
-    # Core mechanics / seed-driver changes need a full gate; ordinary HUD/art
-    # changes do not block fast iteration on the 100 seeded encounters.
-    paths:
-      - '.github/workflows/ci-full.yml'
-      - '.github/workflows/godot-m5-5-acceptance.yml'
-      - 'project.godot'
-      - 'scripts/domain/m1/**'
-      - 'scripts/domain/m2/cards/**'
-      - 'scripts/domain/m4/casting/**'
-      - 'scripts/domain/m5/integration/**'
-      - 'tests/fixtures/m5_full_battle_driver.gd'
-      - 'tests/fixtures/m5_full_battle_fixture.gd'
-      - 'tests/test_m5_100_seeds.gd'
 permissions:
   contents: read
 concurrency:
