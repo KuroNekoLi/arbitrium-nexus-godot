@@ -202,6 +202,7 @@ func _build() -> void:
 	last_preview.activation_requested.connect(func(target: String) -> void:
 		command_requested.emit("ACTIVATE_LAST_PREVIEW", {"target_id": target}))
 	last_preview.cancel_requested.connect(func() -> void: cancel_requested.emit())
+	last_preview.target_changed.connect(func(id: String) -> void: target_requested.emit(id))
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection
@@ -221,7 +222,7 @@ func render(projection: Dictionary, actor: String, cards: Array, reaction_choice
 
 func _focus_buttons(node: Node, output: Array[Control]) -> void:
 	for child: Node in node.get_children():
-		if child is BaseButton and child.is_visible_in_tree() and not child.disabled:
+		if child is BaseButton and child.is_visible_in_tree() and not child.disabled and child.focus_mode != Control.FOCUS_NONE:
 			output.append(child)
 		_focus_buttons(child,output)
 

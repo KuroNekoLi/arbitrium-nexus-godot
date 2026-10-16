@@ -7,6 +7,7 @@ const Cards = preload("res://scripts/domain/m5/lv40/lv40_card_resolver.gd")
 const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
 const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
+const LastTargets = preload("res://scripts/domain/m5/lv40/last_spell_targeting.gd")
 
 static func deny(state: Dictionary, reason: String) -> Dictionary:
 	return {"accepted":false,"error":reason,"state":state.duplicate(true),"events":[],
@@ -94,7 +95,7 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
 		if kind == "ACTIVATE_LAST_SPELL_M4":
 			var actor: String = str(command.get("actor_id",""))
 			var target: String = str(command.get("target_actor_id",""))
-			if (actor == "C" and not next["core"]["battle"]["allies"].has(target)) or (actor != "C" and target != "Boss"):
+			if not LastTargets.candidates(next["core"], actor, config).has(target):
 				return deny(state,"LV40_ILLEGAL_LAST_SPELL_TARGET")
 		var delegated: Dictionary = M4.apply(next,command,config)
 		if not delegated["accepted"]:

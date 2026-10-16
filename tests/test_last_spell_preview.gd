@@ -54,7 +54,9 @@ func run() -> void:
 		check(not screen.hud.get_node("Context").visible, "LSP-NOT-CARD-DETAILS-" + actor)
 		check(panel.costs.text == screen.tr("BATTLE_COST") % [inspected["quote"]["ap_cost"], inspected["quote"]["mp_cost"]], "LSP-DOMAIN-QUOTE-" + actor)
 		check(Model.state_hash(screen.snapshot) == hash_before and screen.controller.tape().is_empty(), "LSP-OPEN-NO-PAYMENT-" + actor)
-		check(not screen.get_node("Design/Arena/A").visible and not screen.get_node("Design/Arena/B").visible and not screen.get_node("Design/Arena/C").visible, "LSP-WORLD-PARTY-HIDDEN-" + actor)
+		# Superseded by the user's 2026-10-16 scope-selection references: keep
+		# battlefield actors visible so the new target markers identify recipients.
+		check(screen.get_node("Design/Arena/A").visible and screen.get_node("Design/Arena/B").visible and screen.get_node("Design/Arena/C").visible, "LSP-WORLD-PARTY-RETAINED-" + actor)
 		check(screen.hud.roster[actor].visible and screen.hud.get_node("ModalInputShield").visible, "LSP-ROSTER-RETAINED-MODAL-" + actor)
 		if DisplayServer.get_name() == "headless":
 			screen.cancel_action()

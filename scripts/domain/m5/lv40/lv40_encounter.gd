@@ -6,7 +6,7 @@ const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
 const Phase = preload("res://scripts/domain/m3/phase/phase_engine.gd")
 const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const Content = preload("res://scripts/domain/m5/lv40/lv40_content.gd")
-const VERSION: String = "lv40-starter-v0.3-boss-v0.2-A-provisional-1"
+const VERSION: String = "lv40-starter-v0.3-boss-v0.2-A-provisional-2"
 const LOADOUTS: Dictionary = {
 	"A":["U01","U02","U03","U04","U05","R01","R02","R03","R05","R06","R07","R08"],
 	"B":["U01","U02","U03","U04","U05","A01","A02","A03","A04","A05","A06","A07"],

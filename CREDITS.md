@@ -1,5 +1,9 @@
 # Third-party asset credits
 
+## Last Spell targeting preview (2026-10-16)
+
+Reuses the existing party portrait atlas for cut-ins/target cards and existing v35 SVG/NinePatch assets for scope markers and framing. No pixels were extracted from the three supplied concept images. Existing portrait provenance remains pending; no new final character design or commercial license is asserted.
+
 ## V3.5 incremental HUD assets
 
 `assets/ui/v35/ap_core.svg`, `ap_crystal.svg` and the V3.5.1–V3.5.3 icon set (`cmd_*.svg`, `status_*.svg`, `intent_skill.svg`) are original editable repository-native vector code authored for this task, not extracted from the user's reference images or an external pack. They contain no baked UI text. The resource frame reuses the existing Kenney Fantasy UI Borders CC0 asset and bundled notice below. No new external downloads, fonts or plugins were adopted. Reference A/B JPEGs under docs/ui/references/v35 are user-supplied comparison material only; commercial redistribution rights are not inferred.

@@ -1,0 +1,75 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS LST-01-CONTENT-SCOPE
+PASS LST-02-WRONG-TEAM-ATOMIC
+PASS LST-03-ENEMY-ALL-COMMIT
+PASS LST-04-AOE-DAMAGES-BOTH
+PASS LST-05-DEAD-ANCHOR-NOT-AOE-LOCK
+PASS LST-06-ALLY-ALL-COMMIT
+PASS LST-07-ALL-ALLIES-HEALED
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+   at: grab_focus (scene/gui/control.cpp:3011)
+   GDScript backtrace (most recent call first):
+       [0] _sync_modal_focus (res://scripts/battle/ui/battle_hud.gd:259)
+       [1] _open_last_preview (res://scripts/battle/battle_screen.gd:372)
+       [2] _command_requested (res://scripts/battle/battle_screen.gd:392)
+       [3] <anonymous lambda> (res://scripts/battle/ui/battle_hud.gd:103)
+       [4] <anonymous lambda> (res://scripts/battle/ui/components/command_menu.gd:23)
+       [5] click (res://tests/test_last_spell_target_scope.gd:25)
+       [6] run (res://tests/test_last_spell_target_scope.gd:117)
+PASS LST-08-SCOPE-UI-A
+PASS LST-09-SCOPE-PREVIEW-ATOMIC-A
+PASS LST-10-SINGLE-ENEMY-AUTOSELECT
+PASS LST-12-CANCEL-RESTORES-HAND-A
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+   at: grab_focus (scene/gui/control.cpp:3011)
+   GDScript backtrace (most recent call first):
+       [0] _sync_modal_focus (res://scripts/battle/ui/battle_hud.gd:259)
+       [1] _open_last_preview (res://scripts/battle/battle_screen.gd:372)
+       [2] _command_requested (res://scripts/battle/battle_screen.gd:392)
+       [3] <anonymous lambda> (res://scripts/battle/ui/battle_hud.gd:103)
+       [4] <anonymous lambda> (res://scripts/battle/ui/components/command_menu.gd:23)
+       [5] click (res://tests/test_last_spell_target_scope.gd:25)
+       [6] run (res://tests/test_last_spell_target_scope.gd:117)
+PASS LST-08-SCOPE-UI-B
+PASS LST-09-SCOPE-PREVIEW-ATOMIC-B
+PASS LST-11-ALL-MARKED-B
+PASS LST-12-CANCEL-RESTORES-HAND-B
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+   at: grab_focus (scene/gui/control.cpp:3011)
+   GDScript backtrace (most recent call first):
+       [0] _sync_modal_focus (res://scripts/battle/ui/battle_hud.gd:259)
+       [1] _open_last_preview (res://scripts/battle/battle_screen.gd:372)
+       [2] _command_requested (res://scripts/battle/battle_screen.gd:392)
+       [3] <anonymous lambda> (res://scripts/battle/ui/battle_hud.gd:103)
+       [4] <anonymous lambda> (res://scripts/battle/ui/components/command_menu.gd:23)
+       [5] click (res://tests/test_last_spell_target_scope.gd:25)
+       [6] run (res://tests/test_last_spell_target_scope.gd:117)
+PASS LST-08-SCOPE-UI-C
+PASS LST-09-SCOPE-PREVIEW-ATOMIC-C
+PASS LST-11-ALL-MARKED-C
+PASS LST-12-CANCEL-RESTORES-HAND-C
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+   at: grab_focus (scene/gui/control.cpp:3011)
+   GDScript backtrace (most recent call first):
+       [0] _sync_modal_focus (res://scripts/battle/ui/battle_hud.gd:259)
+       [1] _open_last_preview (res://scripts/battle/battle_screen.gd:372)
+       [2] run (res://tests/test_last_spell_target_scope.gd:138)
+PASS LST-13-MULTI-TARGET-CARD-CHANGES-ONLY
+PASS LST-14-EXPLICIT-ACTIVATION-SELECTED-TARGET
+PASS LST-15-MULTI-COMMAND-REPLAY
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _scroll_latest (res://scripts/battle/ui/components/battle_log_panel.gd:84)
+SCRIPT ERROR: Invalid access to property or key 'process_frame' on a base object of type 'null instance'.
+   at: _scroll_latest (res://scripts/battle/ui/components/battle_log_panel.gd:84)
+   GDScript backtrace (most recent call first):
+       [0] _scroll_latest (res://scripts/battle/ui/components/battle_log_panel.gd:84)
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+   at: grab_focus (scene/gui/control.cpp:3011)
+   GDScript backtrace (most recent call first):
+       [0] _sync_modal_focus (res://scripts/battle/ui/battle_hud.gd:259)
+       [1] _open_last_preview (res://scripts/battle/battle_screen.gd:372)
+       [2] run (res://tests/test_last_spell_target_scope.gd:154)
+LAST_TARGET_SCOPE_REPORT executed=22 passed=22 failed=0

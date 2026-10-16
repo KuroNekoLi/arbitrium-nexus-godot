@@ -81,8 +81,9 @@ func _redraw() -> void:
 
 func _scroll_latest() -> void:
 	# Wait for Container measurement; preserve the entire event history above.
+	if not is_inside_tree() or is_queued_for_deletion(): return
 	await get_tree().process_frame
-	if is_instance_valid(log_scroll):
+	if is_inside_tree() and not is_queued_for_deletion() and is_instance_valid(log_scroll):
 		log_scroll.scroll_vertical = int(log_scroll.get_v_scroll_bar().max_value)
 
 func _make_row(row: Dictionary, newest: bool) -> HBoxContainer:

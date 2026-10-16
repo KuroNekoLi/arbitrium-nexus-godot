@@ -104,6 +104,10 @@ static func config(version: String) -> Dictionary:
 		c["last_spell_cost_definitions"][spell] = {"card_id":spell,"ap_cost":3,"mp_cost":{"A":5,"B":9,"C":7}[actor]}
 		c["m5_spell_profiles"][spell] = profile("PHYSICAL" if actor == "A" else "MAGICAL",
 			65000 if actor == "A" else 68000,1,"RANDOM_PERCENT" if actor == "A" else "GUARANTEED","FIRE" if actor == "B" else "NEUTRAL")
+	c["last_spell_targeting"] = {
+		"LS_REN_SWORD_V1":{"team":"ENEMY","scope":"SINGLE","description_key":"LAST_REN_DESCRIPTION","artwork_path":"res://assets/ui/v35/cmd_basic.svg"},
+		"LS_AKANE_MAGE_V1":{"team":"ENEMY","scope":"ALL","description_key":"LAST_AKANE_DESCRIPTION","appearance_id":"A06"},
+		"LS_TSUMUGI_HEAL_V1":{"team":"ALLY","scope":"ALL","description_key":"LAST_TSUMUGI_DESCRIPTION","artwork_path":"res://assets/ui/v35/status_barrier.svg"}}
 	c["actorDisplayNames"] = {"A":"朝霧蓮","B":"九條朱音","C":"白石紬"}
 	c["actor_name_keys"] = {"A":"actor.ren.name","B":"actor.akane.name","C":"actor.tsumugi.name"}
 	c["bossname"] = "秘紋守衛・零式"

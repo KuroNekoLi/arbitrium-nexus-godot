@@ -3,6 +3,25 @@ BATTLE_CONTEXT_EMPTY,Choose an action then its target,選擇行動，再指定�
 BATTLE_LOG_EMPTY,Events appear here after your first action,行動後將在此顯示戰鬥紀錄
 BATTLE_LAST_ACTIVATE,Activate Last Spell,啟動終極法術
 BATTLE_LAST_CANCEL,Cancel preview,取消預覽
+LAST_AP,AP COST,AP 消耗
+LAST_MP,MP COST,MP 消耗
+LAST_TIMING,RELEASE,結算時機
+LAST_RELEASE_VALUE,After %d rounds,%d 回合後釋放
+LAST_IRREVERSIBLE,Activation is irreversible · cancel before activating,啟動後不可取消 · 啟動前仍可返回
+LAST_ONCE,Once per battle,每場戰鬥限一次
+LAST_CHOOSE_TARGET,Choose a target · activate when ready,請選擇施放目標 · 選定後啟動
+LAST_ALL_SELECTED,All eligible targets selected (%d),已標註全體有效目標（%d 位）
+LAST_TARGET,Target: %s,目標：%s
+LAST_SELECTED,SELECTED,選擇中
+LAST_INCLUDED,INCLUDED,已選定
+LAST_SCOPE_ENEMY_SINGLE,ENEMY · SINGLE,敵方單體
+LAST_SCOPE_ENEMY_ALL,ALL ENEMIES,敵方全體
+LAST_SCOPE_ALLY_SINGLE,ALLY · SINGLE,我方單體
+LAST_SCOPE_ALLY_ALL,ALL ALLIES,我方全體
+LAST_SCOPE_UNKNOWN_SINGLE,TARGET,施放目標
+LAST_REN_DESCRIPTION,Deals physical damage to one enemy and separate Break damage on a hit.,對一名敵人造成物理傷害；合法命中時另造成失衡傷害。
+LAST_AKANE_DESCRIPTION,Deals magical damage to each living enemy using its own defenses and resistances.,對全體有效敵人造成魔法傷害，依各目標防禦與抗性分別結算。
+LAST_TSUMUGI_DESCRIPTION,Heals all living allies and grants HP Barrier. Does not revive.,回復全體有效隊友生命並給予生命屏障；不會復活倒地角色。
 BATTLE_LAST_DELAY,Release after %d rounds,%d 回合後釋放
 BATTLE_TEAM_AP,PARTY AP,隊伍 AP
 BATTLE_TITLE,ARBITRIUM NEXUS,仲裁核心

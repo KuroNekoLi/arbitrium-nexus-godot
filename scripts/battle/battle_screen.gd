@@ -12,6 +12,7 @@ const Director = preload("res://scripts/battle/presentation/battle_animation_dir
 const Effects = preload("res://scripts/battle/presentation/battle_effects.gd")
 const Bindings = preload("res://scripts/battle/ui/battle_input_bindings.gd")
 const LogFormatter = preload("res://scripts/battle/presentation/battle_log_formatter.gd")
+const LastView = preload("res://scripts/battle/presentation/last_spell_read_model.gd")
 const LOG_EVENT_LIMIT: int = 64
 var log_events: Array = []
 var controller: Node
@@ -24,6 +25,8 @@ var pending_card: String = ""
 var pending_kind: String = ""
 var selected_target: String = ""
 var remembered_attack_target: String = ""
+var remembered_last_ally_target: String = ""
+var _hand_before_last: bool = true
 var legal_targets: Array = []
 var pending_command: Dictionary = {}
 var keyboard_index: int = 0
@@ -242,6 +245,11 @@ func select_target(target: String) -> void:
 		_refresh_preview()
 		return
 	selected_target = target
+	if pending_kind == "ACTIVATE_LAST_SPELL_M4":
+		if hud.last_preview.targeting.get("team", "") == "ALLY":
+			remembered_last_ally_target = target
+		else:
+			remembered_attack_target = target
 	_refresh_preview()
 
 func _refresh_preview() -> void:
@@ -262,8 +270,7 @@ func _refresh_preview() -> void:
 	if pending_kind == "ACTIVATE_LAST_SPELL_M4" and hud.last_preview.visible:
 		# Keep the public targeting/confirm facade for non-GUI clients, while the
 		# player sees only the dedicated cut-in's activation/cancel controls.
-		var index: int = hud.last_preview.target_ids.find(selected_target)
-		if index >= 0: hud.last_preview.target_selector.select(index)
+		hud.last_preview.select_target(selected_target, false)
 		hud.last_preview.error_label.text = "" if result["accepted"] else _reason(str(result["error"]))
 	elif pending_kind == "BASIC_ATTACK_RESOURCE_ONLY":
 		hud.set_basic_target_choices(legal_targets, selected_target, _basic_target_labels())
@@ -285,6 +292,9 @@ func cancel_action() -> void:
 	pending_command = {}
 	legal_targets = []
 	if not is_node_ready(): return
+	if hud.last_preview.visible:
+		hud.hand.visible = _hand_before_last
+		hud.feedback.show()
 	hud.last_preview.hide()
 	for actor: String in _last_actor_visibility:
 		$Design/Arena.get_node(actor).visible = _last_actor_visibility[actor]
@@ -332,25 +342,42 @@ func _open_last_preview() -> void:
 	if hud.reaction_panel.visible or hud.result_panel.visible:
 		return
 	cancel_action()
-	var inspected: Dictionary = preload("res://scripts/domain/m4/last_spell/last_spell_resolver.gd").inspect(snapshot["core"], selected_actor, config)
-	var targets: Array = []
-	for target: String in snapshot["core"]["battle"]["actors"]:
-		var command: Dictionary = Factory.build(snapshot, "ACTIVATE_LAST_SPELL_M4", {
-			"actor_id": selected_actor, "target_actor_id": target, "confirmed": true, "casting_mode": "FULL"})
-		if Factory.preview(snapshot, command, config)["accepted"]:
-			targets.append({"id": target, "name": log_actor_name(target)})
-	var actor: Node2D = $Design/Arena.get_node(selected_actor)
-	var texture: Texture2D = actor.body.sprite_frames.get_frame_texture("idle", 0)
+	var presentation: Dictionary = LastView.project(snapshot, selected_actor, config)
+	var inspected: Dictionary = presentation["inspection"]
+	var targets: Array = presentation["targets"]
+	legal_targets = []
+	for target: Dictionary in targets:
+		var id: String = str(target["id"])
+		target["name"] = log_actor_name(id)
+		target["portrait"] = _last_target_portrait(id)
+		if hud.target_buttons.has(id):
+			target["rect"] = Rect2(hud.target_buttons[id].position, hud.target_buttons[id].size)
+		if target["legal"]: legal_targets.append(id)
+	var team: String = str(presentation["targeting"].get("team", "UNKNOWN"))
+	var remembered: String = remembered_last_ally_target if team == "ALLY" else remembered_attack_target
+	selected_target = remembered if legal_targets.has(remembered) else selected_actor if team == "ALLY" and legal_targets.has(selected_actor) else str(legal_targets[0]) if not legal_targets.is_empty() else ""
+	presentation["selected_id"] = selected_target
+	var appearance_id: String = str(presentation["targeting"].get("appearance_id", ""))
+	if not appearance_id.is_empty():
+		presentation["appearance"] = load("res://resources/ui/appearances/" + appearance_id + ".tres")
+	var artwork_path: String = str(presentation["targeting"].get("artwork_path", ""))
+	if not artwork_path.is_empty(): presentation["spell_art"] = load(artwork_path)
+	var texture: Texture2D = hud.roster[selected_actor].portrait.texture
 	var character: String = str(Lv40Encounter.CHARACTERS.get(selected_actor, "")) if config.get("m5_lv40_enabled", false) else ""
 	var title: String = tr("last_spell." + character + ".name") if not character.is_empty() else tr("BATTLE_LAST")
-	hud.last_preview.present(title, inspected, texture, targets, _reason(str(inspected.get("error", ""))))
+	_hand_before_last = hud.hand.visible
+	hud.hand.hide()
+	hud.last_preview.present(title, inspected, texture, targets, _reason(str(inspected.get("error", ""))), presentation)
 	pending_kind = "ACTIVATE_LAST_SPELL_M4"
-	legal_targets = targets.map(func(target: Dictionary) -> String: return str(target["id"]))
-	for id: String in ["A", "B", "C"]:
-		var visual: Node2D = $Design/Arena.get_node(id)
-		_last_actor_visibility[id] = visual.visible
-		visual.hide()
+	if not selected_target.is_empty(): _refresh_preview()
+	hud.feedback.hide()
 	hud._sync_modal_focus()
+
+func _last_target_portrait(id: String) -> Texture2D:
+	if hud.roster.has(id): return hud.roster[id].portrait.texture
+	var visual: Node2D = $Design/Arena.get_node_or_null(id)
+	if visual != null: return visual.body.sprite_frames.get_frame_texture("idle", 0)
+	return preload("res://assets/ui/v35/intent_skill.svg")
 
 func _command_requested(kind: String, fields: Dictionary) -> void:
 	if kind == "ACTIVATE_LAST_PREVIEW":
