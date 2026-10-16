@@ -5,6 +5,7 @@
 - New game entry: `res://scenes/battle/lv40_playable_battle.tscn`; never reintroduce the 8-card / two-plays / timed-reaction prototype.
 - Current roster is `resources/combat/rosters/lv40_party_v0_3.json`: slot IDs are battle-instance addresses, **not fixed character identities**. Obtain actors, name keys, stats, starting decks, variant IDs, and art paths from content rather than hardcoding `A/B/C` to named heroes.
 - Each active actor has exactly **12 SP**, opening hand **4**, refill to **4**, max hand **8**; use M1–M5 Domain as the single authority. Do not reintroduce old `CardCatalog` or `DeckProfileStore`.
+- Card eligibility is declared in `resources/combat/cards/lv40_eligibility_v0_3.json` (`UNIVERSAL`, `ROLE_TAG`, `CHARACTER`). `lv40_party_catalog.gd` validates it during encounter setup and card usage; NEVER assume that a card is eligible merely because it is included in a JSON loadout.
 - Changing content identity requires updating i18n, matching card and Last Spell definitions, and versioned test fixtures. Never claim a new character is fully supported merely because its name changed in JSON.
 
 > This repository is an executable Godot card-JRPG prototype. These rules apply to this repository, not to the documentation-only source `KuroNekoLi/astraea-combat-rules`.
