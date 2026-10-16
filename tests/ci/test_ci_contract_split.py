@@ -28,14 +28,14 @@ class CIContractSplitTests(unittest.TestCase):
         self.assertIn("test_p4_v35_convergence:V35_CONVERGENCE_REPORT:25", self.p4)
         self.assertIn("test_p4_feedback_edges:P4_4_EDGE_REPORT:80", self.p4)
         self.assertIn("test_p4_localization:P4_LOCALIZATION_REPORT:198", self.p4)
-        # These retired prototype suites are now verified only in nightly Full.
+        # Retired prototype scripts are deleted. All 25 P4 component suites remain current.
         for legacy in ("test_battle_state", "test_deck_builder", "test_combat_ui", "test_turn_flow"):
             self.assertNotIn(legacy, self.p4)
         self.assertIn("assert_godot_logs.py", self.p4)
         self.assertIn("GUI_NOT_VERIFIED", self.p4)
 
     def test_triggers_guard_existing_gui_run_restrictions(self):
-        self.assertIn("branches: [master, 'ci/**', 'integration/**', 'handoff/**', 'ui/**']", self.p4)
+        self.assertIn("branches: [master, 'refactor/**', 'ci/**', 'integration/**', 'handoff/**', 'ui/**']", self.p4)
         self.assertIn("'scripts/battle/**'", self.p4)
         self.assertIn("'scenes/battle/**'", self.p4)
         self.assertIn("'tests/test_p4_*.gd'", self.p4)

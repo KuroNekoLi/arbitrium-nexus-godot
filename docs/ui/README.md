@@ -2,7 +2,7 @@
 
 > **設計規劃版本：2026-10-15；2026-10-16 Combat文件入口已更新**  
 > 本目錄是未來 Godot Agent 的正式 **UI／美術／動畫研究與交接入口**。本次只補充文件及免費／開源資源調查；**此份UI規劃編寫當時**沒有新實作；但後續已新增Lv40 playable Scene、限定正向接線測試與靜態截圖，詳細進度需核對 `docs/verification/ui/` 的最新證據。這些仍不等於全部真人操作驗收。  
-> 現有 Repository 本來就有舊版可玩 UI MVP、卡牌和動畫；「NOT IMPLEMENTED」指**本套高保真重建規劃尚未落地**，不能誤讀為工程沒有任何 UI。
+> 目前已有 Lv40 BattleScreen、P4 HUD、真渲染截圖路線；以下 01～05 是設計研究與歷史執行計畫，**不是當前實作差距清單**。請讀取最新 Scenes、測試與 [現行工程對照](../combat/engineering/規則與程式對照表.md)。
 
 ## 快速導覽（未來 Agent 請依序閱讀）
 
@@ -24,7 +24,7 @@
 - **Gameplay authority**：[`docs/combat/README.md`](../combat/README.md) 及其繁體中文主題規格；工程入口是[`docs/combat/engineering/戰鬥引擎實作契約.md`](../combat/engineering/戰鬥引擎實作契約.md)。舊編號文件已列為歷史並歸檔，不再並列判斷權威。
 - 工程合約：[`docs/combat/engineering/戰鬥引擎實作契約.md`](../combat/engineering/戰鬥引擎實作契約.md)、[規則程式對照表](../combat/engineering/規則與程式對照表.md)、`docs/verification/` 最新 Engineering Notes + CI 證據。舊規格檔原來曾寫過其他 Repo／docs-only 前提；**以這個使用者指定的真實 Godot Repo 為工作目標**，不要回頭處理舊 Repo。
 - 規格優先級：最新明示 `USER_APPROVED` > 原已核准 P1/P2/M > 合法 `DELEGATED_DEFAULT` > `BALANCE_PROVISIONAL` > `HISTORICAL/SUPERSEDED`。文件不能擅自把 TBD 變正式規則。
-- 根 `README.md` 原有 MVP 操作包含舊版 8 卡／每階段出牌兩次／Reaction 倒數；**是舊 UI 原型描述**，不得當新版 Domain 規格或新 HUD 必須複製的行為。
+- 根目錄 `README.md` 已以現行 12 SP + M1～M5 引擎重寫；舊版 8 卡／兩次出牌／Reaction 倒數只存在封存歷史，不可重新導入。
 
 ## 已決定的界面行為（優先實作；不屬玩法重設）
 
@@ -48,10 +48,10 @@
 
 ## 最值得優先重用的程式與素材
 
-- `scenes/ui/hero_roster_item.tscn` + `scripts/ui/hero_roster_item.gd`：已是角色資訊共用元件。
-- `scripts/ui/card_view.gd` + `addons/simple_cards/`：已具 hover／drag，但 Card Artwork 還是用 atlas index hardcode。
-- `scripts/main.gd`：目前大量原型 UI 是動態搭建在這支檔案；應逐步抽離而不是整包重寫。
-- `assets/kleya_atlas.png`、`nova_atlas.png`、`yora_atlas.png`、`assets/portraits/`、`assets/card_art_atlas.png`。
+- `scenes/ui/hero_roster_item.tscn` + `scripts/ui/hero_roster_item.gd`：**仍為現役共用元件**，由 `scripts/battle/ui/components/party_status_panel.gd` preload；不能因建立時間或測試名稱帶 legacy 而刪除。
+- `scripts/battle/ui/battle_card_view.gd`、`scripts/battle/ui/components/hand_view.gd` + `addons/simple_cards/`：現行手牌與卡片 presentation；更換插畫先查 CardAppearance 對應及現有測試。
+- `scripts/battle/battle_screen.gd` 與 `scripts/battle/battle_controller.gd`：目前戰鬥畫面與命令提交；舊 `scripts/main.gd` 已退役，不得恢復第二套 UI→Domain 路徑。
+- `assets/characters/ren/`、`akane/`、`tsumugi/`：目前候選角色立繪；資源路徑從 roster JSON 與 CharacterAppearance 取得。`assets/legacy/` 僅留歷史素材與授權，非現行人物清單。
 - `addons/kenney_fantasy_ui_borders/`、`kenney_particle_pack/`、`kenney_ui_audio/`、`kenney_rpg_audio/`，授權清單見 `CREDITS.md`。
 - `.codex/skills/` 內已有專業 `godot-card-rpg-uiux-engineer`、`godot-game-asset-pipeline`、`godot-2-5d-rendering-engineer`、`godot-qa-ci-engineer` 等；未來由 orchestrator 協調而非新造一套平行技能。
 

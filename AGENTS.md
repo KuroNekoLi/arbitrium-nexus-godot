@@ -17,12 +17,12 @@
 
 **Content status**: named party, **31 ordinary SP CardDefinitions / 3 separate LastSpellDefinitions**, candidate Lv40 Boss, multipliers and starter decks are `CONTENT_PROVISIONAL` unless specifically approved. The Lv40 starter has 24 different SP definitions represented by **36 instances** across three 12-card loadouts, not all 31 available candidate definitions. No new gameplay rule is approved just because it appears in a headless fixture.
 
-**Legacy**: the 2026-10-14/15 numbered combat docs have been retained as historical evidence under `docs/combat/archive/legacy-2026-10-16/`; they are **NOT** parallel combat authority. Old 8-card `scripts/domain/deck_profile_store.gd` and `kleya/nova/yora` are prototype code, not grounds to downgrade the 12-card specification. This documentation reorganization does not itself change Godot gameplay or establish CI/visual acceptance.
+**Legacy**: the 2026-10-14/15 numbered combat docs have been retained as historical evidence under `docs/combat/archive/legacy-2026-10-16/`; they are **NOT** parallel combat authority. Old 8-card `scripts/domain/deck_profile_store.gd` and `scripts/main.gd` are deleted prototype code. Never recreate them or the old compatibility smoke tests. The cleanup changes CI and code files on `refactor/combat-canonical-cleanup-20261016`; use that branch's own Actions for acceptance, not older evidence.
 
 ## Work restrictions
 1. Verify Git HEAD, Godot project/version, existing tests, and real implementation before attempting changes.
 2. Respect explicit USER_APPROVED combat rules; mark candidate values `BALANCE_PROVISIONAL`; do not assume Python smoke tests establish Godot correctness.
-3. Preserve existing Godot scenes, assets, skills and tests until a separately authorized implementation task.
+3. Preserve active M1–M5 code, scenes, reusable UI, skills and tests. The user has explicitly authorized removing the retired eight-card implementation, its smoke-test shims, and obsolete workflow steps. Do not delete current tests merely because their names mention `legacy`.
 4. In conflicts, provide a side-by-side decision proposal; never silently pick a historical or lower-priority rule.
 5. Godot Domain owns HP, AP, MP, RP, deck zones, turn order, reaction ordering and RNG; renderer is never authoritative. No unapproved free movement, auto-pass reaction timeout or Counter-Function.
 6. For implementation changes, require repeatable headless tests, case IDs, failure logs, CI evidence and code commits. Do not claim pass without evidence.
