@@ -317,7 +317,7 @@ func begin_targeting_arrow(instance: String, targets: Array) -> void:
 	for card: Control in card_views:
 		if str(card.instance_id) == instance:
 			# Anchor to the slot in the fan, not the moving dragged card.
-			source = hand.to_global(card.home + Vector2(card.size.x * 0.5, card.size.y * 0.22))
+			source = hand.get_global_transform() * (card.home + Vector2(card.size.x * 0.5, card.size.y * 0.22))
 			found = true
 			break
 	if found:
