@@ -1,70 +1,30 @@
-# CI test matrix — P2 through P5 (2026-10-16)
+# CI 測試矩陣｜現行戰鬥引擎（2026-10-16 清理版）
 
-## Goal and verification boundary
-Keep **every** existing headless P4 assertion, but avoid running 25 P4 suites on every ordinary code push. As of P4, the separate early-prototype legacy gates run in nightly Full instead of being duplicated in UI and Integration jobs. The 1149-contract P4 gate is moved unchanged from `ci-fast.yml` into `ci-p4-contracts.yml`; existing exception/authorization conditions for historical V3.5 GUI input tests remain intact. Strict import and log-error gates remain mandatory. This is a workflow scheduling refactor, **not** a reduced coverage claim.
+> 這是可供開發與 Agent 理解的**目標驗證架構**。通過與否只根據當次分支 HEAD 的 GitHub Actions 日誌，不能引用歷史成功結果替代。
 
-| Gate | When it runs | Scope |
-|---|---|---|
-| `CI Fast` | Relevant push/PR or manual | Godot strict import, core Golden/Replay, 5 fast seeds, P4 scene/HUD/Lv40 smoke and screenshot writer |
-| `CI P4 UI Contracts` | Battle/UI/asset/test/config changes, nightly, or manual | Complete 25-suite headless P4 contracts (1149 checks); no legacy prototype suites |
-| `CI Integration` | Domain / combat logic changes or manual | 26 named domain suites (1128 assertions); no legacy prototype suites |
-| `CI Full` | **Daily 02:00 Asia/Taipei**, manually, or after Release published; **never automatically on push** | 100 seeded battles, complete acceptance regression, and 4 legacy prototype smoke suites |
-| `CI Visual - Real Godot Battle Screenshots` | Relevant UI/actor/scene/resource changes, PR, or manual | Xvfb/Mesa real rendering, 9 HUD + 3 Boss PNGs, manifests and verified image dimensions |
+| Workflow | 觸發時機 | 驗證內容 | 不等於 |
+|---|---|---|---|
+| `ci-fast.yml` — CI Fast | master、refactor/** 等允許分支有相關程式碼 push，PR，手動 | Godot 4.7.2 strict import／log gate、M5 Golden／Replay、5 seed、P4 scene／HUD／Lv40 互動 smoke | GUI 真實滑鼠、100 場 |
+| `ci-integration.yml` — CI Integration | Domain 變更 push、PR、手動 | `tools/ci/integration_suites.txt` 中 **26 套／1128 斷言**；M1～M5／Replay，維持逐套實測 | 像素畫面或真人全場 |
+| `ci-p4-contracts.yml` — P4 Contracts | UI／場景／內容／資產變更 push、PR、每日、手動 | **25 套／1149 斷言**，包含正式 HUD 元件；歷史取名 `test_p4_v34_legacy_roster.gd` 是**目前仍在使用的** HeroRosterItem 驗證 | 已授權限制外的 GUI 操作測試 |
+| `godot-v2-3-visual-capture.yml` — CI Visual | 畫面／美術／場景變更 push、PR、手動 | Godot + Xvfb 真實渲染：9 張 HUD 與 3 張 Boss 快照、PNG 及 Manifest 驗證 | Golden pixel diff 或人工 UX 驗收 |
+| `ci-full.yml` — CI Full | 每日台北02:00、手動、Release published；**非一般 push** | 透過 `godot-m5-5-acceptance.yml` 執行 100 固定種子戰鬥、Replay、M1～M5 長回歸與嚴格 log gate | 人工完成整場戰鬥、舊八卡程式相容性 |
 
-## Execution cost measured before the split
-From master runs at `2c31fe9`: Fast total ~170 seconds (two parallel jobs), Integration ~88 seconds, Full ~331 seconds. The P4 contract job took ~170 seconds, while Fast smoke itself took ~96 seconds. The full 100-seed test measured ~226 seconds. These are observed CI run durations, not projections for the refactored flow.
+## 為什麼刪除舊 smoke 但保留很多 M1～M5 測試？
 
-## Expected benefit and next steps
-- Ordinary domain changes: Fast + Integration remain; the P4 suite is not scheduled unless affected battle/UI/fixtures/config paths change. A nightly P4 run catches cross-boundary changes.
-- UI changes: Fast and P4 contracts run in separate workflows; no assertion is skipped just for being UI work. Visual viewport image capture remains its own renderer-based gate.
-- Historical phase-specific workflows remain manual/branch-scoped; do not delete original tests.
-- **P3 implemented:** `CI Full` no longer listens to `push` or `pull_request`; Fast/Integration continue on relevant code changes. `godot-m5-5-acceptance.yml` remains reusable and manually dispatchable, without changes to its test oracles.
-- Evaluate actual after-run timings before deciding any additional split. Check whether branch protection requires a stable always-running aggregate status.
+- `test_battle_state.gd`、`test_deck_builder.gd`、`test_combat_ui.gd`、`test_turn_flow.gd` 在刪除前早已不是舊行為的測試，只是導向 `test_lv40_roster.gd` 的重複相容殼。現在已從 `tests/` 和 M2～M5 workflows 移除。
+- 已退役 `godot-g0-legacy-baseline.yml`；其當時的八卡／兩次出牌／反應倒數不能重新成為驗收基準。
+- `scripts/domain/m1～m5/` 和 `tests/test_m2_*.gd`、`test_m3_*.gd`、`test_m4_*.gd`、`test_m5_*.gd` 是**新引擎**，不是舊版；所有原有當前 Domain／Replay 斷言及實機必要場景都應保留。
+- `tests/test_p4_v34_legacy_roster.gd` 驗證新 `PartyStatusPanel` 所使用的現役共用 UI 元件，其名稱僅是歷史標籤。P4 仍是 **25 套／1149 斷言**，未削減。
+- `tests/ci_failure_probe.gd` 用來檢測非零退出是否會讓 CI 失敗；屬正式安全網，仍必須保留。
+- `tests/ci/test_ci_current_only.py` 阻止被刪除的四個舊測試／workflow 回流，同時檢查 Full 的 100 場與 Replay 仍存在。
 
-## Safety
-Headless contracts assert structure/state, not actual screenshots; do not represent them as visual-equivalence proof. Real GUI input suites with explicit limited-run authority are still excluded from generic auto re-runs. Keep `assert_godot_logs.py` strict.
+## Agent 執行順序
 
-## P3 — Full-gate trigger policy
+1. 先跑 `python3 -m unittest discover -s tests/ci -p 'test_*.py' -v` 和 Godot strict editor import。
+2. 再跑最小受影響的 `tests/test_m*.gd`、`test_lv40_roster.gd`、`test_lv40_content.gd` 或 `test_p4_*.gd`。
+3. 以分支的 Fast／Integration／P4／Visual Actions 檢查真正的 success／failure 和失敗日誌。
+4. 大改動、候選 Release 才執行 Full；不能為了快速開發去刪除或放寬 100 場與 Replay 的驗收契約。
+5. 記錄 commit SHA、測試名稱、執行時機、通過數與實際限制。舊 run 的證據只能標記 `HISTORICAL`。
 
-- `CI Full` runs every day at **18:00 UTC = 02:00 Asia/Taipei (next day)**, when a GitHub release is `published`, or when explicitly started with **Actions → CI Full - 100 Battles and 1238 Assertions → Run workflow**.
-- Ordinary `push` and `pull_request` events **must never** schedule 100 full seeded battles. The `CI Fast` (5 replayed seeds + Golden/Replay/scene smoke), `CI Integration` (1128 Domain assertions), and UI/scene-specific P4 contracts remain responsible for relevant push events.
-- The 100-seed suite, 110 seed-specific checks, 1238 combined acceptance assertions, strict log/error gates, and replay equivalence are untouched.
-- **Release governance:** `release: published` starts verification **after** the release is published; it does **not** block publication. For a release candidate, manually run the Full gate on the candidate ref and review the passing result **before** publishing. On failure, investigate rather than changing the expected counts.
-- Scheduled workflows only run from the default branch. P4 runs at 19:00 UTC (03:00 Asia/Taipei) and is separately scheduled.
-- Check repository branch-protection / required checks administratively before relying on `CI Full` as a required push status. A non-triggered, required workflow may remain Pending. This connector could not read the branch-protection settings.
-- Prefer dispatching **CI Full** for one-off manual verification rather than also dispatching the reusable **M5.5** workflow, to avoid duplicate 100-battle work.
-- P4 moves the four early-prototype smoke suites out of ordinary P4 and Integration runs; Full still runs all four nightly/release/manually.
-
-## P4 — Legacy prototype execution ownership
-
-**Decision:** the four legacy smoke scripts (test_battle_state, test_deck_builder, test_combat_ui, test_turn_flow) are still in `tests/`, but the **only automatically scheduled** calls to all four now belong to the nightly `CI Full` canonical M5.5 acceptance. The older `godot-g0-legacy-baseline.yml` and milestone Workflows remain manually callable. This does not imply these obsolete prototype tests validate the current 12-card/AP/RP domain.
-
-The tests target the legacy prototype (`scenes/main.tscn`, older `scripts/domain/battle_state.gd`, and an eight-card deck editor), distinct from the modern `battle_screen.tscn` / M1–M5.5 Domain. The daily push gates still provide:
-- Fast: representative current battle, replay, 5 seeds, current P4 scene/HUD/Lv40.
-- Integration: **26 suites, 1128 assertions** with the same strict log validation.
-- P4: **25 suites, 1149 assertions**, no legacy runs (`legacy=0` reports intentional routing, not failure).
-- Full: complete M5.5 / 100 seeded battles, plus all four legacy smoke scripts.
-
-**Observed historical overhead (not an end-to-end forecast):** Integration's legacy step took approximately 5.4 seconds in the 2026-10-16 run; P4's four legacy scripts took about 4–5 seconds in its 2026-10-16 successful run. Expect a modest saving, not a multi-minute reduction.
-
-**Tradeoff:** an edit confined to the legacy prototype itself will not receive legacy behavior validation during an ordinary push. Use `CI Full` manually for such changes or wait for the nightly gate. No source test file is deleted; strict error handling on remaining tests is unchanged.
-
-Further candidate optimizations (not implemented here) should benchmark the ~64-second feedback-edge animation waits and representative visual capture, without weakening those assertions.
-
-## P5 — Real-render screenshots, cache and artifact contract
-
-`.github/workflows/godot-v2-3-visual-capture.yml` remains the **single active true-render snapshot workflow on master**, now titled `CI Visual - Real Godot Battle Screenshots` in Actions. Its `v23_` and `v31_` filenames are historical labels; both scripts instantiate the current `scenes/battle/battle_screen.tscn`. The older V3.1 workflow remains historical/branch-scoped and is not enabled on master.
-
-- Path filters include battle UI, actor scenes, presentation scripts, character atlases/assets, themes, screenshot scripts, and CI dependencies. Documentation-only Push does not invoke rendering. Manual dispatch and PRs are supported.
-- Verified Godot 4.7.2 binary and incremental import are restored from the shared setup Action, followed by a fresh strict Godot editor import. Rendering uses **Xvfb / Mesa compatibility**, never `--headless`.
-- `tools/ci/validate_visual_snapshots.py` checks **every one of the 9 HUD and 3 Boss PNG files** and both manifest case lists, PNG chunk CRC, decompression, dimensions, locale/hand-size/fixture metadata, Godot/display metadata, and JPG thumbnail signatures. All are placed in artifact `battle-visual-snapshots` together with renderer logs.
-- An Actions Job Summary links the artifact. The former base64 image dump has been removed from long CI logs, not the actual captured images.
-- Restricted historical V26 GUI tests are unchanged and not made runnable as ordinary Push/PR tests. The screenshot scripts only observe the actual Godot-rendered viewport or mock-only Boss **projection**, without changing Domain state or driving GUI clicks.
-- **Limits:** These screenshots verify visual output existence and integrity, **not** a pixel-diff Golden Image baseline, multi-enemy targeting, Last Spell target selection, or manual visual approval. Those require their own fixtures and oracles.
-- Deliberately left unchanged: P4 Feedback Edges timing, current 25/1149 headless contracts, Fast/Integration/Full rules, and all combat mechanics.
-
-## P6 — Approved Golden Images (pending human review)
-
-- `CI Visual` additionally emits `visual-regression-evidence` and the status `pending_review` until an owner approves all 12 reference images. The status is **not a pixel-perfect approval**.
-- Approved baselines are SHA-256 pinned and compared with the 12 real screenshots; large diff causes a failing Visual CI job and diff images in the artifact.
-- Baseline update requires a **separate deliberate human-reviewed commit**; CI never copies fresh PNGs over the reference set. See [Visual Regression P6](VISUAL_REGRESSION_P6.md).
+可參考：[戰鬥規則總覽](../combat/README.md)、[規則與程式對照](../combat/engineering/規則與程式對照表.md)、[舊系統退役紀錄](../combat/engineering/舊系統退役與驗收紀錄.md)。
