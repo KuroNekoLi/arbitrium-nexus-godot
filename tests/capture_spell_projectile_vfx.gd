@@ -21,8 +21,8 @@ func run() -> void:
 		quit(1)
 		return
 	var writer := Writer.new()
-	var namespace: Dictionary = Writer.prefix_from_args(OS.get_cmdline_user_args())
-	if not bool(namespace.get("ok",false)):
+	var capture_args: Dictionary = Writer.prefix_from_args(OS.get_cmdline_user_args())
+	if not bool(capture_args.get("ok",false)):
 		quit(1)
 		return
 	root.size = Vector2i(1280,720)
@@ -49,7 +49,7 @@ func run() -> void:
 	var image: Image = root.get_texture().get_image()
 	check(image != null and image.get_size() == Vector2i(1280,720),
 		"SPELL-CAPTURE-REAL-1280")
-	var output: Dictionary = writer.write_png(image,"akane_fireball_in_flight",str(namespace["prefix"]))
+	var output: Dictionary = writer.write_png(image,"akane_fireball_in_flight",str(capture_args["prefix"]))
 	check(bool(output.get("ok",false)), "SPELL-CAPTURE-PNG-VALID")
 	if bool(output.get("ok",false)):
 		var thumb: Image = image.duplicate()
