@@ -1,0 +1,4 @@
+SCRIPT ERROR: Invalid call. Nonexistent 'float' constructor.
+   at: run (res://tests/test_boss_astriom_scene.gd:34)
+   GDScript backtrace (most recent call first):
+       [0] run (res://tests/test_boss_astriom_scene.gd:34)
