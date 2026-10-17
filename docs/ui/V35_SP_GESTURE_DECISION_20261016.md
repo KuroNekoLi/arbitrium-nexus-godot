@@ -5,7 +5,7 @@
 ## 有效決策
 
 - SPG-01：SP 拖曳至合法對象區域並放開，立即提交既有 Domain Command，不另按 Confirm。
-- SPG-02：可完整詠唱的 SP，持續按住時暫時切換 FULL；合法拖放以放開當刻的模式提交，隨即恢復 CHANTLESS。無效拖放不付款，放開也恢復模式。
+- SPG-02：可完整詠唱的 SP，在拖曳開始前持續按住時暫時切換 FULL；合法拖放以放開當刻的模式提交，隨即恢復 CHANTLESS。若先越過拖曳門檻，該次手勢固定為 CHANTLESS，不可在拖曳途中切成 FULL。無效拖放不付款，放開也恢復模式。
 - SPG-03：完整詠唱「長按」目前是暫定操作；450 ms 為可替換的工程預設，不是戰鬥數值。
 - SPG-04：點選及鍵盤保留目標→Confirm 的可及性路徑；Reaction 仍必須手動 Confirm／Pass；Last Spell 仍是獨立不可逆確認入口。
 - SPG-05：右下名稱改為「符卡詳情／SPELL CARD DETAILS」，只有點選符卡檢視時出現；Idle、普通指令及拖放過程不顯示此面板。取消／換角／出牌後收合。Last Spell／其他指令的確認另由 `CommandConfirmation` 承載；設定與錯誤提示不屬於符卡詳情。

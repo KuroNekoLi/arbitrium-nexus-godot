@@ -118,7 +118,10 @@ func _process(delta: float) -> void:
 	# targeting, preserve the real card in the hand and let the arrow convey aim.
 	if not holding:
 		super._process(delta)
-	if not _released and can_full_chant and not full_chant_held:
+	# Full Chant is chosen by holding the card before a drag begins. Once the
+	# pointer crosses SimpleCards' drag threshold, this gesture stays Chantless;
+	# otherwise a slow drag across the arena would become a long press.
+	if not _released and not holding and can_full_chant and not full_chant_held:
 		_press_seconds += delta
 		if _press_seconds >= FULL_CHANT_HOLD_SECONDS:
 			full_chant_held = true

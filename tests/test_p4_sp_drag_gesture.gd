@@ -69,9 +69,18 @@ func run() -> void:
 			await create_timer(0.55).timeout
 			check(card.full_chant_held and screen.hud.mode.selected == 1, "SPG-HOLD-FULL-PREVIEW")
 			check(Model.state_hash(screen.snapshot) == before, "SPG-HOLD-NO-PAYMENT")
+		else:
+			await create_timer(0.1).timeout
 		var target: Vector2 = screen.hud.target_buttons["Boss"].get_global_rect().get_center()
 		await move_pointer(target)
-		await create_timer(0.07).timeout
+		if full:
+			await create_timer(0.07).timeout
+		else:
+			# Starting the drag immediately locks this gesture to Chantless even
+			# when aiming takes longer than the long-press threshold.
+			await create_timer(card.FULL_CHANT_HOLD_SECONDS + 0.1).timeout
+			check(not card.full_chant_held and screen.hud.mode.selected == 0,
+				"SPG-DRAG-DOES-NOT-BECOME-FULL")
 		check(card.face.visible and card.position.distance_to(card.home) < 1.0,
 			"SPG-AIM-CARD-REMAINS-IN-HAND-" + str(full))
 		if screen.hud.targeting_arrow.hovered_target != "Boss":
