@@ -88,9 +88,8 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 	var trusted: Dictionary = config.duplicate(true)
 	if content["kind"] == "MAGIC":
 		if combo == "COMBO":
-			var exposed: Dictionary = next["battle"]["m53"]["exposed"]
 			var offered: Dictionary = next["battle"]["m53"]["combo"]
-			if definition != "A06" or mode != "CHANTLESS" or exposed.is_empty() or offered.is_empty() or str(offered.get("source_actor_id","")) == actor or str(offered.get("target_id","")) != target:
+			if definition != "A06" or mode != "CHANTLESS" or offered.is_empty() or str(offered.get("source_actor_id","")) == actor or str(offered.get("target_id","")) != target:
 				return _error("LV40_COMBO_NOT_ELIGIBLE")
 		var p: Dictionary = content["chantless_profile"].duplicate(true)
 		if combo == "COMBO":
@@ -137,8 +136,11 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 				records.append({"kind":"ComboExecuted","finisher_actor_id":actor,"target_id":target,"extra_ap":0,"second_card_paid":true})
 	elif content["kind"] == "PHYSICAL":
 		var effect: Dictionary = trusted["m5_3_sp_effects"][definition]
-		effect["create_exposed"] = ["R01","R07"].has(definition) and bool(next["battle"]["lv40"]["core_open"])
-		if effect["create_exposed"]:
+		var ren_combo_setup: bool = ["R01","R07"].has(definition)
+		# Core opening grants Exposed, but is no longer required to establish
+		# Ren's attack-combo opportunity.
+		effect["create_exposed"] = ren_combo_setup and bool(next["battle"]["lv40"]["core_open"])
+		if ren_combo_setup:
 			effect["creates_combo_tags"] = ["FIRE"]
 		var existing: Dictionary = next["battle"]["m53"]["exposed"]
 		if definition == "R03" and not existing.is_empty():

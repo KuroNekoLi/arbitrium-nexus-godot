@@ -89,7 +89,15 @@ func _initialize() -> void:
 	check(attack["accepted"],"CP2-24-offense-shared-enemy-target")
 	var closed: Dictionary = offense.duplicate(true)
 	closed["state"]["core"]["battle"]["lv40"]["core_open"] = false
-	deny(closed,Fixture.command(closed),"CP2-16-setup-no-new-opportunity-rollback")
+	var closed_attack: Dictionary = M5.apply(closed["state"],Fixture.command(closed),closed["config"])
+	var closed_combo_executed: bool = false
+	var closed_core_opened: bool = false
+	for event: Dictionary in closed_attack.get("events",[]):
+		closed_combo_executed = closed_combo_executed or event["kind"] == "ComboExecuted"
+		closed_core_opened = closed_core_opened or event["kind"] == "ExposedApplied"
+	check(closed_attack["accepted"] and closed_combo_executed and not closed_core_opened and
+		closed_attack["state"]["core"]["battle"]["m53"]["exposed"].is_empty(),
+		"CP2-16-offense-combo-without-core-open-or-Exposed")
 	var dead_target: Dictionary = offense.duplicate(true)
 	dead_target["state"]["core"]["battle"]["actors"]["Boss"]["hp"] = 1
 	deny(dead_target,Fixture.command(dead_target),"CP2-17-setup-kills-target-rollback")

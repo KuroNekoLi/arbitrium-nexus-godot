@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "content_version": "lv40-starter-v0.3-boss-v0.2-A-provisional-2",
+  "content_version": "lv40-starter-v0.3-boss-v0.2-A-provisional-4",
   "party_order": [
     "A",
     "B",
@@ -39,6 +39,7 @@
         "R07",
         "R08"
       ],
+      "demo_opening_cards": ["R01"],
       "passive": {
         "id": "REN_P01",
         "kind": "BREAK_FIRST_HIT",
@@ -98,6 +99,7 @@
         "A06",
         "A07"
       ],
+      "demo_opening_cards": ["A06"],
       "last_spell_name_key": "last_spell.akane.name",
       "last_spell_profile": {
         "damage_kind": "MAGICAL",

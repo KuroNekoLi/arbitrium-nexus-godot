@@ -65,8 +65,32 @@ static func draw_to_four(state: Dictionary, actor_id: String) -> Dictionary:
 	var missing: int = max(0, TARGET_HAND - state["actors"][actor_id]["zones"]["hand"].size())
 	return draw_cards(state, actor_id, missing)
 
+static func _prioritize_opening_cards(state: Dictionary, actor_id: String,
+		definitions: Variant) -> Dictionary:
+	if not definitions is Array or definitions.size() > TARGET_HAND:
+		return Zones.rejected(state, "INVALID_GUARANTEED_OPENING_CARDS")
+	var seen: Dictionary = {}
+	var actor: Dictionary = state["actors"][actor_id]
+	for definition: Variant in definitions:
+		if not definition is String or str(definition).is_empty() or seen.has(definition):
+			return Zones.rejected(state, "INVALID_GUARANTEED_OPENING_CARD")
+		seen[definition] = true
+		var instance_id: String = ""
+		for card_id: String in actor["zones"]["draw"]:
+			if str(actor["instances"][card_id]["definition_id"]) == definition:
+				instance_id = card_id
+				break
+		if instance_id.is_empty():
+			return Zones.rejected(state, "GUARANTEED_OPENING_CARD_NOT_IN_DECK")
+		actor["zones"]["draw"].erase(instance_id)
+		actor["zones"]["draw"].append(instance_id)
+		Zones.emit(state, "DemoOpeningCardPrioritized", actor_id,
+			{"card_instance_id":instance_id,"definition_id":definition})
+	return Zones.accepted(state)
+
 static func start_battle(loadouts: Dictionary, contexts: Dictionary, definitions: Dictionary,
-		ownership: Dictionary, seed_value: int, deck_rules: Dictionary = {}) -> Dictionary:
+		ownership: Dictionary, seed_value: int, deck_rules: Dictionary = {},
+		guaranteed_opening_cards: Dictionary = {}) -> Dictionary:
 	var created: Dictionary = Zones.create_party(loadouts, contexts, definitions, ownership,
 		seed_value, deck_rules)
 	if not created["accepted"]:
@@ -79,6 +103,13 @@ static func start_battle(loadouts: Dictionary, contexts: Dictionary, definitions
 		var actor_id: String = str(actor_key)
 		_shuffle_zone(state, actor_id)
 		log.append(state["events"][-1])
+		var event_start: int = state["events"].size()
+		var prioritized: Dictionary = _prioritize_opening_cards(state, actor_id,
+			guaranteed_opening_cards.get(actor_id, []))
+		if not prioritized["accepted"]:
+			return Zones.rejected({}, str(prioritized["error"]))
+		for event_index: int in range(event_start, state["events"].size()):
+			log.append(state["events"][event_index])
 		var drawn: Dictionary = draw_cards(state, actor_id, TARGET_HAND)
 		if not drawn["accepted"]:
 			return Zones.rejected({}, str(drawn["error"]))

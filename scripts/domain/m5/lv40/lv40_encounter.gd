@@ -7,7 +7,7 @@ const Phase = preload("res://scripts/domain/m3/phase/phase_engine.gd")
 const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const Content = preload("res://scripts/domain/m5/lv40/lv40_content.gd")
 const Roster = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
-const VERSION: String = "lv40-starter-v0.3-boss-v0.2-A-provisional-3"
+const VERSION: String = "lv40-starter-v0.3-boss-v0.2-A-provisional-4"
 
 static func party_ids() -> Array[String]:
 	return Roster.party_ids()
@@ -53,7 +53,14 @@ static func initial(seed: int = 20261014) -> Dictionary:
 				return {}
 			owned[actor][card] = int(owned[actor].get(card, 0)) + 1
 			catalogue[card] = {"id":card,"kind":"SP"}
-	var dealt: Dictionary = Draw.start_battle(loadout,contexts,catalogue,owned,seed)
+	var guaranteed_opening_cards: Dictionary = {}
+	for actor: String in ids:
+		var opening: Variant = roster["actors"][actor].get("demo_opening_cards", [])
+		if not opening is Array:
+			return {}
+		if not opening.is_empty():
+			guaranteed_opening_cards[actor] = opening.duplicate()
+	var dealt: Dictionary = Draw.start_battle(loadout,contexts,catalogue,owned,seed,{},guaranteed_opening_cards)
 	if not dealt["accepted"]:
 		return {}
 	var battle: Dictionary = Model.make_state(ids,["Boss"],seed)
