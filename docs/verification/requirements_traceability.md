@@ -443,3 +443,5 @@ Exact 48 IDs and SHA256 evidence in [PH3_M5_4_ENGINEERING_NOTE.md](PH3_M5_4_ENGI
 本分支／合併審查已完成；現行仍待驗收項目及其狀態請看 [戰鬥待辦表](../combat/engineering/待實作與待驗證功能.md) 和 [UI 視覺驗收清單](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md)。歷史測試次數限制保留在對應專項紀錄中，不因刪除已結案的交接文件而解除。
 
 現役 UI、角色 CG、Last Spell 預覽與 P4 的最新驗收狀態，統一維護於 [Battle UI Visual Acceptance](../ui/BATTLE_UI_VISUAL_ACCEPTANCE.md) 和 [P4 UI Acceptance Status](ui/P4_DELIVERY_STATUS.md)。本文件其餘內容為歷史追溯資料，不作目前驗收判定。
+
+2026-10-18：Editor-authored layout 的場景／Skin／命中區／動畫基準需求、修復、測試與 merge blocker，見 [專項審查](ui/EDITOR_LAYOUT_REVIEW_20261018.md)；修復提交 `842b294`，Domain 1238/1238，完整分支仍為 MERGE_PENDING_TEST_AUTHORIZATION。

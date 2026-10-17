@@ -1,0 +1,8 @@
+VISUAL_REGRESSION_REPORT status=pending_review images=12 failed=0
+VISUAL_REGRESSION_REPORT status=pass images=12 failed=0
+VISUAL_REGRESSION_REPORT status=fail images=12 failed=1
+..........................................
+----------------------------------------------------------------------
+Ran 42 tests in 0.273s
+
+OK

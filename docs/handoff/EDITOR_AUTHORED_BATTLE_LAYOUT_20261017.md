@@ -1,5 +1,7 @@
 # 戰鬥畫面 GUI 編輯：人工驗收交接
 
+> 2026-10-18 review 更新：修復提交 `842b294820530fcf8e00fa7ca8de8bb2753a4988`，完整結果見 [審查與修復紀錄](../verification/ui/EDITOR_LAYOUT_REVIEW_20261018.md)。Master merge／push 等待 editor-authored layout 與 P4 HUD 各追加一次測試的授權；不要在等待時自動 push 觸發同一組 CI。HeroRosterSkin 增加 RS-21，期待數量為 21；第二次因新 fixture 的 Dictionary 型別中止，已修正，第三次尚待 CI。新 target geometry 在 headless 為 19，rendered 為 21；下一次 CI 為本輪第三次。Boss、feedback edges 的下一次亦為第三次。原限制與全部失敗紀錄保留。
+
 - 分支：`refactor/editor-authored-battle-layout`；以 `git rev-parse HEAD` 記錄實際受測提交。
 - 需求：使用者要求常駐畫面可經 Godot GUI 調整並保存，自行手動驗收後決定是否合併。正式入口、角色定義和 M1–M5 規則保持現行契約。
 - 範圍：固定 HUD／彈窗子場景、角色欄模板、角色視覺／陰影／TargetRegion、原地切換語言。包含前置 Boss GUI 座標提交 `ff52438`。

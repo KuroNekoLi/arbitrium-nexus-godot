@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+WARNING: BLOCKED_CONTRACT: Lv40 playable BattleScreen/Controller wiring remains staging-only
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/battle/battle_screen.gd:84)
+       [1] _run (res://tests/test_p4_lv40_ui.gd:21)
+PASS P4-LV40-UI-01-INHERITED-PROFILE
+PASS P4-LV40-UI-02-NO-FIXTURE-SNAPSHOT
+PASS P4-LV40-UI-03-NO-FIXTURE-CONTROLLER
+PASS P4-LV40-UI-04-BLOCKED-FEEDBACK
+PASS P4-LV40-UI-05-DISABLED-END
+PASS P4-LV40-UI-09-BLOCKED-INPUT
+PASS P4-LV40-UI-10-KEY-NO-STATE
+PASS P4-LV40-UI-06-LEGACY-DEFAULT
+PASS P4-LV40-UI-07-LEGACY-SNAPSHOT
+PASS P4-LV40-UI-08-LEGACY-CONTROLLER
+P4_LV40_UI_STAGING_REPORT executed=10 passed=10 failed=0

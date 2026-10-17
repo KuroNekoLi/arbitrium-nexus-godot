@@ -1,5 +1,7 @@
 # 現役 P4 UI 驗收狀態
 
+2026-10-18 的 `refactor/editor-authored-battle-layout` 審查、修復與最新驗證見 [Editor Layout Review](EDITOR_LAYOUT_REVIEW_20261018.md)。該分支仍待測試追加授權及 Master CI；下列較早結果不代表此次分支已驗收或合併。
+
 最新 UI 驗收基準包含 `master@de4d201` 互動修正與本次高解析狀態圖工作樹，Godot `4.7.2.stable.official.ed1daf0bf`，Windows disposable checkout。原 P4 合約 logs 位於 `%TEMP%\arbitrium-contracts-postdrag`；本次素材驗收 logs 與畫面位於 `%TEMP%\arbitrium-cg-assets-qa-20261017`。這些本機路徑不是可攜 CI artifact。
 
 ## 已驗收的現役範圍

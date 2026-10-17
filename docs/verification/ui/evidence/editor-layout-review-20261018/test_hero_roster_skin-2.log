@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS RS-01-SHARED-DEFAULT-DEFINITION
+PASS RS-02-DEFAULT-TEMPLATE-NOT-MUTATED
+PASS RS-03-INDEPENDENT-ACTOR-TINTS
+PASS RS-04-GUI-NAME-COLOR
+PASS RS-05-GUI-NORMAL-TEXTURE
+PASS RS-06-GUI-SELECTED-TEXTURE
+PASS RS-07-GUI-PORTRAIT-SURFACE
+PASS RS-08-GUI-STATUS-SURFACE
+PASS RS-09-GUI-STATUS-COLOR
+PASS RS-10-GUI-DOWNED-TINT
+PASS RS-11-GUI-COMBO-ART
+PASS RS-12-FRAME-ART-AND-TINT-NOT-OVERWRITTEN
+SCRIPT ERROR: Invalid assignment of property or key 'combo_icons' with value of type 'Dictionary' on a base object of type 'Resource (HeroRosterSkin)'.
+   at: run (res://tests/test_hero_roster_skin.gd:70)
+   GDScript backtrace (most recent call first):
+       [0] run (res://tests/test_hero_roster_skin.gd:70)
