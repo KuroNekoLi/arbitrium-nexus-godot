@@ -164,24 +164,6 @@ func _combo_vfx(detail: Dictionary, command: Dictionary) -> void:
 	var height: float = float(target.visual_height)
 	overlay.combo_vfx(target.position+Vector2(0,-height*0.5),defense,height,overlay.combo_cutin_duration())
 
-func play_card(artwork: Texture2D, origin: Vector2, target: Vector2) -> void:
-	if reduced_motion:
-		overlay.burst(target,true,Color("9dcaff"))
-		return
-	var ghost := TextureRect.new()
-	ghost.texture = artwork
-	ghost.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	ghost.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	ghost.size = Vector2(146,90)
-	ghost.position = origin
-	ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	overlay.add_child(ghost)
-	var tween: Tween = ghost.create_tween()
-	tween.tween_property(ghost,"position",target-ghost.size*0.5,0.3).set_trans(Tween.TRANS_QUAD)
-	tween.parallel().tween_property(ghost,"scale",Vector2(0.5,0.5),0.3)
-	tween.tween_property(ghost,"modulate:a",0.0,0.16)
-	tween.tween_callback(ghost.queue_free)
-
 func _exit_tree() -> void:
 	queue.clear()
 	generation += 1

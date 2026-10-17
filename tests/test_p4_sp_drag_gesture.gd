@@ -30,6 +30,14 @@ func mouse_button(point: Vector2, down: bool) -> void:
 	root.push_input(event)
 	await process_frame
 
+func contains_card_art_flight(node: Node, artwork: Texture2D) -> bool:
+	for child: Node in node.get_children():
+		if child is TextureRect and child.texture == artwork:
+			return true
+		if contains_card_art_flight(child, artwork):
+			return true
+	return false
+
 func run() -> void:
 	if DisplayServer.get_name() == "headless":
 		push_error("SP gesture verification requires a rendered Godot window")
@@ -52,6 +60,7 @@ func run() -> void:
 		check(card != null, "SPG-REAL-DUAL-CARD-" + str(full))
 		if card == null: continue
 		var instance: String = card.instance_id
+		var card_artwork: Texture2D = card.appearance.artwork
 		var before: String = Model.state_hash(screen.snapshot)
 		var start: Vector2 = card.get_global_transform() * Vector2(60, 80)
 		await move_pointer(start)
@@ -89,6 +98,9 @@ func run() -> void:
 		check(not is_instance_valid(card) or card.face.visible, "SPG-RELEASE-RESTORES-OR-CONSUMES-CARD-" + str(full))
 		var tape: Array = screen.controller.tape()
 		check(tape.size() == 1, "SPG-RELEASE-ONE-COMMAND-" + str(full))
+		if tape.size() == 1:
+			check(not contains_card_art_flight(screen.director.overlay, card_artwork),
+				"SPG-NO-CARD-ARTWORK-FLIGHT-" + str(full))
 		if tape.size() == 1:
 			check(tape[0].get("casting_mode", "") == ("FULL" if full else "CHANTLESS"), "SPG-RELEASE-MODE-" + str(full))
 		check(not screen.snapshot["core"]["cards"]["actors"]["C"]["zones"]["hand"].has(instance), "SPG-REAL-HAND-PAYMENT-" + str(full))

@@ -139,12 +139,6 @@ func _on_resolved(state: Dictionary, events: Array, command: Dictionary) -> void
 	# Released instances have disappeared from the accepted state. Recover
 	# presentation metadata from the previous snapshot, never the command tape.
 	var prior_casts: Dictionary = snapshot.get("core",{}).get("battle",{}).get("casting_instances",{}).duplicate(true)
-	for card: Control in hud.card_views:
-		if card.instance_id == command.get("card_instance_id",""):
-			var origin: Vector2 = design.get_global_transform().affine_inverse()*card.global_position
-			var target: Node2D = $Design/Arena.get_node(str(command.get("target_actor_id","Boss")))
-			director.play_card(card.appearance.artwork,origin,target.position+Vector2(0,-100))
-			break
 	cancel_action()
 	present(state)
 	# V3.5.4: log rows are derived only from real DomainEvents (raw events are
