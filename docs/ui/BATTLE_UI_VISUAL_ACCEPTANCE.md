@@ -2,17 +2,17 @@
 
 ## Current runtime reacceptance — 2026-10-17
 
-Reviewed against the current working tree based on `master@bbab424` with Godot `4.7.2.stable.official.ed1daf0bf` in a disposable Windows checkout. Current Lv40 HUD/hand/roster/command/Last Spell surfaces are still used by the playable battle, so V2/V3/V3.5 component behavior was rechecked as one current-runtime scope; historical stage snapshots are not separate acceptance gates.
+Reviewed against the current working tree based on `master@de4d201` with Godot `4.7.2.stable.official.ed1daf0bf` in a disposable Windows checkout. Current Lv40 HUD/hand/roster/command/Last Spell surfaces are still used by the playable battle, so V2/V3/V3.5 component behavior was rechecked as one current-runtime scope; historical stage snapshots are not separate acceptance gates.
 
 - Current P4 UI contract suites: **25 suites, 1,149/1,149 assertions PASS** after the hand-drag presentation fix.
 - Real-render capture: **63/63 checks PASS**, 18 captures across 1280/1920, zh_TW/en, hand sizes and Lv40/Last Spell previews. This verifies rendering and bounds, not final art approval.
 - Current playable-battle integration: `test_p4_integration` **31/31**, `test_p4_lv40_playable` **32/32**, character state CG **39/39**, spell/character presentation **46/46**, targeting contract **26/26**.
 - Real GUI: V2.5 preferences/input **31/31**, V2.6 pending UX **48/48**, V3.4 roster/command **28/28**, SP drag gesture **25/25**, and P4.3 input capture **20/20**.
 - Dragging an SP card leaves the card visible in its hand slot; only the targeting arrow follows the pointer. The pointer target is highlighted/marked. The real Godot capture `drag_arrow_target_reticle_20261017.png` shows all four cards in hand while aiming.
-- Party actors were repositioned to keep their standing images separated. Their static field CG source is still only 128×180 pixels and is enlarged to 163–200 pixels tall, so it looks soft. The 1024×1536 character CGs are opaque illustrations and cannot replace the transparent in-field sprites directly; sharper field CG art remains a separate asset task.
+- Party actors were repositioned to keep their standing images separated. User-provided 1024×1280 transparent state sheets replace the low-resolution sheets. Godot state contract **39/39 PASS**, rendered HUD capture **63/63 PASS**, and incapacitation/retirement render **37/37 PASS**. The captures were visually inspected at 1280×720 and 1920×1080; no character is clipped. Per-character horizontal crop boundaries are Ren y=536, Akane y=512, Tsumugi y=504.
 - Final high-fidelity visual approval remains pending; rendered tests do not establish user sign-off. Full human Lv40 Boss victory and formal balance/performance acceptance have not been performed.
 
-Raw local logs and rendered PNGs were kept outside the repository under `%TEMP%\arbitrium-contracts-postdrag`, `%TEMP%\arbitrium-drag-final`, `%TEMP%\arbitrium-final-gui-last`, and `%TEMP%\arbitrium-final-qa-worktree\outputs\p4_input_capture`. These paths are machine-local execution evidence, not portable CI artifacts.
+Raw local logs and rendered PNGs were kept outside the repository under `%TEMP%\arbitrium-contracts-postdrag`, `%TEMP%\arbitrium-drag-final`, `%TEMP%\arbitrium-final-gui-last`, and `%TEMP%\arbitrium-cg-assets-qa-20261017`. These paths are machine-local execution evidence, not portable CI artifacts.
 
 > **STATUS: TEST PLAN ONLY — ZERO NEW EXECUTION CLAIMS**（2026-10-15）。
 > V0 文件契約對應：`BATTLE_UI_DESIGN_SYSTEM.md`、`BATTLE_UI_COMPONENT_CONTRACT.md`、`06_VISUAL_REFACTOR_OWNERSHIP_PLAN.md`。

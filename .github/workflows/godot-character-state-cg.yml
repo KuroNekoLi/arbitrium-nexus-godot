@@ -8,7 +8,7 @@ on:
       - 'scripts/battle/presentation/character_appearance_registry.gd'
       - 'scripts/battle/presentation/battle_actor.gd'
       - 'scripts/battle/ui/components/party_status_panel.gd'
-      - 'assets/characters/**/cg_states.webp'
+      - 'assets/characters/**/cg_states.png'
   workflow_dispatch:
 permissions:
   contents: read

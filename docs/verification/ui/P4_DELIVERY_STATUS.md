@@ -1,6 +1,6 @@
 # 現役 P4 UI 驗收狀態
 
-最新本機驗收基準：依 `master@bbab424` 的工作樹修正，Godot `4.7.2.stable.official.ed1daf0bf`，Windows disposable checkout。最新 25 組 headless logs 位於 `%TEMP%\arbitrium-contracts-postdrag`；互動與截圖證據位於 `%TEMP%\arbitrium-drag-final`、`%TEMP%\arbitrium-final-gui-last` 及同一 disposable checkout 的 `outputs/p4_input_capture`。這些本機路徑不是可攜 CI artifact。
+最新 UI 驗收基準包含 `master@de4d201` 互動修正與本次高解析狀態圖工作樹，Godot `4.7.2.stable.official.ed1daf0bf`，Windows disposable checkout。原 P4 合約 logs 位於 `%TEMP%\arbitrium-contracts-postdrag`；本次素材驗收 logs 與畫面位於 `%TEMP%\arbitrium-cg-assets-qa-20261017`。這些本機路徑不是可攜 CI artifact。
 
 ## 已驗收的現役範圍
 
@@ -10,7 +10,7 @@
 - 角色狀態 CG: 39/39；法術與角色呈現：46/46；目標標記契約：26/26。
 - V2.5 GUI：31/31；V2.6 GUI：48/48；V3.4 roster/command GUI：28/28。
 - SP drag gesture：25/25；P4.3 input capture：20/20。拖曳期間手牌仍顯示於手牌區，游標只顯示瞄準箭頭，箭頭目標有標記。
-- 角色戰場靜止 CG 原圖只有 128×180，實際放大至 163–200px 高，因此會顯糊。大尺寸角色 CG 帶不透明背景，不能直接替代透明戰場貼圖；需另備高解析透明站姿素材。
+- 使用者提供的高解析透明角色狀態圖已接入執行路徑，舊 128×180 狀態貼圖已移除。PNG 尺寸／透明通道已檢查；Godot 狀態測試 39/39、真實 HUD capture 63/63、失能／退場渲染 37/37 PASS。各角色裁切線依原圖透明分界為 Ren y=536、Akane y=512、Tsumugi y=504。
 
 ## 現役未通過或尚未驗收
 

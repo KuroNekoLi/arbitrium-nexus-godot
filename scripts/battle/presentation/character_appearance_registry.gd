@@ -20,11 +20,12 @@ static func cg_for(id: String) -> Texture2D:
 	return item.cg if item != null else null
 
 
-## New separately-generated portraits and on-field CG are optional content.
-## Keep the approved atlas/animations as a safe fallback until the art bundle
-## (assets/characters/<character_id>/cg_states.webp) is imported.
-## The atlas has 128x140 portraits at y=0 and 128x180 field poses at y=140.
-## Columns: 0=normal, 1=incapacitated; EXHAUSTED never gets a field CG.
+## User-provided high-resolution AI art, aligned to the existing state atlas.
+## Each sheet is 1024x1280 with 512px columns. The generated sheets have
+## slightly different transparent row separators; keep the per-sheet split
+## below instead of cropping into adjacent poses. Column 0=normal,
+## column 1=incapacitated; EXHAUSTED never gets a field CG.
+const STATE_SHEET_SPLIT_Y := {"ren": 536, "akane": 512, "tsumugi": 504}
 static func state_texture_for(id: String, status: String, on_field: bool) -> Texture2D:
 	if status == "EXHAUSTED" and on_field:
 		return null
@@ -34,17 +35,20 @@ static func state_texture_for(id: String, status: String, on_field: bool) -> Tex
 	if appearance_path.is_empty():
 		return null
 	var character_slug: String = appearance_path.get_file().get_basename()
-	var path: String = "res://assets/characters/%s/cg_states.webp" % character_slug
+	var path: String = "res://assets/characters/%s/cg_states.png" % character_slug
 	if not ResourceLoader.exists(path):
 		return null
 	var atlas: Texture2D = load(path) as Texture2D
-	if atlas == null or atlas.get_size() != Vector2(256,320):
+	if atlas == null or atlas.get_size() != Vector2(1024,1280):
+		return null
+	var split_y: int = int(STATE_SHEET_SPLIT_Y.get(character_slug, -1))
+	if split_y <= 0 or split_y >= 1280:
 		return null
 	var region := AtlasTexture.new()
 	region.atlas = atlas
 	var col: int = 1 if status == "INCAPACITATED" else 0
-	region.region = Rect2(col * 128, 140 if on_field else 0,
-		128, 180 if on_field else 140)
+	region.region = Rect2(col * 512, split_y if on_field else 0,
+		512, 1280 - split_y if on_field else split_y)
 	return region
 
 static func portrait_for_status(id: String, status: String) -> Texture2D:

@@ -58,3 +58,7 @@ SimpleCards 2.13 by twdoor, MIT: https://github.com/twdoor/simple-cards-v-2 . Fu
 ## Character appearance candidates — 2026-10-16
 
 Six transparent PNGs (Ren / Akane / Tsumugi, one 3×3 action atlas and one independent portrait CG per character) were generated with a project-authorized image-generation tool on 2026-10-16. Original file SHA-256 values and dimensions are recorded in `assets/asset_manifest.csv` and `docs/handoff/CHARACTER_ATLAS_EDITOR_PREVIEW_CHECKPOINT_20261016.md`. The tool did not disclose its generation model. These are **replaceable AI-generated character design candidates**, not bundled Kenney assets or public-domain CC0 artwork. User approval of final canonical character appearance and actual visual QA is still pending. Original legacy art assets remain available for compatibility until every original caller is safely migrated.
+
+## Character state CG replacement candidates — 2026-10-17
+
+Ren, Akane, and Tsumugi state sheets were supplied by the user from a ChatGPT image-generation conversation. The source model, exact prompt, and redistribution/license details were not supplied. They are integrated as task-approved, replaceable 1024×1280 RGBA PNGs at `assets/characters/<character_id>/cg_states.png`, replacing the previous 256×320 state sheets. SHA-256, dimensions, and current QA status are recorded in `assets/asset_manifest.csv`. Do not claim final Canon approval or external redistribution rights from the image files alone.
