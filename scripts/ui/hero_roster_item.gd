@@ -96,7 +96,7 @@ func set_combo_state(state: String) -> void:
 		state = ""
 	elif combat_status != "ACTIVE" and state != "":
 		# Incapacitated/Exhausted can never finish; never claim eligibility.
-		state = "UNAVAILABLE"
+		state = "UNAVAILABLE" if skin.combo_icons.has("UNAVAILABLE") else ""
 	combo_state = state
 	combo_strength = 2 if state in ["ELIGIBLE", "SELECTED"] else 1 if state == "IDLE" else 0
 	combo_mark.visible = not state.is_empty()

@@ -93,6 +93,8 @@ func _ready() -> void:
 	last_preview.target_changed.connect(func(id: String) -> void: target_requested.emit(id))
 	refresh_locale()
 	if not Engine.is_editor_hint():
+		# Tool previews can be serialized by the editor; runtime feedback starts empty.
+		feedback.text = ""
 		for popup: Control in [reaction_panel, result_panel, command_prompt, preferences_panel, last_preview, combo_preview, _modal_shield]:
 			popup.hide()
 		last_preview.cancel_button.disabled = false

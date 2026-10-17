@@ -15,6 +15,9 @@ func check(condition: bool, case_id: String) -> void:
 
 func run() -> void:
 	var screen: Control = BattleScene.instantiate()
+	var authored_circle: Sprite2D = screen.get_node("Design/Arena/Boss/MagicCircle")
+	authored_circle.rotation = 0.13
+	authored_circle.modulate = Color(0.8, 0.9, 1.0, 0.7)
 	root.add_child(screen)
 	await process_frame
 	var arena: Node2D = screen.get_node("Design/Arena")
@@ -38,7 +41,12 @@ func run() -> void:
 	check(angle_delta >= 5.0 and angle_delta <= 10.0 and circle.transform == floor_transform,
 		"BA-14-SLOW-ROTATION-PRESERVES-GROUND-PROJECTION")
 	boss.play_hit()
-	check(animation_player.current_animation == "hit", "BA-08-HIT-ANIMATION-AVAILABLE")
+	var hit: Animation = animation_player.get_animation("hit")
+	var hit_x: int = hit.find_track(NodePath("Body:position:x"), Animation.TYPE_VALUE)
+	check(animation_player.current_animation == "hit" and hit_x >= 0 and
+		is_equal_approx(float(hit.track_get_key_value(hit_x, 0)), boss._body_base_position.x) and
+		is_equal_approx(float(hit.track_get_key_value(hit_x, hit.track_get_key_count(hit_x) - 1)), boss._body_base_position.x),
+		"BA-08-HIT-ANIMATION-AVAILABLE")
 	await animation_player.animation_finished
 	check(animation_player.current_animation == "idle", "BA-09-HIT-RETURNS-TO-IDLE")
 	boss.play_defeated()
@@ -46,7 +54,8 @@ func run() -> void:
 	await create_timer(0.9).timeout
 	check(is_zero_approx(body.modulate.a) and is_zero_approx(aura.modulate.a) and is_zero_approx(circle.modulate.a), "BA-11-DEFEAT-FADE-COMPLETES")
 	boss.project_conditions("ACTIVE", false, false)
-	check(boss.visible and animation_player.current_animation == "idle", "BA-12-ENCOUNTER-RESET-RESTORES-IDLE")
+	check(boss.visible and animation_player.current_animation == "idle" and circle.transform == floor_transform and
+		circle.modulate == Color(0.8, 0.9, 1.0, 0.7), "BA-12-ENCOUNTER-RESET-RESTORES-IDLE")
 	check(screen._last_target_portrait("Boss") == body.texture, "BA-13-BOSS-TARGET-PORTRAIT-FALLBACK")
 	if DisplayServer.get_name() != "headless":
 		var temp_dir: String = OS.get_environment("TEMP")

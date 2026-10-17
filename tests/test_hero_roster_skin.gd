@@ -67,6 +67,11 @@ func run() -> void:
 	check(first.combo_mark.texture == texture, "RS-11-GUI-COMBO-ART")
 	check(border.texture == texture and border.modulate == Color(0.7, 0.8, 0.9), "RS-12-FRAME-ART-AND-TINT-NOT-OVERWRITTEN")
 	first.set_combo_state("")
+	var partial_icons: Dictionary[String, Texture2D] = {"ELIGIBLE": texture}
+	custom.combo_icons = partial_icons
+	first.update_projection({"status": "INCAPACITATED", "hp": 0, "max_hp": 100, "mp": 10, "max_mp": 10}, "Downed")
+	first.set_combo_state("ELIGIBLE")
+	check(first.combo_state.is_empty() and not first.combo_mark.visible, "RS-21-PARTIAL-SKIN-DOWNED-FALLBACK")
 	custom.tint_flat_surfaces_with_actor = false
 	var flat := StyleBoxFlat.new()
 	flat.border_color = Color.MAGENTA

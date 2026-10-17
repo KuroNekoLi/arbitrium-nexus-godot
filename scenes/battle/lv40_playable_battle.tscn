@@ -304,10 +304,10 @@ offset = Vector2(0, -384)
 [node name="TargetRegion" parent="Design/Arena/C" index="2"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 100.0
-offset_bottom = 180.0
+offset_left = -50.0
+offset_top = -180.0
+offset_right = 50.0
+offset_bottom = 0.0
 
 [node name="B" parent="Design/Arena" index="1"]
 position = Vector2(500, 420)
@@ -335,10 +335,10 @@ offset = Vector2(0, -388)
 [node name="TargetRegion" parent="Design/Arena/B" index="2"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 100.0
-offset_bottom = 180.0
+offset_left = -50.0
+offset_top = -180.0
+offset_right = 50.0
+offset_bottom = 0.0
 
 [node name="AnimationFit" parent="Design/Arena/A/Visuals" index="0"]
 scale = Vector2(0.4784689, 0.4784689)
@@ -361,10 +361,10 @@ offset = Vector2(0, -372)
 [node name="TargetRegion" parent="Design/Arena/A" index="2"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 100.0
-offset_bottom = 180.0
+offset_left = -50.0
+offset_top = -200.0
+offset_right = 50.0
+offset_bottom = 0.0
 
 [node name="Boss" parent="Design/Arena" index="3"]
 position = Vector2(876.99994, 417)
@@ -374,10 +374,10 @@ scale = Vector2(0.81353307, 0.8615283)
 material = SubResource("ShaderMaterial_rjpi3")
 
 [node name="TargetRegion" parent="Design/Arena/Boss" index="4" unique_id=424724982]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 250.0
-offset_bottom = 335.0
+offset_left = -165.0
+offset_top = -330.0
+offset_right = 90.0
+offset_bottom = 90.0
 
 [node name="HUD" parent="Design" index="2"]
 layout_mode = 0

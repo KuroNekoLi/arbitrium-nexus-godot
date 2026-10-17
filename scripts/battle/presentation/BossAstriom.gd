@@ -17,9 +17,11 @@ var motion: Tween
 var _defeated: bool = false
 var _body_base_scale: Vector2
 var _body_base_position: Vector2
+var base_tint: Color = Color.WHITE
 var _aura_base_scale: Vector2
 var _aura_base_modulate: Color = Color(1.0, 1.0, 1.0, 0.75)
 var _circle_angle: float = 0.0
+var _circle_base_modulate: Color = Color.WHITE
 
 @onready var magic_circle: Sprite2D = $MagicCircle
 @onready var aura_back: Sprite2D = $AuraBack
@@ -39,7 +41,8 @@ func _process(delta: float) -> void:
 	if Engine.is_editor_hint() or _defeated or retired:
 		return
 	_circle_angle = fposmod(_circle_angle + deg_to_rad(circle_rotation_speed) * delta, TAU)
-	(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", _circle_angle)
+	if magic_circle.material is ShaderMaterial:
+		magic_circle.material.set_shader_parameter("angle", _circle_angle)
 
 # Sprite transforms are authored in boss_astriom.tscn and remain the runtime
 # source of truth, preserving edits made in Godot's 2D viewport.
@@ -48,12 +51,14 @@ func _capture_layer_defaults() -> void:
 		body.centered = true
 		_body_base_scale = body.scale
 		_body_base_position = body.position
+		base_tint = body.modulate
 	if aura_back.texture != null:
 		aura_back.centered = true
 		_aura_base_scale = aura_back.scale
 		_aura_base_modulate = aura_back.modulate
 	if magic_circle.texture != null:
 		magic_circle.centered = true
+		_circle_base_modulate = magic_circle.modulate
 		# The shader selects and rotates the floor ring inside a fixed ellipse.
 		magic_circle.region_enabled = false
 		if magic_circle.material is ShaderMaterial:
@@ -64,7 +69,8 @@ func _build_animations() -> void:
 	var idle := Animation.new()
 	idle.length = 2.4
 	idle.loop_mode = Animation.LOOP_LINEAR
-	_add_value_track(idle, "MagicCircle:modulate:a", [0.0, 1.2, 2.4], [0.82, 0.94, 0.82])
+	_add_value_track(idle, "MagicCircle:modulate:a", [0.0, 1.2, 2.4], [
+		_circle_base_modulate.a * 0.91, _circle_base_modulate.a, _circle_base_modulate.a * 0.91])
 	_add_value_track(idle, "AuraBack:modulate", [0.0, 1.2, 2.4], [
 		_aura_base_modulate, Color.WHITE, _aura_base_modulate])
 	_add_value_track(idle, "AuraBack:scale", [0.0, 1.2, 2.4], [
@@ -76,8 +82,9 @@ func _build_animations() -> void:
 	var hit := Animation.new()
 	hit.length = 0.34
 	_add_value_track(hit, "Body:modulate", [0.0, 0.07, 0.18, 0.34], [
-		Color.WHITE, Color(2.0, 1.35, 1.8, 1.0), Color(1.35, 1.0, 1.3, 1.0), Color.WHITE])
-	_add_value_track(hit, "Body:position:x", [0.0, 0.06, 0.12, 0.2, 0.34], [0.0, -4.0, 4.0, -2.0, 0.0])
+		base_tint, Color(2.0, 1.35, 1.8, 1.0), Color(1.35, 1.0, 1.3, 1.0), base_tint])
+	var x: float = _body_base_position.x
+	_add_value_track(hit, "Body:position:x", [0.0, 0.06, 0.12, 0.2, 0.34], [x, x - 4.0, x + 4.0, x - 2.0, x])
 	library.add_animation("hit", hit)
 
 	var cast := Animation.new()
@@ -90,10 +97,11 @@ func _build_animations() -> void:
 
 	var defeated := Animation.new()
 	defeated.length = 0.85
-	_add_value_track(defeated, "Body:modulate", [0.0, 0.85], [Color.WHITE, Color(0.45, 0.38, 0.7, 0.0)])
+	_add_value_track(defeated, "Body:modulate", [0.0, 0.85], [base_tint, Color(0.45, 0.38, 0.7, 0.0)])
 	_add_value_track(defeated, "Body:scale", [0.0, 0.85], [_body_base_scale, _body_base_scale * 0.9])
 	_add_value_track(defeated, "AuraBack:modulate", [0.0, 0.85], [_aura_base_modulate, Color(1.0, 1.0, 1.0, 0.0)])
-	_add_value_track(defeated, "MagicCircle:modulate", [0.0, 0.85], [Color.WHITE, Color(1.0, 1.0, 1.0, 0.0)])
+	_add_value_track(defeated, "MagicCircle:modulate", [0.0, 0.85], [
+		_circle_base_modulate, Color(_circle_base_modulate, 0.0)])
 	library.add_animation("defeated", defeated)
 	animation_player.add_animation_library("", library)
 
@@ -111,7 +119,7 @@ func play_idle() -> void:
 	if animation_player.current_animation != "idle":
 		body.position.x = _body_base_position.x
 		body.scale = _body_base_scale
-		body.modulate = Color.WHITE
+		body.modulate = base_tint
 		animation_player.play("idle")
 
 ## Play a short visual-only impact response.
@@ -125,7 +133,7 @@ func play_spell_cast() -> void:
 	if _defeated or retired:
 		return
 	body.position.x = _body_base_position.x
-	body.modulate = Color.WHITE
+	body.modulate = base_tint
 	animation_player.play("cast")
 
 ## Lunge toward a target for an accepted physical action, then return to the slot.
@@ -180,15 +188,15 @@ func reset_motion() -> void:
 	downed = false
 	position = home
 	visible = true
-	body.modulate = Color.WHITE
+	body.modulate = base_tint
 	body.scale = _body_base_scale
 	body.position = _body_base_position
 	aura_back.modulate = _aura_base_modulate
 	aura_back.scale = _aura_base_scale
-	magic_circle.modulate = Color.WHITE
-	magic_circle.rotation = 0.0
+	magic_circle.modulate = _circle_base_modulate
 	_circle_angle = 0.0
-	(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", 0.0)
+	if magic_circle.material is ShaderMaterial:
+		magic_circle.material.set_shader_parameter("angle", 0.0)
 	play_idle()
 
 func get_portrait_texture() -> Texture2D:
