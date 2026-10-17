@@ -4,26 +4,26 @@ extends PanelContainer
 ## Rendered threat styling is ornamental; NEVER deduce danger, targets or legality.
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
-var boss_stats: Label
-var break_stats: Label
-var intent: Label
-var boss_title: Label
-var hp_bar: ProgressBar
-var break_bar: ProgressBar
-var _intent_heading: Label
+@export var boss_stats: Label
+@export var break_stats: Label
+@export var intent: Label
+@export var boss_title: Label
+@export var hp_bar: ProgressBar
+@export var break_bar: ProgressBar
+@export var _intent_heading: Label
 
-var title_plate: HBoxContainer
-var hp_section: VBoxContainer
-var break_section: VBoxContainer
-var intent_panel: PanelContainer
-var _intent_accent: ColorRect
+@export var title_plate: HBoxContainer
+@export var hp_section: VBoxContainer
+@export var break_section: VBoxContainer
+@export var intent_panel: PanelContainer
+@export var _intent_accent: ColorRect
 const INTENT_ICON: Texture2D = preload("res://assets/ui/v35/intent_skill.svg")
 ## Hero accents mirror PartyStatusPanel so a target chip reads as "that hero".
 const TARGET_ACCENTS: Dictionary = {"A": Color("efc675"), "B": Color("75d6ff"), "C": Color("df9cff")}
-var intent_icon: TextureRect
-var hit_chip: Label
-var target_badges: HBoxContainer
-var target_portrait: TextureRect
+@export var intent_icon: TextureRect
+@export var hit_chip: Label
+@export var target_badges: HBoxContainer
+@export var target_portrait: TextureRect
 const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 
 func _make_chip(parent: Node, name: String, accent: Color) -> Label:
@@ -70,106 +70,6 @@ func _make_section(parent: VBoxContainer, name: String) -> VBoxContainer:
 	section.add_theme_constant_override("separation", 2)
 	parent.add_child(section)
 	return section
-
-func _ready() -> void:
-	var enemy: VBoxContainer = UI.column(self)
-	enemy.name = "BossContent"
-	enemy.add_theme_constant_override("separation", 5)
-
-	title_plate = HBoxContainer.new()
-	title_plate.name = "BossTitlePlate"
-	title_plate.add_theme_constant_override("separation", 7)
-	enemy.add_child(title_plate)
-	var identity_mark := ColorRect.new()
-	identity_mark.name = "IdentityAccent"
-	identity_mark.color = Tokens.METAL
-	identity_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	identity_mark.custom_minimum_size = Vector2(3, 21)
-	title_plate.add_child(identity_mark)
-	boss_title = _make_label(title_plate, "BossName", "BATTLE_TITLE", 19)
-	boss_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	boss_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-
-	var rule := PanelContainer.new()
-	rule.name = "HeaderRule"
-	rule.custom_minimum_size.y = 1
-	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rule.add_theme_stylebox_override("panel", Tokens.heading_rule())
-	enemy.add_child(rule)
-
-	hp_section = _make_section(enemy, "BossHPSection")
-	boss_stats = _make_label(hp_section, "BossHPText", "", 14)
-	hp_bar = ProgressBar.new()
-	hp_bar.name = "BossHPBar"
-	Tokens.setup_read_only_bar(hp_bar, Tokens.HP)
-	hp_section.add_child(hp_bar)
-
-	break_section = _make_section(enemy, "BossBreakSection")
-	break_stats = _make_label(break_section, "BossBreakText", "", 13)
-	break_stats.tooltip_text = ""
-	break_bar = ProgressBar.new()
-	break_bar.name = "BossBreakBar"
-	Tokens.setup_read_only_bar(break_bar, Tokens.BREAK)
-	break_section.add_child(break_bar)
-
-	intent_panel = PanelContainer.new()
-	intent_panel.name = "PublishedIntentPanel"
-	intent_panel.add_theme_stylebox_override("panel",
-		Tokens.inset_frame(Tokens.INTENT.darkened(0.18)))
-	intent_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	enemy.add_child(intent_panel)
-	var intent_row := HBoxContainer.new()
-	intent_row.name = "IntentRow"
-	intent_row.add_theme_constant_override("separation", 7)
-	intent_panel.add_child(intent_row)
-	_intent_accent = ColorRect.new()
-	_intent_accent.name = "IntentAccent"
-	_intent_accent.color = Tokens.INTENT
-	_intent_accent.custom_minimum_size.x = 3
-	_intent_accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	intent_row.add_child(_intent_accent)
-	var intent_content := VBoxContainer.new()
-	intent_content.name = "IntentContent"
-	intent_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	intent_content.add_theme_constant_override("separation", 2)
-	intent_row.add_child(intent_content)
-	# V3.5.3: icon + heading + public hit-count chip share one row (no extra height).
-	var heading_row := HBoxContainer.new()
-	heading_row.name = "IntentHeadingRow"
-	heading_row.add_theme_constant_override("separation", 5)
-	heading_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	intent_content.add_child(heading_row)
-	intent_icon = TextureRect.new()
-	intent_icon.name = "IntentIcon"
-	intent_icon.texture = INTENT_ICON
-	intent_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	intent_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	intent_icon.custom_minimum_size = Vector2(18, 18)
-	intent_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	heading_row.add_child(intent_icon)
-	_intent_heading = _make_label(heading_row, "IntentHeading", "BATTLE_INTENT", 13)
-	_intent_heading.add_theme_color_override("font_color", Tokens.INTENT)
-	_intent_heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	hit_chip = _make_chip(heading_row, "IntentHitChip", Tokens.INTENT)
-	# Target badges: one chip per PUBLISHED target id; nothing is inferred.
-	target_badges = HBoxContainer.new()
-	target_badges.name = "IntentTargetBadges"
-	target_badges.add_theme_constant_override("separation", 4)
-	target_badges.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	intent_content.add_child(target_badges)
-	intent = UI.label(intent_content, "", 13)
-	intent.name = "IntentDetail"
-	intent.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	intent.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	intent.max_lines_visible = 2
-	intent.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	target_portrait = TextureRect.new()
-	target_portrait.name = "PublishedTargetPortrait"
-	target_portrait.custom_minimum_size = Vector2(44, 44)
-	target_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	target_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	target_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	intent_row.add_child(target_portrait)
 
 func render_enemy(projection: Dictionary) -> void:
 	boss_title.text = tr(str(projection.get("actor_name_keys", {}).get("Boss", "BATTLE_TITLE")))

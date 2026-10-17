@@ -10,21 +10,10 @@ signal chant_held(instance: String, full: bool)
 
 var card_views: Array[Control] = []
 var selected_instance: String = ""
-var empty_state: Label
+@export var empty_state: Label
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	empty_state = Label.new()
-	empty_state.name = "EmptyState"
-	empty_state.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	empty_state.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	empty_state.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	empty_state.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	empty_state.autowrap_mode = TextServer.AUTOWRAP_OFF
-	empty_state.add_theme_font_size_override("font_size", 18)
-	empty_state.text = tr("BATTLE_EMPTY")
-	empty_state.visible = false
-	add_child(empty_state)
+	resized.connect(_arrange_hand)
 
 func render_cards(cards: Array) -> void:
 	var prior_positions: Dictionary = {}

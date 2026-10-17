@@ -1,0 +1,110 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/battle/ui/components/combo_confirmation_overlay.gd" id="1_4v0fh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4sl4"]
+content_margin_left = 18.0
+content_margin_top = 18.0
+content_margin_right = 18.0
+content_margin_bottom = 18.0
+bg_color = Color(0.025, 0.045, 0.1, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8039216, 0.654902, 0.36862746, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="ComboConfirmation" type="PanelContainer" unique_id=757859028 node_paths=PackedStringArray("title", "setup_targets", "recipes", "normal_text", "combo_text", "normal_button", "combo_button", "cancel_button")]
+visible = false
+z_index = 112
+layout_mode = 0
+offset_left = 286.0
+offset_top = 120.0
+offset_right = 974.0
+offset_bottom = 550.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_l4sl4")
+script = ExtResource("1_4v0fh")
+title = NodePath("VBoxContainer/Label")
+setup_targets = NodePath("VBoxContainer/HBoxContainer/OptionButton")
+recipes = NodePath("VBoxContainer/OptionButton")
+normal_text = NodePath("VBoxContainer/HBoxContainer2/Label")
+combo_text = NodePath("VBoxContainer/HBoxContainer2/Label2")
+normal_button = NodePath("VBoxContainer/HBoxContainer3/Button2")
+combo_button = NodePath("VBoxContainer/HBoxContainer3/Button3")
+cancel_button = NodePath("VBoxContainer/HBoxContainer3/Button")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=58200696]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1253077897]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "CP2_PREPARATION"
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1377604401]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer" unique_id=166608169]
+custom_minimum_size = Vector2(58, 64)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/HBoxContainer" unique_id=1906781414]
+custom_minimum_size = Vector2(58, 64)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/HBoxContainer" unique_id=1610142876]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer" unique_id=1424706223]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=406916990]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1451286405]
+custom_minimum_size = Vector2(310, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1039426267]
+custom_minimum_size = Vector2(310, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.88235295, 0.74509805, 1, 1)
+autowrap_mode = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=1361495234]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=136849088]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "BATTLE_CANCEL"
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=706942146]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CP2_NORMAL"
+
+[node name="Button3" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=511758652]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CP2_COMMIT"

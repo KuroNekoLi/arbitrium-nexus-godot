@@ -1,6 +1,293 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/battle/ui/components/action_context_panel.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/action_context_panel.gd" id="1_8dsnm"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_analyze.svg" id="2_4cu5h"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/arcane_panel.svg" id="3_g3smq"]
 
-[node name="Context" type="PanelContainer"]
-script = ExtResource("1")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7cj17"]
+bg_color = Color(0.56784314, 0.4894118, 0.3419608, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nyf5o"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.047058824, 0.10980392, 0.18431373, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.46137255, 0.39764705, 0.27784312, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5kihu"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppfv3"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.09803922, 0.21176471, 0.29411766, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.83137256, 0.68235296, 0.44313726, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gtne5"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7066667, 0.58000004, 0.3766667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_800fj"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b7inr"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ud7r4"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4866667, 0.5566667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qd1tr"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="Context" type="PanelContainer" unique_id=158730252 node_paths=PackedStringArray("details", "mode", "combo", "confirm_button", "detail_scroll", "action_row", "summary", "artwork", "action_title", "cost_badge", "target_label")]
+visible = false
+layout_mode = 0
+offset_left = 984.0
+offset_top = 348.0
+offset_right = 1264.0
+offset_bottom = 568.0
+script = ExtResource("1_8dsnm")
+details = NodePath("VBoxContainer/DetailScroll/VBoxContainer/DetailsInset/Label")
+mode = NodePath("VBoxContainer/DetailScroll/VBoxContainer/OptionButton")
+combo = NodePath("VBoxContainer/DetailScroll/VBoxContainer/CheckButton")
+confirm_button = NodePath("VBoxContainer/ActionButtons/ConfirmButton")
+detail_scroll = NodePath("VBoxContainer/DetailScroll")
+action_row = NodePath("VBoxContainer/ActionButtons")
+summary = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary")
+artwork = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/ActionArtwork")
+action_title = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer/Label")
+cost_badge = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer/Label2")
+target_label = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer/Label3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1491594545]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="DetailScroll" type="ScrollContainer" parent="VBoxContainer" unique_id=765987177]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/DetailScroll" unique_id=613569101]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="DetailsHeading" type="Label" parent="VBoxContainer/DetailScroll/VBoxContainer" unique_id=779482368]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.84705883, 0.7529412, 0.5411765, 1)
+text = "BATTLE_DETAILS"
+autowrap_mode = 3
+
+[node name="DetailsRule" type="PanelContainer" parent="VBoxContainer/DetailScroll/VBoxContainer" unique_id=803370295]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7cj17")
+
+[node name="ActionSummary" type="HBoxContainer" parent="VBoxContainer/DetailScroll/VBoxContainer" unique_id=859333708]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="ActionArtwork" type="TextureRect" parent="VBoxContainer/DetailScroll/VBoxContainer/ActionSummary" unique_id=698525214]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_4cu5h")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/DetailScroll/VBoxContainer/ActionSummary" unique_id=1379913809]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer" unique_id=934335615]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.9372549, 0.88235295, 0.74509805, 1)
+text = "BATTLE_SELECT"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer" unique_id=1195823932]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.40784314, 0.7921569, 1, 1)
+autowrap_mode = 3
+
+[node name="Label3" type="Label" parent="VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer" unique_id=1156433236]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.6784314, 0.7490196, 0.8156863, 1)
+text = "BATTLE_CONTEXT_EMPTY"
+autowrap_mode = 3
+
+[node name="DetailsInset" type="PanelContainer" parent="VBoxContainer/DetailScroll/VBoxContainer" unique_id=846519396]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_nyf5o")
+
+[node name="Label" type="Label" parent="VBoxContainer/DetailScroll/VBoxContainer/DetailsInset" unique_id=212212634]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "BATTLE_SELECT"
+autowrap_mode = 3
+
+[node name="OptionButton" type="OptionButton" parent="VBoxContainer/DetailScroll/VBoxContainer" unique_id=550710860]
+visible = false
+layout_mode = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "破棄詠唱"
+popup/item_0/id = 0
+popup/item_1/text = "完整詠唱"
+popup/item_1/id = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/DetailScroll/VBoxContainer" unique_id=157804722]
+visible = false
+layout_mode = 2
+text = "BATTLE_COMBO"
+
+[node name="ActionButtons" type="HBoxContainer" parent="VBoxContainer" unique_id=858788224]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ConfirmButton" type="Button" parent="VBoxContainer/ActionButtons" unique_id=185700329]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_5kihu")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ppfv3")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gtne5")
+theme_override_styles/focus = SubResource("StyleBoxFlat_800fj")
+theme_override_colors/font_color = Color(0.91568625, 0.8411765, 0.7215686, 1)
+text = "BATTLE_CONFIRM"
+
+[node name="CancelButton" type="Button" parent="VBoxContainer/ActionButtons" unique_id=789000256]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_b7inr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ud7r4")
+theme_override_styles/focus = SubResource("StyleBoxFlat_qd1tr")
+text = "BATTLE_CANCEL"
+
+[node name="ArcaneChrome" type="Control" parent="." unique_id=1539698498]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="ArcaneChrome" unique_id=1075794225]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -9.0
+offset_right = 12.0
+offset_bottom = 9.0
+texture = ExtResource("3_g3smq")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30

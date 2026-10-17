@@ -5,7 +5,7 @@
 [ext_resource type="Resource" path="res://resources/ui/characters/ren.tres" id="9"]
 [ext_resource type="Resource" path="res://resources/ui/characters/akane.tres" id="10"]
 [ext_resource type="Resource" path="res://resources/ui/characters/tsumugi.tres" id="11"]
-[ext_resource type="Script" path="res://scripts/battle/ui/battle_hud.gd" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/battle_hud.tscn" id="8"]
 [ext_resource type="PackedScene" path="res://scenes/battle/enemies/boss_astriom.tscn" id="12_boss"]
 [node name="BattleScreen" type="Control"]
 layout_mode = 3
@@ -49,8 +49,21 @@ accent = Color(1, 0.76, 0.41, 1)
 position = Vector2(845, 455)
 actor_id = "Boss"
 visual_height = 325.0
-[node name="HUD" type="Control" parent="Design"]
-offset_right = 1280.0
-offset_bottom = 720.0
-mouse_filter = 2
-script = ExtResource("8")
+[node name="HUD" parent="Design" instance=ExtResource("8")]
+
+[editable path="Design/Arena/C"]
+[editable path="Design/Arena/B"]
+[editable path="Design/Arena/A"]
+[editable path="Design/Arena/Boss"]
+[editable path="Design/HUD"]
+[editable path="Design/HUD/TopBar"]
+[editable path="Design/HUD/PartyStatusPanel"]
+[editable path="Design/HUD/Commands"]
+[editable path="Design/HUD/EnemyStatus"]
+[editable path="Design/HUD/Context"]
+[editable path="Design/HUD/BattleLogPanel"]
+[editable path="Design/HUD/HandView"]
+[editable path="Design/HUD/TargetHitRegions"]
+[editable path="Design/HUD/ReactionQueue"]
+[editable path="Design/HUD/LastSpellPreview"]
+[editable path="Design/HUD/ComboConfirmation"]

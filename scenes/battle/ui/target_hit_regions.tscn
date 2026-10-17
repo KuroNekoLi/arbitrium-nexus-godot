@@ -1,6 +1,80 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/battle/ui/components/target_hit_regions.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/target_hit_regions.gd" id="1_87vya"]
 
-[node name="TargetHitRegions" type="Control"]
-script = ExtResource("1")
+[node name="TargetHitRegions" type="Control" unique_id=550786529 node_paths=PackedStringArray("basic_choices")]
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+script = ExtResource("1_87vya")
+basic_choices = NodePath("BasicAttackTargets")
+
+[node name="TargetBoss" type="Button" parent="." unique_id=362123657]
+layout_mode = 0
+offset_left = 722.0
+offset_top = 125.0
+offset_right = 972.0
+offset_bottom = 460.0
+tooltip_text = "仲裁核心"
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.61960787, 0.92156863, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_constants/outline_size = 5
+theme_override_colors/font_outline_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+flat = true
+
+[node name="TargetA" type="Button" parent="." unique_id=1947574107]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 285.0
+offset_right = 450.0
+offset_bottom = 460.0
+tooltip_text = "隊員一"
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.61960787, 0.92156863, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_constants/outline_size = 5
+theme_override_colors/font_outline_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+flat = true
+
+[node name="TargetB" type="Button" parent="." unique_id=880843153]
+layout_mode = 0
+offset_left = 590.0
+offset_top = 249.0
+offset_right = 690.0
+offset_bottom = 422.0
+tooltip_text = "隊員二"
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.61960787, 0.92156863, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_constants/outline_size = 5
+theme_override_colors/font_outline_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+flat = true
+
+[node name="TargetC" type="Button" parent="." unique_id=1105465670]
+layout_mode = 0
+offset_left = 475.0
+offset_top = 225.0
+offset_right = 565.0
+offset_bottom = 389.0
+tooltip_text = "隊員三"
+focus_mode = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.61960787, 0.92156863, 1, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_constants/outline_size = 5
+theme_override_colors/font_outline_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+flat = true
+
+[node name="BasicAttackTargets" type="HBoxContainer" parent="." unique_id=2026866334]
+visible = false
+layout_mode = 0
+offset_left = 660.0
+offset_top = 393.0
+offset_right = 970.0
+offset_bottom = 436.0
+mouse_filter = 2

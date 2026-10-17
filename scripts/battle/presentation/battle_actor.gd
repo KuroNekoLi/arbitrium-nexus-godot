@@ -27,13 +27,11 @@ extends Node2D
 	set(value):
 		accent = value
 		queue_redraw()
-@export var shadow_width: float = 0.19:
-	set(value):
-		shadow_width = clampf(value, 0.0, 1.0)
-		queue_redraw()
 const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
-var state_cg: Sprite2D
-var body: AnimatedSprite2D
+@onready var state_cg: Sprite2D = $Visuals/StateFit/StateCG
+@onready var body: AnimatedSprite2D = $Visuals/AnimationFit/Body
+@onready var _animation_fit: Node2D = $Visuals/AnimationFit
+@onready var _state_fit: Node2D = $Visuals/StateFit
 var motion: Tween
 var tint_tween: Tween
 var home: Vector2
@@ -56,20 +54,17 @@ func _ready() -> void:
 	home = position
 	if appearance != null and not appearance.changed.is_connected(_on_art_changed):
 		appearance.changed.connect(_on_art_changed)
+	if not body.frame_changed.is_connected(_align_frame):
+		body.frame_changed.connect(_align_frame)
+		body.animation_changed.connect(_align_frame)
 	_on_art_changed()
 	if Engine.is_editor_hint():
 		# Editor redraws appearance only; no combat commands or tweens.
 		set_process(false)
 
 func _on_art_changed() -> void:
-	if not is_inside_tree():
+	if not is_node_ready() or body == null:
 		return
-	if body == null or not is_instance_valid(body):
-		body = AnimatedSprite2D.new()
-		body.name = "ActorFramesPreview"
-		body.frame_changed.connect(_align_frame)
-		body.animation_changed.connect(_align_frame)
-		add_child(body) # no owner: editor does not save transient children
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
 	if boss_art:
@@ -104,7 +99,7 @@ func _on_art_changed() -> void:
 		return
 	body.sprite_frames = frames
 	var size: Vector2 = frames.get_frame_texture("idle",0).get_size()
-	body.scale = Vector2.ONE * (visual_height / maxf(1.0,size.y))
+	_animation_fit.scale = Vector2.ONE * (visual_height / maxf(1.0,size.y))
 	_update_base_tint()
 	body.modulate = base_tint
 	body.play("idle")
@@ -118,21 +113,23 @@ func _align_frame() -> void:
 		return
 	if appearance == null or boss_art:
 		body.centered = true
-		body.position = Vector2(0, -visual_height * 0.5)
+		body.offset = Vector2(0, -body.sprite_frames.get_frame_texture(body.animation, body.frame).get_height() * 0.5)
 		return
 	var row: int = ["idle", "run", "strike"].find(str(body.animation))
 	if row < 0 or body.frame >= body.sprite_frames.get_frame_count(body.animation):
 		return
 	if downed:
 		body.centered = true
-		body.rotation = -0.95
-		body.position = Vector2(-visual_height * 0.2, -visual_height * 0.19)
+		_animation_fit.rotation = -0.95
+		_animation_fit.position = Vector2(-visual_height * 0.2, -visual_height * 0.19)
+		body.offset = Vector2.ZERO
 		return
 	# The atlas has unequal row heights; anchor every frame to its own feet,
 	# without resizing actors or moving their authoritative visual slots.
 	var frame_size: Vector2 = body.sprite_frames.get_frame_texture(body.animation, body.frame).get_size()
 	body.centered = false
-	body.position = Vector2(-frame_size.x * 0.5, -appearance.baseline_for(row, body.frame)) * body.scale + appearance.foot_offset
+	_animation_fit.position = appearance.foot_offset
+	body.offset = Vector2(-frame_size.x * 0.5, -appearance.baseline_for(row, body.frame))
 
 func _sync_state_cg() -> void:
 	# Purely visual: no HP mutation, actor removal or target eligibility here.
@@ -145,14 +142,10 @@ func _sync_state_cg() -> void:
 			state_cg.visible = false
 		body.visible = true
 		return
-	if state_cg == null:
-		state_cg = Sprite2D.new()
-		state_cg.name = "CharacterStateCG"
-		add_child(state_cg)
 	state_cg.texture = texture
 	state_cg.centered = true
-	state_cg.position = Vector2(0,-visual_height * 0.5)
-	state_cg.scale = Vector2.ONE * (visual_height / maxf(1.0,float(texture.get_height())))
+	state_cg.offset = Vector2(0, -float(texture.get_height()) * 0.5)
+	_state_fit.scale = Vector2.ONE * (visual_height / maxf(1.0,float(texture.get_height())))
 	state_cg.modulate = base_tint
 	state_cg.visible = not retired
 	body.visible = false
@@ -163,7 +156,6 @@ func _draw() -> void:
 	if barrier_active:
 		draw_arc(Vector2(0,-visual_height*0.45),visual_height*0.48,PI,TAU,48,Color("6de2cb"),3)
 	draw_set_transform(Vector2.ZERO,0,Vector2(1,0.23))
-	draw_circle(Vector2.ZERO,visual_height*shadow_width,Color(0.01,0.02,0.06,0.55))
 	draw_arc(Vector2.ZERO,visual_height*0.24,0,TAU,48,Color(accent,0.6),2)
 
 func play_attack(target_position: Vector2) -> void:
@@ -223,7 +215,7 @@ func project_conditions(status: String, casting: bool, barrier: bool, field_reti
 		if motion: motion.kill()
 		if tint_tween: tint_tween.kill()
 		position = home
-		body.rotation = 0.0
+		_animation_fit.rotation = 0.0
 		if downed:
 			body.stop()
 			body.frame = 0

@@ -7,46 +7,12 @@ const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 const Formatter = preload("res://scripts/battle/presentation/battle_log_formatter.gd")
 const HISTORY_LIMIT: int = 24
 const VISIBLE_ROWS: int = 4
-var log_label: Label
-var log_scroll: ScrollContainer
-var entry_list: VBoxContainer
+@export var log_label: Label
+@export var log_scroll: ScrollContainer
+@export var entry_list: VBoxContainer
 var history: Array = []
-var earlier_entries: VBoxContainer
+@export var earlier_entries: VBoxContainer
 
-func _ready() -> void:
-	var body: VBoxContainer = UI.column(self)
-	body.add_theme_constant_override("separation", 4)
-	var heading: Label = UI.label(body, "BATTLE_LOG", 14)
-	heading.name = "LogHeading"
-	heading.add_theme_color_override("font_color", Color("#D8C08A"))
-	log_scroll = ScrollContainer.new()
-	log_scroll.name = "LogScroll"
-	log_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	log_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	log_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.add_child(log_scroll)
-	var content := VBoxContainer.new()
-	content.name = "LogContent"
-	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content.add_theme_constant_override("separation", 2)
-	log_scroll.add_child(content)
-	earlier_entries = VBoxContainer.new()
-	earlier_entries.name = "EarlierEntries"
-	earlier_entries.add_theme_constant_override("separation", 2)
-	content.add_child(earlier_entries)
-	entry_list = VBoxContainer.new()
-	entry_list.name = "LogEntries"
-	entry_list.add_theme_constant_override("separation", 2)
-	entry_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content.add_child(entry_list)
-	log_label = UI.label(content, "", 12)
-	log_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	log_label.max_lines_visible = 3
-	log_label.text = tr("BATTLE_LOG_EMPTY")
-	log_label.add_theme_color_override("font_color", Color("#8095A8"))
-
-## Appends formatter rows (already derived from real events) and redraws.
 func append_rows(rows: Array) -> void:
 	history.append_array(rows)
 	_redraw()

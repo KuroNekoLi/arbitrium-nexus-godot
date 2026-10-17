@@ -35,3 +35,10 @@ scale = Vector2(0.31572407, 0.29730788)
 texture = ExtResource("4_body")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1134963994]
+
+[node name="TargetRegion" type="Control" parent="."]
+offset_left = -123.0
+offset_top = -330.0
+offset_right = 127.0
+offset_bottom = 5.0
+mouse_filter = 2

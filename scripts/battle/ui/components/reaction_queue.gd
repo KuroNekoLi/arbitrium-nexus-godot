@@ -2,12 +2,7 @@
 extends PanelContainer
 const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
 signal command_requested(kind: String, fields: Dictionary)
-var reaction_column: VBoxContainer
-
-func _ready() -> void:
-	reaction_column = VBoxContainer.new()
-	add_child(reaction_column)
-	hide()
+@export var reaction_column: VBoxContainer
 
 func render_window(window: Dictionary, choices: Array, names: Dictionary = {}) -> void:
 	for child: Node in reaction_column.get_children():

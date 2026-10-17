@@ -1,7 +1,271 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/battle/ui/components/team_phase_header.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/team_phase_header.gd" id="1_62y6p"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/ap_core.svg" id="2_sdnym"]
+[ext_resource type="Texture2D" path="res://addons/kenney_fantasy_ui_borders/panel-border-000.png" id="3_pcirr"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/arcane_panel.svg" id="4_vnee2"]
 
-[node name="TopBar" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d0i2i"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.018, 0.043, 0.073, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.708, 0.612, 0.427, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.012, 0.031, 0.071, 0.65)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwr4a"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_15iyb"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.09803922, 0.21176471, 0.29411766, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.47058824, 0.57254905, 0.654902, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dlmwo"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4866667, 0.5566667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2bb0n"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="TopBar" type="Control" unique_id=1538617365 node_paths=PackedStringArray("header", "resources", "ap_value", "rp_value", "crystal_row")]
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 1264.0
+offset_bottom = 76.0
 mouse_filter = 2
-script = ExtResource("1")
+script = ExtResource("1_62y6p")
+header = NodePath("PhasePanel/HBoxContainer/Label")
+resources = NodePath("ResourcePanel/HBoxContainer/Label")
+ap_value = NodePath("ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2/APValue")
+rp_value = NodePath("ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer/RPValue")
+crystal_row = NodePath("ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2/APCrystalRow")
+
+[node name="ResourcePanel" type="PanelContainer" parent="." unique_id=235044100]
+layout_mode = 0
+offset_right = 310.0
+offset_bottom = 64.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_d0i2i")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ResourcePanel" unique_id=637557830]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="ResourcePanel/HBoxContainer" unique_id=400619295]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+vertical_alignment = 1
+
+[node name="APCoreIcon" type="TextureRect" parent="ResourcePanel/HBoxContainer" unique_id=611084899]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_sdnym")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ResourcePanel/HBoxContainer" unique_id=1316854120]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ResourcePanel/HBoxContainer/VBoxContainer" unique_id=924616685]
+layout_mode = 2
+
+[node name="APCaption" type="Label" parent="ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=410621293]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.8509804, 0.7607843, 0.5803922, 1)
+text = "BATTLE_TEAM_AP"
+
+[node name="RPValue" type="Label" parent="ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer" unique_id=1172003629]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.49803922, 0.8901961, 1, 1)
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ResourcePanel/HBoxContainer/VBoxContainer" unique_id=1237685255]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="APValue" type="Label" parent="ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1702530658]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.95686275, 0.90588236, 0.7607843, 1)
+theme_override_colors/font_outline_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+theme_override_constants/outline_size = 4
+
+[node name="APCrystalRow" type="HBoxContainer" parent="ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1196120152]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Control" type="Control" parent="ResourcePanel" unique_id=149670921]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ResourceFrame" type="NinePatchRect" parent="ResourcePanel/Control" unique_id=1474308902]
+modulate = Color(0.70980394, 0.6117647, 0.42745098, 1)
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("3_pcirr")
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="PhasePanel" type="PanelContainer" parent="." unique_id=1375573275]
+layout_mode = 0
+offset_left = 400.0
+offset_right = 802.0
+offset_bottom = 64.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PhasePanel" unique_id=924090093]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="PhasePanel/HBoxContainer" unique_id=1095800657]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 23
+text = "BATTLE_TITLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ArcaneChrome" type="Control" parent="PhasePanel" unique_id=1077103550]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="PhasePanel/ArcaneChrome" unique_id=622450146]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -9.0
+offset_right = 12.0
+offset_bottom = 9.0
+texture = ExtResource("4_vnee2")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="UtilityPanel" type="PanelContainer" parent="." unique_id=667586329]
+visible = false
+layout_mode = 0
+offset_left = 930.0
+offset_right = 1248.0
+offset_bottom = 64.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UtilityPanel" unique_id=1386724839]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Button" type="Button" parent="UtilityPanel/HBoxContainer" unique_id=843757063]
+layout_mode = 2
+text = "EN"
+
+[node name="Button2" type="Button" parent="UtilityPanel/HBoxContainer" unique_id=372289424]
+layout_mode = 2
+text = "繁中"
+
+[node name="Button3" type="Button" parent="UtilityPanel/HBoxContainer" unique_id=1472693727]
+layout_mode = 2
+text = "BATTLE_SAVE"
+
+[node name="ArcaneChrome" type="Control" parent="UtilityPanel" unique_id=1141405064]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="UtilityPanel/ArcaneChrome" unique_id=315245378]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -9.0
+offset_right = 12.0
+offset_bottom = 9.0
+texture = ExtResource("4_vnee2")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="PreferencesDisclosure" type="Button" parent="." unique_id=1723802253]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 0
+offset_left = 930.0
+offset_top = 8.0
+offset_right = 974.0
+offset_bottom = 52.0
+tooltip_text = "減少動態 · 靜音"
+theme_override_styles/normal = SubResource("StyleBoxFlat_nwr4a")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_15iyb")
+theme_override_styles/hover = SubResource("StyleBoxFlat_dlmwo")
+theme_override_styles/focus = SubResource("StyleBoxFlat_2bb0n")
+theme_override_font_sizes/font_size = 11
+text = "⚙"
+alignment = 0

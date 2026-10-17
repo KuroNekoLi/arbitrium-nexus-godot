@@ -2,34 +2,33 @@
 extends Control
 signal target_requested(actor: String)
 var target_buttons: Dictionary = {}
-var basic_choices: HBoxContainer
+@export var basic_choices: HBoxContainer
 var hovered_target: String = ""
+var arena: Node2D
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for entry: Array in [["Boss", Rect2(722,125,250,335)], ["A", Rect2(340,285,110,175)], ["B", Rect2(590,249,100,173)], ["C", Rect2(475,225,90,164)]]:
-		var target := Button.new()
-		target.name = "Target" + entry[0]
-		target.position = entry[1].position
-		target.size = entry[1].size
-		target.flat = true
-		target.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		target.focus_mode = Control.FOCUS_NONE
-		target.tooltip_text = tr("BATTLE_TITLE" if entry[0] == "Boss" else "BATTLE_HERO_" + entry[0])
-		target.add_theme_font_size_override("font_size", 20)
-		target.add_theme_color_override("font_color", Color("#9EEBFF"))
-		target.add_theme_color_override("font_outline_color", Color("#07111D"))
-		target.add_theme_constant_override("outline_size", 5)
-		target.pressed.connect(func() -> void: target_requested.emit(entry[0]))
-		add_child(target)
-		target_buttons[entry[0]] = target
-	basic_choices = HBoxContainer.new()
-	basic_choices.name = "BasicAttackTargets"
-	basic_choices.position = Vector2(660, 393)
-	basic_choices.size = Vector2(310, 43)
-	basic_choices.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	basic_choices.hide()
-	add_child(basic_choices)
+	for id: String in ["Boss", "A", "B", "C"]:
+		var target: Button = get_node("Target" + id)
+		target_buttons[id] = target
+		target.pressed.connect(func() -> void: target_requested.emit(id))
+
+## TargetRegion is authored beside the actor visuals and follows their slot.
+## Only presentation geometry is copied; legality remains in BattleScreen.
+func _process(_delta: float) -> void:
+	if not is_instance_valid(arena):
+		return
+	var inverse: Transform2D = get_global_transform().affine_inverse()
+	for id: String in target_buttons:
+		var region: Control = arena.get_node_or_null(id + "/TargetRegion") as Control
+		if region == null:
+			continue
+		var transform: Transform2D = inverse * region.get_global_transform()
+		var bounds := Rect2(transform * Vector2.ZERO, Vector2.ZERO)
+		for corner: Vector2 in [Vector2(region.size.x, 0), region.size, Vector2(0, region.size.y)]:
+			bounds = bounds.expand(transform * corner)
+		target_buttons[id].position = bounds.position
+		target_buttons[id].size = bounds.size
+	queue_redraw()
 
 func set_targets(ids: Array) -> void:
 	for id: String in target_buttons:

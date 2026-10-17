@@ -2,8 +2,6 @@
 class_name HeroRosterItem
 extends Button
 
-const FANTASY_FRAME: Texture2D = preload("res://addons/kenney_fantasy_ui_borders/panel-border-000.png")
-const CREST: Texture2D = preload("res://assets/ui/v35/ap_crystal.svg")
 const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
 const BattleTranslations = preload("res://scripts/battle/presentation/battle_translations.gd")
 
@@ -16,20 +14,20 @@ signal hero_selected(hero_id: String)
 
 var hero_id: String = ""
 var accent: Color = Color.WHITE
-var hp_bar: ProgressBar
-var mana_bar: ProgressBar
+@export var hp_bar: ProgressBar
+@export var mana_bar: ProgressBar
 ## V3.5.1 presentation-only status surface. Populated exclusively by callers
 ## that read authoritative projection fields; this component never infers state.
-var status_badges: HBoxContainer
+@export var status_badges: HBoxContainer
 var status_kind: String = ""
 var combat_status: String = "ACTIVE"
 var retired: bool = false
-var retirement_mark: Label
+@export var retirement_mark: Label
 var combo_strength: int = 0
 ## Presentation-only combo partner state: "", IDLE, ELIGIBLE, SELECTED, UNAVAILABLE.
 ## Callers derive it from the preparation controller; never from Domain mutation.
 var combo_state: String = ""
-var combo_mark: TextureRect
+@export var combo_mark: TextureRect
 const COMBO_PARTNER_TEXTURES: Dictionary = {
 	"IDLE": preload("res://assets/ui/combo/combo_partner_idle.png"),
 	"ELIGIBLE": preload("res://assets/ui/combo/combo_partner_eligible.png"),
@@ -42,73 +40,10 @@ const COMBO_TOOLTIP_KEYS: Dictionary = {
 }
 
 func _ready() -> void:
-	# This reusable component also lives in the legacy scene, which does not
-	# initialize BattleScreen's catalogues. Installation is idempotent and
-	# does not change the user's locale or any combat state.
 	if not Engine.is_editor_hint():
 		BattleTranslations.install()
 	pressed.connect(_on_pressed)
-	var frame := NinePatchRect.new()
-	frame.name = "FantasyBorder"
-	frame.texture = FANTASY_FRAME
-	frame.patch_margin_left = 12
-	frame.patch_margin_top = 12
-	frame.patch_margin_right = 12
-	frame.patch_margin_bottom = 12
-	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	frame.z_index = 1
-	add_child(frame)
-	var stats: VBoxContainer = get_node("Layout/Stats")
-	stats.add_theme_constant_override("separation", 1)
-	hp_bar = _make_resource_bar(stats, "HeroHPBar", Tokens.HERO_HP)
-	stats.move_child(hp_bar, mana_label.get_index())
-	mana_bar = _make_resource_bar(stats, "HeroMPBar", Tokens.HERO_MP)
-	var subtitle: Label = get_node("Layout/Stats/Subtitle")
-	for item: Label in [name_label, hp_label, mana_label, subtitle]:
-		item.autowrap_mode = TextServer.AUTOWRAP_OFF
-		item.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	# The status pill is SHRINK_BEGIN; with ellipsis trimming its minimum width is
-	# ~0 and the text vanishes (V3.5.5 VIS01). Status labels are short words.
-	subtitle.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
-	name_label.add_theme_font_size_override("font_size", 15)
-	hp_label.add_theme_font_size_override("font_size", 12)
-	mana_label.add_theme_font_size_override("font_size", 12)
-	subtitle.add_theme_font_size_override("font_size", 11)
-	subtitle.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_build_status_overlay()
-	retirement_mark = Label.new()
-	retirement_mark.name = "RetirementMark"
-	retirement_mark.text = "×"
-	retirement_mark.add_theme_font_size_override("font_size", 48)
-	retirement_mark.add_theme_color_override("font_color", Color("ee718d"))
-	retirement_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	retirement_mark.position = Vector2(22, 18)
-	portrait.get_parent().add_child(retirement_mark)
-	retirement_mark.hide()
-	# PortraitFrame is a Container; a zero-minimum holder receives the full
-	# rect so the 64px candidate texture can sit in the top-right corner
-	# without enlarging the portrait or covering bottom status badges.
-	var combo_layer := Control.new()
-	combo_layer.name = "ComboOverlay"
-	combo_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	portrait.get_parent().add_child(combo_layer)
-	combo_mark = TextureRect.new()
-	combo_mark.name = "ComboPartnerIndicator"
-	combo_mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	combo_mark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	combo_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	combo_mark.anchor_left = 1.0
-	combo_mark.anchor_right = 1.0
-	combo_mark.offset_left = -28
-	combo_mark.offset_right = 2
-	combo_mark.offset_top = -4
-	combo_mark.offset_bottom = 26
-	combo_layer.add_child(combo_mark)
-	combo_mark.hide()
 
-## Legacy strength API: 2 → ELIGIBLE, 1 → IDLE, 0 → hidden.
 func set_combo_indicator(strength: int) -> void:
 	set_combo_state("ELIGIBLE" if strength > 1 else "IDLE" if strength == 1 else "")
 
@@ -129,51 +64,6 @@ func set_combo_state(state: String) -> void:
 		combo_mark.texture = COMBO_PARTNER_TEXTURES[state]
 		combo_mark.tooltip_text = tr(COMBO_TOOLTIP_KEYS[state])
 	_apply_style()
-
-func _make_resource_bar(container: VBoxContainer, label: String, fill_color: Color) -> ProgressBar:
-	var bar := ProgressBar.new()
-	bar.name = label
-	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	Tokens.setup_read_only_bar(bar, fill_color)
-	bar.add_theme_stylebox_override("background", Tokens.hero_bar_track())
-	bar.custom_minimum_size.y = 8
-	container.add_child(bar)
-	# Ornamental crest at the bar end; ignores input and never encodes a value.
-	var crest := TextureRect.new()
-	crest.name = "BarCrest"
-	crest.texture = CREST
-	crest.modulate = fill_color.lightened(0.25)
-	crest.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	crest.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	crest.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	crest.anchor_left = 1.0
-	crest.anchor_right = 1.0
-	crest.anchor_top = 0.5
-	crest.anchor_bottom = 0.5
-	crest.offset_left = -5
-	crest.offset_right = 5
-	crest.offset_top = -7
-	crest.offset_bottom = 7
-	bar.add_child(crest)
-	return bar
-
-func _build_status_overlay() -> void:
-	# Zero-minimum overlay: the PortraitFrame size is never enlarged by badges.
-	var overlay := Control.new()
-	overlay.name = "StatusOverlay"
-	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	portrait.get_parent().add_child(overlay)
-	status_badges = HBoxContainer.new()
-	status_badges.name = "StatusBadges"
-	status_badges.add_theme_constant_override("separation", 1)
-	status_badges.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	status_badges.anchor_top = 1.0
-	status_badges.anchor_bottom = 1.0
-	status_badges.anchor_right = 1.0
-	status_badges.offset_top = -17
-	status_badges.offset_bottom = 1
-	status_badges.alignment = BoxContainer.ALIGNMENT_BEGIN
-	overlay.add_child(status_badges)
 
 func configure(id: String, display_name: String, portrait_texture: Texture2D, accent_color: Color) -> void:
 	hero_id = id

@@ -1,6 +1,249 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/battle/ui/components/enemy_status_panel.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/enemy_status_panel.gd" id="1_r8k8s"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/intent_skill.svg" id="2_argh5"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/arcane_panel.svg" id="3_511yj"]
 
-[node name="EnemyStatus" type="PanelContainer"]
-script = ExtResource("1")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbumy"]
+bg_color = Color(0.56784314, 0.4894118, 0.3419608, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_feyqq"]
+bg_color = Color(0.039215688, 0.078431375, 0.12941177, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.39215687, 0.4745098, 0.5372549, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j8tlw"]
+bg_color = Color(0.7921569, 0.33333334, 0.38039216, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hrksw"]
+bg_color = Color(0.039215688, 0.078431375, 0.12941177, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.39215687, 0.4745098, 0.5372549, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xi4pi"]
+bg_color = Color(0.83137256, 0.68235296, 0.44313726, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mqw7i"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.047058824, 0.10980392, 0.18431373, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7878431, 0.5402353, 0.42125493, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ccgp"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+content_margin_bottom = 1.0
+bg_color = Color(0.2882353, 0.19764708, 0.15411766, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.9607843, 0.65882355, 0.5137255, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="EnemyStatus" type="PanelContainer" unique_id=754693190 node_paths=PackedStringArray("boss_stats", "break_stats", "intent", "boss_title", "hp_bar", "break_bar", "_intent_heading", "title_plate", "hp_section", "break_section", "intent_panel", "_intent_accent", "intent_icon", "hit_chip", "target_badges", "target_portrait")]
+layout_mode = 0
+offset_left = 984.0
+offset_top = 12.0
+offset_right = 1264.0
+offset_bottom = 250.0
+script = ExtResource("1_r8k8s")
+boss_stats = NodePath("BossContent/BossHPSection/BossHPText")
+break_stats = NodePath("BossContent/BossBreakSection/BossBreakText")
+intent = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentDetail")
+boss_title = NodePath("BossContent/BossTitlePlate/BossName")
+hp_bar = NodePath("BossContent/BossHPSection/BossHPBar")
+break_bar = NodePath("BossContent/BossBreakSection/BossBreakBar")
+_intent_heading = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow/IntentHeading")
+title_plate = NodePath("BossContent/BossTitlePlate")
+hp_section = NodePath("BossContent/BossHPSection")
+break_section = NodePath("BossContent/BossBreakSection")
+intent_panel = NodePath("BossContent/PublishedIntentPanel")
+_intent_accent = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentAccent")
+intent_icon = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow/IntentIcon")
+hit_chip = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow/IntentHitChip")
+target_badges = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentTargetBadges")
+target_portrait = NodePath("BossContent/PublishedIntentPanel/IntentRow/PublishedTargetPortrait")
+
+[node name="BossContent" type="VBoxContainer" parent="." unique_id=698494696]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="BossTitlePlate" type="HBoxContainer" parent="BossContent" unique_id=287816339]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="IdentityAccent" type="ColorRect" parent="BossContent/BossTitlePlate" unique_id=853098102]
+custom_minimum_size = Vector2(3, 21)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.70980394, 0.6117647, 0.42745098, 1)
+
+[node name="BossName" type="Label" parent="BossContent/BossTitlePlate" unique_id=1698105924]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 19
+text = "BATTLE_TITLE"
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="HeaderRule" type="PanelContainer" parent="BossContent" unique_id=438640570]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sbumy")
+
+[node name="BossHPSection" type="VBoxContainer" parent="BossContent" unique_id=332937642]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BossHPText" type="Label" parent="BossContent/BossHPSection" unique_id=1198082475]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text_overrun_behavior = 3
+
+[node name="BossHPBar" type="ProgressBar" parent="BossContent/BossHPSection" unique_id=941853113]
+custom_minimum_size = Vector2(0, 11)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_feyqq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_j8tlw")
+show_percentage = false
+
+[node name="BossBreakSection" type="VBoxContainer" parent="BossContent" unique_id=1154085018]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BossBreakText" type="Label" parent="BossContent/BossBreakSection" unique_id=1416132376]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text_overrun_behavior = 3
+
+[node name="BossBreakBar" type="ProgressBar" parent="BossContent/BossBreakSection" unique_id=502795734]
+custom_minimum_size = Vector2(0, 11)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hrksw")
+theme_override_styles/fill = SubResource("StyleBoxFlat_xi4pi")
+show_percentage = false
+
+[node name="PublishedIntentPanel" type="PanelContainer" parent="BossContent" unique_id=1516854269]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_mqw7i")
+
+[node name="IntentRow" type="HBoxContainer" parent="BossContent/PublishedIntentPanel" unique_id=1441651946]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="IntentAccent" type="ColorRect" parent="BossContent/PublishedIntentPanel/IntentRow" unique_id=1283896365]
+custom_minimum_size = Vector2(3, 0)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.9607843, 0.65882355, 0.5137255, 1)
+
+[node name="IntentContent" type="VBoxContainer" parent="BossContent/PublishedIntentPanel/IntentRow" unique_id=505743837]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="IntentHeadingRow" type="HBoxContainer" parent="BossContent/PublishedIntentPanel/IntentRow/IntentContent" unique_id=1273120320]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 5
+
+[node name="IntentIcon" type="TextureRect" parent="BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow" unique_id=357527185]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_argh5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IntentHeading" type="Label" parent="BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow" unique_id=1563545571]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.9607843, 0.65882355, 0.5137255, 1)
+text = "BATTLE_INTENT"
+text_overrun_behavior = 3
+
+[node name="IntentHitChip" type="Label" parent="BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow" unique_id=2022922321]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_5ccgp")
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.97843134, 0.81235296, 0.732549, 1)
+
+[node name="IntentTargetBadges" type="HBoxContainer" parent="BossContent/PublishedIntentPanel/IntentRow/IntentContent" unique_id=322976517]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="IntentDetail" type="Label" parent="BossContent/PublishedIntentPanel/IntentRow/IntentContent" unique_id=979856971]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+text_overrun_behavior = 3
+max_lines_visible = 2
+
+[node name="PublishedTargetPortrait" type="TextureRect" parent="BossContent/PublishedIntentPanel/IntentRow" unique_id=397112125]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ArcaneChrome" type="Control" parent="." unique_id=1125737157]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="ArcaneChrome" unique_id=798626318]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -9.0
+offset_right = 12.0
+offset_bottom = 9.0
+texture = ExtResource("3_511yj")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30

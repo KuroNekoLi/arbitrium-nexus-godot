@@ -4,6 +4,8 @@
 
 ## 仍需保留
 
+- [戰鬥畫面 GUI 編輯驗收](EDITOR_AUTHORED_BATTLE_LAYOUT_20261017.md)：固定 HUD／角色視覺節點遷移，待使用者手動驗收後再合併；通過後刪除此交接及索引。
+
 - [Codex Context Policy](CODEX_CONTEXT_POLICY_20261016.md)：供 `AGENTS.md` 指定的探索與檔案讀取方式使用。
 - [SP 拖曳優先詠唱模式驗收](SP_DRAG_FIRST_CHANT_MODE_20261017.md)：請低成本 AI 對提交 `2a0fc02075d0a13243c18aeed087e60119964bc7` 執行獨立 GUI 驗收；通過後刪除此交接及此索引項。
 - [高解析角色狀態 CG 驗收](HIGH_RES_CHARACTER_STATE_CG_20261017.md)：請低成本 AI 對提交 `8594cd4a4c24484d548a4bc8c3b3439de21d5ce0` 執行獨立驗收；通過後刪除此交接及此索引項。

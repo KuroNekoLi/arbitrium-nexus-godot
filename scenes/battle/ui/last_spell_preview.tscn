@@ -1,0 +1,369 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/battle/ui/components/last_spell_preview.gd" id="1_hvlqb"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/ap_core.svg" id="2_og1m5"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_last.svg" id="3_vongb"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/arcane_panel.svg" id="4_si20t"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sktxa"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.015686275, 0.03529412, 0.08627451, 0.9490196)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.73333335, 0.6313726, 0.42352942, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rbrfd"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.17254902, 0.039215688, 0.105882354, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8, 0.3019608, 0.41568628, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="LastSpellPreview" type="Control" unique_id=828218978 node_paths=PackedStringArray("artwork", "title", "costs", "timing", "error_label", "target_selector", "activate_button", "cancel_button", "information", "scope_label", "description", "target_heading", "target_row", "world_layer", "summary_title", "summary_description", "summary_target", "spell_art", "ap_value", "mp_value", "rune")]
+visible = false
+z_index = 115
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+script = ExtResource("1_hvlqb")
+artwork = NodePath("CharacterCutIn")
+title = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer/Label2")
+costs = NodePath("LastSpellInformation/VBoxContainer/Label2")
+timing = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer3/Label2")
+error_label = NodePath("LastSpellInformation/VBoxContainer/Label5")
+target_selector = NodePath("LastSpellInformation/VBoxContainer/LastSpellTarget")
+activate_button = NodePath("LastSpellInformation/VBoxContainer/ActivationFooter/Button")
+cancel_button = NodePath("LastSpellInformation/VBoxContainer/ActivationFooter/Button2")
+information = NodePath("LastSpellInformation")
+scope_label = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer/Label3")
+description = NodePath("LastSpellInformation/VBoxContainer/Label")
+target_heading = NodePath("LastSpellInformation/VBoxContainer/Label4")
+target_row = NodePath("LastSpellInformation/VBoxContainer/TargetScroll/TargetCards")
+world_layer = NodePath("TargetMarkers")
+summary_title = NodePath("LastSpellSummary/VBoxContainer/Label2")
+summary_description = NodePath("LastSpellSummary/VBoxContainer/ScrollContainer/VBoxContainer/Label")
+summary_target = NodePath("LastSpellSummary/VBoxContainer/Label3")
+spell_art = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer/TextureRect2")
+ap_value = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer/Label2")
+mp_value = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer2/Label2")
+rune = NodePath("TextureRect")
+
+[node name="TargetMarkers" type="Control" parent="." unique_id=1268055216]
+anchors_preset = 0
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1255383433]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 375.0
+offset_right = 540.0
+offset_bottom = 645.0
+mouse_filter = 2
+texture = ExtResource("2_og1m5")
+expand_mode = 1
+
+[node name="CharacterCutIn" type="TextureRect" parent="." unique_id=699066956]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 393.0
+offset_right = 523.0
+offset_bottom = 710.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LastSpellInformation" type="PanelContainer" parent="." unique_id=1364010875]
+layout_mode = 0
+offset_left = 455.0
+offset_top = 292.0
+offset_right = 975.0
+offset_bottom = 706.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_sktxa")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LastSpellInformation" unique_id=504272905]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LastSpellInformation/VBoxContainer" unique_id=729294140]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="LastSpellInformation/VBoxContainer/HBoxContainer" unique_id=121655208]
+custom_minimum_size = Vector2(46, 60)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_vongb")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LastSpellInformation/VBoxContainer/HBoxContainer" unique_id=948417384]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1472004529]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "BATTLE_LAST"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=466649970]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
+
+[node name="Label3" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1098484628]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="LastSpellInformation/VBoxContainer/HBoxContainer" unique_id=1253917245]
+custom_minimum_size = Vector2(88, 70)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="LastSpellInformation/VBoxContainer" unique_id=586105508]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="LastSpellInformation/VBoxContainer" unique_id=1889982114]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LastSpellInformation/VBoxContainer/HBoxContainer2" unique_id=1471784344]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1960265496]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "LAST_AP"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=981221531]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.43137255, 0.85490197, 1, 1)
+autowrap_mode = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="LastSpellInformation/VBoxContainer/HBoxContainer2" unique_id=1743284921]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=221718086]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "LAST_MP"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer2" unique_id=2120050097]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.81960785, 0.6039216, 1, 1)
+autowrap_mode = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="LastSpellInformation/VBoxContainer/HBoxContainer2" unique_id=1358862572]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=200508836]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "LAST_TIMING"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer3" unique_id=475111988]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.89411765, 0.8352941, 0.7137255, 1)
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellInformation/VBoxContainer" unique_id=705601209]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 1
+autowrap_mode = 3
+
+[node name="Label3" type="Label" parent="LastSpellInformation/VBoxContainer" unique_id=1950366386]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_rbrfd")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 0.7176471, 0.74509805, 1)
+text = "LAST_IRREVERSIBLE"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Label4" type="Label" parent="LastSpellInformation/VBoxContainer" unique_id=646452816]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TargetScroll" type="ScrollContainer" parent="LastSpellInformation/VBoxContainer" unique_id=1224360576]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+vertical_scroll_mode = 0
+
+[node name="TargetCards" type="HBoxContainer" parent="LastSpellInformation/VBoxContainer/TargetScroll" unique_id=1041299254]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="LastSpellTarget" type="OptionButton" parent="LastSpellInformation/VBoxContainer" unique_id=1301498074]
+visible = false
+layout_mode = 2
+
+[node name="Label5" type="Label" parent="LastSpellInformation/VBoxContainer" unique_id=1445611334]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 0.81960785, 0.5647059, 1)
+autowrap_mode = 3
+
+[node name="Control" type="Control" parent="LastSpellInformation/VBoxContainer" unique_id=1770886057]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActivationFooter" type="HBoxContainer" parent="LastSpellInformation/VBoxContainer" unique_id=1186320132]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Button" type="Button" parent="LastSpellInformation/VBoxContainer/ActivationFooter" unique_id=1934927172]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+theme_override_constants/icon_max_width = 30
+text = "BATTLE_LAST_ACTIVATE"
+icon = ExtResource("3_vongb")
+
+[node name="ArcaneChrome" type="Control" parent="LastSpellInformation/VBoxContainer/ActivationFooter/Button" unique_id=748418403]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="LastSpellInformation/VBoxContainer/ActivationFooter/Button/ArcaneChrome" unique_id=1850739012]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("4_si20t")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="Button2" type="Button" parent="LastSpellInformation/VBoxContainer/ActivationFooter" unique_id=733618748]
+custom_minimum_size = Vector2(106, 0)
+layout_mode = 2
+text = "BATTLE_LAST_CANCEL"
+
+[node name="ArcaneChrome" type="Control" parent="LastSpellInformation" unique_id=779125463]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="LastSpellInformation/ArcaneChrome" unique_id=1365972702]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = -5.0
+offset_right = 7.0
+offset_bottom = 5.0
+texture = ExtResource("4_si20t")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
+
+[node name="LastSpellSummary" type="PanelContainer" parent="." unique_id=72003750]
+layout_mode = 0
+offset_left = 984.0
+offset_top = 348.0
+offset_right = 1264.0
+offset_bottom = 568.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LastSpellSummary" unique_id=966976572]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="LastSpellSummary/VBoxContainer" unique_id=1149735387]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "BATTLE_LAST"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellSummary/VBoxContainer" unique_id=1159574544]
+layout_mode = 2
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="LastSpellSummary/VBoxContainer" unique_id=1258483145]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LastSpellSummary/VBoxContainer/ScrollContainer" unique_id=191958395]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="LastSpellSummary/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=2146953755]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="LastSpellSummary/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1050959027]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.8862745, 0.6784314, 0.6745098, 1)
+text = "BATTLE_LAST_WARNING"
+autowrap_mode = 3
+
+[node name="Label3" type="Label" parent="LastSpellSummary/VBoxContainer" unique_id=32399999]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+
+[node name="ArcaneChrome" type="Control" parent="LastSpellSummary" unique_id=1509093642]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="LastSpellSummary/ArcaneChrome" unique_id=1631245396]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -9.0
+offset_right = 12.0
+offset_bottom = 9.0
+texture = ExtResource("4_si20t")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30

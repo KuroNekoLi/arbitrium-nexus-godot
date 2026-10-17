@@ -1,0 +1,401 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://resources/ui/battle_theme.tres" id="1_pianl"]
+[ext_resource type="Script" path="res://scripts/battle/ui/battle_hud.gd" id="2_53k6g"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/team_phase_header.gd" id="3_j5pah"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/team_phase_header.tscn" id="3_kjx8g"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/party_status_panel.tscn" id="5_03kce"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/party_status_panel.gd" id="7_8qklp"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/command_menu.tscn" id="7_mtunl"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/command_menu.gd" id="8_s5dt7"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/enemy_status_panel.tscn" id="9_bb6ib"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/action_context_panel.tscn" id="11_cngjj"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/battle_log_panel.tscn" id="13_x111s"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/enemy_status_panel.gd" id="15_8o7fo"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/hand_view.tscn" id="15_lakhi"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/action_context_panel.gd" id="17_4ohph"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/target_hit_regions.tscn" id="17_qpohy"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/battle_log_panel.gd" id="18_74pxp"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/hand_view.gd" id="19_qtpou"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/reaction_queue.tscn" id="20_5ws0q"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/target_hit_regions.gd" id="20_fxj6c"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/card_targeting_arrow_overlay.gd" id="21_uikt0"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/last_spell_preview.tscn" id="22_eoxnu"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/reaction_queue.gd" id="22_l5r5b"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/last_spell_preview.gd" id="23_buwgo"]
+[ext_resource type="PackedScene" path="res://scenes/battle/ui/combo_confirmation_overlay.tscn" id="24_idnwp"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/combo_confirmation_overlay.gd" id="24_otfy4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l4sl4"]
+content_margin_left = 18.0
+content_margin_top = 18.0
+content_margin_right = 18.0
+content_margin_bottom = 18.0
+bg_color = Color(0.025, 0.045, 0.1, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8039216, 0.654902, 0.36862746, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="HUD" type="Control" unique_id=1358585325 node_paths=PackedStringArray("hand", "end_button", "details", "feedback", "header", "resources", "boss_stats", "intent", "reaction_panel", "reaction_column", "confirm_button", "mode", "combo", "log_label", "result_panel", "result_label", "reduced_toggle", "mute_toggle", "conditions", "_conditions_panel", "_top", "_party", "_commands", "_enemy", "_context", "_log", "targeting_arrow", "_targets", "_modal_shield", "command_prompt", "command_prompt_title", "command_prompt_description", "command_prompt_column", "preferences_panel", "last_preview", "combo_preview", "preparation_indicator")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+theme = ExtResource("1_pianl")
+script = ExtResource("2_53k6g")
+hand = NodePath("HandView")
+end_button = NodePath("Commands/CommandContent/EmphasisRow/Command_END_PLAYER_PHASE_5")
+details = NodePath("Context/VBoxContainer/DetailScroll/VBoxContainer/DetailsInset/Label")
+feedback = NodePath("Label")
+header = NodePath("TopBar/PhasePanel/HBoxContainer/Label")
+resources = NodePath("TopBar/ResourcePanel/HBoxContainer/Label")
+boss_stats = NodePath("EnemyStatus/BossContent/BossHPSection/BossHPText")
+intent = NodePath("EnemyStatus/BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentDetail")
+reaction_panel = NodePath("ReactionQueue")
+reaction_column = NodePath("ReactionQueue/VBoxContainer")
+confirm_button = NodePath("Context/VBoxContainer/ActionButtons/ConfirmButton")
+mode = NodePath("Context/VBoxContainer/DetailScroll/VBoxContainer/OptionButton")
+combo = NodePath("Context/VBoxContainer/DetailScroll/VBoxContainer/CheckButton")
+log_label = NodePath("BattleLogPanel/VBoxContainer/LogScroll/LogContent/Label")
+result_panel = NodePath("Result")
+result_label = NodePath("Result/VBoxContainer/Label")
+reduced_toggle = NodePath("PresentationPreferences/PreferencesContent/CheckButton")
+mute_toggle = NodePath("PresentationPreferences/PreferencesContent/CheckButton2")
+conditions = NodePath("Conditions/VBoxContainer/Label")
+_conditions_panel = NodePath("Conditions")
+_top = NodePath("TopBar")
+_party = NodePath("PartyStatusPanel")
+_commands = NodePath("Commands")
+_enemy = NodePath("EnemyStatus")
+_context = NodePath("Context")
+_log = NodePath("BattleLogPanel")
+targeting_arrow = NodePath("CardTargetingArrow")
+_targets = NodePath("TargetHitRegions")
+_modal_shield = NodePath("ModalInputShield")
+command_prompt = NodePath("CommandConfirmation")
+command_prompt_title = NodePath("CommandConfirmation/VBoxContainer/Label")
+command_prompt_description = NodePath("CommandConfirmation/VBoxContainer/Label2")
+command_prompt_column = NodePath("CommandConfirmation/VBoxContainer")
+preferences_panel = NodePath("PresentationPreferences")
+last_preview = NodePath("LastSpellPreview")
+combo_preview = NodePath("ComboConfirmation")
+preparation_indicator = NodePath("Label2")
+
+[node name="TopBar" type="Control" parent="." unique_id=1538617365 node_paths=PackedStringArray("header", "resources", "ap_value", "rp_value", "crystal_row") instance=ExtResource("3_kjx8g")]
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 1264.0
+offset_bottom = 76.0
+mouse_filter = 2
+script = ExtResource("3_j5pah")
+header = NodePath("PhasePanel/HBoxContainer/Label")
+resources = NodePath("ResourcePanel/HBoxContainer/Label")
+ap_value = NodePath("ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2/APValue")
+rp_value = NodePath("ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer/RPValue")
+crystal_row = NodePath("ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2/APCrystalRow")
+
+[node name="Conditions" type="PanelContainer" parent="." unique_id=716679526]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 98.0
+offset_right = 952.0
+offset_bottom = 134.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Conditions" unique_id=621537283]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Conditions/VBoxContainer" unique_id=1574544523]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text_overrun_behavior = 3
+
+[node name="PartyStatusPanel" type="VBoxContainer" parent="." unique_id=2095023450 instance=ExtResource("5_03kce")]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 98.0
+offset_right = 276.0
+offset_bottom = 416.0
+theme_override_constants/separation = 9
+script = ExtResource("7_8qklp")
+
+[node name="Commands" type="PanelContainer" parent="." unique_id=2050086858 node_paths=PackedStringArray("end_button") instance=ExtResource("7_mtunl")]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 432.0
+offset_right = 264.0
+offset_bottom = 698.0
+script = ExtResource("8_s5dt7")
+end_button = NodePath("CommandContent/EmphasisRow/Command_END_PLAYER_PHASE_5")
+
+[node name="EnemyStatus" type="PanelContainer" parent="." unique_id=754693190 node_paths=PackedStringArray("boss_stats", "break_stats", "intent", "boss_title", "hp_bar", "break_bar", "_intent_heading", "title_plate", "hp_section", "break_section", "intent_panel", "_intent_accent", "intent_icon", "hit_chip", "target_badges", "target_portrait") instance=ExtResource("9_bb6ib")]
+layout_mode = 0
+offset_left = 984.0
+offset_top = 12.0
+offset_right = 1264.0
+offset_bottom = 250.0
+script = ExtResource("15_8o7fo")
+boss_stats = NodePath("BossContent/BossHPSection/BossHPText")
+break_stats = NodePath("BossContent/BossBreakSection/BossBreakText")
+intent = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentDetail")
+boss_title = NodePath("BossContent/BossTitlePlate/BossName")
+hp_bar = NodePath("BossContent/BossHPSection/BossHPBar")
+break_bar = NodePath("BossContent/BossBreakSection/BossBreakBar")
+_intent_heading = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow/IntentHeading")
+title_plate = NodePath("BossContent/BossTitlePlate")
+hp_section = NodePath("BossContent/BossHPSection")
+break_section = NodePath("BossContent/BossBreakSection")
+intent_panel = NodePath("BossContent/PublishedIntentPanel")
+_intent_accent = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentAccent")
+intent_icon = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow/IntentIcon")
+hit_chip = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow/IntentHitChip")
+target_badges = NodePath("BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentTargetBadges")
+target_portrait = NodePath("BossContent/PublishedIntentPanel/IntentRow/PublishedTargetPortrait")
+
+[node name="Context" type="PanelContainer" parent="." unique_id=158730252 node_paths=PackedStringArray("details", "feedback", "mode", "combo", "confirm_button", "reduced_toggle", "mute_toggle", "detail_scroll", "action_row", "summary", "artwork", "action_title", "cost_badge", "target_label", "preferences_disclosure", "preferences_content") instance=ExtResource("11_cngjj")]
+visible = false
+layout_mode = 0
+offset_left = 984.0
+offset_top = 348.0
+offset_right = 1264.0
+offset_bottom = 568.0
+script = ExtResource("17_4ohph")
+details = NodePath("VBoxContainer/DetailScroll/VBoxContainer/DetailsInset/Label")
+feedback = NodePath("../Label")
+mode = NodePath("VBoxContainer/DetailScroll/VBoxContainer/OptionButton")
+combo = NodePath("VBoxContainer/DetailScroll/VBoxContainer/CheckButton")
+confirm_button = NodePath("VBoxContainer/ActionButtons/ConfirmButton")
+reduced_toggle = NodePath("../PresentationPreferences/PreferencesContent/CheckButton")
+mute_toggle = NodePath("../PresentationPreferences/PreferencesContent/CheckButton2")
+detail_scroll = NodePath("VBoxContainer/DetailScroll")
+action_row = NodePath("VBoxContainer/ActionButtons")
+summary = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary")
+artwork = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/ActionArtwork")
+action_title = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer/Label")
+cost_badge = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer/Label2")
+target_label = NodePath("VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer/Label3")
+preferences_disclosure = NodePath("../TopBar/PreferencesDisclosure")
+preferences_content = NodePath("../PresentationPreferences/PreferencesContent")
+
+[node name="BattleLogPanel" type="PanelContainer" parent="." unique_id=377062720 node_paths=PackedStringArray("log_label", "log_scroll", "entry_list", "earlier_entries") instance=ExtResource("13_x111s")]
+layout_mode = 0
+offset_left = 984.0
+offset_top = 580.0
+offset_right = 1264.0
+offset_bottom = 698.0
+script = ExtResource("18_74pxp")
+log_label = NodePath("VBoxContainer/LogScroll/LogContent/Label")
+log_scroll = NodePath("VBoxContainer/LogScroll")
+entry_list = NodePath("VBoxContainer/LogScroll/LogContent/LogEntries")
+earlier_entries = NodePath("VBoxContainer/LogScroll/LogContent/EarlierEntries")
+
+[node name="Label" type="Label" parent="." unique_id=1164795027]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 0
+offset_left = 320.0
+offset_top = 420.0
+offset_right = 940.0
+offset_bottom = 462.0
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.81960785, 0.5529412, 1)
+horizontal_alignment = 1
+autowrap_mode = 3
+text_overrun_behavior = 3
+max_lines_visible = 2
+
+[node name="PresentationPreferences" type="PanelContainer" parent="." unique_id=1258316080]
+visible = false
+z_index = 80
+layout_mode = 0
+offset_left = 984.0
+offset_top = 82.0
+offset_right = 1264.0
+offset_bottom = 252.0
+
+[node name="PreferencesContent" type="VBoxContainer" parent="PresentationPreferences" unique_id=968896284]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="PresentationPreferences/PreferencesContent" unique_id=1625007463]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "BATTLE_REDUCED"
+
+[node name="Button" type="Button" parent="PresentationPreferences/PreferencesContent" unique_id=439095596]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "BATTLE_SKIP"
+
+[node name="CheckButton2" type="CheckButton" parent="PresentationPreferences/PreferencesContent" unique_id=569727040]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "BATTLE_MUTE"
+
+[node name="Label2" type="Label" parent="." unique_id=220993689]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 385.0
+offset_right = 965.0
+offset_bottom = 417.0
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.88235295, 0.74509805, 1, 1)
+autowrap_mode = 3
+
+[node name="HandView" type="Control" parent="." unique_id=2143181168 node_paths=PackedStringArray("empty_state") instance=ExtResource("15_lakhi")]
+anchors_preset = 0
+offset_left = 290.0
+offset_top = 470.0
+offset_right = 976.0
+offset_bottom = 710.0
+mouse_filter = 2
+script = ExtResource("19_qtpou")
+empty_state = NodePath("EmptyState")
+
+[node name="TargetHitRegions" type="Control" parent="." unique_id=550786529 node_paths=PackedStringArray("basic_choices") instance=ExtResource("17_qpohy")]
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+script = ExtResource("20_fxj6c")
+basic_choices = NodePath("BasicAttackTargets")
+
+[node name="CardTargetingArrow" type="Control" parent="." unique_id=1301887785]
+z_index = 75
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+script = ExtResource("21_uikt0")
+
+[node name="ModalInputShield" type="Control" parent="." unique_id=1020570458]
+visible = false
+z_index = 95
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ReactionQueue" type="PanelContainer" parent="." unique_id=533686916 node_paths=PackedStringArray("reaction_column") instance=ExtResource("20_5ws0q")]
+visible = false
+z_index = 100
+layout_mode = 0
+offset_left = 300.0
+offset_top = 154.0
+offset_right = 965.0
+offset_bottom = 459.0
+script = ExtResource("22_l5r5b")
+reaction_column = NodePath("VBoxContainer")
+
+[node name="Result" type="PanelContainer" parent="." unique_id=1569981283]
+visible = false
+z_index = 120
+layout_mode = 0
+offset_left = 390.0
+offset_top = 210.0
+offset_right = 890.0
+offset_bottom = 390.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Result" unique_id=1851780908]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="Result/VBoxContainer" unique_id=2101749793]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+autowrap_mode = 3
+
+[node name="Button" type="Button" parent="Result/VBoxContainer" unique_id=1163663368]
+layout_mode = 2
+text = "BATTLE_RESTART"
+
+[node name="CommandConfirmation" type="PanelContainer" parent="." unique_id=1017612969]
+visible = false
+z_index = 110
+layout_mode = 0
+offset_left = 430.0
+offset_top = 190.0
+offset_right = 850.0
+offset_bottom = 420.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CommandConfirmation" unique_id=969466019]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="CommandConfirmation/VBoxContainer" unique_id=1981984421]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "BATTLE_CONFIRM"
+autowrap_mode = 3
+
+[node name="Label2" type="Label" parent="CommandConfirmation/VBoxContainer" unique_id=761955890]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+
+[node name="LastSpellPreview" type="Control" parent="." unique_id=828218978 node_paths=PackedStringArray("artwork", "title", "costs", "timing", "error_label", "target_selector", "activate_button", "cancel_button", "information", "scope_label", "description", "target_heading", "target_row", "world_layer", "summary_title", "summary_description", "summary_target", "spell_art", "ap_value", "mp_value", "rune") instance=ExtResource("22_eoxnu")]
+visible = false
+z_index = 115
+anchors_preset = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+mouse_filter = 2
+script = ExtResource("23_buwgo")
+artwork = NodePath("CharacterCutIn")
+title = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer/Label2")
+costs = NodePath("LastSpellInformation/VBoxContainer/Label2")
+timing = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer3/Label2")
+error_label = NodePath("LastSpellInformation/VBoxContainer/Label5")
+target_selector = NodePath("LastSpellInformation/VBoxContainer/LastSpellTarget")
+activate_button = NodePath("LastSpellInformation/VBoxContainer/ActivationFooter/Button")
+cancel_button = NodePath("LastSpellInformation/VBoxContainer/ActivationFooter/Button2")
+information = NodePath("LastSpellInformation")
+scope_label = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer/Label3")
+description = NodePath("LastSpellInformation/VBoxContainer/Label")
+target_heading = NodePath("LastSpellInformation/VBoxContainer/Label4")
+target_row = NodePath("LastSpellInformation/VBoxContainer/TargetScroll/TargetCards")
+world_layer = NodePath("TargetMarkers")
+summary_title = NodePath("LastSpellSummary/VBoxContainer/Label2")
+summary_description = NodePath("LastSpellSummary/VBoxContainer/ScrollContainer/VBoxContainer/Label")
+summary_target = NodePath("LastSpellSummary/VBoxContainer/Label3")
+spell_art = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer/TextureRect2")
+ap_value = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer/Label2")
+mp_value = NodePath("LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer2/Label2")
+rune = NodePath("TextureRect")
+
+[node name="ComboConfirmation" type="PanelContainer" parent="." unique_id=757859028 node_paths=PackedStringArray("title", "setup_targets", "recipes", "normal_text", "combo_text", "normal_button", "combo_button", "cancel_button") instance=ExtResource("24_idnwp")]
+visible = false
+z_index = 112
+layout_mode = 0
+offset_left = 286.0
+offset_top = 120.0
+offset_right = 974.0
+offset_bottom = 550.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_l4sl4")
+script = ExtResource("24_otfy4")
+title = NodePath("VBoxContainer/Label")
+setup_targets = NodePath("VBoxContainer/HBoxContainer/OptionButton")
+recipes = NodePath("VBoxContainer/OptionButton")
+normal_text = NodePath("VBoxContainer/HBoxContainer2/Label")
+combo_text = NodePath("VBoxContainer/HBoxContainer2/Label2")
+normal_button = NodePath("VBoxContainer/HBoxContainer3/Button2")
+combo_button = NodePath("VBoxContainer/HBoxContainer3/Button3")
+cancel_button = NodePath("VBoxContainer/HBoxContainer3/Button")
+
+[editable path="TopBar"]
+[editable path="PartyStatusPanel"]
+[editable path="Commands"]
+[editable path="EnemyStatus"]
+[editable path="Context"]
+[editable path="BattleLogPanel"]
+[editable path="HandView"]
+[editable path="TargetHitRegions"]
+[editable path="ReactionQueue"]
+[editable path="LastSpellPreview"]
+[editable path="ComboConfirmation"]

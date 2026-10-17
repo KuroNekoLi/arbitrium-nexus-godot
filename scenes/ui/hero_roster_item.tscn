@@ -1,13 +1,58 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/hero_roster_item.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/ap_crystal.svg" id="2_6nfa4"]
+[ext_resource type="Texture2D" path="res://addons/kenney_fantasy_ui_borders/panel-border-000.png" id="3_gdpjj"]
 
-[node name="HeroRosterItem" type="Button"]
-custom_minimum_size = Vector2(282, 98)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n7ihg"]
+bg_color = Color(0.039215688, 0.078431375, 0.12941177, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60333335, 0.52000004, 0.36333334, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iovgg"]
+bg_color = Color(0.4392157, 0.8392157, 0.627451, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dfgpr"]
+bg_color = Color(0.039215688, 0.078431375, 0.12941177, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.60333335, 0.52000004, 0.36333334, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_71yot"]
+bg_color = Color(0.40784314, 0.7921569, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="HeroRosterItem" type="Button" unique_id=784539823 node_paths=PackedStringArray("hp_bar", "mana_bar", "status_badges", "retirement_mark", "combo_mark")]
+custom_minimum_size = Vector2(260, 100)
 toggle_mode = true
 script = ExtResource("1")
+hp_bar = NodePath("Layout/Stats/HeroHPBar")
+mana_bar = NodePath("Layout/Stats/HeroMPBar")
+status_badges = NodePath("Layout/PortraitFrame/StatusOverlay/StatusBadges")
+retirement_mark = NodePath("Layout/PortraitFrame/RetirementMark")
+combo_mark = NodePath("Layout/PortraitFrame/ComboOverlay/ComboPartnerIndicator")
 
-[node name="Layout" type="HBoxContainer" parent="."]
+[node name="Layout" type="HBoxContainer" parent="." unique_id=1489699460]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,12 +62,12 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/separation = 9
 
-[node name="PortraitFrame" type="PanelContainer" parent="Layout"]
+[node name="PortraitFrame" type="PanelContainer" parent="Layout" unique_id=27990795]
 custom_minimum_size = Vector2(76, 82)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Portrait" type="TextureRect" parent="Layout/PortraitFrame"]
+[node name="Portrait" type="TextureRect" parent="Layout/PortraitFrame" unique_id=1371650559]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(68, 74)
 layout_mode = 2
@@ -30,38 +75,137 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Stats" type="VBoxContainer" parent="Layout"]
+[node name="StatusOverlay" type="Control" parent="Layout/PortraitFrame" unique_id=898740585]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="StatusBadges" type="HBoxContainer" parent="Layout/PortraitFrame/StatusOverlay" unique_id=517287089]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -17.0
+offset_bottom = 1.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="RetirementMark" type="Label" parent="Layout/PortraitFrame" unique_id=1849114895]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93333334, 0.44313726, 0.5529412, 1)
+theme_override_font_sizes/font_size = 48
+text = "×"
+
+[node name="ComboOverlay" type="Control" parent="Layout/PortraitFrame" unique_id=1955726417]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ComboPartnerIndicator" type="TextureRect" parent="Layout/PortraitFrame/ComboOverlay" unique_id=527294676]
+visible = false
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -28.0
+offset_top = -4.0
+offset_right = 2.0
+offset_bottom = 26.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Stats" type="VBoxContainer" parent="Layout" unique_id=158141848]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 0
 
-[node name="HeroName" type="Label" parent="Layout/Stats"]
+[node name="HeroName" type="Label" parent="Layout/Stats" unique_id=673059288]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 15
 text = "角色"
+text_overrun_behavior = 3
 
-[node name="Subtitle" type="Label" parent="Layout/Stats"]
+[node name="Subtitle" type="Label" parent="Layout/Stats" unique_id=2125081334]
 layout_mode = 2
-mouse_filter = 2
+size_flags_horizontal = 0
 theme_override_colors/font_color = Color(0.59, 0.72, 0.8, 1)
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 11
 text = "戰術成員"
 
-[node name="HeroHP" type="Label" parent="Layout/Stats"]
+[node name="HeroHP" type="Label" parent="Layout/Stats" unique_id=1568885892]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.82, 0.94, 0.96, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "HP  100 / 100"
+text_overrun_behavior = 3
 
-[node name="HeroMana" type="Label" parent="Layout/Stats"]
+[node name="HeroHPBar" type="ProgressBar" parent="Layout/Stats" unique_id=1771688818]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_n7ihg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_iovgg")
+show_percentage = false
+
+[node name="BarCrest" type="TextureRect" parent="Layout/Stats/HeroHPBar" unique_id=1811951835]
+modulate = Color(0.57941175, 0.87941176, 0.72058827, 1)
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -7.0
+offset_right = 5.0
+offset_bottom = 7.0
+mouse_filter = 2
+texture = ExtResource("2_6nfa4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeroMana" type="Label" parent="Layout/Stats" unique_id=2021100826]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.45, 0.84, 0.95, 1)
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 12
 text = "MP  3 / 3"
+text_overrun_behavior = 3
+
+[node name="HeroMPBar" type="ProgressBar" parent="Layout/Stats" unique_id=265504761]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_dfgpr")
+theme_override_styles/fill = SubResource("StyleBoxFlat_71yot")
+show_percentage = false
+
+[node name="BarCrest" type="TextureRect" parent="Layout/Stats/HeroMPBar" unique_id=1278162702]
+modulate = Color(0.55588233, 0.84411764, 1, 1)
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -7.0
+offset_right = 5.0
+offset_bottom = 7.0
+mouse_filter = 2
+texture = ExtResource("2_6nfa4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FantasyBorder" type="NinePatchRect" parent="." unique_id=1740530032]
+z_index = 1
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource("3_gdpjj")
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+patch_margin_bottom = 12

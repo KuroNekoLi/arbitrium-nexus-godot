@@ -60,6 +60,7 @@ func _enter_tree() -> void:
 	TranslationServer.set_locale("zh_TW")
 
 func _ready() -> void:
+	hud.bind_arena($Design/Arena)
 	if Engine.is_editor_hint():
 		for id: String in PartyCatalogue.party_ids():
 			var item: Resource = Appearances.appearance_for(id)
@@ -478,7 +479,12 @@ func _open_last_preview() -> void:
 		target["name"] = log_actor_name(id)
 		target["portrait"] = _last_target_portrait(id)
 		if hud.target_buttons.has(id):
-			target["rect"] = Rect2(hud.target_buttons[id].position, hud.target_buttons[id].size)
+			var button: Control = hud.target_buttons[id]
+			var into_preview: Transform2D = hud.last_preview.get_global_transform().affine_inverse() * button.get_global_transform()
+			var bounds := Rect2(into_preview * Vector2.ZERO, Vector2.ZERO)
+			for corner: Vector2 in [Vector2(button.size.x, 0), button.size, Vector2(0, button.size.y)]:
+				bounds = bounds.expand(into_preview * corner)
+			target["rect"] = bounds
 		if target["legal"]: legal_targets.append(id)
 	var team: String = str(presentation["targeting"].get("team", "UNKNOWN"))
 	var remembered: String = remembered_last_ally_target if team == "ALLY" else remembered_attack_target
@@ -614,17 +620,11 @@ func _command_requested(kind: String, fields: Dictionary) -> void:
 func set_locale(locale: String) -> void:
 	TranslationServer.set_locale(locale)
 	cancel_action()
-	# Recreate labels through the same HUD component, without touching Domain.
-	var parent: Node = hud.get_parent()
-	parent.remove_child(hud)
-	hud.queue_free()
-	hud = preload("res://scripts/battle/ui/battle_hud.gd").new()
-	hud.name = "HUD"
-	hud.size = Vector2(1280,720)
-	parent.add_child(hud)
-	_connect_hud()
+	# Keep the authored scene (including inherited layout overrides) alive.
+	hud.refresh_locale()
 	present(snapshot)
 	if not log_events.is_empty():
+		hud.get_node("BattleLogPanel").clear_rows()
 		hud.get_node("BattleLogPanel").append_rows(_log_rows(log_events))
 	hud.reduced_toggle.set_pressed_no_signal(director.reduced_motion)
 	hud.mute_toggle.set_pressed_no_signal(not director.overlay.audio_enabled)

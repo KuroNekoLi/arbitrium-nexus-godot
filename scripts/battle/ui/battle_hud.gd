@@ -1,18 +1,6 @@
 @tool
 extends Control
-## V1 composition facade. Keep all public signals/fields for BattleScreen + P4 tests.
-const HeaderScene = preload("res://scenes/battle/ui/team_phase_header.tscn")
-const PartyScene = preload("res://scenes/battle/ui/party_status_panel.tscn")
-const CommandsScene = preload("res://scenes/battle/ui/command_menu.tscn")
-const EnemyScene = preload("res://scenes/battle/ui/enemy_status_panel.tscn")
-const ContextScene = preload("res://scenes/battle/ui/action_context_panel.tscn")
-const LogScene = preload("res://scenes/battle/ui/battle_log_panel.tscn")
-const HandScene = preload("res://scenes/battle/ui/hand_view.tscn")
-const TargetsScene = preload("res://scenes/battle/ui/target_hit_regions.tscn")
-const ArrowOverlay = preload("res://scripts/battle/ui/components/card_targeting_arrow_overlay.gd")
-const ReactionScene = preload("res://scenes/battle/ui/reaction_queue.tscn")
-const UI = preload("res://scripts/battle/ui/components/ui_elements.gd")
-const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
+## Editor-authored composition facade. Keep all public signals/fields for BattleScreen + P4 tests.
 
 signal actor_requested(actor: String)
 signal card_requested(instance: String)
@@ -28,218 +16,110 @@ signal locale_requested(locale: String)
 # Compatibility facade: battle_screen.gd and P42/P43 tests directly read these.
 var card_views: Array[Control] = []
 var roster: Dictionary = {}
-var hand: Control
-var end_button: Button
-var details: Label
-var feedback: Label
-var header: Label
-var resources: Label
-var boss_stats: Label
-var intent: Label
-var reaction_panel: PanelContainer
-var reaction_column: VBoxContainer
-var confirm_button: Button
-var mode: OptionButton
-var combo: CheckButton
-var log_label: Label
+@export var hand: Control
+@export var end_button: Button
+@export var details: Label
+@export var feedback: Label
+@export var header: Label
+@export var resources: Label
+@export var boss_stats: Label
+@export var intent: Label
+@export var reaction_panel: PanelContainer
+@export var reaction_column: VBoxContainer
+@export var confirm_button: Button
+@export var mode: OptionButton
+@export var combo: CheckButton
+@export var log_label: Label
 var target_buttons: Dictionary = {}
 var vm: Dictionary = {}
 var selected: String = "A"
-var result_panel: PanelContainer
-var result_label: Label
-var reduced_toggle: CheckButton
-var mute_toggle: CheckButton
-var conditions: Label
-var _conditions_panel: PanelContainer
+@export var result_panel: PanelContainer
+@export var result_label: Label
+@export var reduced_toggle: CheckButton
+@export var mute_toggle: CheckButton
+@export var conditions: Label
+@export var _conditions_panel: PanelContainer
 
-var _top: Control
-var _party: Control
-var _commands: Control
-var _enemy: Control
-var _context: Control
-var _log: Control
-var targeting_arrow: Control
-var _targets: Control
-var _modal_shield: Control
+@export var _top: Control
+@export var _party: Control
+@export var _commands: Control
+@export var _enemy: Control
+@export var _context: Control
+@export var _log: Control
+@export var targeting_arrow: Control
+@export var _targets: Control
+@export var _modal_shield: Control
 var _modal_active: bool = false
 var _return_focus: WeakRef
 var _background_focus: Dictionary = {}
-var command_prompt: PanelContainer
-var command_prompt_title: Label
-var command_prompt_description: Label
-var command_prompt_column: VBoxContainer
-var preferences_panel: PanelContainer
-var last_preview: Control
-var combo_preview: PanelContainer
-var preparation_indicator: Label
+@export var command_prompt: PanelContainer
+@export var command_prompt_title: Label
+@export var command_prompt_description: Label
+@export var command_prompt_column: VBoxContainer
+@export var preferences_panel: PanelContainer
+@export var last_preview: Control
+@export var combo_preview: PanelContainer
+@export var preparation_indicator: Label
 
+## Layout and fixed controls are authored in battle_hud.tscn.
+## This facade binds intent signals; it never reapplies panel rectangles.
 func _ready() -> void:
-	theme = preload("res://resources/ui/battle_theme.tres")
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_build()
-
-func _place(scene: PackedScene, rect: Rect2) -> Control:
-	var component := scene.instantiate() as Control
-	component.position = rect.position
-	component.size = rect.size
-	add_child(component)
-	return component
-
-func _build() -> void:
-	_top = _place(HeaderScene, Rect2(16, 12, 1248, 64))
-	header = _top.header
-	resources = _top.resources
-	_top.locale_requested.connect(func(locale: String) -> void: locale_requested.emit(locale))
-	_top.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
-
-	# V1 deliberately preserves the previous 1280×720 rectangles.
-	_conditions_panel = PanelContainer.new()
-	_conditions_panel.name = "Conditions"
-	_conditions_panel.position = Vector2(312, 98)
-	_conditions_panel.size = Vector2(640, 36)
-	add_child(_conditions_panel)
-	conditions = UI.label(UI.column(_conditions_panel), "", 14)
-	conditions.autowrap_mode = TextServer.AUTOWRAP_OFF
-	conditions.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-
-	_party = _place(PartyScene, Rect2(16, 98, 260, 318))
 	roster = _party.roster
+	card_views = hand.card_views
+	target_buttons = _targets.target_buttons
+	_top.locale_requested.connect(func(locale: String) -> void: locale_requested.emit(locale))
+	_top.command_requested.connect(_forward_command)
 	_party.actor_requested.connect(func(actor: String) -> void: actor_requested.emit(actor))
-
-	_commands = _place(CommandsScene, Rect2(16, 432, 248, 266))
-	end_button = _commands.end_button
-	_commands.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
-
-	_enemy = _place(EnemyScene, Rect2(984, 12, 280, 238))
-	boss_stats = _enemy.boss_stats
-	intent = _enemy.intent
-
-	_context = _place(ContextScene, Rect2(984, 348, 280, 220))
-	details = _context.details
-	mode = _context.mode
-	combo = _context.combo
-	confirm_button = _context.confirm_button
-	feedback = _context.feedback
-	_log = _place(LogScene, Rect2(984, 580, 280, 118))
-	log_label = _log.log_label
-	# Shared metallic corners stay separate from live labels, bars and input.
-	for panel: Control in [_commands, _enemy, _context, _log]:
-		preload("res://scripts/battle/ui/components/battle_hud_chrome.gd").install(panel)
-	reduced_toggle = _context.reduced_toggle
-	mute_toggle = _context.mute_toggle
-	_context.hide()
-	_context.action_row.hide()
-	# Feedback and preferences are not card details; they must remain available
-	# when no card is selected. Keep the public field references unchanged.
-	feedback.reparent(self)
-	feedback.position = Vector2(320, 420)
-	feedback.size = Vector2(620, 42)
-	feedback.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	preferences_panel = PanelContainer.new()
-	preferences_panel.name = "PresentationPreferences"
-	preferences_panel.position = Vector2(984, 82)
-	preferences_panel.size = Vector2(280, 170)
-	preferences_panel.z_index = 80
-	add_child(preferences_panel)
-	var preferences: Control = _context.preferences_content
-	preferences.reparent(preferences_panel)
-	preferences.show()
-	preferences_panel.hide()
-	var disclosure: Button = _context.preferences_disclosure
-	# Replace the old local disclosure, not its presentation preference signals.
-	for connection: Dictionary in disclosure.pressed.get_connections():
-		disclosure.pressed.disconnect(connection["callable"])
-	# The old locale/save utility island is intentionally hidden. Keep the
-	# single settings affordance visible in the empty header gap without
-	# restoring that retired toolbar.
-	disclosure.reparent(_top)
-	disclosure.position = Vector2(930, 8)
-	disclosure.size = Vector2(44, 44)
-	disclosure.add_theme_stylebox_override("normal", Tokens.command_surface(Tokens.COMMAND_UTILITY, false))
-	disclosure.add_theme_stylebox_override("hover", Tokens.command_surface(Tokens.COMMAND_UTILITY, false, true))
-	disclosure.add_theme_stylebox_override("pressed", Tokens.command_surface(Tokens.COMMAND_UTILITY, true))
-	disclosure.add_theme_stylebox_override("focus", Tokens.focus_ring())
-	disclosure.pressed.connect(func() -> void: preferences_panel.visible = not preferences_panel.visible)
-	command_prompt = PanelContainer.new()
-	command_prompt.name = "CommandConfirmation"
-	command_prompt.position = Vector2(430, 190)
-	command_prompt.size = Vector2(420, 230)
-	command_prompt.z_index = 110
-	add_child(command_prompt)
-	command_prompt_column = UI.column(command_prompt)
-	command_prompt_title = UI.label(command_prompt_column, "BATTLE_CONFIRM", 22)
-	command_prompt_description = UI.label(command_prompt_column, "", 16)
-	command_prompt_description.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	command_prompt.hide()
-	preparation_indicator = UI.label(self,"",16)
-	preparation_indicator.position = Vector2(300,385)
-	preparation_indicator.size = Vector2(665,32)
-	preparation_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	preparation_indicator.add_theme_color_override("font_color",Color("e1beff"))
-	combo_preview = preload("res://scripts/battle/ui/components/combo_confirmation_overlay.gd").new()
-	add_child(combo_preview)
-	_context.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
+	_commands.command_requested.connect(_forward_command)
+	_context.command_requested.connect(_forward_command)
 	_context.confirm_requested.connect(func() -> void: confirm_requested.emit())
 	_context.cancel_requested.connect(func() -> void: cancel_requested.emit())
-
-	hand = _place(HandScene, Rect2(290, 470, 686, 240))
-	card_views = hand.card_views
+	_context.preferences_disclosure.pressed.connect(func() -> void: preferences_panel.visible = not preferences_panel.visible)
 	hand.card_requested.connect(func(instance: String) -> void: card_requested.emit(instance))
 	hand.card_released.connect(func(instance: String, pointer: Vector2) -> void:
 		end_targeting_arrow()
 		card_released.emit(instance, pointer))
 	hand.card_drag_started.connect(func(instance: String) -> void: card_drag_started.emit(instance))
 	hand.chant_held.connect(func(instance: String, full: bool) -> void:
-		card_chant_held.emit(instance,full)
-		command_requested.emit("HOLD_CHANT", {"instance_id": instance, "full": full}))
-
-	_targets = _place(TargetsScene, Rect2(0, 0, 1280, 720))
-	target_buttons = _targets.target_buttons
+		card_chant_held.emit(instance, full)
+		command_requested.emit("HOLD_CHANT", {"instance_id":instance, "full":full}))
 	_targets.target_requested.connect(func(actor: String) -> void: target_requested.emit(actor))
-	# Visual-only aim path. No input interception and no Domain access.
-	targeting_arrow = ArrowOverlay.new()
-	targeting_arrow.name = "CardTargetingArrow"
-	targeting_arrow.position = Vector2.ZERO
-	targeting_arrow.size = Vector2(1280,720)
-	targeting_arrow.z_index = 75
-	add_child(targeting_arrow)
 	targeting_arrow.target_hovered.connect(_targets.set_hovered_target)
-
-	reaction_panel = _place(ReactionScene, Rect2(300, 154, 665, 305)) as PanelContainer
-	reaction_panel.z_index = 100
-	var result := PanelContainer.new()
-	result.name = "Result"
-	result.position = Vector2(390,210)
-	result.size = Vector2(500,180)
-	result.z_index = 120
-	add_child(result)
-	result_panel = result
-	var result_column: VBoxContainer = UI.column(result)
-	result_label = UI.label(result_column,"",30)
-	UI.button(result_column,"BATTLE_RESTART",func() -> void: command_requested.emit("RESTART_BATTLE",{}))
-	result.hide()
-	reaction_column = reaction_panel.reaction_column
-	reaction_panel.command_requested.connect(func(kind: String, fields: Dictionary) -> void: command_requested.emit(kind, fields))
-	_modal_shield = Control.new()
-	_modal_shield.name = "ModalInputShield"
-	_modal_shield.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_modal_shield.mouse_filter = Control.MOUSE_FILTER_STOP
-	_modal_shield.z_index = 95
-	_modal_shield.hide()
-	add_child(_modal_shield)
-	# GUI picking follows tree order, not draw z_index. Keep the shield before
-	# both modal panels so it blocks the background, never their own buttons.
-	move_child(_modal_shield,reaction_panel.get_index())
-	move_child(command_prompt, result_panel.get_index())
-	last_preview = preload("res://scripts/battle/ui/components/last_spell_preview.gd").new()
-	last_preview.size = Vector2(1280, 720)
-	last_preview.z_index = 115
-	add_child(last_preview)
+	reaction_panel.command_requested.connect(_forward_command)
+	$Result/VBoxContainer/Button.pressed.connect(func() -> void: command_requested.emit("RESTART_BATTLE", {}))
 	last_preview.activation_requested.connect(func(target: String) -> void:
-		command_requested.emit("ACTIVATE_LAST_PREVIEW", {"target_id": target}))
+		command_requested.emit("ACTIVATE_LAST_PREVIEW", {"target_id":target}))
 	last_preview.cancel_requested.connect(func() -> void: cancel_requested.emit())
 	last_preview.target_changed.connect(func(id: String) -> void: target_requested.emit(id))
-	move_child(combo_preview,get_child_count()-1)
+	refresh_locale()
+	if not Engine.is_editor_hint():
+		for popup: Control in [reaction_panel, result_panel, command_prompt, preferences_panel, last_preview, combo_preview, _modal_shield]:
+			popup.hide()
+		last_preview.cancel_button.disabled = false
+
+func bind_arena(arena: Node2D) -> void:
+	_targets.arena = arena
+
+## Static labels retain their catalogue keys across repeated locale switches.
+func refresh_locale() -> void:
+	_translate_static(self)
+	mode.set_item_text(0, tr("BATTLE_CHANTLESS"))
+	mode.set_item_text(1, tr("BATTLE_FULL"))
+	_context.preferences_disclosure.tooltip_text = tr("BATTLE_REDUCED") + " · " + tr("BATTLE_MUTE")
+
+func _translate_static(node: Node) -> void:
+	if node is Label or node is Button:
+		if not node.has_meta("translation_key"):
+			var key: String = node.text
+			if key.begins_with("BATTLE_") or key.begins_with("LAST_") or key.begins_with("CP2_"):
+				node.set_meta("translation_key", key)
+		if node.has_meta("translation_key"):
+			node.text = tr(str(node.get_meta("translation_key")))
+	for child: Node in node.get_children():
+		_translate_static(child)
+
+func _forward_command(kind: String, fields: Dictionary) -> void:
+	command_requested.emit(kind, fields)
 
 func render(projection: Dictionary, actor: String, cards: Array, reaction_choices: Array) -> void:
 	vm = projection

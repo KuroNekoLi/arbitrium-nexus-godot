@@ -1,6 +1,6 @@
 @tool
 extends VBoxContainer
-const Roster = preload("res://scenes/ui/hero_roster_item.tscn")
+@export var roster_item_scene: PackedScene = preload("res://scenes/ui/hero_roster_item.tscn")
 const AppearanceRegistry = preload("res://scripts/battle/presentation/character_appearance_registry.gd")
 const PartyCatalogue = preload("res://scripts/domain/m5/lv40/lv40_party_catalog.gd")
 const ICON_BARRIER: Texture2D = preload("res://assets/ui/v35/status_barrier.svg")
@@ -12,15 +12,12 @@ signal actor_requested(actor: String)
 var roster: Dictionary = {}
 
 func _ready() -> void:
-	add_theme_constant_override("separation", 9)
 	var roster_data: Dictionary = PartyCatalogue.read()
 	var party_ids: Array[String] = PartyCatalogue.party_ids(roster_data)
 	for i: int in party_ids.size():
 		var actor: String = party_ids[i]
-		var view: Button = Roster.instantiate()
-		view.custom_minimum_size = Vector2(260, 100)
+		var view: Button = roster_item_scene.instantiate()
 		add_child(view)
-		view.get_node("Layout/Stats").add_theme_constant_override("separation", 0)
 		var portrait: Texture2D = AppearanceRegistry.portrait_for_status(actor,"ACTIVE")
 		view.configure(actor, tr(str(roster_data["actors"][actor]["name_key"])), portrait, [Color("efc675"), Color("75d6ff"), Color("df9cff")][i % 3])
 		view.hero_selected.connect(func(id: String) -> void: actor_requested.emit(id))

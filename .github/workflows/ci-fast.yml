@@ -65,6 +65,7 @@ jobs:
             'test_lv40_roster:CURRENT_ROSTER_REPORT:38' \
             'test_p4_scene:P4_1_REPORT:8' \
             'test_boss_astriom_scene:BOSS_ASTRIOM_REPORT:14' \
+            'test_editor_authored_battle_layout:EDITOR_AUTHORED_LAYOUT_REPORT:15' \
             'test_p4_hud:P4_2_REPORT:36' \
             'test_p4_integration:P4_3_REPORT:31' \
             'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32' \

@@ -1,6 +1,838 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/battle/ui/components/command_menu.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/battle/ui/components/command_menu.gd" id="1_i2x4m"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_basic.svg" id="2_ebhoh"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_analyze.svg" id="3_c5iy3"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_item.svg" id="4_fidiw"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_swap.svg" id="5_nm4rc"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_last.svg" id="6_h673x"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/cmd_end.svg" id="7_66xoo"]
+[ext_resource type="Texture2D" path="res://assets/ui/v35/arcane_panel.svg" id="8_pg0ny"]
 
-[node name="Commands" type="PanelContainer"]
-script = ExtResource("1")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6r7ty"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_srnt3"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.09803922, 0.21176471, 0.29411766, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42352942, 0.8039216, 0.9882353, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5q4fq"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.36, 0.68333334, 0.84000003, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tsnv4"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.039215688, 0.08235294, 0.1254902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.17254902, 0.23529412, 0.2901961, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p0l8d"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bdhaq"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jx4cj"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.09803922, 0.21176471, 0.29411766, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.47058824, 0.57254905, 0.654902, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jffxm"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4866667, 0.5566667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frhjj"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.039215688, 0.08235294, 0.1254902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.17254902, 0.23529412, 0.2901961, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0uaj"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8c4a"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t046j"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.09803922, 0.21176471, 0.29411766, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.47058824, 0.57254905, 0.654902, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqkad"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.4866667, 0.5566667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qwhs3"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.039215688, 0.08235294, 0.1254902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.17254902, 0.23529412, 0.2901961, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k25xb"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xxo5y"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.047058824, 0.1254902, 0.2, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25490198, 0.33333334, 0.4, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpxhq"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.09803922, 0.21176471, 0.29411766, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.46666667, 0.8509804, 0.7764706, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e2ol1"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.08235294, 0.17254902, 0.2509804, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.39666668, 0.72333336, 0.66, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sehih"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.039215688, 0.08235294, 0.1254902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.17254902, 0.23529412, 0.2901961, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_krwkm"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bmda2"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.23278429, 0.18447058, 0.24266665, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.83137256, 0.65882355, 0.8666667, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.65882355, 0.8666667, 0.35)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oggu7"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.38622743, 0.34757647, 0.39413333, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8566667, 0.71000004, 0.88666666, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.65882355, 0.8666667, 0.5)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s448e"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.32485017, 0.2823341, 0.33354664, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8566667, 0.71000004, 0.88666666, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.65882355, 0.8666667, 0.5)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1w36v"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.078431375, 0.10980392, 0.14509805, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.22745098, 0.27450982, 0.32156864, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.65882355, 0.8666667, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjtnb"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_74qp2"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.23278429, 0.19105881, 0.12407842, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.83137256, 0.68235296, 0.44313726, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.68235296, 0.44313726, 0.35)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5mfwx"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.38622743, 0.35284704, 0.29926276, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8566667, 0.73, 0.52666664, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.68235296, 0.44313726, 0.5)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p5dbj"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.32485017, 0.28813174, 0.22918901, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8566667, 0.73, 0.52666664, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.68235296, 0.44313726, 0.5)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gt332"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 13.0
+bg_color = Color(0.078431375, 0.10980392, 0.14509805, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.22745098, 0.27450982, 0.32156864, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.83137256, 0.68235296, 0.44313726, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6mvgr"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="Commands" type="PanelContainer" unique_id=2050086858 node_paths=PackedStringArray("end_button")]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 432.0
+offset_right = 264.0
+offset_bottom = 698.0
+script = ExtResource("1_i2x4m")
+end_button = NodePath("CommandContent/EmphasisRow/Command_END_PLAYER_PHASE_5")
+
+[node name="CommandContent" type="VBoxContainer" parent="." unique_id=667239392]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Command_BASIC_ATTACK_RESOURCE_ONLY_0" type="Button" parent="CommandContent" unique_id=1046096858]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "普通攻擊
+本階段首擊回復 MP"
+theme_override_styles/normal = SubResource("StyleBoxFlat_6r7ty")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_srnt3")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5q4fq")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_tsnv4")
+theme_override_styles/focus = SubResource("StyleBoxFlat_p0l8d")
+theme_override_colors/font_color = Color(0.9411765, 0.9607843, 0.9764706, 1)
+theme_override_colors/font_disabled_color = Color(0.43529412, 0.49803922, 0.54901963, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 6
+theme_override_constants/icon_max_width = 20
+text = "BATTLE_BASIC"
+icon = ExtResource("2_ebhoh")
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="AccentRail" type="ColorRect" parent="CommandContent/Command_BASIC_ATTACK_RESOURCE_ONLY_0" unique_id=1332345656]
+layout_mode = 0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 6.0
+offset_right = 6.0
+offset_bottom = -6.0
+mouse_filter = 2
+color = Color(0.42352942, 0.8039216, 0.9882353, 1)
+
+[node name="Subtitle" type="Label" parent="CommandContent/Command_BASIC_ATTACK_RESOURCE_ONLY_0" unique_id=108056695]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -16.0
+offset_right = -4.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.6198039, 0.81686276, 0.9192157, 1)
+text = "BATTLE_BASIC_SUB"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="UtilityRow" type="HBoxContainer" parent="CommandContent" unique_id=584174973]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Command_UNIMPLEMENTED_1" type="Button" parent="CommandContent/UtilityRow" unique_id=315899045]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "解析
+尚未實作"
+theme_override_styles/normal = SubResource("StyleBoxFlat_bdhaq")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_jx4cj")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jffxm")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_frhjj")
+theme_override_styles/focus = SubResource("StyleBoxFlat_x0uaj")
+theme_override_colors/font_color = Color(0.9411765, 0.9607843, 0.9764706, 1)
+theme_override_colors/font_disabled_color = Color(0.43529412, 0.49803922, 0.54901963, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 6
+theme_override_constants/icon_max_width = 20
+text = "BATTLE_ANALYZE"
+icon = ExtResource("3_c5iy3")
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="AccentRail" type="ColorRect" parent="CommandContent/UtilityRow/Command_UNIMPLEMENTED_1" unique_id=1635286195]
+layout_mode = 0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 6.0
+offset_right = 6.0
+offset_bottom = -6.0
+mouse_filter = 2
+color = Color(0.47058824, 0.57254905, 0.654902, 1)
+
+[node name="Subtitle" type="Label" parent="CommandContent/UtilityRow/Command_UNIMPLEMENTED_1" unique_id=1470658995]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -16.0
+offset_right = -4.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.6409804, 0.71274513, 0.7692157, 1)
+text = "BATTLE_UNIMPLEMENTED_SUB"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Command_UNIMPLEMENTED_2" type="Button" parent="CommandContent/UtilityRow" unique_id=512583379]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "道具
+尚未實作"
+theme_override_styles/normal = SubResource("StyleBoxFlat_a8c4a")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_t046j")
+theme_override_styles/hover = SubResource("StyleBoxFlat_fqkad")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_qwhs3")
+theme_override_styles/focus = SubResource("StyleBoxFlat_k25xb")
+theme_override_colors/font_color = Color(0.9411765, 0.9607843, 0.9764706, 1)
+theme_override_colors/font_disabled_color = Color(0.43529412, 0.49803922, 0.54901963, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 6
+theme_override_constants/icon_max_width = 20
+text = "BATTLE_ITEM"
+icon = ExtResource("4_fidiw")
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="AccentRail" type="ColorRect" parent="CommandContent/UtilityRow/Command_UNIMPLEMENTED_2" unique_id=429621313]
+layout_mode = 0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 6.0
+offset_right = 6.0
+offset_bottom = -6.0
+mouse_filter = 2
+color = Color(0.47058824, 0.57254905, 0.654902, 1)
+
+[node name="Subtitle" type="Label" parent="CommandContent/UtilityRow/Command_UNIMPLEMENTED_2" unique_id=1808105509]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -16.0
+offset_right = -4.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.6409804, 0.71274513, 0.7692157, 1)
+text = "BATTLE_UNIMPLEMENTED_SUB"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Command_FREE_SWAP_3" type="Button" parent="CommandContent" unique_id=805343053]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "免費換牌
+0 AP · 每階段 1 次"
+theme_override_styles/normal = SubResource("StyleBoxFlat_xxo5y")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_hpxhq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_e2ol1")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_sehih")
+theme_override_styles/focus = SubResource("StyleBoxFlat_krwkm")
+theme_override_colors/font_color = Color(0.9411765, 0.9607843, 0.9764706, 1)
+theme_override_colors/font_disabled_color = Color(0.43529412, 0.49803922, 0.54901963, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_constants/h_separation = 6
+theme_override_constants/icon_max_width = 20
+text = "BATTLE_SWAP"
+icon = ExtResource("5_nm4rc")
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="AccentRail" type="ColorRect" parent="CommandContent/Command_FREE_SWAP_3" unique_id=1233739134]
+layout_mode = 0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 6.0
+offset_right = 6.0
+offset_bottom = -6.0
+mouse_filter = 2
+color = Color(0.46666667, 0.8509804, 0.7764706, 1)
+
+[node name="Subtitle" type="Label" parent="CommandContent/Command_FREE_SWAP_3" unique_id=1664788154]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -16.0
+offset_right = -4.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.6392157, 0.8380392, 0.82392156, 1)
+text = "BATTLE_SWAP_SUB"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="EmphasisRow" type="HBoxContainer" parent="CommandContent" unique_id=1478507402]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Command_ACTIVATE_LAST_SPELL_M4_4" type="Button" parent="CommandContent/EmphasisRow" unique_id=339138063]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "終極法術
+不可逆的終式"
+theme_override_styles/normal = SubResource("StyleBoxFlat_bmda2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_oggu7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_s448e")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_1w36v")
+theme_override_styles/focus = SubResource("StyleBoxFlat_rjtnb")
+theme_override_colors/font_color = Color(0.9241177, 0.8464706, 0.94, 1)
+theme_override_colors/font_disabled_color = Color(0.43529412, 0.49803922, 0.54901963, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_constants/h_separation = 6
+theme_override_constants/icon_max_width = 20
+text = "BATTLE_LAST"
+icon = ExtResource("6_h673x")
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="AccentRail" type="ColorRect" parent="CommandContent/EmphasisRow/Command_ACTIVATE_LAST_SPELL_M4_4" unique_id=259207430]
+layout_mode = 0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 6.0
+offset_right = 6.0
+offset_bottom = -6.0
+mouse_filter = 2
+color = Color(0.83137256, 0.65882355, 0.8666667, 1)
+
+[node name="Subtitle" type="Label" parent="CommandContent/EmphasisRow/Command_ACTIVATE_LAST_SPELL_M4_4" unique_id=228038332]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -16.0
+offset_right = -4.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.80333334, 0.7515687, 0.8645098, 1)
+text = "BATTLE_LAST_SUB"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Command_END_PLAYER_PHASE_5" type="Button" parent="CommandContent/EmphasisRow" unique_id=1633180057]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "結束階段
+結束我方階段"
+theme_override_styles/normal = SubResource("StyleBoxFlat_74qp2")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_5mfwx")
+theme_override_styles/hover = SubResource("StyleBoxFlat_p5dbj")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_gt332")
+theme_override_styles/focus = SubResource("StyleBoxFlat_6mvgr")
+theme_override_colors/font_color = Color(0.9241177, 0.8570588, 0.74941176, 1)
+theme_override_colors/font_disabled_color = Color(0.43529412, 0.49803922, 0.54901963, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_constants/h_separation = 6
+theme_override_constants/icon_max_width = 20
+text = "BATTLE_END"
+icon = ExtResource("7_66xoo")
+alignment = 0
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="AccentRail" type="ColorRect" parent="CommandContent/EmphasisRow/Command_END_PLAYER_PHASE_5" unique_id=1188333131]
+layout_mode = 0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 6.0
+offset_right = 6.0
+offset_bottom = -6.0
+mouse_filter = 2
+color = Color(0.83137256, 0.68235296, 0.44313726, 1)
+
+[node name="Subtitle" type="Label" parent="CommandContent/EmphasisRow/Command_END_PLAYER_PHASE_5" unique_id=1579670965]
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -16.0
+offset_right = -4.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.80333334, 0.7621569, 0.6739216, 1)
+text = "BATTLE_END_SUB"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="Label" type="Label" parent="CommandContent" unique_id=891393501]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.5411765, 0.627451, 0.6901961, 1)
+text = "BATTLE_PROTOTYPE"
+autowrap_mode = 3
+
+[node name="ArcaneChrome" type="Control" parent="." unique_id=1915322572]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="ArcaneChrome" unique_id=1776513848]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -9.0
+offset_right = 12.0
+offset_bottom = 9.0
+texture = ExtResource("8_pg0ny")
+patch_margin_left = 30
+patch_margin_top = 30
+patch_margin_right = 30
+patch_margin_bottom = 30
