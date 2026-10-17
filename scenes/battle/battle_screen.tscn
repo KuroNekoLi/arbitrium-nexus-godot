@@ -5,8 +5,8 @@
 [ext_resource type="Resource" path="res://resources/ui/characters/ren.tres" id="9"]
 [ext_resource type="Resource" path="res://resources/ui/characters/akane.tres" id="10"]
 [ext_resource type="Resource" path="res://resources/ui/characters/tsumugi.tres" id="11"]
-[ext_resource type="Texture2D" path="res://assets/nexus_party_splash.png" id="7"]
 [ext_resource type="Script" path="res://scripts/battle/ui/battle_hud.gd" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/battle/enemies/boss_astriom.tscn" id="12_boss"]
 [node name="BattleScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -45,13 +45,10 @@ actor_id = "A"
 appearance = ExtResource("9")
 visual_height = 200.0
 accent = Color(1, 0.76, 0.41, 1)
-[node name="Boss" parent="Design/Arena" instance=ExtResource("3")]
+[node name="Boss" parent="Design/Arena" instance=ExtResource("12_boss")]
 position = Vector2(845, 455)
 actor_id = "Boss"
-atlas = ExtResource("7")
-boss_art = true
 visual_height = 325.0
-accent = Color(1, 0.25, 0.6, 1)
 [node name="HUD" type="Control" parent="Design"]
 offset_right = 1280.0
 offset_bottom = 720.0

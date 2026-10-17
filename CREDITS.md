@@ -62,3 +62,7 @@ Six transparent PNGs (Ren / Akane / Tsumugi, one 3×3 action atlas and one indep
 ## Character state CG replacement candidates — 2026-10-17
 
 Ren, Akane, and Tsumugi state sheets were supplied by the user from a ChatGPT image-generation conversation. The source model, exact prompt, and redistribution/license details were not supplied. They are integrated as task-approved, replaceable 1024×1280 RGBA PNGs at `assets/characters/<character_id>/cg_states.png`, replacing the previous 256×320 state sheets. SHA-256, dimensions, and current QA status are recorded in `assets/asset_manifest.csv`. Do not claim final Canon approval or external redistribution rights from the image files alone.
+
+## Boss Astriom layered asset candidates — 2026-10-17
+
+Three separate transparent PNGs (`boss_body.png`, `boss_aura.png`, `boss_magic_circle.png`) were supplied by the user and integrated under `assets/monsters/boss/` as replaceable, user-provided ChatGPT-generated candidates. Source model, exact prompt, and external licensing/redistribution terms were not supplied. Their SHA-256 values and dimensions are recorded in `assets/asset_manifest.csv`; no public-domain or external redistribution license is asserted.

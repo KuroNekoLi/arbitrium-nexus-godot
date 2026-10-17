@@ -113,6 +113,7 @@ func _ready() -> void:
 	controller.rejected.connect(func(error: String) -> void: hud.feedback.text = _reason(error))
 	director = Director.new()
 	director.arena = $Design/Arena
+	director.idle.connect(_on_animation_idle)
 	var effects: Control = Effects.new()
 	effects.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	effects.theme = hud.theme
@@ -127,6 +128,13 @@ func _initial_state() -> Dictionary:
 
 func _on_cue(cue: Dictionary) -> void:
 	if cue["kind"] != "DAMAGE": hud.feedback.text = tr("BATTLE_CUE_"+str(cue["kind"]))
+
+func _on_animation_idle() -> void:
+	if str(view_model.get("outcome", "")) != "VICTORY":
+		return
+	var boss: Node = $Design/Arena.get_node_or_null("Boss")
+	if boss != null and boss.has_method("play_defeated"):
+		boss.play_defeated()
 
 func _submit(command: Dictionary) -> void:
 	if command["type"] == "SAVE_REPLAY":
@@ -499,7 +507,10 @@ func _last_target_portrait(id: String) -> Texture2D:
 	if candidate != null: return candidate
 	if hud.roster.has(id): return hud.roster[id].portrait.texture
 	var visual: Node2D = $Design/Arena.get_node_or_null(id)
-	if visual != null: return visual.body.sprite_frames.get_frame_texture("idle", 0)
+	if visual != null:
+		if visual.has_method("get_portrait_texture"):
+			return visual.get_portrait_texture()
+		return visual.body.sprite_frames.get_frame_texture("idle", 0)
 	return preload("res://assets/ui/v35/intent_skill.svg")
 
 func _command_requested(kind: String, fields: Dictionary) -> void:
