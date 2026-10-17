@@ -38,6 +38,6 @@
 
 ## 現行程式與舊系統界線
 - 正式執行入口：`res://scenes/battle/lv40_playable_battle.tscn`；唯一戰鬥狀態是 M1～M5 Domain 和 Lv40 內容。八卡原型及四個過渡用 smoke 殼與 G0 工作流程已退役。
-- 角色、能力、12張牌組與終式：`resources/combat/rosters/lv40_party_v0_3.json`。A/B/C 只是戰鬥槽位，**不等於固定姓名**；角色資料與技能、翻譯、美術及卡牌資格必須同步。新版圖形配牌編輯器、持久化存檔及五人上場尚未完成。
+- 角色靜態資料：每位角色一個 `resources/combat/characters/*.tres` `CharacterDefinition`，集中身分、Variant、Lv40數值、12張起始牌組、被動、終式與外觀資源引用。`resources/combat/rosters/lv40_party_v0_3.json` 只指派角色定義到A/B/C戰鬥槽位，並保存示範開手覆寫；槽位**不等於固定姓名**。卡牌定義與資格仍由獨立內容表管理。新版圖形配牌編輯器、持久化存檔及五人上場尚未完成。
 - `scenes/ui/hero_roster_item.tscn` 是新 `PartyStatusPanel` 仍在引用的**現役 HUD 元件**，即使個別驗證名稱仍含 `legacy` 也不能一概刪除。
 - **已交付的清理不等於 CI 或實機通關**；回歸證據須逐次核對實際提交／Actions。規範索引見[程式對照](engineering/規則與程式對照表.md)，退役清單見[工程紀錄](engineering/舊系統退役與驗收紀錄.md)。

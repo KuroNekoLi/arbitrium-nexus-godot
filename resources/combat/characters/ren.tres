@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="CharacterDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/character_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+character_id = "ren"
+variant_id = "ren_swordsman_v1"
+name_key = "actor.ren.name"
+display_zh = "朝霧蓮"
+level = 40
+max_hp = 1500
+max_mp = 8
+patk = 135
+matk = 70
+pdef = 110
+mdef = 90
+accuracy = 105
+evasion = 95
+crit_rate_bp = 1000
+crit_bonus_bp = 5000
+loadout = PackedStringArray("U01", "U02", "U03", "U04", "U05", "R01", "R02", "R03", "R05", "R06", "R07", "R08")
+role_tags = PackedStringArray("SWORDSMAN", "VANGUARD")
+appearance_path = "res://resources/ui/characters/ren.tres"
+passive = {"id":"REN_P01","kind":"BREAK_FIRST_HIT","amount":2}
+full_chant_passive = {}
+last_spell_id = "LS_REN_SWORD_V1"
+last_spell_name_key = "last_spell.ren.name"
+last_spell_mp_cost = 5
+last_spell_profile = {"damage_kind":"PHYSICAL","multiplier_bp":65000,"hit_mode":"RANDOM_PERCENT","element":"NEUTRAL"}
+last_spell_targeting = {"team":"ENEMY","scope":"SINGLE","description_key":"LAST_REN_DESCRIPTION","artwork_path":"res://assets/ui/v35/cmd_basic.svg"}
+last_spell_effect = {"kind":"DAMAGE","break_on_hit":24}

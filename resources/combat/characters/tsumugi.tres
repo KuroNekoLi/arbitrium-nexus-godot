@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="CharacterDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/character_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+character_id = "tsumugi"
+variant_id = "tsumugi_healer_v1"
+name_key = "actor.tsumugi.name"
+display_zh = "白石紬"
+level = 40
+max_hp = 1200
+max_mp = 12
+patk = 55
+matk = 105
+pdef = 80
+mdef = 110
+accuracy = 95
+evasion = 95
+crit_rate_bp = 500
+crit_bonus_bp = 5000
+loadout = PackedStringArray("U01", "U02", "U03", "U04", "U05", "T01", "T03", "T04", "T05", "T06", "T09", "T10")
+role_tags = PackedStringArray("HEALER", "SUPPORT")
+appearance_path = "res://resources/ui/characters/tsumugi.tres"
+passive = {"id":"TSUMUGI_P01","kind":"HEAL_FIRST_SP","amount":60}
+full_chant_passive = {}
+last_spell_id = "LS_TSUMUGI_HEAL_V1"
+last_spell_name_key = "last_spell.tsumugi.name"
+last_spell_mp_cost = 7
+last_spell_profile = {"damage_kind":"MAGICAL","multiplier_bp":68000,"hit_mode":"GUARANTEED","element":"NEUTRAL"}
+last_spell_targeting = {"team":"ALLY","scope":"ALL","description_key":"LAST_TSUMUGI_DESCRIPTION","artwork_path":"res://assets/ui/v35/status_barrier.svg"}
+last_spell_effect = {"kind":"HEAL_BARRIER","heal_max_hp_bp":3500,"barrier_amount":260}

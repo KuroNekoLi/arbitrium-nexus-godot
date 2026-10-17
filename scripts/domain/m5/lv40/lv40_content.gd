@@ -67,7 +67,7 @@ static func config(version: String) -> Dictionary:
 			"crit_rate_bp":int(r["crit_rate_bp"]),"crit_bonus_bp":int(r["crit_bonus_bp"])}
 		c["lv40_actor_definitions"][actor] = {"max_hp":int(r["max_hp"]),"max_mp":int(r["max_mp"]),
 			"character_id":str(r["character_id"]),"name_key":str(r["name_key"]),
-			"role_tags":r.get("role_tags",[]).duplicate(),"level":40}
+			"role_tags":r.get("role_tags",[]).duplicate(),"level":int(r.get("level",40))}
 		c["m5_element_resistance"][actor] = {"NEUTRAL":10000,"FIRE":11500 if actor == "Boss" else 10000,
 			"ARCANE":9000 if actor == "Boss" else 10000}
 	c["m5_basic_attack_profile"] = profile("PHYSICAL",10000,1,"RANDOM_PERCENT")

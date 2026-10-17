@@ -139,7 +139,7 @@ func _sync_state_cg() -> void:
 	if body == null:
 		return
 	var status: String = "INCAPACITATED" if downed else "ACTIVE"
-	var texture: Texture2D = AppearanceRegistry.field_cg_for_status(actor_id,status)
+	var texture: Texture2D = appearance.field_cg_for_status(status) if appearance != null else AppearanceRegistry.field_cg_for_status(actor_id,status)
 	if texture == null:
 		if state_cg != null:
 			state_cg.visible = false

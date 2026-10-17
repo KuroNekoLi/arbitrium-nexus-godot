@@ -64,9 +64,26 @@ func _run() -> void:
 			"ROSTER-DETERMINISTIC-SEED")
 	var swapped: Dictionary = data.duplicate(true)
 	var first: String = ids[0]
-	swapped["actors"][first]["character_id"] = "future_person"
-	swapped["actors"][first]["variant_id"] = "future_variant"
-	swapped["actors"][first]["name_key"] = "actor.future.name"
+	for slot: String in ids:
+		var slot_actor: Dictionary = data["actors"][slot]
+		swapped["actors"][slot] = {"character_definition_path":slot_actor["character_definition_path"]}
+		if slot_actor.has("demo_opening_cards"):
+			swapped["actors"][slot]["demo_opening_cards"] = slot_actor["demo_opening_cards"].duplicate()
+	var original_definition: CharacterDefinition = load(
+		str(data["actors"][first]["character_definition_path"])) as CharacterDefinition
+	check(original_definition != null, "ROSTER-REPLACEMENT-DEFINITION-LOADED")
+	if original_definition == null:
+		quit(1)
+		return
+	var replacement: CharacterDefinition = original_definition.duplicate(true) as CharacterDefinition
+	replacement.character_id = "future_person"
+	replacement.variant_id = "future_variant"
+	replacement.name_key = "actor.future.name"
+	var definition_path: String = "user://replacement_character_definition.tres"
+	var definition_error: Error = ResourceSaver.save(replacement, definition_path)
+	check(definition_error == OK, "ROSTER-REPLACEMENT-DEFINITION-WRITABLE")
+	swapped["actors"][first] = {"character_definition_path":definition_path,
+		"demo_opening_cards":data["actors"][first].get("demo_opening_cards", [])}
 	var path: String = "user://replacement_roster_smoke.json"
 	var output: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	check(output != null, "ROSTER-TEMP-WRITABLE")
@@ -82,5 +99,6 @@ func _run() -> void:
 		check(Roster.loadouts(parsed)[first] == loadouts[first],
 			"ROSTER-SWAP-PRESERVES-12-CARD-LOADOUT")
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(definition_path))
 	print("CURRENT_ROSTER_REPORT executed=%d passed=%d failed=%d" % [tested, tested-failed, failed])
 	quit(0 if failed == 0 else 1)

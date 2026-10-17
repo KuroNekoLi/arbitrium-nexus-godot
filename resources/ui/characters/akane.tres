@@ -1,13 +1,16 @@
-[gd_resource type="Resource" script_class="BattleCharacterAppearance" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="BattleCharacterAppearance" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/battle/presentation/character_appearance.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/characters/akane/atlas.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/characters/akane/cg.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/characters/akane/cg_states.png" id="4"]
 
 [resource]
 script = ExtResource("1")
 atlas = ExtResource("2")
 cg = ExtResource("3")
+cg_states = ExtResource("4")
+cg_state_split_y = 504
 columns = PackedInt32Array(0, 418, 836, 1254)
 rows = PackedInt32Array(0, 418, 800, 1254)
 portrait_rect = Rect2(100, 125, 824, 940)

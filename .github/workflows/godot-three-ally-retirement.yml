@@ -44,7 +44,7 @@ jobs:
           set -Eeuo pipefail
           for spec in \
             'test_lv40_content:LV40_CONTENT_REPORT:37' \
-            'test_lv40_roster:CURRENT_ROSTER_REPORT:36' \
+            'test_lv40_roster:CURRENT_ROSTER_REPORT:38' \
             'test_lv40_domain:LV40_DOMAIN_REPORT:83' \
             'test_lv40_edges:LV40_EDGES_REPORT:37' \
             'test_p4_last_spell_retirement:RETIREMENT_REPORT:29' \

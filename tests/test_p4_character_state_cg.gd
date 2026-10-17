@@ -24,7 +24,7 @@ func run() -> void:
 	for id: String in ["A","B","C"]:
 		var appearance: Resource = Art.appearance_for(id)
 		var slug: String = appearance.resource_path.get_file().get_basename() if appearance != null else ""
-		var split_y: int = {"ren":536,"akane":512,"tsumugi":504}.get(slug,0)
+		var split_y: int = {"ren":536,"akane":504,"tsumugi":512}.get(slug,0)
 		var p1: Texture2D = Art.portrait_for_status(id,"ACTIVE")
 		var p2: Texture2D = Art.portrait_for_status(id,"INCAPACITATED")
 		var f1: Texture2D = Art.field_cg_for_status(id,"ACTIVE")

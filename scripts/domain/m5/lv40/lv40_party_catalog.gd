@@ -13,6 +13,9 @@ static func read(path: String = PATH) -> Dictionary:
 		push_error("Roster must be a JSON object")
 		return {}
 	var roster: Dictionary = value
+	if int(roster.get("schema_version", 0)) != 2:
+		push_error("Roster schema version must be 2")
+		return {}
 	var order: Variant = roster.get("party_order", null)
 	var actors: Variant = roster.get("actors", null)
 	if not order is Array or not actors is Dictionary or order.size() != 3:
@@ -28,14 +31,34 @@ static func read(path: String = PATH) -> Dictionary:
 		var actor: Variant = actors[slot]
 		if not actor is Dictionary:
 			return {}
+		var definition_path: String = str(actor.get("character_definition_path", ""))
+		if definition_path.is_empty() or not ResourceLoader.exists(definition_path):
+			push_error("Character definition missing for roster slot: " + slot)
+			return {}
+		var loaded: Resource = ResourceLoader.load(definition_path)
+		if loaded == null or not loaded is CharacterDefinition:
+			push_error("Invalid character definition for roster slot: " + slot)
+			return {}
+		var slot_data: Dictionary = actor
+		var actor_data: Dictionary = (loaded as CharacterDefinition).to_actor_data()
+		actor_data["character_definition_path"] = definition_path
+		var opening_cards: Variant = slot_data.get("demo_opening_cards", [])
+		if not opening_cards is Array:
+			push_error("Invalid demo opening cards for roster slot: " + slot)
+			return {}
+		if not opening_cards.is_empty():
+			actor_data["demo_opening_cards"] = opening_cards.duplicate()
+		actors[slot] = actor_data
+		roster["actors"] = actors
+		actor = actor_data
 		for key: String in ["character_id", "variant_id", "name_key", "appearance_path", "last_spell_id", "last_spell_name_key"]:
 			if str(actor.get(key, "")).is_empty():
 				push_error("Roster actor missing " + key + ": " + slot)
 				return {}
-		for key: String in ["max_hp", "max_mp", "patk", "matk", "pdef", "mdef", "accuracy", "evasion", "crit_rate_bp", "crit_bonus_bp", "last_spell_mp_cost"]:
+		for key: String in ["level", "max_hp", "max_mp", "patk", "matk", "pdef", "mdef", "accuracy", "evasion", "crit_rate_bp", "crit_bonus_bp", "last_spell_mp_cost"]:
 			if not actor.has(key) or int(actor[key]) < 0:
 				return {}
-		if int(actor["max_hp"]) < 1 or not actor.get("loadout", null) is Array or actor["loadout"].size() != DECK_SIZE:
+		if int(actor["level"]) < 1 or int(actor["max_hp"]) < 1 or not actor.get("loadout", null) is Array or actor["loadout"].size() != DECK_SIZE:
 			push_error("Invalid 12-SP loadout for slot: " + slot)
 			return {}
 		if not actor.get("last_spell_profile", null) is Dictionary or not actor.get("last_spell_targeting", null) is Dictionary or not actor.get("last_spell_effect", null) is Dictionary:

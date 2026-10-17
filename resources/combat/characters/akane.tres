@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="CharacterDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/domain/character_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+character_id = "akane"
+variant_id = "akane_burst_mage_v1"
+name_key = "actor.akane.name"
+display_zh = "九條朱音"
+level = 40
+max_hp = 950
+max_mp = 14
+patk = 60
+matk = 175
+pdef = 65
+mdef = 85
+accuracy = 95
+evasion = 90
+crit_rate_bp = 800
+crit_bonus_bp = 5000
+loadout = PackedStringArray("U01", "U02", "U03", "U04", "U05", "A01", "A02", "A03", "A04", "A05", "A06", "A07")
+role_tags = PackedStringArray("BURST_MAGE", "ARCANE")
+appearance_path = "res://resources/ui/characters/akane.tres"
+passive = {}
+full_chant_passive = {"id":"AKANE_P01","kind":"FULL_CHANT_HP_MULTIPLIER","multiplier_bp":11000}
+last_spell_id = "LS_AKANE_MAGE_V1"
+last_spell_name_key = "last_spell.akane.name"
+last_spell_mp_cost = 9
+last_spell_profile = {"damage_kind":"MAGICAL","multiplier_bp":68000,"hit_mode":"GUARANTEED","element":"FIRE"}
+last_spell_targeting = {"team":"ENEMY","scope":"ALL","description_key":"LAST_AKANE_DESCRIPTION","appearance_id":"A06"}
+last_spell_effect = {"kind":"DAMAGE"}

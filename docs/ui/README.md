@@ -51,7 +51,7 @@
 - `scenes/ui/hero_roster_item.tscn` + `scripts/ui/hero_roster_item.gd`：**仍為現役共用元件**，由 `scripts/battle/ui/components/party_status_panel.gd` preload；不能因建立時間或測試名稱帶 legacy 而刪除。
 - `scripts/battle/ui/battle_card_view.gd`、`scripts/battle/ui/components/hand_view.gd` + `addons/simple_cards/`：現行手牌與卡片 presentation；更換插畫先查 CardAppearance 對應及現有測試。
 - `scripts/battle/battle_screen.gd` 與 `scripts/battle/battle_controller.gd`：目前戰鬥畫面與命令提交；舊 `scripts/main.gd` 已退役，不得恢復第二套 UI→Domain 路徑。
-- `assets/characters/ren/`、`akane/`、`tsumugi/`：目前候選角色立繪；資源路徑從 roster JSON 的 `appearance_path` 與 CharacterAppearance 取得。`assets/legacy/` 僅留歷史素材與授權，非現行人物清單。
+- `assets/characters/ren/`、`akane/`、`tsumugi/`：目前候選角色立繪；`CharacterDefinition` 提供 `appearance_path`，由 CharacterAppearance 統一讀取動畫圖集、肖像與狀態立繪。`assets/legacy/` 僅留歷史素材與授權，非現行人物清單。
 - `addons/kenney_fantasy_ui_borders/`、`kenney_particle_pack/`、`kenney_ui_audio/`、`kenney_rpg_audio/`，授權清單見 `CREDITS.md`。
 - `.codex/skills/` 內已有專業 `godot-card-rpg-uiux-engineer`、`godot-game-asset-pipeline`、`godot-2-5d-rendering-engineer`、`godot-qa-ci-engineer` 等；未來由 orchestrator 協調而非新造一套平行技能。
 

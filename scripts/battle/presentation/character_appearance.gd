@@ -11,6 +11,14 @@ extends Resource
 	set(value):
 		cg = value
 		emit_changed()
+@export var cg_states: Texture2D:
+	set(value):
+		cg_states = value
+		emit_changed()
+@export var cg_state_split_y: int = 0:
+	set(value):
+		cg_state_split_y = maxi(0, value)
+		emit_changed()
 @export var columns: PackedInt32Array = PackedInt32Array([0, 418, 836, 1254]):
 	set(value):
 		columns = value
@@ -77,3 +85,28 @@ func portrait_texture() -> Texture2D:
 	cropped.atlas = cg
 	cropped.region = portrait_rect
 	return cropped
+
+## Returns the portrait or field CG from this character's own state sheet.
+## Exhausted characters have no field CG; callers must keep field visibility
+## governed by the battle state, not this presentation helper.
+func state_texture(status: String, on_field: bool) -> Texture2D:
+	if status == "EXHAUSTED" and on_field:
+		return null
+	if cg_states == null or cg_states.get_size() != Vector2(1024, 1280):
+		return null
+	if cg_state_split_y <= 0 or cg_state_split_y >= 1280:
+		return null
+	var column: int = 1 if status == "INCAPACITATED" else 0
+	var top: int = cg_state_split_y if on_field else 0
+	var height: int = 1280 - cg_state_split_y if on_field else cg_state_split_y
+	var region := AtlasTexture.new()
+	region.atlas = cg_states
+	region.region = Rect2(column * 512, top, 512, height)
+	return region
+
+func portrait_texture_for_status(status: String) -> Texture2D:
+	var state_portrait: Texture2D = state_texture(status, false)
+	return state_portrait if state_portrait != null else portrait_texture()
+
+func field_cg_for_status(status: String) -> Texture2D:
+	return state_texture(status, true)
