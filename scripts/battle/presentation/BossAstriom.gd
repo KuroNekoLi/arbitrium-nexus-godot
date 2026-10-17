@@ -4,8 +4,9 @@ extends Node2D
 
 @export var actor_id: String = "Boss"
 @export var visual_height: float = 325.0
+@export_range(5.0, 10.0) var circle_rotation_speed: float = 7.5
 
-var body: Sprite2D
+@onready var body: Sprite2D = $Body
 var downed: bool = false
 var retired: bool = false
 var cast_active: bool = false
@@ -16,7 +17,8 @@ var _defeated: bool = false
 var _body_base_scale: Vector2
 var _body_base_position: Vector2
 var _aura_base_scale: Vector2
-var _aura_base_modulate: Color = Color(1.0, 1.0, 1.0, 0.72)
+var _aura_base_modulate: Color = Color(1.0, 1.0, 1.0, 0.75)
+var _circle_angle: float = 0.0
 
 @onready var magic_circle: Sprite2D = $MagicCircle
 @onready var aura_back: Sprite2D = $AuraBack
@@ -24,12 +26,17 @@ var _aura_base_modulate: Color = Color(1.0, 1.0, 1.0, 0.72)
 
 func _ready() -> void:
 	home = position
-	body = $Body
 	_fit_layers()
 	_build_animations()
 	animation_player.root_node = NodePath("..")
 	animation_player.animation_finished.connect(_on_animation_finished)
 	play_idle()
+
+func _process(delta: float) -> void:
+	if _defeated or retired:
+		return
+	_circle_angle = fposmod(_circle_angle + deg_to_rad(circle_rotation_speed) * delta, TAU)
+	(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", _circle_angle)
 
 func _fit_layers() -> void:
 	if body.texture != null:
@@ -43,41 +50,38 @@ func _fit_layers() -> void:
 		_aura_base_scale = Vector2.ONE * (visual_height * 1.15 / maxf(1.0, aura_back.texture.get_height()))
 		aura_back.scale = _aura_base_scale
 		aura_back.position = Vector2(0.0, -visual_height * 0.58)
-		aura_back.modulate = Color(1.15, 1.1, 1.5, 0.78)
+		aura_back.modulate = _aura_base_modulate
 		_aura_base_modulate = aura_back.modulate
 	if magic_circle.texture != null:
 		magic_circle.centered = true
-		# The supplied image includes a tall sigil behind the floor circle. Show
-		# only its lower half so rotation reads as a ground ring rather than a wall.
-		magic_circle.region_enabled = true
-		magic_circle.region_rect = Rect2(
-			0.0,
-			magic_circle.texture.get_height() * 0.5,
-			magic_circle.texture.get_width(),
-			magic_circle.texture.get_height() * 0.5)
+		# The shader selects and rotates the floor ring inside a fixed ellipse.
+		magic_circle.region_enabled = false
 		magic_circle.scale = Vector2(
-			visual_height * 1.55 / maxf(1.0, magic_circle.texture.get_width()),
-			visual_height * 0.36 / maxf(1.0, magic_circle.texture.get_height() * 0.5))
+			visual_height * 1.55 * 1.45 / maxf(1.0, magic_circle.texture.get_width()),
+			visual_height * 0.36 * 1.45 / maxf(1.0, magic_circle.texture.get_height()))
 		magic_circle.position = Vector2(0.0, 5.0)
+		magic_circle.modulate.a = 0.9
+		(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", _circle_angle)
 
 func _build_animations() -> void:
 	var library := AnimationLibrary.new()
 	var idle := Animation.new()
-	idle.length = 4.0
+	idle.length = 2.4
 	idle.loop_mode = Animation.LOOP_LINEAR
-	_add_value_track(idle, "MagicCircle:rotation", [0.0, 4.0], [0.0, TAU])
-	_add_value_track(idle, "AuraBack:modulate", [0.0, 2.0, 4.0], [
-		_aura_base_modulate, Color(1.25, 1.15, 1.6, 0.95), _aura_base_modulate])
-	_add_value_track(idle, "AuraBack:scale", [0.0, 2.0, 4.0], [
-		_aura_base_scale, _aura_base_scale * 1.035, _aura_base_scale])
-	_add_value_track(idle, "Body:position:y", [0.0, 2.0, 4.0], [
-		_body_base_position.y, _body_base_position.y - 6.0, _body_base_position.y])
+	_add_value_track(idle, "MagicCircle:modulate:a", [0.0, 1.2, 2.4], [0.82, 0.94, 0.82])
+	_add_value_track(idle, "AuraBack:modulate", [0.0, 1.2, 2.4], [
+		_aura_base_modulate, Color.WHITE, _aura_base_modulate])
+	_add_value_track(idle, "AuraBack:scale", [0.0, 1.2, 2.4], [
+		_aura_base_scale * 0.96, _aura_base_scale * 1.04, _aura_base_scale * 0.96])
+	_add_value_track(idle, "Body:position:y", [0.0, 1.2, 2.4], [
+		_body_base_position.y, _body_base_position.y - 10.0, _body_base_position.y])
 	library.add_animation("idle", idle)
 
 	var hit := Animation.new()
 	hit.length = 0.34
 	_add_value_track(hit, "Body:modulate", [0.0, 0.07, 0.18, 0.34], [
 		Color.WHITE, Color(2.0, 1.35, 1.8, 1.0), Color(1.35, 1.0, 1.3, 1.0), Color.WHITE])
+	_add_value_track(hit, "Body:position:x", [0.0, 0.06, 0.12, 0.2, 0.34], [0.0, -4.0, 4.0, -2.0, 0.0])
 	library.add_animation("hit", hit)
 
 	var cast := Animation.new()
@@ -109,6 +113,9 @@ func play_idle() -> void:
 		return
 	visible = true
 	if animation_player.current_animation != "idle":
+		body.position.x = _body_base_position.x
+		body.scale = _body_base_scale
+		body.modulate = Color.WHITE
 		animation_player.play("idle")
 
 ## Play a short visual-only impact response.
@@ -121,6 +128,8 @@ func play_hit() -> void:
 func play_spell_cast() -> void:
 	if _defeated or retired:
 		return
+	body.position.x = _body_base_position.x
+	body.modulate = Color.WHITE
 	animation_player.play("cast")
 
 ## Lunge toward a target for an accepted physical action, then return to the slot.
@@ -182,6 +191,8 @@ func reset_motion() -> void:
 	aura_back.scale = _aura_base_scale
 	magic_circle.modulate = Color.WHITE
 	magic_circle.rotation = 0.0
+	_circle_angle = 0.0
+	(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", 0.0)
 	play_idle()
 
 func get_portrait_texture() -> Texture2D:
@@ -195,7 +206,7 @@ func _draw() -> void:
 	if _defeated:
 		return
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.22))
-	draw_circle(Vector2.ZERO, visual_height * 0.22, Color(0.01, 0.02, 0.06, 0.42))
+	draw_circle(Vector2.ZERO, visual_height * 0.22, Color(0.01, 0.02, 0.06, 0.35))
 
 func _exit_tree() -> void:
 	if motion != null and motion.is_running():

@@ -1,14 +1,20 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/battle/presentation/BossAstriom.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/monsters/boss/boss_magic_circle.png" id="2_magic_circle"]
 [ext_resource type="Texture2D" path="res://assets/monsters/boss/boss_aura.png" id="3_aura"]
 [ext_resource type="Texture2D" path="res://assets/monsters/boss/boss_body.png" id="4_body"]
+[ext_resource type="Shader" path="res://shaders/boss_ground_circle.gdshader" id="5_ground"]
+
+[sub_resource type="ShaderMaterial" id="GroundMaterial"]
+resource_local_to_scene = true
+shader = ExtResource("5_ground")
 
 [node name="BossAstriom" type="Node2D"]
 script = ExtResource("1_script")
 
 [node name="MagicCircle" type="Sprite2D" parent="."]
+material = SubResource("GroundMaterial")
 texture = ExtResource("2_magic_circle")
 z_index = 0
 

@@ -10,6 +10,7 @@ on:
       - 'project.godot'
       - 'scripts/**'
       - 'scenes/**'
+      - 'shaders/**'
       - 'resources/**'
       - 'addons/**'
       - 'assets/**'
@@ -23,6 +24,7 @@ on:
       - 'project.godot'
       - 'scripts/**'
       - 'scenes/**'
+      - 'shaders/**'
       - 'resources/**'
       - 'addons/**'
       - 'assets/**'
@@ -62,7 +64,7 @@ jobs:
             'test_m5_fast_seeds:M5_5_FAST_SEEDS_REPORT:5' \
             'test_lv40_roster:CURRENT_ROSTER_REPORT:38' \
             'test_p4_scene:P4_1_REPORT:8' \
-            'test_boss_astriom_scene:BOSS_ASTRIOM_REPORT:13' \
+            'test_boss_astriom_scene:BOSS_ASTRIOM_REPORT:14' \
             'test_p4_hud:P4_2_REPORT:36' \
             'test_p4_integration:P4_3_REPORT:31' \
             'test_p4_lv40_playable:P4_LV40_PLAYABLE_REPORT:32' \
