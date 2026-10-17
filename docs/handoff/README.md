@@ -8,6 +8,7 @@
 - [SP 拖曳優先詠唱模式驗收](SP_DRAG_FIRST_CHANT_MODE_20261017.md)：請低成本 AI 對提交 `2a0fc02075d0a13243c18aeed087e60119964bc7` 執行獨立 GUI 驗收；通過後刪除此交接及此索引項。
 - [高解析角色狀態 CG 驗收](HIGH_RES_CHARACTER_STATE_CG_20261017.md)：請低成本 AI 對提交 `8594cd4a4c24484d548a4bc8c3b3439de21d5ce0` 執行獨立驗收；通過後刪除此交接及此索引項。
 - [連攜不依賴核心開放與示範起手牌](COMBO_CORE_INDEPENDENT_DEMO_OPENING_20261017.md)：請低成本 AI 對本次規則與開局調整執行獨立驗收；通過後刪除此交接及此索引項。
+- [Astriom Boss 圖層場景](BOSS_ASTRIOM_LAYERED_SCENE_20261017.md)：請低成本 AI 對提交 `1193ace` 執行獨立驗收；通過後刪除此交接及此索引項。
 
 ## 現行工作入口
 
