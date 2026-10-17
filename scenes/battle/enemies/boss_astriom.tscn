@@ -1,30 +1,37 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://ckbrwydavqol8"]
 
-[ext_resource type="Script" path="res://scripts/battle/presentation/BossAstriom.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/monsters/boss/boss_magic_circle.png" id="2_magic_circle"]
-[ext_resource type="Texture2D" path="res://assets/monsters/boss/boss_aura.png" id="3_aura"]
-[ext_resource type="Texture2D" path="res://assets/monsters/boss/boss_body.png" id="4_body"]
-[ext_resource type="Shader" path="res://shaders/boss_ground_circle.gdshader" id="5_ground"]
+[ext_resource type="Script" uid="uid://cvn6u352k8mdh" path="res://scripts/battle/presentation/BossAstriom.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bxcesq8il3nyh" path="res://assets/monsters/boss/boss_magic_circle.png" id="2_magic_circle"]
+[ext_resource type="Texture2D" uid="uid://bawyf360lvh0k" path="res://assets/monsters/boss/boss_aura.png" id="3_aura"]
+[ext_resource type="Texture2D" uid="uid://cno2k0rf532he" path="res://assets/monsters/boss/boss_body.png" id="4_body"]
+[ext_resource type="Shader" uid="uid://tgdj88utd36c" path="res://shaders/boss_ground_circle.gdshader" id="5_ground"]
 
 [sub_resource type="ShaderMaterial" id="GroundMaterial"]
 resource_local_to_scene = true
 shader = ExtResource("5_ground")
+shader_parameter/angle = 0.0
 
-[node name="BossAstriom" type="Node2D"]
+[node name="BossAstriom" type="Node2D" unique_id=1644554671]
 script = ExtResource("1_script")
 
-[node name="MagicCircle" type="Sprite2D" parent="."]
+[node name="MagicCircle" type="Sprite2D" parent="." unique_id=855093991]
+modulate = Color(1, 1, 1, 0.9)
 material = SubResource("GroundMaterial")
+position = Vector2(-23.000002, -30)
+scale = Vector2(0.43868908, 0.10665513)
 texture = ExtResource("2_magic_circle")
-z_index = 0
 
-[node name="AuraBack" type="Sprite2D" parent="."]
-texture = ExtResource("3_aura")
+[node name="AuraBack" type="Sprite2D" parent="." unique_id=1647539550]
+modulate = Color(1, 1, 1, 0.75)
 z_index = 1
+position = Vector2(-51, -195)
+scale = Vector2(0.29837, 0.29837)
+texture = ExtResource("3_aura")
 
-[node name="Body" type="Sprite2D" parent="."]
-texture = ExtResource("4_body")
+[node name="Body" type="Sprite2D" parent="." unique_id=975071617]
 z_index = 2
+position = Vector2(-39.438168, -129.2509)
+scale = Vector2(0.31572407, 0.29730788)
+texture = ExtResource("4_body")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("..")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1134963994]

@@ -1,3 +1,4 @@
+@tool
 class_name BossAstriom
 extends Node2D
 ## Presentation-only layered Boss actor. Combat state remains in the M1-M5 Domain.
@@ -25,43 +26,38 @@ var _circle_angle: float = 0.0
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 func _ready() -> void:
+	_capture_layer_defaults()
+	if Engine.is_editor_hint():
+		return
 	home = position
-	_fit_layers()
 	_build_animations()
 	animation_player.root_node = NodePath("..")
 	animation_player.animation_finished.connect(_on_animation_finished)
 	play_idle()
 
 func _process(delta: float) -> void:
-	if _defeated or retired:
+	if Engine.is_editor_hint() or _defeated or retired:
 		return
 	_circle_angle = fposmod(_circle_angle + deg_to_rad(circle_rotation_speed) * delta, TAU)
 	(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", _circle_angle)
 
-func _fit_layers() -> void:
+# Sprite transforms are authored in boss_astriom.tscn and remain the runtime
+# source of truth, preserving edits made in Godot's 2D viewport.
+func _capture_layer_defaults() -> void:
 	if body.texture != null:
 		body.centered = true
-		_body_base_scale = Vector2.ONE * (visual_height / maxf(1.0, body.texture.get_height()))
-		_body_base_position = Vector2(0.0, -visual_height * 0.5)
-		body.scale = _body_base_scale
-		body.position = _body_base_position
+		_body_base_scale = body.scale
+		_body_base_position = body.position
 	if aura_back.texture != null:
 		aura_back.centered = true
-		_aura_base_scale = Vector2.ONE * (visual_height * 1.15 / maxf(1.0, aura_back.texture.get_height()))
-		aura_back.scale = _aura_base_scale
-		aura_back.position = Vector2(0.0, -visual_height * 0.58)
-		aura_back.modulate = _aura_base_modulate
+		_aura_base_scale = aura_back.scale
 		_aura_base_modulate = aura_back.modulate
 	if magic_circle.texture != null:
 		magic_circle.centered = true
 		# The shader selects and rotates the floor ring inside a fixed ellipse.
 		magic_circle.region_enabled = false
-		magic_circle.scale = Vector2(
-			visual_height * 1.55 * 1.45 / maxf(1.0, magic_circle.texture.get_width()),
-			visual_height * 0.36 * 1.45 / maxf(1.0, magic_circle.texture.get_height()))
-		magic_circle.position = Vector2(0.0, 5.0)
-		magic_circle.modulate.a = 0.9
-		(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", _circle_angle)
+		if magic_circle.material is ShaderMaterial:
+			(magic_circle.material as ShaderMaterial).set_shader_parameter("angle", _circle_angle)
 
 func _build_animations() -> void:
 	var library := AnimationLibrary.new()
