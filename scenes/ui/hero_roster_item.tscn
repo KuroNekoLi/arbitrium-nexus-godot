@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/hero_roster_item.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/ui/hero_roster_skin.tres" id="4_skin"]
 [ext_resource type="Texture2D" path="res://assets/ui/v35/ap_crystal.svg" id="2_6nfa4"]
 [ext_resource type="Texture2D" path="res://addons/kenney_fantasy_ui_borders/panel-border-000.png" id="3_gdpjj"]
 
@@ -46,6 +47,7 @@ corner_radius_bottom_left = 3
 custom_minimum_size = Vector2(260, 100)
 toggle_mode = true
 script = ExtResource("1")
+skin = ExtResource("4_skin")
 hp_bar = NodePath("Layout/Stats/HeroHPBar")
 mana_bar = NodePath("Layout/Stats/HeroMPBar")
 status_badges = NodePath("Layout/PortraitFrame/StatusOverlay/StatusBadges")
@@ -200,6 +202,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="FantasyBorder" type="NinePatchRect" parent="." unique_id=1740530032]
+modulate = Color(0.47058824, 0.57254905, 0.654902, 1)
 z_index = 1
 layout_mode = 0
 anchor_right = 1.0

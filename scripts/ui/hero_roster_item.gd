@@ -2,8 +2,19 @@
 class_name HeroRosterItem
 extends Button
 
-const Tokens = preload("res://scripts/battle/ui/components/battle_visual_tokens.gd")
+const RosterSkin = preload("res://scripts/ui/hero_roster_skin.gd")
 const BattleTranslations = preload("res://scripts/battle/presentation/battle_translations.gd")
+var _skin_resources: Array[Resource] = []
+var _portrait_base_modulate: Color = Color.WHITE
+var _subtitle_base_color: Color = Color.WHITE
+@export var skin: RosterSkin = preload("res://resources/ui/hero_roster_skin.tres"):
+	set(value):
+		_disconnect_skin()
+		skin = value
+		if is_inside_tree():
+			_watch_skin()
+		if is_node_ready():
+			_refresh_skin()
 
 signal hero_selected(hero_id: String)
 
@@ -28,12 +39,6 @@ var combo_strength: int = 0
 ## Callers derive it from the preparation controller; never from Domain mutation.
 var combo_state: String = ""
 @export var combo_mark: TextureRect
-const COMBO_PARTNER_TEXTURES: Dictionary = {
-	"IDLE": preload("res://assets/ui/combo/combo_partner_idle.png"),
-	"ELIGIBLE": preload("res://assets/ui/combo/combo_partner_eligible.png"),
-	"SELECTED": preload("res://assets/ui/combo/combo_partner_selected.png"),
-	"UNAVAILABLE": preload("res://assets/ui/combo/combo_partner_unavailable.png"),
-}
 const COMBO_TOOLTIP_KEYS: Dictionary = {
 	"IDLE": "CP2_POTENTIAL", "ELIGIBLE": "CP2_PARTNER",
 	"SELECTED": "CP2_SELECTED", "UNAVAILABLE": "CP2_UNAVAILABLE",
@@ -43,13 +48,51 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		BattleTranslations.install()
 	pressed.connect(_on_pressed)
+	_portrait_base_modulate = portrait.modulate
+	_subtitle_base_color = get_node("Layout/Stats/Subtitle").get_theme_color("font_color")
+	_watch_skin()
+	_refresh_skin()
+
+func _enter_tree() -> void:
+	if is_node_ready():
+		_watch_skin()
+
+func _exit_tree() -> void:
+	_disconnect_skin()
+
+func _disconnect_skin() -> void:
+	for resource: Resource in _skin_resources:
+		if resource.changed.is_connected(_on_skin_changed):
+			resource.changed.disconnect(_on_skin_changed)
+	_skin_resources.clear()
+
+func _watch_skin() -> void:
+	_disconnect_skin()
+	if skin == null:
+		return
+	_skin_resources.append(skin)
+	_skin_resources.append_array(skin.nested_resources())
+	for resource: Resource in _skin_resources:
+		resource.changed.connect(_on_skin_changed)
+
+func _on_skin_changed() -> void:
+	_watch_skin()
+	if is_node_ready():
+		_refresh_skin()
+
+func _refresh_skin() -> void:
+	if skin == null:
+		return
+	name_label.add_theme_color_override("font_color", accent if skin.use_actor_name_color else skin.name_color)
+	set_status_kind(status_kind)
+	set_combo_state(combo_state)
 
 func set_combo_indicator(strength: int) -> void:
 	set_combo_state("ELIGIBLE" if strength > 1 else "IDLE" if strength == 1 else "")
 
 func set_combo_state(state: String) -> void:
 	# Retired actors keep the retirement mark as the single visible authority.
-	if retired or not COMBO_PARTNER_TEXTURES.has(state):
+	if retired or skin == null or not COMBO_TOOLTIP_KEYS.has(state) or not skin.combo_icons.has(state):
 		state = ""
 	elif combat_status != "ACTIVE" and state != "":
 		# Incapacitated/Exhausted can never finish; never claim eligibility.
@@ -61,7 +104,7 @@ func set_combo_state(state: String) -> void:
 		combo_mark.texture = null
 		combo_mark.tooltip_text = ""
 	else:
-		combo_mark.texture = COMBO_PARTNER_TEXTURES[state]
+		combo_mark.texture = skin.combo_icons[state]
 		combo_mark.tooltip_text = tr(COMBO_TOOLTIP_KEYS[state])
 	_apply_style()
 
@@ -70,9 +113,8 @@ func configure(id: String, display_name: String, portrait_texture: Texture2D, ac
 	accent = accent_color
 	name_label.text = display_name
 	name_label.tooltip_text = display_name
-	name_label.add_theme_color_override("font_color", accent)
 	portrait.texture = portrait_texture
-	_apply_style()
+	_refresh_skin()
 
 ## Legacy interface retained; no persistent hand counter is rendered.
 func update_status(hp: int, max_hp: int, mana: int, max_mana: int, _hand_count: int) -> void:
@@ -102,13 +144,16 @@ func _update_resources(hp: int, max_hp: int, mana: int, max_mana: int) -> void:
 func set_status_kind(status: String) -> void:
 	status_kind = status
 	var subtitle: Label = get_node("Layout/Stats/Subtitle")
-	if status.is_empty():
+	if skin == null:
+		_apply_retirement()
+		return
+	var style: StyleBox = skin.status_surfaces.get(status)
+	if style == null:
 		subtitle.remove_theme_stylebox_override("normal")
 	else:
-		subtitle.add_theme_stylebox_override("normal", Tokens.status_pill(status))
-		subtitle.add_theme_color_override("font_color",
-			Tokens.STATUS_COLORS.get(status, Tokens.COMMAND_UTILITY).lightened(0.35))
-	portrait.modulate = Color(0.55, 0.5, 0.55) if status == "INCAPACITATED" else Color.WHITE
+		subtitle.add_theme_stylebox_override("normal", style)
+	subtitle.add_theme_color_override("font_color", skin.status_colors.get(status, _subtitle_base_color))
+	portrait.modulate = _portrait_base_modulate * (skin.downed_portrait_tint if status == "INCAPACITATED" else skin.active_portrait_tint)
 	_apply_retirement()
 
 func _apply_retirement() -> void:
@@ -116,7 +161,7 @@ func _apply_retirement() -> void:
 	retirement_mark.visible = retired
 	disabled = retired
 	if retired:
-		portrait.modulate = Color("646464")
+		portrait.modulate = _portrait_base_modulate * (skin.retired_portrait_tint if skin != null else Color("646464"))
 
 ## badges: Array of {"id": String, "icon": Texture2D, "tooltip": String}.
 ## Callers must source each entry from a real projection field.
@@ -152,24 +197,20 @@ func _on_pressed() -> void:
 	hero_selected.emit(hero_id)
 
 func _apply_style() -> void:
-	var fantasy_frame := get_node_or_null("FantasyBorder") as NinePatchRect
-	if fantasy_frame:
-		fantasy_frame.modulate = accent.lightened(0.35) if button_pressed else Color("#7892A7")
-	if not is_node_ready():
+	if not is_node_ready() or skin == null:
 		return
 	var portrait_frame := portrait.get_parent() as PanelContainer
-	portrait_frame.add_theme_stylebox_override("panel",
-		Tokens.hero_portrait_surface(accent, button_pressed))
-	add_theme_stylebox_override("normal", Tokens.hero_surface(accent, button_pressed))
-	add_theme_stylebox_override("hover", Tokens.hero_surface(accent, button_pressed, true))
-	add_theme_stylebox_override("pressed", Tokens.hero_surface(accent, true))
-	add_theme_stylebox_override("hover_pressed", Tokens.hero_surface(accent, true, true))
-	add_theme_stylebox_override("focus", Tokens.focus_ring())
-	if combo_strength > 1 and combat_status == "ACTIVE" and not retired:
-		var combo_style: StyleBoxFlat = Tokens.hero_surface(accent, button_pressed).duplicate()
-		combo_style.border_color = Color("dbb1ff")
-		combo_style.set_border_width_all(2)
-		combo_style.shadow_color = Color(0.63,0.3,0.8,0.35)
-		combo_style.shadow_size = 7
-		add_theme_stylebox_override("normal",combo_style)
-		add_theme_stylebox_override("pressed",combo_style)
+	_set_surface(portrait_frame, "panel", skin.portrait_surface(button_pressed, accent))
+	var combo_active: bool = combo_strength > 1 and combat_status == "ACTIVE" and not retired
+	_set_surface(self, "normal", skin.panel_surface("combo" if combo_active and skin.combo != null else "selected" if button_pressed else "normal", accent))
+	_set_surface(self, "hover", skin.panel_surface("selected_hover" if button_pressed else "hover", accent))
+	_set_surface(self, "pressed", skin.panel_surface("combo" if combo_active and skin.combo != null else "selected", accent))
+	_set_surface(self, "hover_pressed", skin.panel_surface("selected_hover", accent))
+	_set_surface(self, "focus", skin.focus)
+	_set_surface(self, "disabled", skin.disabled)
+
+func _set_surface(control: Control, slot: String, style: StyleBox) -> void:
+	if style == null:
+		control.remove_theme_stylebox_override(slot)
+	else:
+		control.add_theme_stylebox_override(slot, style)

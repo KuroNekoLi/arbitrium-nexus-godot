@@ -10,6 +10,8 @@ signal command_requested(kind: String, fields: Dictionary)
 @export var rp_value: Label
 @export var crystal_row: HBoxContainer
 const CRYSTAL = preload("res://assets/ui/v35/ap_crystal.svg")
+## Default-frame compatibility constant; the NinePatchRect owns its live tint.
+const FRAME_TINT: Color = Color("#B59C6D")
 
 func _ready() -> void:
 	$UtilityPanel/HBoxContainer/Button.pressed.connect(func() -> void: locale_requested.emit("en"))

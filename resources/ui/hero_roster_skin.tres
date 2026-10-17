@@ -1,0 +1,254 @@
+[gd_resource type="Resource" script_class="HeroRosterSkin" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_idle.png" id="1_0v5p0"]
+[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_eligible.png" id="2_l1sr6"]
+[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_selected.png" id="3_71eeg"]
+[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_unavailable.png" id="4_lr8su"]
+[ext_resource type="Script" path="res://scripts/ui/hero_roster_skin.gd" id="5_v4vwx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0cuuh"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.09019608, 0.20784314, 0.3137255, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85882354, 0.69411767, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.63, 0.3, 0.8, 0.35)
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ro7er"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.03137255, 0.09019608, 0.14509805, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.19215687, 0.28627452, 0.36078432, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_66dpo"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4392157, 0.84705883, 0.9647059, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1qx06"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.07058824, 0.15686275, 0.23529412, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.82478434, 0.6832941, 0.4037647, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.9372549, 0.7764706, 0.45882353, 0.18)
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5cql6"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.03137255, 0.09019608, 0.14509805, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.19215687, 0.28627452, 0.36078432, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swttq"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6092157, 0.50470585, 0.2982353, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pv5bg"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.02745098, 0.06666667, 0.11372549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9372549, 0.7764706, 0.45882353, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tdr2x"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.09019608, 0.20784314, 0.3137255, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.8803922, 0.7352941, 0.4509804, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.9372549, 0.7764706, 0.45882353, 0.42)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u3717"]
+content_margin_left = 7.0
+content_margin_top = 5.0
+content_margin_right = 7.0
+content_margin_bottom = 5.0
+bg_color = Color(0.09019608, 0.20784314, 0.3137255, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.8803922, 0.7352941, 0.4509804, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.9372549, 0.7764706, 0.45882353, 0.42)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e8mrc"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+content_margin_bottom = 0.0
+bg_color = Color(0.37254903, 0.79607844, 0.6039216, 0.2)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.37254903, 0.79607844, 0.6039216, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sriy6"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+content_margin_bottom = 0.0
+bg_color = Color(0.7058824, 0.54901963, 0.9411765, 0.2)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7058824, 0.54901963, 0.9411765, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eb1jm"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+content_margin_bottom = 0.0
+bg_color = Color(0.8784314, 0.654902, 0.36078432, 0.2)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8784314, 0.654902, 0.36078432, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a60bx"]
+content_margin_left = 6.0
+content_margin_top = 0.0
+content_margin_right = 6.0
+content_margin_bottom = 0.0
+bg_color = Color(0.8901961, 0.41568628, 0.47058824, 0.2)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8901961, 0.41568628, 0.47058824, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[resource]
+script = ExtResource("5_v4vwx")
+normal = SubResource("StyleBoxFlat_5cql6")
+hover = SubResource("StyleBoxFlat_1qx06")
+selected = SubResource("StyleBoxFlat_tdr2x")
+selected_hover = SubResource("StyleBoxFlat_u3717")
+focus = SubResource("StyleBoxFlat_66dpo")
+disabled = SubResource("StyleBoxFlat_ro7er")
+combo = SubResource("StyleBoxFlat_0cuuh")
+portrait_normal = SubResource("StyleBoxFlat_swttq")
+portrait_selected = SubResource("StyleBoxFlat_pv5bg")
+status_surfaces = Dictionary[String, StyleBox]({
+"ACTIVE": SubResource("StyleBoxFlat_e8mrc"),
+"CONCENTRATING": SubResource("StyleBoxFlat_sriy6"),
+"EXHAUSTED": SubResource("StyleBoxFlat_eb1jm"),
+"INCAPACITATED": SubResource("StyleBoxFlat_a60bx")
+})
+status_colors = Dictionary[String, Color]({
+"ACTIVE": Color(0.5921569, 0.867451, 0.74254906, 1),
+"CONCENTRATING": Color(0.8088235, 0.70686275, 0.9617647, 1),
+"EXHAUSTED": Color(0.9209804, 0.77568626, 0.58450985, 1),
+"INCAPACITATED": Color(0.92862743, 0.6201961, 0.65588236, 1)
+})
+combo_icons = Dictionary[String, Texture2D]({
+"ELIGIBLE": ExtResource("2_l1sr6"),
+"IDLE": ExtResource("1_0v5p0"),
+"SELECTED": ExtResource("3_71eeg"),
+"UNAVAILABLE": ExtResource("4_lr8su")
+})

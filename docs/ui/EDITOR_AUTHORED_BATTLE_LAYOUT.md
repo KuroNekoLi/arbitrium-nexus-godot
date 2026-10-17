@@ -31,9 +31,32 @@
 4. 要將 Boss 法陣往下移，選取 `Boss/MagicCircle`，增加其 Position Y；Boss 待機以保存的位置為基準。
 5. `VBoxContainer`／`HBoxContainer` 會排列其子節點。調整它們的 Separation、Custom Minimum Size、Size Flags 和外層位置；直接拖動受 Container 管理的子節點位置，仍會被 Container 排版。
 
+## 用 GUI 換角色欄外框與 UI
+
+開啟 `scenes/ui/hero_roster_item.tscn`，這是三個角色欄共用的視覺模板。主要設定都在 Inspector，不需修改 GDScript。
+
+| 修改項目 | 操作位置 |
+|---|---|
+| 換外框 PNG | 選取 `FantasyBorder` NinePatchRect，將圖片拖入 Texture；調整 Patch Margin 四邊以適應新框 |
+| 改外框顏色／隱藏裝飾框 | `FantasyBorder` → Visibility → Modulate／Visible；程式不再改寫它們 |
+| 一般、滑過、選取、焦點、失效與連攜框 | 選取根節點 `HeroRosterItem` → Skin → Panel Surfaces |
+| 用圖片作整塊角色欄背景／邊框 | Skin 對應狀態建立 `StyleBoxTexture`，設定 Texture 和 Texture Margin；如不需額外裝飾，隱藏 FantasyBorder |
+| 用純色、圓角、邊線、陰影 | Skin 對應狀態編輯 `StyleBoxFlat` |
+| 頭像周圍的小框 | Skin → Portrait Surfaces → Portrait Normal／Selected |
+| 自訂選取框顏色，不跟隨角色色 | Skin → Identity Colors → 關閉 Tint Flat Surfaces With Actor，再編輯各 StyleBoxFlat；StyleBoxTexture 一律保留自訂圖片 |
+| 角色名字顏色 | Skin → Identity Colors → 關閉 Use Actor Name Color，設定 Name Color |
+| 字體、字級、HP／MP 文字色 | 選取對應 Label，修改 Theme Overrides／Theme |
+| HP／MP 條的底圖、填色與厚度 | `Layout/Stats/HeroHPBar`、`HeroMPBar` 的 Theme Overrides → Styles、Custom Minimum Size |
+| 可行動／詠唱／失能／耗竭標籤 | Skin → Status Pills → Status Surfaces、Status Colors；保留既有狀態 ID 作為 Dictionary key |
+| 連攜標記圖片 | Skin → Combo Indicators → Combo Icons；保留 IDLE／ELIGIBLE／SELECTED／UNAVAILABLE key |
+
+預設 Skin 是 `resources/ui/hero_roster_skin.tres`。直接修改會影響所有共用它的角色欄；要製作另一套 UI，可先在 Inspector 對 Skin **Make Unique／設為獨立**，或另存 `.tres` 再指派。整個角色欄也可另存成新 `.tscn`，再到 `PartyStatusPanel` 的 **Roster Item Scene** 換成新模板。
+
+Skin 與其 StyleBox 的修改會更新預覽；選角、狀態投影與語言切換會選用已設定的資源，避免重新生成固定皮膚。Flat 樣式的角色色功能預設保留；關閉該選項便採用資源內指定顏色。腳本只更新文字數值、可用狀態和指派對應樣式，不改動共享的 Skin 模板。
+
 `Body`／`StateCG` 的位置、縮放與旋轉可以保存；圖片尺寸正規化與動畫腳底對齊由鎖定的 `AnimationFit`／`StateFit` 和 Sprite offset 處理。調整角色外觀來源、裁切、標準顯示高度時，使用角色的 `appearance` Resource 與 `visual_height` Inspector 欄位；SpriteFrames、texture、offset、visible 和戰鬥狀態色由程式依外觀／戰鬥資料更新。
 
-固定指令的字級與樣式存於按鈕節點。`Commands/Auto Fit Titles` 預設開啟，會在空間不足時縮小標題；需要完全使用指定字級可關閉它。選取、失能等狀態色仍由呈現腳本依狀態更新。
+固定指令的字級與樣式存於按鈕節點。`Commands/Auto Fit Titles` 預設開啟，會在空間不足時縮小標題；需要完全使用指定字級可關閉它。角色欄的選取、失能等樣式依 Skin 資源切換；其餘元件的資料與情境式樣式仍由對應呈現腳本管理。
 
 `Design` 是 1280×720 的設計畫布，最外層仍會依視窗等比例縮放與置中。請調整其內的元件；這個整體縮放機制不改寫各面板／角色的本地座標。目標按鈕會追蹤各角色的 `TargetRegion`，終式標記也會轉換到正確的彈窗座標。
 
