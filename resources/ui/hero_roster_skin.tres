@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="HeroRosterSkin" format=3]
+[gd_resource type="Resource" script_class="HeroRosterSkin" format=3 uid="uid://c7spprqplerpm"]
 
-[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_idle.png" id="1_0v5p0"]
-[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_eligible.png" id="2_l1sr6"]
-[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_selected.png" id="3_71eeg"]
-[ext_resource type="Texture2D" path="res://assets/ui/combo/combo_partner_unavailable.png" id="4_lr8su"]
-[ext_resource type="Script" path="res://scripts/ui/hero_roster_skin.gd" id="5_v4vwx"]
+[ext_resource type="Texture2D" uid="uid://bmvojpy0k0hjn" path="res://assets/ui/combo/combo_partner_idle.png" id="1_0v5p0"]
+[ext_resource type="Texture2D" uid="uid://c80o1666btfh4" path="res://assets/ui/combo/combo_partner_eligible.png" id="2_l1sr6"]
+[ext_resource type="Texture2D" uid="uid://b1mqqqdp38iev" path="res://assets/ui/combo/combo_partner_selected.png" id="3_71eeg"]
+[ext_resource type="Texture2D" uid="uid://bsm3yr07gdxql" path="res://assets/ui/combo/combo_partner_unavailable.png" id="4_lr8su"]
+[ext_resource type="Script" uid="uid://c6w8am8pla430" path="res://scripts/ui/hero_roster_skin.gd" id="5_v4vwx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0cuuh"]
 content_margin_left = 7.0

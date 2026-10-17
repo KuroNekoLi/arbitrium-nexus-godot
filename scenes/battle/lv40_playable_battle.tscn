@@ -1,6 +1,651 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://4q6i7s8phpj7"]
 
 [ext_resource type="PackedScene" path="res://scenes/battle/battle_screen.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://cjnpoix2fq2vs" path="res://assets/characters/tsumugi/atlas.png" id="2_uebtb"]
+[ext_resource type="Texture2D" uid="uid://benjgrt4lw4wi" path="res://assets/characters/tsumugi/cg_states.png" id="3_pyv3r"]
+[ext_resource type="Texture2D" uid="uid://dnfktcuposkue" path="res://assets/characters/akane/atlas.png" id="4_llsxm"]
+[ext_resource type="Texture2D" uid="uid://b4g36mdmx1l80" path="res://assets/characters/akane/cg_states.png" id="5_ne8yp"]
+[ext_resource type="Texture2D" uid="uid://de8b8dy378l6e" path="res://assets/characters/ren/atlas.png" id="6_y72ew"]
+[ext_resource type="Texture2D" uid="uid://ca1xoa4o3mjt1" path="res://assets/characters/ren/cg_states.png" id="7_8trs8"]
+[ext_resource type="Shader" uid="uid://tgdj88utd36c" path="res://shaders/boss_ground_circle.gdshader" id="8_oqjgv"]
 
-[node name="Lv40PlayableBattle" instance=ExtResource("1")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_uebtb"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(0, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pyv3r"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(418, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_llsxm"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(836, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ne8yp"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(0, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y72ew"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(418, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8trs8"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(836, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oqjgv"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(0, 800, 418, 454)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wquxa"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(418, 800, 418, 454)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5s1l"]
+atlas = ExtResource("2_uebtb")
+region = Rect2(836, 800, 418, 454)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4ya83"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uebtb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pyv3r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_llsxm")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ne8yp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y72ew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8trs8")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oqjgv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wquxa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d5s1l")
+}],
+"loop": 0,
+"name": &"strike",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pi0a2"]
+atlas = ExtResource("3_pyv3r")
+region = Rect2(0, 512, 512, 768)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ou2kv"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(0, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bmuxq"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(418, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4320"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(836, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8vgj4"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(0, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nlcob"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(418, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_57ick"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(836, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ngk4"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(0, 800, 418, 454)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jtnpk"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(418, 800, 418, 454)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxhot"]
+atlas = ExtResource("4_llsxm")
+region = Rect2(836, 800, 418, 454)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xms6m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ou2kv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bmuxq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b4320")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8vgj4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nlcob")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_57ick")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ngk4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jtnpk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wxhot")
+}],
+"loop": 0,
+"name": &"strike",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eclko"]
+atlas = ExtResource("5_ne8yp")
+region = Rect2(0, 504, 512, 776)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_120gr"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(0, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rnj3v"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(418, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ebis8"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(836, 0, 418, 418)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r6lij"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(0, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_42mjn"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(418, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u21h2"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(836, 418, 418, 382)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w88q6"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(0, 800, 418, 454)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_654i0"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(418, 800, 418, 454)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2n6j"]
+atlas = ExtResource("6_y72ew")
+region = Rect2(836, 800, 418, 454)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x3xq7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_120gr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rnj3v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ebis8")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r6lij")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_42mjn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u21h2")
+}],
+"loop": 1,
+"name": &"run",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w88q6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_654i0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2n6j")
+}],
+"loop": 0,
+"name": &"strike",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iot2d"]
+atlas = ExtResource("7_8trs8")
+region = Rect2(0, 536, 512, 744)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rjpi3"]
+resource_local_to_scene = true
+shader = ExtResource("8_oqjgv")
+shader_parameter/angle = 0.0
+
+[node name="Lv40PlayableBattle" unique_id=1066823914 instance=ExtResource("1")]
 encounter_profile = "lv40_playable"
+
+[node name="Design" parent="." index="0"]
+anchors_preset = 0
+
+[node name="Background" parent="Design" index="0"]
+layout_mode = 0
+
+[node name="C" parent="Design/Arena" index="0"]
+position = Vector2(438, 421)
+
+[node name="AnimationFit" parent="Design/Arena/C/Visuals" index="0"]
+scale = Vector2(0.38995215, 0.38995215)
+
+[node name="Body" parent="Design/Arena/C/Visuals/AnimationFit" index="0"]
+visible = false
+modulate = Color(0.98, 1, 1, 1)
+sprite_frames = SubResource("SpriteFrames_4ya83")
+animation = &"idle"
+frame_progress = 0.58333784
+centered = false
+offset = Vector2(-209, -411)
+
+[node name="StateFit" parent="Design/Arena/C/Visuals" index="1"]
+scale = Vector2(0.21223958, 0.21223958)
+
+[node name="StateCG" parent="Design/Arena/C/Visuals/StateFit" index="0"]
+modulate = Color(0.98, 1, 1, 1)
+texture = SubResource("AtlasTexture_pi0a2")
+offset = Vector2(0, -384)
+
+[node name="TargetRegion" parent="Design/Arena/C" index="2"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 100.0
+offset_bottom = 180.0
+
+[node name="B" parent="Design/Arena" index="1"]
+position = Vector2(500, 420)
+
+[node name="AnimationFit" parent="Design/Arena/B/Visuals" index="0"]
+scale = Vector2(0.430622, 0.430622)
+
+[node name="Body" parent="Design/Arena/B/Visuals/AnimationFit" index="0"]
+visible = false
+modulate = Color(1, 0.97, 0.98, 1)
+sprite_frames = SubResource("SpriteFrames_xms6m")
+animation = &"idle"
+frame_progress = 0.58333784
+centered = false
+offset = Vector2(-209, -410)
+
+[node name="StateFit" parent="Design/Arena/B/Visuals" index="1"]
+scale = Vector2(0.23195876, 0.23195876)
+
+[node name="StateCG" parent="Design/Arena/B/Visuals/StateFit" index="0"]
+modulate = Color(1, 0.97, 0.98, 1)
+texture = SubResource("AtlasTexture_eclko")
+offset = Vector2(0, -388)
+
+[node name="TargetRegion" parent="Design/Arena/B" index="2"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 100.0
+offset_bottom = 180.0
+
+[node name="AnimationFit" parent="Design/Arena/A/Visuals" index="0"]
+scale = Vector2(0.4784689, 0.4784689)
+
+[node name="Body" parent="Design/Arena/A/Visuals/AnimationFit" index="0"]
+visible = false
+sprite_frames = SubResource("SpriteFrames_x3xq7")
+animation = &"idle"
+frame_progress = 0.58333784
+centered = false
+offset = Vector2(-209, -410)
+
+[node name="StateFit" parent="Design/Arena/A/Visuals" index="1"]
+scale = Vector2(0.26881722, 0.26881722)
+
+[node name="StateCG" parent="Design/Arena/A/Visuals/StateFit" index="0"]
+texture = SubResource("AtlasTexture_iot2d")
+offset = Vector2(0, -372)
+
+[node name="TargetRegion" parent="Design/Arena/A" index="2"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 100.0
+offset_bottom = 180.0
+
+[node name="Boss" parent="Design/Arena" index="3"]
+position = Vector2(876.99994, 417)
+scale = Vector2(0.81353307, 0.8615283)
+
+[node name="MagicCircle" parent="Design/Arena/Boss" index="0" unique_id=855093991]
+material = SubResource("ShaderMaterial_rjpi3")
+
+[node name="TargetRegion" parent="Design/Arena/Boss" index="4" unique_id=424724982]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 250.0
+offset_bottom = 335.0
+
+[node name="HUD" parent="Design" index="2"]
+layout_mode = 0
+
+[node name="Label" parent="Design/HUD/TopBar/ResourcePanel/HBoxContainer" index="0" unique_id=400619295]
+text = "AP 6  ·  RP 0"
+
+[node name="APCaption" parent="Design/HUD/TopBar/ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer" index="0" unique_id=410621293]
+text = "隊伍 AP"
+metadata/translation_key = "BATTLE_TEAM_AP"
+
+[node name="RPValue" parent="Design/HUD/TopBar/ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer" index="1" unique_id=1172003629]
+text = "RP 0"
+
+[node name="APValue" parent="Design/HUD/TopBar/ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2" index="0" unique_id=1702530658]
+text = "6 AP"
+
+[node name="APCrystalRow" parent="Design/HUD/TopBar/ResourcePanel/HBoxContainer/VBoxContainer/HBoxContainer2" index="1" unique_id=1196120152]
+tooltip_text = "AP 6  ·  RP 0"
+
+[node name="Label" parent="Design/HUD/TopBar/PhasePanel/HBoxContainer" index="0" unique_id=1095800657]
+text = "玩家階段   ·   回合 1"
+metadata/translation_key = "BATTLE_TITLE"
+
+[node name="Button3" parent="Design/HUD/TopBar/UtilityPanel/HBoxContainer" index="2" unique_id=1472693727]
+text = "保存重播"
+metadata/translation_key = "BATTLE_SAVE"
+
+[node name="PreferencesDisclosure" parent="Design/HUD/TopBar" index="3" unique_id=1723802253]
+tooltip_text = "BATTLE_REDUCED · BATTLE_MUTE"
+
+[node name="Conditions" parent="Design/HUD" index="1" unique_id=716679526]
+visible = false
+
+[node name="Command_BASIC_ATTACK_RESOURCE_ONLY_0" parent="Design/HUD/Commands/CommandContent" index="0" unique_id=1046096858]
+text = "普通攻擊"
+metadata/translation_key = "BATTLE_BASIC"
+
+[node name="Subtitle" parent="Design/HUD/Commands/CommandContent/Command_BASIC_ATTACK_RESOURCE_ONLY_0" index="1" unique_id=108056695]
+text = "本階段首擊回復 MP"
+metadata/translation_key = "BATTLE_BASIC_SUB"
+
+[node name="Command_UNIMPLEMENTED_1" parent="Design/HUD/Commands/CommandContent/UtilityRow" index="0" unique_id=315899045]
+text = "解析"
+metadata/translation_key = "BATTLE_ANALYZE"
+
+[node name="Subtitle" parent="Design/HUD/Commands/CommandContent/UtilityRow/Command_UNIMPLEMENTED_1" index="1" unique_id=1470658995]
+text = "尚未實作"
+metadata/translation_key = "BATTLE_UNIMPLEMENTED_SUB"
+
+[node name="Command_UNIMPLEMENTED_2" parent="Design/HUD/Commands/CommandContent/UtilityRow" index="1" unique_id=512583379]
+text = "道具"
+metadata/translation_key = "BATTLE_ITEM"
+
+[node name="Subtitle" parent="Design/HUD/Commands/CommandContent/UtilityRow/Command_UNIMPLEMENTED_2" index="1" unique_id=1808105509]
+text = "尚未實作"
+metadata/translation_key = "BATTLE_UNIMPLEMENTED_SUB"
+
+[node name="Command_FREE_SWAP_3" parent="Design/HUD/Commands/CommandContent" index="2" unique_id=805343053]
+text = "免費換牌"
+metadata/translation_key = "BATTLE_SWAP"
+
+[node name="Subtitle" parent="Design/HUD/Commands/CommandContent/Command_FREE_SWAP_3" index="1" unique_id=1664788154]
+text = "0 AP · 每階段 1 次"
+metadata/translation_key = "BATTLE_SWAP_SUB"
+
+[node name="Command_ACTIVATE_LAST_SPELL_M4_4" parent="Design/HUD/Commands/CommandContent/EmphasisRow" index="0" unique_id=339138063]
+text = "終極法術"
+metadata/translation_key = "BATTLE_LAST"
+
+[node name="Subtitle" parent="Design/HUD/Commands/CommandContent/EmphasisRow/Command_ACTIVATE_LAST_SPELL_M4_4" index="1" unique_id=228038332]
+text = "不可逆的終式"
+metadata/translation_key = "BATTLE_LAST_SUB"
+
+[node name="Command_END_PLAYER_PHASE_5" parent="Design/HUD/Commands/CommandContent/EmphasisRow" index="1" unique_id=1633180057]
+text = "結束回合"
+metadata/translation_key = "BATTLE_END"
+
+[node name="Subtitle" parent="Design/HUD/Commands/CommandContent/EmphasisRow/Command_END_PLAYER_PHASE_5" index="1" unique_id=1579670965]
+text = "結束我方階段"
+metadata/translation_key = "BATTLE_END_SUB"
+
+[node name="Label" parent="Design/HUD/Commands/CommandContent" index="4" unique_id=891393501]
+text = "整合展示 · 暫定內容"
+metadata/translation_key = "BATTLE_PROTOTYPE"
+
+[node name="BossName" parent="Design/HUD/EnemyStatus/BossContent/BossTitlePlate" index="1" unique_id=1698105924]
+text = "仲裁核心"
+metadata/translation_key = "BATTLE_TITLE"
+
+[node name="BossHPText" parent="Design/HUD/EnemyStatus/BossContent/BossHPSection" index="0" unique_id=1198082475]
+text = "HP 2100 / 2700"
+
+[node name="BossHPBar" parent="Design/HUD/EnemyStatus/BossContent/BossHPSection" index="1" unique_id=941853113]
+max_value = 2700.0
+value = 2100.0
+
+[node name="BossBreakText" parent="Design/HUD/EnemyStatus/BossContent/BossBreakSection" index="0" unique_id=1416132376]
+text = "Break 16 / 22"
+
+[node name="BossBreakBar" parent="Design/HUD/EnemyStatus/BossContent/BossBreakSection" index="1" unique_id=502795734]
+max_value = 22.0
+value = 16.0
+
+[node name="IntentHeading" parent="Design/HUD/EnemyStatus/BossContent/PublishedIntentPanel/IntentRow/IntentContent/IntentHeadingRow" index="1" unique_id=1563545571]
+text = "敵方意圖"
+metadata/translation_key = "BATTLE_INTENT"
+
+[node name="IntentDetail" parent="Design/HUD/EnemyStatus/BossContent/PublishedIntentPanel/IntentRow/IntentContent" index="2" unique_id=979856971]
+text = "敵人公開意圖（預覽資料）"
+
+[node name="DetailsHeading" parent="Design/HUD/Context/VBoxContainer/DetailScroll/VBoxContainer" index="0" unique_id=779482368]
+text = "符卡詳情"
+metadata/translation_key = "BATTLE_DETAILS"
+
+[node name="Label" parent="Design/HUD/Context/VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer" index="0" unique_id=934335615]
+text = "選擇卡牌或基本指令"
+metadata/translation_key = "BATTLE_SELECT"
+
+[node name="Label3" parent="Design/HUD/Context/VBoxContainer/DetailScroll/VBoxContainer/ActionSummary/VBoxContainer" index="2" unique_id=1156433236]
+text = "選擇行動，再指定目標"
+metadata/translation_key = "BATTLE_CONTEXT_EMPTY"
+
+[node name="Label" parent="Design/HUD/Context/VBoxContainer/DetailScroll/VBoxContainer/DetailsInset" index="0" unique_id=212212634]
+text = "選擇卡牌或基本指令"
+metadata/translation_key = "BATTLE_SELECT"
+
+[node name="OptionButton" parent="Design/HUD/Context/VBoxContainer/DetailScroll/VBoxContainer" index="4" unique_id=550710860]
+popup/item_0/text = "BATTLE_CHANTLESS"
+popup/item_1/text = "BATTLE_FULL"
+metadata/translation_key = "BATTLE_CHANTLESS"
+
+[node name="CheckButton" parent="Design/HUD/Context/VBoxContainer/DetailScroll/VBoxContainer" index="5" unique_id=157804722]
+text = "使用連攜"
+metadata/translation_key = "BATTLE_COMBO"
+
+[node name="ConfirmButton" parent="Design/HUD/Context/VBoxContainer/ActionButtons" index="0" unique_id=185700329]
+text = "確認"
+metadata/translation_key = "BATTLE_CONFIRM"
+
+[node name="CancelButton" parent="Design/HUD/Context/VBoxContainer/ActionButtons" index="1" unique_id=789000256]
+text = "返回"
+metadata/translation_key = "BATTLE_CANCEL"
+
+[node name="LogHeading" parent="Design/HUD/BattleLogPanel/VBoxContainer" index="0" unique_id=1934884489]
+text = "戰鬥紀錄"
+metadata/translation_key = "BATTLE_LOG"
+
+[node name="Label" parent="Design/HUD/BattleLogPanel/VBoxContainer/LogScroll/LogContent" index="2" unique_id=1690244602]
+text = "行動後將在此顯示戰鬥紀錄"
+metadata/translation_key = "BATTLE_LOG_EMPTY"
+
+[node name="Label" parent="Design/HUD" index="7" unique_id=1164795027]
+text = "EDITOR MOCK_ONLY — 不會建立戰鬥／付款／重播"
+
+[node name="CheckButton" parent="Design/HUD/PresentationPreferences/PreferencesContent" index="0" unique_id=1625007463]
+text = "減少動態"
+metadata/translation_key = "BATTLE_REDUCED"
+
+[node name="Button" parent="Design/HUD/PresentationPreferences/PreferencesContent" index="1" unique_id=439095596]
+text = "跳過演出"
+metadata/translation_key = "BATTLE_SKIP"
+
+[node name="CheckButton2" parent="Design/HUD/PresentationPreferences/PreferencesContent" index="2" unique_id=569727040]
+text = "靜音"
+metadata/translation_key = "BATTLE_MUTE"
+
+[node name="EmptyState" parent="Design/HUD/HandView" index="0" unique_id=487636202]
+text = "目前沒有手牌"
+metadata/translation_key = "BATTLE_EMPTY"
+
+[node name="TargetBoss" parent="Design/HUD/TargetHitRegions" index="0" unique_id=362123657]
+offset_left = 876.99994
+offset_top = 417.0
+offset_right = 1080.3832
+offset_bottom = 705.61194
+
+[node name="TargetA" parent="Design/HUD/TargetHitRegions" index="1" unique_id=1947574107]
+offset_left = 390.0
+offset_top = 458.0
+offset_right = 490.0
+offset_bottom = 638.0
+
+[node name="TargetB" parent="Design/HUD/TargetHitRegions" index="2" unique_id=880843153]
+offset_left = 500.0
+offset_top = 420.0
+offset_right = 600.0
+offset_bottom = 600.0
+
+[node name="TargetC" parent="Design/HUD/TargetHitRegions" index="3" unique_id=1105465670]
+offset_left = 438.0
+offset_top = 421.0
+offset_right = 538.0
+offset_bottom = 601.0
+
+[node name="Button" parent="Design/HUD/Result/VBoxContainer" index="1" unique_id=1163663368]
+text = "重新開始戰鬥"
+metadata/translation_key = "BATTLE_RESTART"
+
+[node name="Label" parent="Design/HUD/CommandConfirmation/VBoxContainer" index="0" unique_id=1981984421]
+text = "確認"
+metadata/translation_key = "BATTLE_CONFIRM"
+
+[node name="Label" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer/HBoxContainer/VBoxContainer" index="0" unique_id=1472004529]
+text = "終極法術"
+metadata/translation_key = "BATTLE_LAST"
+
+[node name="Label" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer" index="0" unique_id=1960265496]
+text = "AP 消耗"
+metadata/translation_key = "LAST_AP"
+
+[node name="Label" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer2" index="0" unique_id=221718086]
+text = "MP 消耗"
+metadata/translation_key = "LAST_MP"
+
+[node name="Label" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer/HBoxContainer2/VBoxContainer3" index="0" unique_id=200508836]
+text = "結算時機"
+metadata/translation_key = "LAST_TIMING"
+
+[node name="Label3" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer" index="4" unique_id=1950366386]
+text = "啟動後不可取消 · 啟動前仍可返回"
+metadata/translation_key = "LAST_IRREVERSIBLE"
+
+[node name="Button" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer/ActivationFooter" index="0" unique_id=1934927172]
+text = "啟動終極法術"
+metadata/translation_key = "BATTLE_LAST_ACTIVATE"
+
+[node name="Button2" parent="Design/HUD/LastSpellPreview/LastSpellInformation/VBoxContainer/ActivationFooter" index="1" unique_id=733618748]
+text = "取消預覽"
+metadata/translation_key = "BATTLE_LAST_CANCEL"
+
+[node name="Label" parent="Design/HUD/LastSpellPreview/LastSpellSummary/VBoxContainer" index="0" unique_id=1149735387]
+text = "終極法術"
+metadata/translation_key = "BATTLE_LAST"
+
+[node name="Label2" parent="Design/HUD/LastSpellPreview/LastSpellSummary/VBoxContainer/ScrollContainer/VBoxContainer" index="1" unique_id=1050959027]
+text = "僅限完整詠唱。提交後不可取消，釋放前生命歸零即失效，成功後本戰力竭。"
+metadata/translation_key = "BATTLE_LAST_WARNING"
+
+[node name="Label" parent="Design/HUD/ComboConfirmation/VBoxContainer" index="0" unique_id=1253077897]
+text = "連攜預備"
+metadata/translation_key = "CP2_PREPARATION"
+
+[node name="Button" parent="Design/HUD/ComboConfirmation/VBoxContainer/HBoxContainer3" index="0" unique_id=136849088]
+text = "返回"
+metadata/translation_key = "BATTLE_CANCEL"
+
+[node name="Button2" parent="Design/HUD/ComboConfirmation/VBoxContainer/HBoxContainer3" index="1" unique_id=706942146]
+text = "普通施放"
+metadata/translation_key = "CP2_NORMAL"
+
+[node name="Button3" parent="Design/HUD/ComboConfirmation/VBoxContainer/HBoxContainer3" index="2" unique_id=511758652]
+text = "發動連攜"
+metadata/translation_key = "CP2_COMMIT"
+
+[editable path="Design/Arena/C"]
+[editable path="Design/Arena/B"]
+[editable path="Design/Arena/A"]
+[editable path="Design/Arena/Boss"]
+[editable path="Design/HUD"]
+[editable path="Design/HUD/TopBar"]
+[editable path="Design/HUD/PartyStatusPanel"]
+[editable path="Design/HUD/Commands"]
+[editable path="Design/HUD/EnemyStatus"]
+[editable path="Design/HUD/Context"]
+[editable path="Design/HUD/BattleLogPanel"]
+[editable path="Design/HUD/HandView"]
+[editable path="Design/HUD/TargetHitRegions"]
+[editable path="Design/HUD/ReactionQueue"]
+[editable path="Design/HUD/LastSpellPreview"]
+[editable path="Design/HUD/ComboConfirmation"]

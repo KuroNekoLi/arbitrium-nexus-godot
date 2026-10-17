@@ -17,14 +17,14 @@ script = ExtResource("1_script")
 [node name="MagicCircle" type="Sprite2D" parent="." unique_id=855093991]
 modulate = Color(1, 1, 1, 0.9)
 material = SubResource("GroundMaterial")
-position = Vector2(-23.000002, -30)
+position = Vector2(-35, 55)
 scale = Vector2(0.43868908, 0.10665513)
 texture = ExtResource("2_magic_circle")
 
 [node name="AuraBack" type="Sprite2D" parent="." unique_id=1647539550]
 modulate = Color(1, 1, 1, 0.75)
 z_index = 1
-position = Vector2(-51, -195)
+position = Vector2(-35, -293)
 scale = Vector2(0.29837, 0.29837)
 texture = ExtResource("3_aura")
 
@@ -36,7 +36,9 @@ texture = ExtResource("4_body")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1134963994]
 
-[node name="TargetRegion" type="Control" parent="."]
+[node name="TargetRegion" type="Control" parent="." unique_id=424724982]
+layout_mode = 3
+anchors_preset = 0
 offset_left = -123.0
 offset_top = -330.0
 offset_right = 127.0
