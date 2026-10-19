@@ -38,13 +38,13 @@
 
 | 群組 | 學科 |
 |---|---|
-| 自然物質 6 | 炎熱／水流／寒霜／風氣／地脈／雷電 |
-| 光影 2 | 光輝／幽影 |
-| 生命靈魂 2 | 生命／靈魂 |
-| 時空法則 3 | 時間／空間／因果律 |
-| 心智感知 4 | 認知／感覺／情緒／夢境 |
-| 構造規約 3 | 奧術／契約／秩序 |
-| 形上可能性 4 | 命運／虛無／存在／混沌 |
+| 自然物質 6 | 炎熱 PYROMANCY／水流 HYDROMANCY／寒霜 CRYOMANCY／風氣 AEROMANCY／地脈 GEOMANCY／雷電 FULGURMANCY |
+| 光影 2 | 光輝 LUMINOMANCY／幽影 UMBROMANCY |
+| 生命靈魂 2 | 生命 VITAMANCY／靈魂 SOULCRAFT |
+| 時空法則 3 | 時間 CHRONOMANCY／空間 SPATIOMANCY／因果律 CAUSALITY |
+| 心智感知 4 | 認知 COGNITION／感覺 SENSATION／情緒 EMOTION／夢境 ONEIROMANCY |
+| 構造規約 3 | 奧術 ARCANUM／契約 CONTRACT／秩序 NOMOMANCY |
+| 形上可能性 4 | 命運 FATEMANCY／虛無 NIHILOMANCY／存在 ONTOMANCY／混沌 CHAOMANCY |
 
 **24 個學科名稱本身仍為內容候選**。要讓一種研究領域變成可玩學科，必須有具辨識度的卡牌選擇；不能為了湊數給時間、秩序、夢境、存在四系各發一張完全同效果的護盾。時間＝持續／時序；因果＝條件到結果；命運＝可能性傾向；混沌＝合法變化分支；彼此不同，也都不能無授權回溯已結算事件。
 
