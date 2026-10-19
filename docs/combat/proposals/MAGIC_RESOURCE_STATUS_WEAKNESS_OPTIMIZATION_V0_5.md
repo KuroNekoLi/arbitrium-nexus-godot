@@ -1,5 +1,7 @@
 # Arbitrium Nexus — 資源魔法、異常狀態與弱點：最終優化建議 v0.5
 
+> **歷史提案（2026-10-19）**：目前最新方向請以 [魔法系統統一設計 v0.7](MAGIC_SYSTEM_UNIFIED_V0_7.md) 為準；本文保留先前的候選設計與推導，不應當成另一份同時生效的戰鬥規則。正式 Gameplay 仍由 `docs/combat/README.md` 及其已核准規則管轄。
+
 > 2026-10-19 ｜ **DESIGN PROPOSAL / NOT USER APPROVED / NOT IMPLEMENTED**
 > **整合母版**：[魔法系統統一設計 v0.4](MAGIC_SYSTEM_INTEGRATED_DESIGN_V0_4.md)。本文件補充資源操縱、狀態、弱點的具體設計，**不取代已核准的戰鬥規則**。
 > **現行 SoT**：[戰鬥總覽](../README.md) → [回合與行動點數](../回合與行動點數系統.md)、[傷害與異常狀態](../傷害與異常狀態系統.md)、[失衡與破綻](../失衡與破綻系統.md)、[詠唱與干擾](../詠唱與魔法干擾系統.md)、[角色連攜](../角色連攜系統.md)。以 master `8e16c8f4e7205d256b230953fd9dda07087a90a1` 現行規則核對。

@@ -1,5 +1,7 @@
 # Arbitrium Nexus — 控制異常、限時 AP 與敵方行動架構評估 v0.6
 
+> **歷史提案（2026-10-19）**：目前最新方向請以 [魔法系統統一設計 v0.7](MAGIC_SYSTEM_UNIFIED_V0_7.md) 為準；本文保留先前的候選設計與推導，不應當成另一份同時生效的戰鬥規則。正式 Gameplay 仍由 `docs/combat/README.md` 及其已核准規則管轄。
+
 > 日期：2026-10-19 ｜ 狀態：**PROPOSED / NOT APPROVED / NOT IMPLEMENTED**  
 > 上游：[統一魔法 v0.4](MAGIC_SYSTEM_INTEGRATED_DESIGN_V0_4.md)＋[資源與異常／弱點 v0.5](MAGIC_RESOURCE_STATUS_WEAKNESS_OPTIMIZATION_V0_5.md)。此文件只設計／比較，不更改兩版已記錄的現行戰鬥規則。  
 > 使用者提出的新方向（**需求建議，並非完整數值核准**）：(1) Boss 可免疫某些不能行動的異常，控制也可以機率觸發；(2) 類似 `5AP+5MP` 的高成本 SP，可讓未來 1／2／3 個玩家階段擁有更高 AP 額度，但不能永久強化；(3) 重新比較現有 EnemyIntent 敵方系統與「敵人也有 AP／SP」的架構。

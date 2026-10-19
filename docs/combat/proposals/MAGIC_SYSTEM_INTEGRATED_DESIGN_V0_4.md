@@ -1,6 +1,8 @@
 # Arbitrium Nexus — 統一魔法系統設計 v0.4
 ## 學科 × 傷害共鳴 × Buff／Debuff × Overload × Weakness／Break／Exposed
 
+> **歷史提案（2026-10-19）**：目前最新方向請以 [魔法系統統一設計 v0.7](MAGIC_SYSTEM_UNIFIED_V0_7.md) 為準；本文保留先前的候選設計與推導，不應當成另一份同時生效的戰鬥規則。正式 Gameplay 仍由 `docs/combat/README.md` 及其已核准規則管轄。
+
 > **狀態：INTEGRATED DESIGN PROPOSAL / NOT A NEW COMBAT RULES BASELINE / NOT IMPLEMENTED**  
 > 更新：2026-10-19　｜　Repo 基準：`master` `8e16c8f4e7205d256b230953fd9dda07087a90a1`  
 > 本文件**統一替代先前 v0.1、v0.2、24 學科矩陣 v0.1 和 v0.3 的閱讀入口**，舊版本保留為研究歷史。  
