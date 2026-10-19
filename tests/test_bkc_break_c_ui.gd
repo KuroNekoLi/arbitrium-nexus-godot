@@ -1,7 +1,7 @@
 extends SceneTree
 ## BKC-04: read-only Boss HUD / localization contract, 2 locales x 2 sizes.
 ## Synthetic branch variants are MOCK_ONLY; actual battlefield state is immutable.
-const Scene = preload("res://scenes/battle/battle_screen.tscn")
+const Scene = preload("res://scenes/battle/lv40_playable_battle.tscn")
 const Model = preload("res://scripts/domain/m1/combat_model.gd")
 var executed: int = 0
 var failed: int = 0
