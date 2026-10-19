@@ -43,7 +43,10 @@ static func project(state: Dictionary, config: Dictionary = {}) -> Dictionary:
 			"hit_count":int(published.get("hit_count",0)),
 			"requires_reaction_window":bool(published.get("requires_reaction_window",false)),
 			"windup_progress":int(published.get("windup_progress",0)),
-			"expected_execute_phase":str(published.get("expected_execute_phase",""))}
+			"expected_execute_phase":str(published.get("expected_execute_phase","")),
+			"break_response":str(published.get("break_response","NOT_ELIGIBLE")),
+			"break_fallback_skill_id":str(published.get("break_fallback_skill_id","")),
+			"break_c_result":str(published.get("break_c_result",""))}
 		view["public_intent_labels"].append(item)
 		if str(item["enemy_id"]) == "Boss":
 			view["boss_cast_public"] = {
@@ -51,6 +54,16 @@ static func project(state: Dictionary, config: Dictionary = {}) -> Dictionary:
 				"windup_progress":item["windup_progress"],
 				"charge_release_skill":str(published.get("charge_release_skill","")),
 				"expected_execute_phase":item["expected_execute_phase"]}
+			# Only reveal Stability if the specific cast has a public id in
+			# this phase's published release Intent. Never leak hidden plans.
+			var public_cast_id: String = str(published.get("casting_id",""))
+			var pending_cast: Dictionary = battle.get("lv40",{}).get("pending_cast",{})
+			if not public_cast_id.is_empty() and \
+					str(pending_cast.get("casting_id","")) == public_cast_id and \
+					not bool(pending_cast.get("interrupted",false)):
+				view["boss_cast_public"]["current_stability"] = int(pending_cast.get("current_stability",0))
+				view["boss_cast_public"]["base_stability"] = int(pending_cast.get("base_stability",0))
+				view["boss_cast_public"]["focus_ward"] = int(pending_cast.get("focus_ward",0))
 	var catalogue: Dictionary = config.get("lv40_cards",{})
 	var definitions: Dictionary = config.get("definitions",{})
 	for actor: String in cards:

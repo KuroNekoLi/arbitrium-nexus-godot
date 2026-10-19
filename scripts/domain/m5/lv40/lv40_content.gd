@@ -128,7 +128,7 @@ static func config(version: String) -> Dictionary:
 		"B13":["MAGICAL",8500,1],"B14":["MAGICAL",6500,1]}
 	for skill: String in bosses:
 		var r: Array = bosses[skill]
-		var p: Dictionary = profile(r[0],r[1],r[2],"GUARANTEED" if ["B06","B09"].has(skill) else "RANDOM_PERCENT")
+		var p: Dictionary = profile(r[0],r[1],r[2],"GUARANTEED" if ["B06","B09","B13","B14"].has(skill) else "RANDOM_PERCENT")
 		p["crit_eligible"] = false
 		c["m5_enemy_profiles"][skill] = p
 	# Profile-driven Break C. These are demo balance candidates, not global IDs.

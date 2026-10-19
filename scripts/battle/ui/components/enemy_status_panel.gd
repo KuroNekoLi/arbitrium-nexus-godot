@@ -96,6 +96,8 @@ func render_enemy(projection: Dictionary) -> void:
 		var exposed: bool = not tactical.get("exposed", {}).is_empty()
 		if locked:
 			break_stats.text += "\n" + tr("BATTLE_BREAK_LOCKED")
+		elif int(tactical.get("break_resilience_round",-1)) == int(projection.get("round",-2)):
+			break_stats.text += "\n" + tr("BKC_BREAK_RESILIENT")
 		if exposed:
 			break_stats.text += "\n" + tr("BATTLE_EXPOSED")
 		break_stats.tooltip_text = break_stats.text
@@ -142,5 +144,22 @@ func render_enemy(projection: Dictionary) -> void:
 			"BATTLE_" + str(announced.get("skill_id", "")).to_upper()))
 		intent.text = tr("BATTLE_INTENT_DETAIL") % [
 			tr(skill_key), ", ".join(names), int(announced.get("hit_count", 1))]
+		var response: String = str(announced.get("break_response","NOT_ELIGIBLE"))
+		var control: String = str(announced.get("break_c_result",""))
+		if control == "CANCEL":
+			intent.text += "\n" + tr("BKC_INTENT_CANCELLED")
+		elif control == "DOWNGRADE":
+			intent.text += "\n" + tr("BKC_INTENT_DOWNGRADED")
+		elif response == "CANCEL":
+			intent.text += "\n" + tr("BKC_INTENT_CANCEL_PREVIEW")
+		elif response == "DOWNGRADE":
+			var fallback: String = str(announced.get("break_fallback_skill_id",""))
+			intent.text += "\n" + (tr("BKC_INTENT_DOWNGRADE_PREVIEW") % tr("intent."+fallback.to_lower()+".name"))
+		var boss_cast: Dictionary = projection.get("boss_cast_public",{})
+		if boss_cast.has("current_stability"):
+			intent.text += "\n" + (tr("BKC_CAST_STABILITY") % [
+				int(boss_cast["current_stability"]),int(boss_cast.get("base_stability",1))])
+			if int(boss_cast.get("focus_ward",0)) > 0:
+				intent.text += "\n" + (tr("BKC_CAST_FOCUS_WARD") % int(boss_cast["focus_ward"]))
 	intent.tooltip_text = intent.text
 

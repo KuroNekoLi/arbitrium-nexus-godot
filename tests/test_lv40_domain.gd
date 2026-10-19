@@ -201,8 +201,8 @@ func _initialize() -> void:
 	r["config"]["m5_3_sp_effects"]["R01"]["damage_profile"]["hit_mode"] = "GUARANTEED"
 	check(play(r,"A","R01","Boss") and has_event(r["last"],"BreakTriggered"),"DEMO-09-BREAK-WHOLE-SP")
 	check(position(r["last"],"DamageTrace") < position(r["last"],"BreakTriggered"),"DEMO-09-EVENT-ORDER")
-	check(enemy(r) and has_event(r["last"],"BossCastingReleased") and next_round(r),"DEMO-09-PENDING-CAST-PRESERVED")
-	check(enemy(r) and r["state"]["enemy_actions"][0]["public_intent"]["skill_id"] == "B11","DEMO-09-NEXT-ELIGIBLE-FALLBACK")
+	check(enemy(r) and has_event(r["last"],"BossCastDowngraded") and next_round(r),"DEMO-09-CAST-DOWNGRADED")
+	check(r["state"]["published_intents"][0]["skill_id"] == "B04" and enemy(r),"DEMO-09-NEXT-ACTION-NORMAL")
 	check(r["state"]["core"]["battle"]["m53"]["break_gauge"] == 22,"DEMO-09-FALLBACK-RESET22")
 	# Universal heal eligibility and negative atomicity.
 	for actor: String in ["A","B","C"]:

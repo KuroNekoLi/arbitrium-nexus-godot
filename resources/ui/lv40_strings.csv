@@ -100,3 +100,11 @@ CP2_SHARED_TARGET,This recipe requires the same target for both SP.,此配方要
 CP2_SUCCESS,Combo executed,連攜發動成功
 CP2_SELECTED,Combo setup selected,已選為連攜起手
 CP2_UNAVAILABLE,Combo unavailable,無法連攜
+
+BKC_BREAK_RESILIENT,Post-break resilience · cannot Break,姿態穩定中・暫時無法失衡
+BKC_INTENT_CANCEL_PREVIEW,Break effect: cancel this action,失衡效果：取消本次行動
+BKC_INTENT_DOWNGRADE_PREVIEW,Break effect: downgrade to %s,失衡效果：降級為 %s
+BKC_INTENT_CANCELLED,Break: action cancelled,失衡：行動已取消
+BKC_INTENT_DOWNGRADED,Break: downgraded action,失衡：招式已降級
+BKC_CAST_STABILITY,Casting stability %d/%d,詠唱穩定度 %d/%d
+BKC_CAST_FOCUS_WARD,Focus Ward %d,專注護符 %d
