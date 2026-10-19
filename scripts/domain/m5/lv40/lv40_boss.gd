@@ -196,7 +196,7 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 		var cancelled: Dictionary = BreakC.recover(next,str(public["intent_id"]),true)
 		return {"ok":true,"core":cancelled["core"],"timeline":[
 			{"kind":"BossActionCancelledByBreak","skill_id":previous_skill,
-				"enemy_action_id":str(public["intent_id"])}] + cancelled["timeline"]
+				"enemy_action_id":str(public["intent_id"])}] + cancelled["timeline"]}
 	if bool(defense.get("enemy_action_cancelled_fixture",false)):
 		return {"ok":true,"core":next,"timeline":[{"kind":"BossActionCancelled","skill_id":skill}]}
 	# Consume the published cycle item, not an assumed pointer. Cooldown and
