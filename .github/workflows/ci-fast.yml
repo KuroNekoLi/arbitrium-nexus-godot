@@ -85,7 +85,7 @@ jobs:
             cat "$bkc_log"; exit 1;
           }
           python3 tools/ci/assert_godot_logs.py "$bkc_log"
-          grep -Fx 'BKC_BREAK_C_REPORT executed=24 passed=24 failed=0' "$bkc_log"
+          grep -Fx 'BKC_BREAK_C_REPORT executed=26 passed=26 failed=0' "$bkc_log"
           echo 'CI_FAST_VERIFIED (Headless only)'
       - name: New Last Spell cut-in GUI gate
         if: github.ref == 'refs/heads/ui/v35-convergence-final-20261016'

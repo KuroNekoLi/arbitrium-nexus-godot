@@ -178,7 +178,13 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 			var bonus: int = int(passive["amount"])
 			used[actor] = round_id
 			records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":str(passive["id"]),"break_bonus":bonus})
-			next = _merge(Effects.break_damage(next,bonus,card,config,actor),next,records)
+			var already_consumed: bool = false
+			for existing_record: Dictionary in records:
+				if str(existing_record.get("kind","")) == "ExposedConsumed":
+					already_consumed = true
+					break
+			next = _merge(Effects.break_damage(next,bonus,card,config,actor,
+				already_consumed),next,records)
 	else:
 		if combo == "COMBO" and definition != "T04":
 			return _error("LV40_NO_REGISTERED_SUPPORT_COMBO_RECIPE")

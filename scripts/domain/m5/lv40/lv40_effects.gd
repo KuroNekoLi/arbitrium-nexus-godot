@@ -82,9 +82,10 @@ static func disrupt_ally(core: Dictionary, actor: String, power: int,
 	return {"ok":true,"core":next,"timeline":records}
 
 static func break_damage(core: Dictionary, amount: int, card_id: String,
-		config: Dictionary = {}, actor_id: String = "") -> Dictionary:
+		config: Dictionary = {}, actor_id: String = "",
+		skip_exposed: bool = false) -> Dictionary:
 	if BreakC.enabled(config):
-		return BreakC.apply_break(core,amount,card_id+":passive",card_id,actor_id,config)
+		return BreakC.apply_break(core,amount,card_id+":passive",card_id,actor_id,config,skip_exposed)
 	var next: Dictionary = core.duplicate(true)
 	var boss: Dictionary = next["battle"]["m53"]
 	var records: Array = []

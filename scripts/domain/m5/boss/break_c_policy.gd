@@ -20,7 +20,8 @@ static func add_exposed(core: Dictionary, command_id: String, card_id: String,
 		"one_use":true,"source":source}]}
 
 static func apply_break(core: Dictionary, amount: int, command_id: String,
-		card_id: String, actor_id: String, config: Dictionary) -> Dictionary:
+		card_id: String, actor_id: String, config: Dictionary,
+		skip_exposed: bool = false) -> Dictionary:
 	var next: Dictionary = core.duplicate(true)
 	var boss: Dictionary = next["battle"]["m53"]
 	var events: Array = []
@@ -41,7 +42,7 @@ static func apply_break(core: Dictionary, amount: int, command_id: String,
 		events.append({"kind":"BreakPending","source_card_instance_id":card_id})
 		events.append({"kind":"BreakTriggered","source_card_instance_id":card_id,
 			"next_action_control":"CANCEL_OR_DOWNGRADE","stability_unmodified":true})
-		if bool(config.get("m5_3_boss",{}).get("exposed_rules",{}).get("on_break",true)):
+		if not skip_exposed and bool(config.get("m5_3_boss",{}).get("exposed_rules",{}).get("on_break",true)):
 			var new_exposed: Dictionary = add_exposed(next,command_id,card_id,
 				actor_id,"BREAK",config)
 			next = new_exposed["core"]

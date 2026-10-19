@@ -146,7 +146,7 @@ static func resolve(original: Dictionary, command: Dictionary,
 	# hit_index boundary and does not retroactively change this SP's attacks.
 	tactical = next["battle"]["m53"]
 	if break_amount > 0 and BreakC.enabled(config):
-		var change: Dictionary = BreakC.apply_break(next,break_amount,id,card,actor,config)
+		var change: Dictionary = BreakC.apply_break(next,break_amount,id,card,actor,config,using_exposed and success)
 		next = change["core"]
 		timeline.append_array(change["timeline"])
 	elif break_amount > 0:
@@ -164,7 +164,8 @@ static func resolve(original: Dictionary, command: Dictionary,
 					"next_action_fallback":true,"stability_unmodified":true})
 	# Exposed is a separate, single, timed opportunity. Existing Exposed
 	# ignores refresh, and this SP can never consume what it just created.
-	var exposing: bool = bool(effect.get("create_exposed",false)) and success
+	var exposing: bool = bool(effect.get("create_exposed",false)) and success and \
+		(not BreakC.enabled(config) or not (using_exposed and success))
 	if exposing:
 		tactical = next["battle"]["m53"]
 		if tactical["exposed"].is_empty():

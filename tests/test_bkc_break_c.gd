@@ -105,6 +105,27 @@ func _initialize() -> void:
 	check(v["public_intent_labels"].size() > 0 and
 		str(v["public_intent_labels"][0].get("break_response","")) == "CANCEL",
 		"BKC-24-PUBLIC_INTENT_PROJECTION")
+	# Old Exposed may be spent on this SP, but the same SP must not
+	# consume and immediately re-create a fresh one from Break.
+	r = rig()
+	r["state"]["core"]["battle"]["m53"]["break_gauge"] = 1
+	r["state"]["core"]["battle"]["m53"]["exposed"] = {
+		"target_id":"Boss","created_command_id":"other-card","expires_round":1}
+	r["config"]["m5_3_sp_effects"]["R01"]["damage_profile"]["hit_mode"] = "GUARANTEED"
+	check(play(r,"A","R01","Boss") and has_event(r["last"],"ExposedConsumed") and
+		has_event(r["last"],"BreakTriggered") and
+		not has_event(r["last"],"ExposedApplied") and
+		r["state"]["core"]["battle"]["m53"]["exposed"].is_empty(),
+		"BKC-25-NO_CONSUME_THEN_REISSUE_ON_BREAK")
+	# Core-open posture must obey that same once-per-source-card rule.
+	r = rig()
+	r["state"]["core"]["battle"]["lv40"]["core_open"] = true
+	r["state"]["core"]["battle"]["m53"]["exposed"] = {
+		"target_id":"Boss","created_command_id":"other-card","expires_round":1}
+	r["config"]["m5_3_sp_effects"]["R01"]["damage_profile"]["hit_mode"] = "GUARANTEED"
+	check(play(r,"A","R01","Boss") and has_event(r["last"],"ExposedConsumed") and
+		r["state"]["core"]["battle"]["m53"]["exposed"].is_empty(),
+		"BKC-26-NO_CONSUME_THEN_REISSUE_ON_POSTURE")
 	print("BKC_BREAK_C_REPORT executed=%d passed=%d failed=%d" % [
 		passed+failed,passed,failed])
 	quit(1 if failed > 0 else 0)
