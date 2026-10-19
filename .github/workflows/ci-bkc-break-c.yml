@@ -1,0 +1,41 @@
+name: CI Break C Targeted
+on:
+  push:
+    branches: ['integration/bkc-break-c-20261020']
+    paths:
+      - 'scripts/**'
+      - 'tests/test_bkc_break_c.gd'
+      - 'resources/ui/**'
+      - '.github/workflows/ci-bkc-break-c.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bkc-targeted-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  break-c-domain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Godot 4.7.2
+        uses: ./.github/actions/setup-godot-ci
+      - name: Godot import and Break C domain regression
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/bkc-logs"
+          timeout 150s "$GODOT_BIN" --headless --path . --editor --import --quit > "$RUNNER_TEMP/bkc-logs/import.log" 2>&1 || {
+            cat "$RUNNER_TEMP/bkc-logs/import.log"; exit 1;
+          }
+          python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/bkc-logs/import.log"
+          bash tools/ci/run_suite.sh 'test_bkc_break_c:BKC_BREAK_C_REPORT:24' "$RUNNER_TEMP/bkc-logs"
+          echo 'BKC_TARGETED_GATE_VERIFIED'
+      - name: Archive Break C regression evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bkc-logs
+          path: ${{ runner.temp }}/bkc-logs/
+          retention-days: 7
