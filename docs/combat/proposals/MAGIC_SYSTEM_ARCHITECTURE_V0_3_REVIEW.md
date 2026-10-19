@@ -1,5 +1,7 @@
 # Arbitrium Nexus — 魔法系統框架重審與修正版 v0.3
 
+> **本文件已列為歷史研究（2026-10-19）**：請優先閱讀 [統一魔法系統 v0.4](MAGIC_SYSTEM_INTEGRATED_DESIGN_V0_4.md)。v0.4 整合目前學科、Buff／Debuff、Overload、Weakness、Break、Exposed、Casting 與 Combo 的完整設計；現行 Combat Rules 不變。
+
 > 日期：2026-10-19
 > 狀態：**DESIGN_REVIEW / PROPOSED / NOT USER_APPROVED / NOT IMPLEMENTED**
 > 使用者已確認的不變原則：**世界觀可完整複雜；實戰必須易懂；深度主要來自可理解的組合與決策，而非多套隱性公式。**

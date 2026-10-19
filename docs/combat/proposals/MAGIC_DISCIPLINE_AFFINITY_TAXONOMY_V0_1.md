@@ -1,5 +1,7 @@
 # 魔法學科、共鳴屬性與法則系統 — 設計提案 v0.1
 
+> **本文件已列為歷史研究（2026-10-19）**：請優先閱讀 [統一魔法系統 v0.4](MAGIC_SYSTEM_INTEGRATED_DESIGN_V0_4.md)。v0.4 整合目前學科、Buff／Debuff、Overload、Weakness、Break、Exposed、Casting 與 Combo 的完整設計；現行 Combat Rules 不變。
+
 > **版本索引提示（2026-10-19）**：本文件保留作歷史設計提案；新的框架重審請優先閱讀 [MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md](MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md)。v0.2 中使用者已確認的「世界觀深、實戰易懂、優先重用機制」原則仍有效；v0.3 其他調整只是新提案，尚未核准。
 
 > 狀態：**PROPOSED / NOT USER_APPROVED / NOT IMPLEMENTED**  

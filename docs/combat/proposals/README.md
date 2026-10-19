@@ -1,23 +1,23 @@
 # Magic System Design Proposals — 導覽與規格狀態
 
-> 本目錄是待核准的**設計提案**。目前唯一現行戰鬥規格仍為 [上層戰鬥總覽](../README.md) 及其最新核准文件，不可直接當成 Domain 規則。
+> **CURRENT INTEGRATED PROPOSAL：v0.4**。本目錄是魔法設計提案，不是新 Combat Rules。實際戰鬥以 [目前戰鬥總覽](../README.md)、最新 USER_APPROVED 規範和現行 Domain 為準。**使用者已確認深世界觀／易懂實戰的設計方向，並授權整合文檔；未批准每種學科、新技能與新倍率。**
 
-## 優先閱讀
+## 優先閱讀：只看這一版即可了解整套設計
 
-1. **[v0.3 — 全框架重審（CURRENT PROPOSAL）](MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md)**：參考 D&D、Pathfinder、MTG、Magicka、Into the Breach 與 Slay the Spire；重新區分 24 世界觀領域、實際效果、傷害共鳴與玩家操作。**PROPOSED / NOT APPROVED**。
-2. **[v0.2 — 使用者已確認的方向及 24 學科候選](MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_2.md)**：「世界觀可完整複雜、實戰應易懂、優先重用機制」已確認；不等於核准全部學科或技能。
-3. **[24 學科玩法矩陣 v0.1](MAGIC_DISCIPLINE_PLAYSTYLE_MATRIX_V0_1.md)**：歷史靈感與技能示例；部分抽象學科只有換皮護盾的問題已由 v0.3 批判與改善。
-4. **[v0.1 — 原始三軸架構](MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_1.md)**：歷史分類研究。
+1. **[魔法系統統一設計 v0.4（CURRENT DESIGN PROPOSAL）](MAGIC_SYSTEM_INTEGRATED_DESIGN_V0_4.md)**：集中整理 24 學科、奧術定義、學科／共鳴／職能／效果的邊界、Buff／Debuff、Overload／APDebt、Weakness／Resistance、Break／Exposed、Casting Stability、Combo、完整工程現況、玩家 UI 與准入 Gate。**PROPOSED；不授權改 Domain。**
+2. **[v0.3 — 框架研究（HISTORICAL）](MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md)**：當時對 24 學科與卡牌辨識的設計批判與遊戲研究；已納入 v0.4。
+3. **[v0.2 — 已確認的易懂實戰方向（HISTORICAL）](MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_2.md)**：世界觀深入、實戰易懂、少量共用機制是確認的方向，其他學科仍是候選。
+4. **[24 學科矩陣 v0.1（HISTORICAL）](MAGIC_DISCIPLINE_PLAYSTYLE_MATRIX_V0_1.md)**：學科身份、示例與限制，不等於現存正式卡。
+5. **[v0.1 — 原始三軸分類（HISTORICAL）](MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_1.md)**：概念分類初稿。
 
-## 不可混淆
+## 版本採用原則
 
-- 「學科」「戰鬥共鳴」「Role Tag」「Effect」不是同一類資料。ARCANUM 是提案中的奧術學科；既有 ARCANE affinity 和 ROLE_TAG:ARCANE 保留不同語意。
-- 每名敵人自己的元素弱點與抗性已核准；元素全集、特殊倍率、新時間／命運／心智能力均未核准。
-- AP/MP/RP、牌組、雙詠唱、Combo 真實雙人付費、Boss Intent、Last Spell 耗竭真正退場，全部以目前 docs/combat/README.md 為準，不引用封存舊規則。
-- 設計分支不代表已合併 master；本目錄無新 Godot Domain、CardDefinitions 或畫面實作。
+- **設計研究**：優先 v0.4；以前提案保留為歷史，不得同時當成四份互相獨立且已批准的規則。
+- **戰鬥實作**：只有當前 `docs/combat/README.md` 及其已核准規則是可執行的權威；v0.4 本身不是新的 Combat Rules Baseline。
+- **名詞歧義**：`ARCANUM` 學科 ≠ `ARCANE` 傷害共鳴 ≠ `ROLE_TAG:ARCANE` 資格；Buff／Debuff ≠ Break ≠ Exposed ≠ Casting Disruption。
+- **候選數值**：`MaxAPDebt=8`、Lv40 Boss FIRE/ARCANE 倍率、Boss Break Max、SCORCH_TEST 等各有 fixture；本目錄不批准新的全域平衡。
+- **分支與驗證**：僅魔法提案分支文件變動，不宣稱 Godot CI 或 Boss 真人試玩因此通過，也不自行合併 master。
 
-## 待決
+## 後續建議
 
-- 是否核准 v0.3 的「24 個學科保留完整世界觀，但不是 24 種必須可玩且互剋的戰鬥分類」？
-- 首發少量可玩學科如何在三名角色的既有技能與 Boss 弱點中驗證身份差異？
-- 未來時間／空間／因果／認知等何時導入第一項經完整 ADR 核准的全新戰術選擇？
+由使用者核准 v0.4 分類方向後，再選 2–4 張具不同可讀戰術抉擇的魔法候選，依 **Card Design Record → Rule/ADR → QA → i18n/UI → Godot/Replay** 逐步導入。**不以一次實作 24 套系統為目標。**
