@@ -58,7 +58,9 @@ jobs:
             cat "$RUNNER_TEMP/fast-logs/import.log"; exit 1;
           }
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/fast-logs/import.log" || {
-            tail -n 95 "$RUNNER_TEMP/fast-logs/import.log"
+            timeout 30s "$GODOT_BIN" --headless --path . --check-only --script res://scripts/domain/m5/lv40/lv40_boss.gd > "$RUNNER_TEMP/fast-logs/boss-check.log" 2>&1 || true
+            cat "$RUNNER_TEMP/fast-logs/boss-check.log"
+            tail -n 35 "$RUNNER_TEMP/fast-logs/import.log"
             exit 1
           }
           for spec in \
