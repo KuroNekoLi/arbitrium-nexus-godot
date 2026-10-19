@@ -46,7 +46,10 @@ func _initialize() -> void:
 		step(replay_r,"END_PLAYER_PHASE") and step(replay_r,"DECLARE_NEXT_ENEMY_ACTION") and
 		step(replay_r,"RESOLVE_ENEMY_ATTACK_M5",{"enemy_action_id":replay_r["state"]["active_enemy_action_id"]}),
 		"BKC-12-DETERMINISTIC_TAPE_CREATED")
-	var reproduced: Dictionary = M5.replay(seed_state,replay_r["tape"],replay_r["config"])
+	var typed_tape: Array[Dictionary] = []
+	for recorded: Dictionary in replay_r["tape"]:
+		typed_tape.append(recorded.duplicate(true))
+	var reproduced: Dictionary = M5.replay(seed_state,typed_tape,replay_r["config"])
 	check(reproduced["accepted"] and reproduced["state_hash"] == Model.state_hash(replay_r["state"]) and
 		reproduced["event_hash"] == Model.event_hash(replay_r["events"]),
 		"BKC-13-SEEDED_REPLAY_HASH_MATCH")
