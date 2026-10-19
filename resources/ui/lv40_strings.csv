@@ -66,6 +66,9 @@ intent.b08.name,Overload Charge,超載蓄力
 intent.b09.name,Overload Discharge,超載釋放
 intent.b10.name,Interrupted Recovery,中斷後整備
 intent.b11.name,Weakened Strike,弱化攻擊
+intent.b12.name,Unsteady Charge,失衡蓄力失敗
+intent.b13.name,Weakened Core Beam,弱化核心光束
+intent.b14.name,Weakened Arcane Sweep,弱化秘紋掃射
 last_spell.ren.name,Ren's Last Spell,蓮的終極法術
 last_spell.akane.name,Akane's Last Spell,朱音的終極法術
 last_spell.tsumugi.name,Tsumugi's Last Spell,紬的終極法術

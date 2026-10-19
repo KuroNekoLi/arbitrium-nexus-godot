@@ -4,6 +4,7 @@ const BossAI = preload("res://scripts/domain/m5/boss/boss_ai_policy.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const Effects = preload("res://scripts/domain/m5/lv40/lv40_effects.gd")
 const Disruption = preload("res://scripts/domain/m4/casting/casting_disruption_resolver.gd")
+const BreakC = preload("res://scripts/domain/m5/boss/break_c_policy.gd")
 const CYCLES: Dictionary = {1:["B01","B05","B06","B04"],2:["B02","B03","B04"],3:["B08","B09","B01","B04"]}
 
 static func initialize(core: Dictionary, config: Dictionary) -> Dictionary:
@@ -56,7 +57,7 @@ static func _single(core: Dictionary, skill: String, config: Dictionary) -> Stri
 
 static func intent(core: Dictionary, skill: String, config: Dictionary) -> Dictionary:
 	var round_id: int = int(core["battle"]["round"])
-	var aoe: bool = ["B04","B09"].has(skill)
+	var aoe: bool = ["B04","B09","B14"].has(skill)
 	var attack: bool = config["m5_enemy_profiles"].has(skill)
 	var targets: Array = _live(core) if aoe else [_single(core,skill,config)]
 	if skill == "B06":
@@ -64,6 +65,10 @@ static func intent(core: Dictionary, skill: String, config: Dictionary) -> Dicti
 	elif not attack:
 		targets = ["Boss"]
 	var pending: Dictionary = core["battle"]["lv40"]["pending_cast"]
+	var break_rules: Dictionary = config.get("m5_3_boss",{}).get("break_responses",{})
+	var response: Dictionary = break_rules.get(skill,{"mode":"NOT_ELIGIBLE"})
+	var response_mode: String = str(response.get("mode","NOT_ELIGIBLE"))
+	var branch_id: String = str(response.get("fallback_skill_id",""))
 	return {"intent_id":"lv40-r"+str(round_id)+"-"+skill,"enemy_id":"Boss",
 		"name_key":str(config.get("intent_name_keys",{}).get(skill,"intent."+skill.to_lower()+".name")),
 		"action_order":1,"created_seq":0,"publicly_declared":true,"skill_id":skill,
@@ -74,11 +79,13 @@ static func intent(core: Dictionary, skill: String, config: Dictionary) -> Dicti
 		"damage_type":str(config["m5_enemy_profiles"][skill]["damage_kind"]) if attack else "NONE",
 		"requires_reaction_window":attack,"is_protectable":attack and not aoe,
 		"unprotectable":not attack or aoe,"on_hit_disruption":skill == "B03",
-		"direct_casting_disruption":false,"breakable":["B01","B02","B03","B04"].has(skill),
+		"direct_casting_disruption":false,"breakable":response_mode != "NOT_ELIGIBLE",
+		"break_response":response_mode,"break_fallback_skill_id":branch_id,
 		"break_fallback":skill == "B11","casting_id":str(pending.get("casting_id","")),
 		"windup_progress":1 if ["B06","B09"].has(skill) else 0,
 		"expected_execute_phase":"EnemyPhase"+str(round_id),
-		"conditional_branches":["CAST_INTERRUPTED_TO_B10","INVALID_TARGET_TO_FIZZLE"],
+		"conditional_branches":["CAST_INTERRUPTED_TO_B10","INVALID_TARGET_TO_FIZZLE",
+			"BREAK_CANCEL" if response_mode == "CANCEL" else ("BREAK_DOWNGRADE_TO_"+branch_id if response_mode == "DOWNGRADE" else "BREAK_NOT_ELIGIBLE")],
 		"charge_release_skill":"B06" if skill == "B05" else ("B09" if skill == "B08" else ""),
 		"charge_target_ids":[_preferred(core,config)] if skill == "B05" else (_live(core) if skill == "B08" else [])}
 
@@ -114,7 +121,38 @@ static func before_end(core: Dictionary, published: Dictionary, config: Dictiona
 	var public: Dictionary = published.duplicate(true)
 	if ["B06","B09"].has(str(public["skill_id"])) and bool(next["battle"]["lv40"]["pending_cast"].get("interrupted",false)):
 		public = intent(next,"B10",config)
-	if bool(next["battle"]["m53"]["break_locked"]) and bool(public.get("breakable",false)):
+	if BreakC.enabled(config) and bool(next["battle"]["m53"]["break_locked"]) and \
+			bool(public.get("breakable",false)):
+		var previous: String = str(public["skill_id"])
+		var response: String = str(public.get("break_response","NOT_ELIGIBLE"))
+		if response == "CANCEL":
+			public["break_c_result"] = "CANCEL"
+			public["break_controlled_skill_id"] = previous
+			public["requires_reaction_window"] = false
+			public["is_protectable"] = false
+			public["unprotectable"] = true
+			public["hit_count"] = 0
+			public["damage_type"] = "NONE"
+		elif response == "DOWNGRADE":
+			var fallback_id: String = str(public.get("break_fallback_skill_id",""))
+			if fallback_id.is_empty() or not config.get("m5_enemy_profiles",{}).has(fallback_id) and fallback_id != "B12":
+				# Invalid content cannot silently change an already public attack.
+				return {"ok":false,"error":"LV40_INVALID_BREAK_FALLBACK","core":core}
+			public["break_c_result"] = "DOWNGRADE"
+			public["break_controlled_skill_id"] = previous
+			public["replaced_skill_id"] = previous
+			public["skill_id"] = fallback_id
+			public["name_key"] = str(config.get("intent_name_keys",{}).get(fallback_id,""))
+			public["requires_reaction_window"] = fallback_id in ["B13","B14"]
+			public["hit_count"] = int(config["m5_enemy_profiles"][fallback_id]["hit_count"]) if fallback_id != "B12" else 0
+			public["damage_type"] = str(config["m5_enemy_profiles"][fallback_id]["damage_kind"]) if fallback_id != "B12" else "NONE"
+			public["is_protectable"] = fallback_id == "B13"
+			public["unprotectable"] = fallback_id != "B13"
+			public["on_hit_disruption"] = false
+			public["charge_release_skill"] = ""
+			public["break_fallback"] = true
+	elif not BreakC.enabled(config) and bool(next["battle"]["m53"]["break_locked"]) and \
+			bool(public.get("breakable",false)):
 		var previous: String = str(public["skill_id"])
 		public = intent(next,"B11",config)
 		public["replaced_skill_id"] = previous
@@ -150,6 +188,15 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 	var skill: String = str(public["skill_id"])
 	var attack_attempted: bool = false
 	var fsm: Dictionary = next["battle"]["lv40"]
+	if str(public.get("break_c_result","")) == "CANCEL":
+		var previous_skill: String = str(public.get("break_controlled_skill_id",skill))
+		var consumed_position: int = CYCLES[int(fsm["boss_phase"])].find(previous_skill)
+		if previous_skill != "B07" and consumed_position >= 0:
+			fsm["cycle_index"] = consumed_position+1
+		var cancelled: Dictionary = BreakC.recover(next,str(public["intent_id"]),true)
+		return {"ok":true,"core":cancelled["core"],"timeline":[
+			{"kind":"BossActionCancelledByBreak","skill_id":previous_skill,
+				"enemy_action_id":str(public["intent_id"])}] + cancelled["timeline"]
 	if bool(defense.get("enemy_action_cancelled_fixture",false)):
 		return {"ok":true,"core":next,"timeline":[{"kind":"BossActionCancelled","skill_id":skill}]}
 	# Consume the published cycle item, not an assumed pointer. Cooldown and
@@ -161,6 +208,19 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 	# This is an announced conditional branch, not a new selected action.
 	if ["B06","B09"].has(skill) and bool(fsm["pending_cast"].get("interrupted",false)):
 		skill = "B10"
+	if skill == "B12":
+		# Suppressing the charge also consumes its scheduled release slot.
+		fsm["pending_cast"] = {}
+		fsm["core_open"] = false
+		records.append({"kind":"BossChargeDowngraded","replaced_skill_id":consumed_skill,
+			"hp_damage":0})
+	elif skill in ["B13","B14"]:
+		# One weakened release in place of the original public B06/B09.
+		# Still uses the original locked target/scope and normal reaction rule.
+		fsm["pending_cast"] = {}
+		fsm["core_open"] = false
+		records.append({"kind":"BossCastDowngraded","replaced_skill_id":consumed_skill,
+			"skill_id":skill})
 	if ["B05","B08"].has(skill):
 		var release: String = "B06" if skill == "B05" else "B09"
 		var stability: int = 9 if skill == "B05" else 15
@@ -232,6 +292,20 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 		next = retaliation["core"]
 		records.append({"kind":"ReactionCounterExecuted","actor_id":counter,"card_definition_id":"R05"})
 		records.append_array(retaliation["timeline"])
-	if skill != "B07":
-		next["battle"]["lv40"]["cycle_index"] = cycle_position+1 if cycle_position >= 0 else int(next["battle"]["lv40"]["cycle_index"])+1
+	if consumed_skill != "B07":
+		var next_index: int = cycle_position+1 if cycle_position >= 0 else int(next["battle"]["lv40"]["cycle_index"])+1
+		if skill == "B12" and consumed_skill in ["B05","B08"]:
+			next_index += 1 # Do not announce the prevented B06/B09 cast.
+		next["battle"]["lv40"]["cycle_index"] = next_index
+	if BreakC.enabled(config) and str(public.get("break_c_result","")) == "DOWNGRADE":
+		var recovered: Dictionary = BreakC.recover(next,str(public["intent_id"]),true)
+		next = recovered["core"]
+		records.append_array(recovered["timeline"])
+	var exposed_rules: Dictionary = config.get("m5_3_boss",{}).get("exposed_rules",{})
+	if bool(exposed_rules.get("on_boss_action",false)):
+		var skills: Array = exposed_rules.get("action_skill_ids",[])
+		if skills.has(consumed_skill):
+			var offered: Dictionary = BreakC.add_exposed(next,command_id,"","Boss","BOSS_ACTION",config)
+			next = offered["core"]
+			records.append_array(offered["timeline"])
 	return {"ok":true,"core":next,"timeline":records}

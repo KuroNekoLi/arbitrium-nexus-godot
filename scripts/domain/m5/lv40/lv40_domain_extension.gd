@@ -9,6 +9,7 @@ const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
 const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
 const LastTargets = preload("res://scripts/domain/m5/lv40/last_spell_targeting.gd")
 const Prepared = preload("res://scripts/domain/m5/combo/prepared_combo_resolver.gd")
+const BreakC = preload("res://scripts/domain/m5/boss/break_c_policy.gd")
 
 static func deny(state: Dictionary, reason: String) -> Dictionary:
 	return {"accepted":false,"error":reason,"state":state.duplicate(true),"events":[],
@@ -72,6 +73,8 @@ static func apply(state: Dictionary, command: Dictionary, config: Dictionary) ->
 		if next["phase"] != "PLAYER_PHASE" or next["published_intents"].size() != 1:
 			return deny(state,"LV40_INVALID_PHASE")
 		var prepared: Dictionary = Boss.before_end(next["core"],next["published_intents"][0],config)
+		if not prepared.get("ok",true):
+			return deny(state,str(prepared["error"]))
 		next["core"] = prepared["core"]
 		next["published_intents"] = [prepared["intent"]]
 		var downstream: Dictionary = M4.apply(next,command,config)
@@ -138,6 +141,12 @@ static func end_enemy(core: Dictionary, config: Dictionary, id: String) -> Dicti
 		return tick
 	next = tick["core"]
 	records.append_array(tick["timeline"])
+	# If no eligible public Boss action was available, break control expires
+	# without silently persisting into a later enemy phase.
+	if BreakC.enabled(config) and bool(next["battle"]["m53"]["break_locked"]):
+		var expiry: Dictionary = BreakC.recover(next,"EXPIRED_NO_ELIGIBLE_ACTION",false)
+		next = expiry["core"]
+		records.append_array(expiry["timeline"])
 	for target: String in next["battle"]["lv40"]["barrier_expiry"].keys():
 		var expires: int = int(next["battle"]["lv40"]["barrier_expiry"][target])
 		if expires >= 0 and expires <= int(next["battle"]["round"]):

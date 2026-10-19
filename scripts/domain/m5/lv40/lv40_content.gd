@@ -124,12 +124,24 @@ static func config(version: String) -> Dictionary:
 	c["m5_enemy_profiles"] = {}
 	var bosses: Dictionary = {"B01":["PHYSICAL",13500,1],"B02":["PHYSICAL",8000,2],
 		"B03":["MAGICAL",13500,1],"B04":["MAGICAL",10500,1],
-		"B06":["MAGICAL",23500,1],"B09":["MAGICAL",15000,1],"B11":["PHYSICAL",6000,1]}
+		"B06":["MAGICAL",23500,1],"B09":["MAGICAL",15000,1],"B11":["PHYSICAL",6000,1],
+		"B13":["MAGICAL",8500,1],"B14":["MAGICAL",6500,1]}
 	for skill: String in bosses:
 		var r: Array = bosses[skill]
 		var p: Dictionary = profile(r[0],r[1],r[2],"GUARANTEED" if ["B06","B09"].has(skill) else "RANDOM_PERCENT")
 		p["crit_eligible"] = false
 		c["m5_enemy_profiles"][skill] = p
+	# Profile-driven Break C. These are demo balance candidates, not global IDs.
+	var break_responses: Dictionary = {}
+	for ordinary: String in ["B01","B02","B03","B04","B07"]:
+		break_responses[ordinary] = {"mode":"CANCEL"}
+	for charge: String in ["B05","B08"]:
+		break_responses[charge] = {"mode":"DOWNGRADE","fallback_skill_id":"B12"}
+	break_responses["B06"] = {"mode":"DOWNGRADE","fallback_skill_id":"B13"}
+	break_responses["B09"] = {"mode":"DOWNGRADE","fallback_skill_id":"B14"}
+	for immune: String in ["B10","B11","B12","B13","B14"]:
+		break_responses[immune] = {"mode":"NOT_ELIGIBLE"}
+	c["m5_3_boss"]["break_responses"] = break_responses
 	c["last_spell_targeting"] = {}
 	for actor: String in party_ids:
 		var actor_data: Dictionary = roster["actors"][actor]
@@ -153,7 +165,7 @@ static func config(version: String) -> Dictionary:
 	c["bossname"] = str(roster["boss"]["display_zh"])
 	c["boss_name_key"] = str(roster["boss"]["name_key"])
 	c["intent_name_keys"] = {}
-	for index: int in range(1,12):
+	for index: int in range(1,15):
 		var skill: String = "B%02d" % index
 		c["intent_name_keys"][skill] = "intent."+skill.to_lower()+".name"
 	for card: String in c["lv40_cards"]:
