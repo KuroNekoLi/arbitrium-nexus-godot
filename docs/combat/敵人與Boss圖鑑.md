@@ -8,7 +8,7 @@
 - 目前配置的其他候選：PAtk417、MAtk434、PDef90、MDef85、Accuracy105、Evasion90。
 - 這一敵人的元素抗性候選：FIRE系HP傷害×1.15、ARCANE×0.90、NEUTRAL×1.00；不等於全遊戲通用元素規則。
 
-## 招式圖鑑（內容設計 B01～B11）
+## 招式圖鑑（內容設計 B01～B11；Break C 可新增內容 ID）
 | ID | 招式 | 攻擊類型／範圍 | 玩家應對及效果 |
 |---|---|---|---|
 | B01 | 鐵拳突襲 | 物理×1.35，單體 | 可Protect與Guard |
@@ -23,10 +23,13 @@
 | B10 | 冷卻校正 | 0傷，Boss自己 | 蓄力被合法打斷後冷卻，不偷換免費攻擊 |
 | B11 | 失衡降級攻勢 | 物理×0.60，單體 | Break使**下一次合格且尚未開始**的Boss行動弱化 |
 
+## Break C 的 Boss 設計可選性
+**Break 歸零保證建立一次 Exposed**；Boss 自己**不需要**在行動週期中主動暴露弱點。可以選擇「只在 Break 時暴露」、「核心姿態可由指定 SP 製造 Exposed」，或「特定 Boss 動作直接產生 Exposed」；三種來源最終使用同一份一次性 Exposed，不疊層。普通招式 Cancel、重大招式 Downgrade 的精確類別與公示契約以 [BKC ADR](engineering/BKC_BREAK_C_ADR_20261020.md) 為準，具體招式數字仍為候選。
+
 ## 公開意圖與3種戰況
 Boss發布 `EnemyIntent`：技能、目標／範圍、預期時點、可否Protect、是否命中型或直接干擾、已明示條件分支。公開後不可偷偷換招或重選鎖定目標。單次蓄力就是一次EnemyAction，不可同輪又免費普攻。候選戰況為初期守衛→中期過載與護壁→低血量終末蓄力；**設計 v0.1 65%/30% 血量閾值來自HP3000版本**，採HP2700的程式應按當前Boss規則和測試核對，不可直接套舊1950／900邊界。
 
-蓮 R01/R07 只有在這個Boss的 `CORE_OPEN` 等合法 `exposed_trigger_profiles` 姿態才有機會建立Exposed；Analyze不會免費建立破綻。Boss Break Gauge與某次施法Casting Stability是不同條，不可把 A05的8 Disruption當成8 Break。
+蓮 R01/R07 在 `CORE_OPEN` 等合法姿態可獨立建立Exposed，沒有該姿態也可以在**實際 Break 歸零時**建立Exposed；Analyze不會免費建立破綻。Boss Break Gauge與某次施法Casting Stability是不同條，不可把 A05的8 Disruption當成8 Break。
 
 ## 功能驗證範圍
 已存在 `scenes/battle/lv40_playable_battle.tscn` 的可載入正向Scene，`tests/test_p4_lv40_playable.gd` 有32項正向測試、相關CI有紀錄；這**只驗證限定Scene/Domain接線**。所有11招內容精度、完整人手操作、最終視覺、每種平衡策略與Lv40真正可玩通關依然須另行測試，不可因Scene存在就升級 `BALANCE_ACCEPTED`。

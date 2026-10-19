@@ -25,7 +25,7 @@
 | 可玩角色、養成 | [角色圖鑑](角色圖鑑.md)／[角色培養與戰鬥形態](角色培養與戰鬥形態.md) |
 | 所有卡片、初始牌組 | [卡牌圖鑑](卡牌圖鑑.md) |
 | 魔法研究體系與未來玩法（設計方向，非新現行規則） | [魔法系統統一設計 v0.7 — 已確認方向／新機制待 ADR](proposals/MAGIC_SYSTEM_UNIFIED_V0_7.md) |
-| 新 Break 方案 C（僅下一版設計，現行玩法尚未更新） | [Break／Exposed／詠唱干擾 v0.8](proposals/BREAK_EXPOSED_CASTING_UNIFIED_RULES_V0_8.md) |
+| Break C 實作規則（實作驗收前仍以原執行證據為準） | [Break C 工程 ADR](engineering/BKC_BREAK_C_ADR_20261020.md)／[詳細設計 v0.8](proposals/BREAK_EXPOSED_CASTING_UNIFIED_RULES_V0_8.md) |
 | 角色專屬大招 | [終式技能圖鑑](終式技能圖鑑.md) |
 | 首批敵人／Boss | [敵人與Boss圖鑑](敵人與Boss圖鑑.md) |
 
