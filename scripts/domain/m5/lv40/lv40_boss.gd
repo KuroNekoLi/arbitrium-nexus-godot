@@ -153,10 +153,10 @@ static func before_end(core: Dictionary, published: Dictionary, config: Dictiona
 			public["break_fallback"] = true
 	elif not BreakC.enabled(config) and bool(next["battle"]["m53"]["break_locked"]) and \
 			bool(public.get("breakable",false)):
-		var previous: String = str(public["skill_id"])
+		var legacy_skill: String = str(public["skill_id"])
 		public = intent(next,"B11",config)
-		public["replaced_skill_id"] = previous
-		public["target_ids"] = published["target_ids"].slice(0,1) if previous != "B04" else [_single(next,"B11",config)]
+		public["replaced_skill_id"] = legacy_skill
+		public["target_ids"] = published["target_ids"].slice(0,1) if legacy_skill != "B04" else [_single(next,"B11",config)]
 		public["fixed_target_ids"] = public["target_ids"].duplicate()
 	return {"core":next,"intent":public}
 
@@ -209,19 +209,12 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 	if ["B06","B09"].has(skill) and bool(fsm["pending_cast"].get("interrupted",false)):
 		skill = "B10"
 	if skill == "B12":
-		# Suppressing the charge also consumes its scheduled release slot.
+		# The charge is suppressed; this is a no-damage, no-cast action.
 		fsm["pending_cast"] = {}
 		fsm["core_open"] = false
 		records.append({"kind":"BossChargeDowngraded","replaced_skill_id":consumed_skill,
 			"hp_damage":0})
-	elif skill in ["B13","B14"]:
-		# One weakened release in place of the original public B06/B09.
-		# Still uses the original locked target/scope and normal reaction rule.
-		fsm["pending_cast"] = {}
-		fsm["core_open"] = false
-		records.append({"kind":"BossCastDowngraded","replaced_skill_id":consumed_skill,
-			"skill_id":skill})
-	if ["B05","B08"].has(skill):
+	elif ["B05","B08"].has(skill):
 		var release: String = "B06" if skill == "B05" else "B09"
 		var stability: int = 9 if skill == "B05" else 15
 		fsm["pending_cast"] = {"casting_id":"boss-cast:"+command_id,"caster_id":"Boss",
@@ -245,6 +238,13 @@ static func resolve(core: Dictionary, public: Dictionary, defense: Dictionary,
 		fsm["pending_cast"] = {}
 		fsm["core_open"] = false
 	elif config["m5_enemy_profiles"].has(skill):
+		if ["B13","B14"].has(skill):
+			# Weaken a previously published release while preserving its
+			# original public targets and ordinary ReactionWindow rules.
+			fsm["pending_cast"] = {}
+			fsm["core_open"] = false
+			records.append({"kind":"BossCastDowngraded","replaced_skill_id":consumed_skill,
+				"skill_id":skill})
 		if ["B06","B09"].has(skill):
 			if fsm["pending_cast"].is_empty() or bool(fsm["pending_cast"].get("interrupted",false)) or int(fsm["pending_cast"].get("due_round",0)) != int(next["battle"]["round"]):
 				return {"ok":false,"error":"LV40_RELEASE_REQUIRES_DUE_CAST"}

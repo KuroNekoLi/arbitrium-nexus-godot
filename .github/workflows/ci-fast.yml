@@ -58,7 +58,7 @@ jobs:
             cat "$RUNNER_TEMP/fast-logs/import.log"; exit 1;
           }
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/fast-logs/import.log" || {
-            grep -n -E 'SCRIPT ERROR|Parse Error|Parser Error|Invalid argument|Error at' "$RUNNER_TEMP/fast-logs/import.log" | tail -70
+            tail -n 95 "$RUNNER_TEMP/fast-logs/import.log"
             exit 1
           }
           for spec in \
