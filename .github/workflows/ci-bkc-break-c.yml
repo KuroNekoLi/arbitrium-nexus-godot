@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/**'
       - 'tests/test_bkc_break_c.gd'
+      - 'tests/test_bkc_break_c_ui.gd'
       - 'resources/ui/**'
       - '.github/workflows/ci-bkc-break-c.yml'
   workflow_dispatch:
@@ -31,6 +32,7 @@ jobs:
           }
           python3 tools/ci/assert_godot_logs.py "$RUNNER_TEMP/bkc-logs/import.log"
           bash tools/ci/run_suite.sh 'test_bkc_break_c:BKC_BREAK_C_REPORT:26' "$RUNNER_TEMP/bkc-logs"
+          bash tools/ci/run_suite.sh 'test_bkc_break_c_ui:BKC_BREAK_C_UI_REPORT:33' "$RUNNER_TEMP/bkc-logs"
           echo 'BKC_TARGETED_GATE_VERIFIED'
       - name: Archive Break C regression evidence
         if: always()
