@@ -1,5 +1,7 @@
 # Arbitrium Nexus — 24 學科戰鬥特色矩陣 v0.1
 
+> **版本索引提示（2026-10-19）**：本文件保留作歷史設計提案；新的框架重審請優先閱讀 [MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md](MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md)。v0.2 中使用者已確認的「世界觀深、實戰易懂、優先重用機制」原則仍有效；v0.3 其他調整只是新提案，尚未核准。
+
 > 日期：2026-10-19｜狀態：**PROPOSED / CONTENT_ONLY / NOT IMPLEMENTED**
 > 上游：[MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_2.md](MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_2.md)；已確認方向是**世界觀深入、實戰簡單、策略來自組合**。24 學科的名稱及以下技能尚未逐項核准。
 > 對照 master 戰鬥文件之已有資源／合法性／失能與耗竭／公開意圖／詠唱、Break、Reaction、Last Spell、Combo 規則。**不得把本候選矩陣當作正式 CardDefinition、技能數值、UI 共鳴傷害類型或 Domain 變更。**

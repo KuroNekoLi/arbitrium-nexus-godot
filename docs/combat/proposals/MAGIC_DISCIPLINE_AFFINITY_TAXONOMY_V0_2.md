@@ -1,5 +1,7 @@
 # 魔法學科與實戰複雜度原則 — v0.2
 
+> **版本索引提示（2026-10-19）**：本文件保留作歷史設計提案；新的框架重審請優先閱讀 [MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md](MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md)。v0.2 中使用者已確認的「世界觀深、實戰易懂、優先重用機制」原則仍有效；v0.3 其他調整只是新提案，尚未核准。
+
 > 日期：2026-10-19  
 > 狀態：**設計方向 USER_CONFIRMED；學科名單、技能效果、數值與實作仍為 PROPOSED**  
 > 基礎：[`MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_1.md`](MAGIC_DISCIPLINE_AFFINITY_TAXONOMY_V0_1.md)  

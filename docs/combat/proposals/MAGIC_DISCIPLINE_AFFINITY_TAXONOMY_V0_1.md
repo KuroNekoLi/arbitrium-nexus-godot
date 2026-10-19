@@ -1,5 +1,7 @@
 # 魔法學科、共鳴屬性與法則系統 — 設計提案 v0.1
 
+> **版本索引提示（2026-10-19）**：本文件保留作歷史設計提案；新的框架重審請優先閱讀 [MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md](MAGIC_SYSTEM_ARCHITECTURE_V0_3_REVIEW.md)。v0.2 中使用者已確認的「世界觀深、實戰易懂、優先重用機制」原則仍有效；v0.3 其他調整只是新提案，尚未核准。
+
 > 狀態：**PROPOSED / NOT USER_APPROVED / NOT IMPLEMENTED**  
 > 日期：2026-10-19  
 > 專案：Arbitrium Nexus / Godot 4.7.2  
