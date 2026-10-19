@@ -30,3 +30,9 @@ Boss發布 `EnemyIntent`：技能、目標／範圍、預期時點、可否Prote
 
 ## 功能驗證範圍
 已存在 `scenes/battle/lv40_playable_battle.tscn` 的可載入正向Scene，`tests/test_p4_lv40_playable.gd` 有32項正向測試、相關CI有紀錄；這**只驗證限定Scene/Domain接線**。所有11招內容精度、完整人手操作、最終視覺、每種平衡策略與Lv40真正可玩通關依然須另行測試，不可因Scene存在就升級 `BALANCE_ACCEPTED`。
+
+## BKC-01：下一版 Boss 破綻模式（資料設計，尚未實裝）
+
+玩家透過 Break 製造 Exposed 的路徑將成為 Break C 共通能力；**Boss 不必自主暴露弱點**。Boss Profile 可另外配置：（1）零自主來源；（2）成功施放特定招式後直接露破綻；（3）開啟 `CORE_OPEN` 等姿態，再由指定 SP 觸發 Exposed。三者最後共用一份 Exposed 狀態，不建立第二種「Boss 破綻 Debuff」。
+
+完整資料契約、現有 B01～B11 的 **REGULAR/CANCEL 或 MAJOR/DOWNGRADE 候選分類**與尚待核准的 fallback 見 [BKC-01 Boss 行為契約](engineering/BKC_01_BOSS_BEHAVIOR_CONTRACT.md)。**這張 Boss 圖鑑前面的 B01～B11 效果依然是現行候選內容**；BKC-01 不更動 HP2700／Break22／元素倍率等既有 fixture，也不宣稱已調整 AI 或提前公布 Intent。
