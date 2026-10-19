@@ -1,5 +1,8 @@
 # Arbitrium Nexus — 魔法系統統一設計 v0.7（全面 Review 後版本）
 
+> **Break／Exposed／Casting Disruption 的最新設計已升級為 [v0.8 方案 C](BREAK_EXPOSED_CASTING_UNIFIED_RULES_V0_8.md)**：使用者已選擇「普通招式取消、重大大招降級、同時建立一次 Exposed」；本 v0.7 所述舊 Break／Exposed 關係保留為歷史設計背景，不能再作最新方向。v0.8 尚未實裝，現行戰鬥仍以 `master` 的正式規則為準。
+
+
 > **版本：v0.7｜日期：2026-10-19**  
 > **狀態：DESIGN DIRECTION USER_APPROVED；CONTENTS/BALANCE PROVISIONAL；NEW MECHANICS NOT IMPLEMENTED**  
 > **最新已確認方向：** 24 學科是豐富世界觀，不是 24 套戰鬥機制；Overload／Buff／Break 等舊規則保留；可使用明示機率異常，Boss 有逐敵／逐狀態的免疫與控制保護；高成本 SP 能讓未來 1～3 個玩家階段獲得暫時 AP 加成；**現在沿用公開 EnemyIntent，未來有需求才擴充混合式 EnemyActionBudget，不採玩家對稱敵方手牌/AP/MP 架構**。  
