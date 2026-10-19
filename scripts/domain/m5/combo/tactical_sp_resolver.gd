@@ -7,6 +7,7 @@ const Zones = preload("res://scripts/domain/m2/cards/card_zone_resolver.gd")
 const Damage = preload("res://scripts/domain/m5/damage/damage_pipeline_resolver.gd")
 const Boss = preload("res://scripts/domain/m5/boss/boss_ai_policy.gd")
 const HP = preload("res://scripts/domain/m5/status/hp_lifecycle_bridge.gd")
+const BreakC = preload("res://scripts/domain/m5/boss/break_c_policy.gd")
 
 static func _error(code: String) -> Dictionary:
 	return {"ok":false,"error":code,"core":{},"timeline":[]}
@@ -144,7 +145,11 @@ static func resolve(original: Dictionary, command: Dictionary,
 	# Process all regular and bonus hit effects FIRST. Break is not live at a
 	# hit_index boundary and does not retroactively change this SP's attacks.
 	tactical = next["battle"]["m53"]
-	if break_amount > 0:
+	if break_amount > 0 and BreakC.enabled(config):
+		var change: Dictionary = BreakC.apply_break(next,break_amount,id,card,actor,config)
+		next = change["core"]
+		timeline.append_array(change["timeline"])
+	elif break_amount > 0:
 		if bool(tactical["break_locked"]):
 			timeline.append({"kind":"BreakDamageIgnoredLocked","amount":break_amount})
 		else:

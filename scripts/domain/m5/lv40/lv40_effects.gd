@@ -5,6 +5,7 @@ const Disruption = preload("res://scripts/domain/m4/casting/casting_disruption_r
 const LastInstability = preload("res://scripts/domain/m4/last_spell/last_spell_instability_resolver.gd")
 const Refund = preload("res://scripts/domain/m4/casting/casting_refund_policy.gd")
 const M2 = preload("res://scripts/domain/m2/integration/m2_domain_resolver.gd")
+const BreakC = preload("res://scripts/domain/m5/boss/break_c_policy.gd")
 
 static func barrier(core: Dictionary, actor: String, amount: int, round_id: int) -> Dictionary:
 	if bool(core["battle"].get("retired_from_field_by_actor", {}).get(actor, false)):
@@ -80,7 +81,10 @@ static func disrupt_ally(core: Dictionary, actor: String, power: int,
 		records.append({"kind":"ScheduledEffectCancelled","casting_id":id,"effect_applied":false})
 	return {"ok":true,"core":next,"timeline":records}
 
-static func break_damage(core: Dictionary, amount: int, card_id: String) -> Dictionary:
+static func break_damage(core: Dictionary, amount: int, card_id: String,
+		config: Dictionary = {}, actor_id: String = "") -> Dictionary:
+	if BreakC.enabled(config):
+		return BreakC.apply_break(core,amount,card_id+":passive",card_id,actor_id,config)
 	var next: Dictionary = core.duplicate(true)
 	var boss: Dictionary = next["battle"]["m53"]
 	var records: Array = []

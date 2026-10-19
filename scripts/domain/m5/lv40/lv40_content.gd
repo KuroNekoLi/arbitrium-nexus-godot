@@ -27,6 +27,7 @@ static func config(version: String) -> Dictionary:
 		"costs":costs,"resources":economy,"trigger_rules":[],
 		"m5_damage_enabled":true,"m5_balance_authority":"BALANCE_PROVISIONAL",
 		"m5_2_status_enabled":true,"m5_3_enabled":true,"m5_4_outcome_enabled":true,
+		"m5_break_c_enabled":true,"m5_break_c_exposed_bonus_bp":12000,
 		"m4_dual_cast_enabled":true,"m4_2_internal_refund":true,
 		"m5_balance":{"defense_k":200,"variance_bp":500,"guard_reduction_bp":4000,
 			"base_hit_bp":8500,"accuracy_step_bp":20},
@@ -39,7 +40,8 @@ static func config(version: String) -> Dictionary:
 		"casting_interrupt_refund":{"authority":"BALANCE_PROVISIONAL","numerator":1,
 			"denominator":2,"rounding":"FLOOR_FIXTURE"},
 		"m5_4_last_release_recoil":{},
-		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11"}}
+		"m5_3_boss":{"boss_id":"Boss","break_max":22,"fallback_skill_id":"B11",
+			"exposed_rules":{"on_break":true,"on_special_posture":true,"on_boss_action":false}}}
 	c["lv40_card_eligibility"] = eligibility.get("cards", {})
 	c["lv40_actor_passives"] = {}
 	c["last_spell_name_keys"] = {}

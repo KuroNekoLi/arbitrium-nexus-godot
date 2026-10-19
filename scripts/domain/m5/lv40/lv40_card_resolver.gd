@@ -10,6 +10,7 @@ const Effects = preload("res://scripts/domain/m5/lv40/lv40_effects.gd")
 const Boss = preload("res://scripts/domain/m5/lv40/lv40_boss.gd")
 const Focus = preload("res://scripts/domain/m4/casting/focus_ward_resolver.gd")
 const Status = preload("res://scripts/domain/m5/status/status_resolver.gd")
+const BreakC = preload("res://scripts/domain/m5/boss/break_c_policy.gd")
 
 static func _error(error: String) -> Dictionary:
 	return {"ok":false,"error":error}
@@ -94,6 +95,15 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 		var p: Dictionary = content["chantless_profile"].duplicate(true)
 		if combo == "COMBO":
 			p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*120/100)
+		# Exposed C: next instant damaging SP; Full Chant deferred release is
+		# resolved in a different timing path and must not consume at commit.
+		var previous_exposed: Dictionary = next["battle"]["m53"]["exposed"]
+		var exposed_magic: bool = BreakC.enabled(config) and mode != "FULL" and \
+			not previous_exposed.is_empty() and \
+			int(previous_exposed.get("expires_round",-1)) >= int(next["battle"]["round"]) and \
+			str(previous_exposed.get("created_command_id","")) != id
+		if exposed_magic:
+			p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*int(config.get("m5_break_c_exposed_bonus_bp",12000))/10000)
 		var power: Dictionary = next["battle"]["lv40"]["spell_power"].get(actor,{})
 		if not power.is_empty():
 			p["skill_multiplier_bp"] = int(int(p["skill_multiplier_bp"])*120/100)
@@ -128,7 +138,7 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 				var lowest: String = _lowest_ratio(next)
 				if not lowest.is_empty():
 					next = _merge(Effects.heal(next,lowest,80),next,records)
-			if ["A04","A06"].has(definition) and _hit(records) and not next["battle"]["m53"]["exposed"].is_empty():
+			if (exposed_magic or (not BreakC.enabled(config) and ["A04","A06"].has(definition))) and _hit(records) and not next["battle"]["m53"]["exposed"].is_empty():
 				next["battle"]["m53"]["exposed"] = {}
 				records.append({"kind":"ExposedConsumed","target_id":target,"consumed_command_id":id,"whole_sp":true})
 			if combo == "COMBO" and _hit(records):
@@ -139,11 +149,17 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 		var ren_combo_setup: bool = ["R01","R07"].has(definition)
 		# Core opening grants Exposed, but is no longer required to establish
 		# Ren's attack-combo opportunity.
-		effect["create_exposed"] = ren_combo_setup and bool(next["battle"]["lv40"]["core_open"])
+		effect["create_exposed"] = ren_combo_setup and bool(config.get("m5_3_boss",{}).get("exposed_rules",{}).get("on_special_posture",true)) and bool(next["battle"]["lv40"]["core_open"])
 		if ren_combo_setup:
 			effect["creates_combo_tags"] = ["FIRE"]
 		var existing: Dictionary = next["battle"]["m53"]["exposed"]
-		if definition == "R03" and not existing.is_empty():
+		if BreakC.enabled(config) and not existing.is_empty() and \
+				int(existing.get("expires_round",-1)) >= int(next["battle"]["round"]):
+			effect["consume_exposed"] = true
+			effect["damage_profile"]["skill_multiplier_bp"] = int(
+				int(effect["damage_profile"]["skill_multiplier_bp"]) * \
+				int(config.get("m5_break_c_exposed_bonus_bp",12000))/10000)
+		elif definition == "R03" and not existing.is_empty():
 			effect["consume_exposed"] = true
 			effect["damage_profile"]["skill_multiplier_bp"] = 14375
 		if combo == "COMBO":
@@ -162,7 +178,7 @@ static func play(state: Dictionary, command: Dictionary, config: Dictionary) -> 
 			var bonus: int = int(passive["amount"])
 			used[actor] = round_id
 			records.append({"kind":"PassiveTriggered","actor_id":actor,"passive_id":str(passive["id"]),"break_bonus":bonus})
-			next = _merge(Effects.break_damage(next,bonus,card),next,records)
+			next = _merge(Effects.break_damage(next,bonus,card,config,actor),next,records)
 	else:
 		if combo == "COMBO" and definition != "T04":
 			return _error("LV40_NO_REGISTERED_SUPPORT_COMBO_RECIPE")
