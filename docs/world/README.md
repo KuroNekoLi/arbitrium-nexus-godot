@@ -31,6 +31,12 @@
 - [創作參考與研究紀錄](12_CREATIVE_REFERENCES.md)：參考作品帶來的寫作原則與獨立創作界線。
 - [世界觀 Canon 決策紀錄](13_CANON_DECISIONS.md)：哪些已核准、哪些還只是提案。
 
+## 星煌魔法學院與 Ruby 個人故事
+
+本作主要校園故事舞台確立為**星煌魔法學院**（由星煌家族建立的世界頂尖私立魔法學院）。玩家可從 [學院與 Ruby 公開介紹](characters/STARGLORY_ACADEMY_RUBY_PUBLIC.md) 開始。
+
+**編劇與製作內部**另有 [Ruby／Aqua 角色聖經](characters/RUBY_AQUA_WRITERS_BIBLE.md)、[完整悲劇劇情提案](characters/RUBY_AQUA_TRAGEDY_STORY_DRAFT.md) 和 [世界觀／戰鬥整合](characters/RUBY_AQUA_LORE_GAMEPLAY_NOTES.md)。**後三份包含核心身份、已故人物與重大劇透，不得公開在玩家入口或早期圖鑑。** 故事提案中的事故細節仍須使用者核准。
+
 ## 如何判斷一項設定已經確定？
 
 | 標記 | 意義 |
