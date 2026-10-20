@@ -18,6 +18,7 @@
 6. **[異形與邊境危機](05_ABERRATIONS_AND_FRONTIER.md)**：人們為什麼需要魔法師？
 7. **[學院、組織與不同立場](06_INSTITUTIONS_AND_BELIEFS.md)**：誰有權制定魔法使用規則？
 8. **[蓮、朱音與紬的旅途](07_PEOPLE_AND_JOURNEY.md)**：三位主角會從什麼角度理解世界？
+9. **[世界觀小字典](14_GLOSSARY.md)**：不知道一個名詞的意思時，可以從這裡查起。
 
 ## 劇情設計區：包含可能的重大劇透
 
@@ -28,6 +29,7 @@
 - [世界觀與戰鬥規則對照](10_LORE_TO_GAMEPLAY.md)：哪些是故事說法、哪些才是真正的 Domain 效果。
 - [角色台詞與敘事寫作規範](11_NARRATIVE_STYLE_GUIDE.md)：如何讓設定自然出現在故事裡。
 - [創作參考與研究紀錄](12_CREATIVE_REFERENCES.md)：參考作品帶來的寫作原則與獨立創作界線。
+- [世界觀 Canon 決策紀錄](13_CANON_DECISIONS.md)：哪些已核准、哪些還只是提案。
 
 ## 如何判斷一項設定已經確定？
 
