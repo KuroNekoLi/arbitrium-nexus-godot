@@ -11,7 +11,7 @@
 | [星煌魔法學院／露比公開介紹](STARGLORY_ACADEMY_PUBLIC.md) | 玩家可讀、宣傳、美術 | 只含已確認公開設定，不揭露 Aqua |
 | [Ruby／Aqua 正史與設定分層](RUBY_AQUA_CANON.md) | 編劇、企劃、AI Agent，**重大劇透** | 已確認的 Canon 與未決事項之權威記錄 |
 | [正式主角與妹妹的人物設定](PROTAGONIST_SIBLINGS_CHARACTER_BIBLE_WRITER_ONLY.md) | 編劇、企劃、AI Agent，**重大劇透** | 兄妹已確認人物骨架、魔法天賦、已選死亡故事方向、候選場景與下一輪未決事項 |
-| [第三位主角：女性治療魔法師與《無法治癒的一切》](MAIN_PARTY_HEALER_CHARACTER_BIBLE_WRITER_ONLY.md) | 編劇、企劃、AI Agent，**內部主線提案** | 已確認女性治療職能、專業照護夢想、目睹後續照護不足的啟發經歷與正式外觀；《無法治癒的一切》主線題旨為 DIRECTION_APPROVED，關係、家庭和具體劇情仍未定 |
+| [第三位主角：橘澄花與《無法治癒的一切》](MAIN_PARTY_HEALER_CHARACTER_BIBLE_WRITER_ONLY.md) | 編劇、企劃、AI Agent，**內部主線提案** | 正式姓名橘澄花（Tachibana Sumika）、女性治療職能、專業照護夢想、目睹後續照護不足的啟發經歷與正式外觀已確認；《無法治癒的一切》主線為 DIRECTION_APPROVED，性格、人物關係、家庭及具體劇情仍待決 |
 | [〈那天，我沒有回頭〉完整故事提案](RUBY_AQUA_TRAGEDY_TREATMENT.md) | 編劇與演出，**重大劇透** | 保留完整人物關係、國中悲劇、鏡子、自責、吊飾、學院線和拔劍結局；事故細節屬待核准提案 |
 | [劇情連續性、角色動機、待決問題](RUBY_AQUA_CONTINUITY_REVIEW.md) | 編劇、世界觀和關卡製作，**重大劇透** | 防止身份、時間線、異形與 The Fading 的邏輯矛盾 |
 
