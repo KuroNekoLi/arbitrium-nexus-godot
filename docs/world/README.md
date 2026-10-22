@@ -11,7 +11,7 @@
 ## 從這裡開始：不劇透的世界之旅
 
 1. **[世界觀總覽](WORLD_BIBLE.md)**：先用一個早晨認識這個世界。
-2. **[魔法究竟是什麼？](01_MAGIC_AND_SPELLCRAFT.md)**：從火球術認識術式、Mana、完整／縮短／無詠唱、耦合與魔法的界線。
+2. **[魔法究竟是什麼？](01_MAGIC_AND_SPELLCRAFT.md)**：從火球術認識術式、Mana、完整／縮短／無詠唱、共鳴與魔法的界線。
 3. **[魔導設備、學院與解咒](15_MAGIC_ENGINEERING_AND_COUNTERMAGIC.md)**：路燈為什麼會自己亮？為何家族祕術可能被模仿？什麼是解析、破解與反運算？
 4. **[二十四種魔法研究領域](02_MAGIC_DISCIPLINES.md)**：火焰、時間、生命、命運等學問如何共存？
 5. **[魔法與日常生活](03_EVERYDAY_LIFE.md)**：學校、醫療、交通、工作、費用與不平等。
@@ -41,7 +41,7 @@
 
 ## 作者／Agent 技術規格（含重大劇透，不屬於玩家入口）
 
-為避免寫作或 AI 開發時擅自替魔法新增不一致的法則，另建 [魔法本體論 V1.0 技術文件目錄](magic/00_MAGIC_SYSTEM_SPEC_V1.md)。詳細內容包括 [Function Graph 與生命週期](magic/01_SPELL_FUNCTION_GRAPH.md)、[Mana／耦合與詠唱](magic/02_MANA_AND_COUPLING.md)、[魔導設備與安全](magic/03_MAGIC_DEVICES_AND_ENGINEERING.md)、[術式解析與反運算](magic/04_ANALYSIS_AND_INVERSE_OPERATION.md)、[新術式設計檢查表](magic/05_MAGIC_DESIGN_RULES.md)。
+為避免寫作或 AI 開發時擅自替魔法新增不一致的法則，另建 [魔法本體論 V1.0 技術文件目錄](magic/00_MAGIC_SYSTEM_SPEC_V1.md)。詳細內容包括 [Function Graph 與生命週期](magic/01_SPELL_FUNCTION_GRAPH.md)、[Mana／共鳴與詠唱](magic/02_MANA_AND_COUPLING.md)、[魔導設備與安全](magic/03_MAGIC_DEVICES_AND_ENGINEERING.md)、[術式解析與反運算](magic/04_ANALYSIS_AND_INVERSE_OPERATION.md)、[新術式設計檢查表](magic/05_MAGIC_DESIGN_RULES.md)。
 
 **請勿將技術規格直接公開為玩家 Wiki 或第一章教授台詞。** 其中包含 The Fading、異形 V0.9 作者秘密及研究中尚未核准的細節。它們不是新 SP 或 Godot 已實作功能，任何戰鬥規則仍以 [Combat](../combat/README.md) 為準。
 
