@@ -41,7 +41,7 @@
 
 ## 作者／Agent 技術規格（含重大劇透，不屬於玩家入口）
 
-為避免寫作或 AI 開發時擅自替魔法新增不一致的法則，另建 [魔法本體論 V1.0 技術文件目錄](magic/00_MAGIC_SYSTEM_SPEC_V1.md)。詳細內容包括 [Function Graph 與生命週期](magic/01_SPELL_FUNCTION_GRAPH.md)、[Mana／共鳴與詠唱](magic/02_MANA_AND_COUPLING.md)、[魔導設備與安全](magic/03_MAGIC_DEVICES_AND_ENGINEERING.md)、[術式解析與反運算](magic/04_ANALYSIS_AND_INVERSE_OPERATION.md)、[新術式設計檢查表](magic/05_MAGIC_DESIGN_RULES.md)。
+為避免寫作或 AI 開發時擅自替魔法新增不一致的法則，另建 [魔法本體論 V1.0 技術文件目錄](magic/00_MAGIC_SYSTEM_SPEC_V1.md)。詳細內容包括 [術式結構 與生命週期](magic/01_SPELL_FUNCTION_GRAPH.md)、[Mana／共鳴與詠唱](magic/02_MANA_AND_COUPLING.md)、[魔導設備與安全](magic/03_MAGIC_DEVICES_AND_ENGINEERING.md)、[術式解析與反運算](magic/04_ANALYSIS_AND_INVERSE_OPERATION.md)、[新術式設計檢查表](magic/05_MAGIC_DESIGN_RULES.md)、[禁忌級共鳴封鎖](magic/06_FORBIDDEN_RESONANCE_SEVERANCE.md)。
 
 **請勿將技術規格直接公開為玩家 Wiki 或第一章教授台詞。** 其中包含 The Fading、異形 V0.9 作者秘密及研究中尚未核准的細節。它們不是新 SP 或 Godot 已實作功能，任何戰鬥規則仍以 [Combat](../combat/README.md) 為準。
 
