@@ -39,6 +39,12 @@
 - [創作參考與研究紀錄](12_CREATIVE_REFERENCES.md)：參考作品帶來的寫作原則與獨立創作界線。
 - [世界觀 Canon 決策紀錄](13_CANON_DECISIONS.md)：哪些已核准、哪些還只是提案。
 
+## 作者／Agent 技術規格（含重大劇透，不屬於玩家入口）
+
+為避免寫作或 AI 開發時擅自替魔法新增不一致的法則，另建 [魔法本體論 V1.0 技術文件目錄](magic/00_MAGIC_SYSTEM_SPEC_V1.md)。詳細內容包括 [Function Graph 與生命週期](magic/01_SPELL_FUNCTION_GRAPH.md)、[Mana／耦合與詠唱](magic/02_MANA_AND_COUPLING.md)、[魔導設備與安全](magic/03_MAGIC_DEVICES_AND_ENGINEERING.md)、[術式解析與反運算](magic/04_ANALYSIS_AND_INVERSE_OPERATION.md)、[新術式設計檢查表](magic/05_MAGIC_DESIGN_RULES.md)。
+
+**請勿將技術規格直接公開為玩家 Wiki 或第一章教授台詞。** 其中包含 The Fading、異形 V0.9 作者秘密及研究中尚未核准的細節。它們不是新 SP 或 Godot 已實作功能，任何戰鬥規則仍以 [Combat](../combat/README.md) 為準。
+
 ## 星煌魔法學院與 Ruby 個人故事
 
 本作主要校園故事舞台確立為**星煌魔法學院**（由星煌家族建立的世界頂尖私立魔法學院）。玩家可從 [學院與 Ruby 公開介紹](characters/STARGLORY_ACADEMY_RUBY_PUBLIC.md) 開始。
